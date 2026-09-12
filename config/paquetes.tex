@@ -9,6 +9,7 @@
 \usepackage{booktabs}  % Tablas elegantes según estándar APA (sin líneas verticales)
 \usepackage{amsmath}
 \usepackage{ragged2e} % Permite forzar justificación plena (\justifying)
+\usepackage{indentfirst} % Sangría de primera línea en TODO párrafo, incluido el primero tras cada encabezado
 \usepackage{hyperref}
 
 % Configuración de citas y bibliografía APA 7.ª Edición
@@ -24,3 +25,10 @@
     citecolor=black,
     urlcolor=black
 }
+
+% Líneas punteadas (puntos de guía) en el Índice General para los títulos de
+% nivel 1. El article.cls actual define \l@section sin puntos; se restaura el
+% formato clásico con \@dottedtocline conservando la alineación a la izquierda.
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{0em}{2.3em}}
+\makeatother

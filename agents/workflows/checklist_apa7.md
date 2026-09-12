@@ -47,3 +47,11 @@ Utiliza esta lista de verificación antes de finalizar cualquier entrega o compi
 - [ ] Omitir cero antes del punto decimal en valores que no pueden superar 1.0 (ejemplo: *$p < .05$*, *$r = .65$*).
 - [ ] Tono académico formal, claro, conciso y objetivo.
 - [ ] Sin comandos obsoletos de TeX (`{\bf ...}`) ni saltos de línea forzados repetitivos (`\\\\`).
+
+---
+
+## 📑 6. Páginas Preliminares e Índices
+- [ ] El Índice General inicia con los apartados preliminares en este orden: *Índice General*, *Índice de Tablas*, *Índice de Figuras* y después *Resumen*, *Abstract*.
+- [ ] Todos los títulos del Índice General muestran líneas punteadas (puntos de guía) hacia el número de página.
+- [ ] Todo párrafo inicia con sangría de primera línea de 0.5 in (1.27 cm), incluido el primero que sigue a cada encabezado de nivel.
+- [ ] El texto del cuerpo está justificado a ambos márgenes.

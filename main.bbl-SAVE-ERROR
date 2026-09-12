@@ -1,0 +1,159 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/apasortcite//global/global/global}
+    \entry{apa2020}{book}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=b29c48e2adfa8813d0821cd69be08ecb}{%
+           family={{American Psychological Association}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Washington, DC}%
+      }
+      \strng{namehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{fullhash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{fullhashraw}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{bibnamehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authorbibnamehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authornamehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authorfullhash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authorfullhashraw}{b29c48e2adfa8813d0821cd69be08ecb}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{7th}
+      \field{title}{Publication Manual of the American Psychological Association}
+      \field{year}{2020}
+      \verb{doi}
+      \verb 10.1037/0000165-000
+      \endverb
+    \endentry
+    \entry{einstein1905}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3ebf53e52a3ce84f0ffb8553200a6a63}{%
+           family={Einstein},
+           familyi={E\bibinitperiod},
+           given={Albert},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{fullhash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{fullhashraw}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{bibnamehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authorbibnamehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authornamehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authorfullhash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authorfullhashraw}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Annalen der Physik}
+      \field{number}{10}
+      \field{title}{Zur Elektrodynamik bewegter Körper}
+      \field{volume}{322}
+      \field{year}{1905}
+      \field{pages}{891\bibrangedash 921}
+      \range{pages}{31}
+      \verb{doi}
+      \verb 10.1002/andp.19053221004
+      \endverb
+    \endentry
+  \enddatalist
+  \datalist[entry]{apa/global//global/global/global}
+    \entry{apa2020}{book}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=b29c48e2adfa8813d0821cd69be08ecb}{%
+           family={{American Psychological Association}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Washington, DC}%
+      }
+      \strng{namehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{fullhash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{fullhashraw}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{bibnamehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authorbibnamehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authornamehash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authorfullhash}{b29c48e2adfa8813d0821cd69be08ecb}
+      \strng{authorfullhashraw}{b29c48e2adfa8813d0821cd69be08ecb}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{7th}
+      \field{title}{Publication Manual of the American Psychological Association}
+      \field{year}{2020}
+      \verb{doi}
+      \verb 10.1037/0000165-000
+      \endverb
+    \endentry
+    \entry{einstein1905}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3ebf53e52a3ce84f0ffb8553200a6a63}{%
+           family={Einstein},
+           familyi={E\bibinitperiod},
+           given={Albert},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{fullhash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{fullhashraw}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{bibnamehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authorbibnamehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authornamehash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authorfullhash}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \strng{authorfullhashraw}{3ebf53e52a3ce84f0ffb8553200a6a63}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Annalen der Physik}
+      \field{number}{10}
+      \field{title}{Zur Elektrodynamik bewegter Körper}
+      \field{volume}{322}
+      \field{year}{1905}
+      \field{pages}{891\bibrangedash 921}
+      \range{pages}{31}
+      \verb{doi}
+      \verb 10.1002/andp.19053221004
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

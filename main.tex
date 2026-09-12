@@ -17,6 +17,7 @@
 
 \maketitle
 \justifying % Justificación plena en todo el documento (independiente de la opción stu/man)
+\setlength{\parindent}{0.5in} % Sangría de primera línea APA 7 (0.5 in / 1.27 cm) en todo párrafo
 
 % ==============================================================================
 % 3.1 PRIMERA PARTE: PÁGINAS PRELIMINARES (Índices, Resumen y Abstract)
@@ -26,22 +27,12 @@
 
 % ==============================================================================
 % 3.2 CUERPO DEL DOCUMENTO
-% Inclusión de secciones modulares (flujo IMRyD)
 % ==============================================================================
-\input{secciones/01_introduccion.tex}
-\input{secciones/02_metodo.tex}
-\input{secciones/03_resultados.tex}
-\input{secciones/04_discusion.tex}
-\input{secciones/05_conclusiones.tex}
+\input{secciones/03_introduccion.tex}
 
 % ==============================================================================
 % 4. BIBLIOGRAFÍA / REFERENCIAS (APA 7)
 % ==============================================================================
 \printbibliography
-
-% ==============================================================================
-% 5. APÉNDICES / ANEXOS (OPCIONAL)
-% ==============================================================================
-\input{secciones/99_anexos.tex}
 
 \end{document}
