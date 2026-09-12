@@ -63,3 +63,4 @@ Los agentes deben respetar la modularidad del documento:
 2. **Verificación de Citas**: Al añadir una afirmación respaldada en literatura, registrar de inmediato la entrada BibTeX en [`referencias.bib`](file:///c:/Users/PC/Documents/doc-comedor/referencias.bib).
 3. **Preservación de Comentarios**: Mantener los comentarios aclaratorios existentes en los archivos `.tex`.
 4. **Tono Académico**: Redactar en español académico formal, en tercera persona o primera persona del plural formal, evitando coloquialismos, redundancias o hipérboles.
+5. **Compilación Segura**: Compilar siempre con `pdflatex -interaction=nonstopmode main.tex` y `biber --winunicode main`. Si `main.aux` se corrompe tras una interrupción (`Missing \begin{document}`), eliminar `main.aux` y volver a compilar.

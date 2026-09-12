@@ -60,21 +60,36 @@ La clase incluye la opción `spanish` y `es-tabla` en `config/paquetes.tex` para
 ## ⚙️ Cómo Compilar el Proyecto
 
 ### Opción A: Compilación Local (VS Code / TeXworks / Terminal)
-Para compilar correctamente las citas con `biblatex` y `biber`, ejecuta el siguiente flujo:
-
 ```bash
-pdflatex main.tex
+pdflatex -interaction=nonstopmode main.tex
 biber --winunicode main
-pdflatex main.tex
-pdflatex main.tex
+pdflatex -interaction=nonstopmode main.tex
+pdflatex -interaction=nonstopmode main.tex
 ```
+
 > [!TIP]
-> En entornos Windows con soporte UTF-8, el flag `--winunicode` en `biber` garantiza la detección correcta del archivo de control `main.bcf`.
+> - El flag `-interaction=nonstopmode` previene que LaTeX se quede congelado esperando entradas interactivas (`?`), evitando la corrupción de archivos auxiliares.
+> - En entornos Windows con soporte UTF-8, el flag `--winunicode` en `biber` garantiza la detección correcta del archivo de control `main.bcf`.
 
 Si usas `latexmk`:
 ```bash
 latexmk -pdf main.tex
 ```
+
+### 🛠️ Solución de Problemas Comunes (Troubleshooting)
+
+#### Error: `! LaTeX Error: Missing \begin{document}` (línea en `main.aux`)
+- **Causa**: Ocurre si una compilación anterior se interrumpió o canceló a la mitad, dejando el archivo temporal `main.aux` incompleto o corrupto.
+- **Solución**: Borra el archivo auxiliar dañado y recompila:
+  - **PowerShell (Windows):**
+    ```powershell
+    Remove-Item main.aux
+    ```
+  - **Bash (Linux/macOS):**
+    ```bash
+    rm main.aux
+    ```
+  - Tras borrarlo, ejecuta el flujo completo de compilación de 4 pasos con `-interaction=nonstopmode`.
 
 ### Opción B: Overleaf
 1. Comprime todo el contenido del directorio en un archivo `.zip` (manteniendo las carpetas `secciones/`, `config/`, `figuras/`, `tablas/`).
