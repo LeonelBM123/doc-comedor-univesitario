@@ -4,6 +4,14 @@ Este documento define el procedimiento estandarizado que deben seguir el usuario
 
 ---
 
+## 🔄 Fase 0: Ingreso de Texto en Bruto (carpeta `texto_formatter/`)
+
+1. Si el usuario dispone de texto fuente sin formato (prosa, borradores, notas), debe depositarlo en [`texto_formatter/`](file:///c:/Users/PC/Documents/doc-comedor/texto_formatter).
+2. El agente debe **leer** los archivos depositados y aplicar el protocolo definido en [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
+3. Al concluir la conversión, los archivos fuente se trasladan a `texto_formatter/procesados/` para evitar reprocesamiento.
+
+---
+
 ## 📈 Etapas del Flujo
 
 ### Fase 1: Planificación (Rol: Orquestador)

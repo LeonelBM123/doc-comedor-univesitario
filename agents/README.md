@@ -21,6 +21,7 @@ Este marco de trabajo divide las responsabilidades del proceso editorial entre c
 
 ```text
 [ Usuario / Requerimiento ]
+[ Texto en bruto depositado en texto_formatter/ ] ──► (se convierte a APA 7 LaTeX)
             │
             ▼
 ┌───────────────────────────────┐
@@ -53,6 +54,8 @@ Este marco de trabajo divide las responsabilidades del proceso editorial entre c
 ```text
 agents/
 ├── README.md                           # Este archivo (visión general)
+├── rules/
+│   └── 01_carpeta_texto_formatter.md   # Regla: buzón de entrada de texto a formatear
 ├── roles/
 │   ├── 01_orquestador.md               # Prompt y directrices del Editor en Jefe
 │   ├── 02_redactor_academico.md        # Prompt y estilo del Redactor Académico
@@ -62,6 +65,18 @@ agents/
     ├── flujo_redaccion_revision.md     # Procedimiento paso a paso para cada sección
     └── checklist_apa7.md               # Lista de verificación pre-entrega
 ```
+
+---
+
+## 📥 Buzón de Entrada: Carpeta `texto_formatter/`
+
+La carpeta [`texto_formatter/`](file:///c:/Users/PC/Documents/doc-comedor/texto_formatter) es el **buzón de entrada** donde el usuario deposita texto en bruto (prosa, borradores, notas sin formato LaTeX) que debe ser convertido a redacción académica **APA 7 en LaTeX**.
+
+- Es un buzón de **solo lectura**: los agentes nunca editan el contenido original.
+- Al procesarlo, el texto convertido se escribe en `secciones/` y las fuentes verificadas en `referencias.bib`.
+- Los archivos fuente ya procesados se trasladan a `texto_formatter/procesados/`.
+
+Todo agente debe cumplir la regla completa en [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
 
 ---
 

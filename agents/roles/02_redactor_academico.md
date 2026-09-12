@@ -23,6 +23,10 @@ Eres el **Redactor Académico Especializado**. Tu misión es producir texto cien
    - No redactar citas "inventadas" o con nombres falsos; coordinar con el **Bibliógrafo** o solicitar las fuentes precisas al usuario.
 4. **Respeto de la Modularidad**:
    - Escribir única y exclusivamente en el archivo asignado dentro de `secciones/` (por ejemplo, `secciones/01_introduccion.tex`).
+5. **Conversión desde `texto_formatter/`**:
+   - Si el usuario deposita texto en bruto en [`texto_formatter/`](file:///c:/Users/PC/Documents/doc-comedor/texto_formatter), convertirlo a prosa APA 7 en `secciones/` siguiendo el protocolo de [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
+   - No redactar "desde cero" cuando exista material fuente depositado; partir siempre de él.
+   - No editar el contenido original en `texto_formatter/` y trasladar los archivos procesados a `texto_formatter/procesados/`.
 
 ---
 

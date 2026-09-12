@@ -12,7 +12,10 @@ doc-comedor/
 ├── config/                   # Preámbulo y metadatos del documento
 │   ├── paquetes.tex          # Librerías (biblatex, booktabs, babel, csquotes...)
 │   └── metadatos.tex         # Título, autor, asignatura, profesor, resumen y keywords
-├── secciones/                # Capítulos y secciones modulares (flujo IMRyD)
+├── secciones/                # Páginas preliminares y capítulos modulares (flujo IMRyD)
+│   ├── 00_frontmatter.tex    # Índices (general, tablas, figuras) e inclusión de Resumen/Abstract
+│   ├── 00_resumen.tex        # Resumen en español + Palabras clave
+│   ├── 00_abstract.tex       # Abstract en inglés + Keywords
 │   ├── 01_introduccion.tex   # Planteamiento del problema y objetivos
 │   ├── 02_metodo.tex         # Diseño, participantes, instrumentos y procedimiento
 │   ├── 03_resultados.tex     # Análisis descriptivo, pruebas estadísticas y tablas
@@ -22,8 +25,10 @@ doc-comedor/
 ├── tablas/                   # Tablas independientes en formato booktabs
 ├── figuras/                  # Gráficos, esquemas e ilustraciones
 ├── referencias.bib           # Base de datos bibliográfica en formato BibTeX
+├── texto_formatter/          # Buzón de entrada de texto en bruto a convertir a APA 7
 ├── agents/                   # Contexto, roles y flujos para agentes de IA
 │   ├── README.md             # Mapa del sistema y guía de invocación de agentes
+│   ├── rules/                # Reglas obligatorias del sistema (buzón texto_formatter/)
 │   ├── roles/                # Roles especializados (Orquestador, Redactor, Bibliógrafo, Auditor)
 │   └── workflows/            # Procedimiento paso a paso y Checklist interactivo APA 7
 ├── .agents/                  # Reglas nativas para Antigravity IDE (.agents/rules/)

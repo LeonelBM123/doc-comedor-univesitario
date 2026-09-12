@@ -16,8 +16,18 @@
 \begin{document}
 
 \maketitle
+\justifying % Justificación plena en todo el documento (independiente de la opción stu/man)
 
+% ==============================================================================
+% 3.1 PRIMERA PARTE: PÁGINAS PRELIMINARES (Índices, Resumen y Abstract)
+% Carátula → Índice General → Índice de Tablas → Índice de Figuras → Resumen → Abstract
+% ==============================================================================
+\input{secciones/00_frontmatter.tex}
+
+% ==============================================================================
+% 3.2 CUERPO DEL DOCUMENTO
 % Inclusión de secciones modulares (flujo IMRyD)
+% ==============================================================================
 \input{secciones/01_introduccion.tex}
 \input{secciones/02_metodo.tex}
 \input{secciones/03_resultados.tex}

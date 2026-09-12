@@ -11,7 +11,9 @@
 \professor{Nombre del Profesor / Docente}
 \duedate{12 de Septiembre de 2026}
 
-% Resumen y Palabras Clave
-\abstract{Este documento presenta una estructura modular en LaTeX configurada bajo la 7.ª edición de las normas APA utilizando la clase \texttt{apa7}. El manuscrito ha sido dividido en módulos temáticos e incluye la configuración para un flujo de trabajo asistido por agentes de inteligencia artificial especializados en redacción, citación, revisión y auditoría de estilo.}
-
-\keywords{Normas APA 7, LaTeX, Arquitectura Modular, Redacción Científica, Agentes IA}
+% NOTA: El Resumen (en español) y el Abstract (en inglés) no se definen aquí para
+% evitar que la clase apa7 los renderice dentro de la carátula. Se incluyen como
+% páginas independientes en el front matter a través de:
+%   - secciones/00_resumen.tex  (Resumen + Palabras clave)
+%   - secciones/00_abstract.tex (Abstract + Keywords)
+% Ambos se invocan desde secciones/00_frontmatter.tex.
