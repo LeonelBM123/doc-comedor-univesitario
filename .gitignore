@@ -1,0 +1,22 @@
+# LaTeX Auxiliary Files
+*.aux
+*.bcf
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.run.xml
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.ttt
+*.fff
+
+# Output PDF (Opcional, conservar si deseas ignorar los PDF generados)
+# *.pdf

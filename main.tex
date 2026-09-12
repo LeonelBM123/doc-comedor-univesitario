@@ -1,0 +1,37 @@
+\documentclass[stu, 12pt, spanish]{apa7}
+
+% ==============================================================================
+% 1. PAQUETES Y CONFIGURACIÓN
+% ==============================================================================
+\input{config/paquetes.tex}
+
+% ==============================================================================
+% 2. METADATOS DEL DOCUMENTO (Título, Autores, Resumen)
+% ==============================================================================
+\input{config/metadatos.tex}
+
+% ==============================================================================
+% 3. CUERPO DEL DOCUMENTO
+% ==============================================================================
+\begin{document}
+
+\maketitle
+
+% Inclusión de secciones modulares (flujo IMRyD)
+\input{secciones/01_introduccion.tex}
+\input{secciones/02_metodo.tex}
+\input{secciones/03_resultados.tex}
+\input{secciones/04_discusion.tex}
+\input{secciones/05_conclusiones.tex}
+
+% ==============================================================================
+% 4. BIBLIOGRAFÍA / REFERENCIAS (APA 7)
+% ==============================================================================
+\printbibliography
+
+% ==============================================================================
+% 5. APÉNDICES / ANEXOS (OPCIONAL)
+% ==============================================================================
+\input{secciones/99_anexos.tex}
+
+\end{document}
