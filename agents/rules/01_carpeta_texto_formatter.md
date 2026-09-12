@@ -11,9 +11,10 @@ Esta carpeta es el **único buzón de entrada de texto fuente**. Cuando el usuar
 
 ```text
 texto_formatter/           # Buzón de entrada (SOLO LECTURA para agentes)
-├── README.md              # Instrucciones de uso
-└── procesados/            # Archivos fuente ya convertidos (traslado tras el procesamiento)
+└── README.md              # Instrucciones de uso
 ```
+
+> En esta carpeta solo se colocan archivos de texto normales (`.txt`, `.md`). No existe ninguna subcarpeta de procesados: el contenido convertido va directamente a `secciones/`.
 
 ---
 
@@ -32,12 +33,11 @@ texto_formatter/           # Buzón de entrada (SOLO LECTURA para agentes)
 
 1. **LEER** el/los archivos depositados por el usuario.
 2. **PLANIFICAR** el desglose del contenido según el índice vigente del documento (rol **Orquestador**).
-3. **REDACTAR** en español académico formal, mapeando el contenido a la jerarquía de encabezados APA 7 (5 niveles): `\section`, `\subsection`, `\subsubsection`, `\paragraph`, `\subparagraph`.
+3. **REDACTAR** en español académico formal, mapeando el contenido a la jerarquía de encabezados APA 7 (5 niveles): `\section`, `\subsection`, `\subsubsection`, `\paragraph`, `\subparagraph`. El resultado se escribe directamente en `secciones/`, en la sección que indique el usuario.
 4. **CITAR** únicamente fuentes verificadas (existentes en `referencias.bib` o registradas por el **Bibliógrafo**). **PROHIBIDO inventar autores, años o DOIs** (ver `AGENTS.md`, regla CERO ALUCINACIONES).
 5. **NO EDITAR** el contenido original dentro de `texto_formatter/`; es un buzón de solo lectura.
-6. **TRASLADAR** el archivo fuente procesado a `texto_formatter/procesados/` al concluir la conversión, para evitar reprocesamiento.
-7. **COMPILAR** (`pdflatex -interaction=nonstopmode main.tex` + `biber --winunicode main`) y verificar ausencia de errores y referencias no resueltas.
-8. **INFORMAR** al usuario del resultado, indicando los archivos generados o modificados en `secciones/`.
+6. **COMPILAR** (`pdflatex -interaction=nonstopmode main.tex` + `biber --winunicode main`) y verificar ausencia de errores y referencias no resueltas.
+7. **INFORMAR** al usuario del resultado, indicando los archivos generados o modificados en `secciones/`.
 
 ---
 

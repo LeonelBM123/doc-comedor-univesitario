@@ -55,7 +55,7 @@ Los agentes deben respetar la modularidad del documento:
 - **`referencias.bib`**: Base de datos de fuentes verificadas.
 - **`agents/`**: Directorio de documentación de roles, flujos y checklists de trabajo.
 - **`agents/rules/`**: Reglas del sistema de agentes (p. ej., buzón de entrada `texto_formatter/`).
-- **`texto_formatter/`**: Buzón de entrada donde el usuario deposita texto en bruto (sin formato LaTeX) para que los agentes lo conviertan a APA 7 en LaTeX. Es de SOLO LECTURA para los agentes; el texto convertido se escribe en `secciones/` y los archivos fuente procesados se trasladan a `texto_formatter/procesados/`. Regla obligatoria: [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
+- **`texto_formatter/`**: Buzón de entrada donde el usuario deposita texto en bruto (sin formato LaTeX) para que los agentes lo conviertan a APA 7 en LaTeX. Es de SOLO LECTURA para los agentes; el texto convertido se escribe en `secciones/` (en la sección que indique el usuario). Regla obligatoria: [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
 - **`.agents/`**: Reglas y skills nativas para el entorno Antigravity IDE.
 
 ---

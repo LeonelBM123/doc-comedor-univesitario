@@ -73,8 +73,7 @@ agents/
 La carpeta [`texto_formatter/`](file:///c:/Users/PC/Documents/doc-comedor/texto_formatter) es el **buzón de entrada** donde el usuario deposita texto en bruto (prosa, borradores, notas sin formato LaTeX) que debe ser convertido a redacción académica **APA 7 en LaTeX**.
 
 - Es un buzón de **solo lectura**: los agentes nunca editan el contenido original.
-- Al procesarlo, el texto convertido se escribe en `secciones/` y las fuentes verificadas en `referencias.bib`.
-- Los archivos fuente ya procesados se trasladan a `texto_formatter/procesados/`.
+- Al procesarlo, el texto convertido se escribe directamente en `secciones/`, en la sección que indique el usuario.
 
 Todo agente debe cumplir la regla completa en [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
 

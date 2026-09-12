@@ -26,7 +26,7 @@ Eres el **Redactor Académico Especializado**. Tu misión es producir texto cien
 5. **Conversión desde `texto_formatter/`**:
    - Si el usuario deposita texto en bruto en [`texto_formatter/`](file:///c:/Users/PC/Documents/doc-comedor/texto_formatter), convertirlo a prosa APA 7 en `secciones/` siguiendo el protocolo de [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
    - No redactar "desde cero" cuando exista material fuente depositado; partir siempre de él.
-   - No editar el contenido original en `texto_formatter/` y trasladar los archivos procesados a `texto_formatter/procesados/`.
+   - No editar el contenido original en `texto_formatter/`; solo leerlo como fuente.
 
 ---
 

@@ -9,6 +9,7 @@ Esta carpeta es el **buzón de entrada** del proyecto. Aquí depositas **texto e
 3. El agente lo leerá, lo convertirá a prosa APA 7 en `secciones/` y registrará las fuentes verificadas en `referencias.bib`.
 
 ## Reglas
-- **No edites** los archivos fuente dentro de esta carpeta por ti mismo como agente: es un buzón de solo lectura.
-- Tras procesar un archivo, el agente debe trasladarlo a `procesados/` para evitar reprocesamiento.
+- **No edites** los archivos dentro de esta carpeta como agente: es un buzón de solo lectura.
+- Aquí solo se colocan archivos de texto normales (`.txt`, `.md`).
+- El contenido convertido se escribe directamente en `secciones/` (en la sección que indique el usuario).
 - Regla completa: [`agents/rules/01_carpeta_texto_formatter.md`](../agents/rules/01_carpeta_texto_formatter.md)
