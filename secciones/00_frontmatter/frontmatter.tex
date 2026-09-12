@@ -1,0 +1,36 @@
+% ==============================================================================
+% FRONT MATTER (Páginas preliminares)
+% Orden exigido: Carátula → Índice General → Índice de Ilustraciones →
+% Índice de Tablas → Resumen → Abstract.
+% ==============================================================================
+
+\newpage
+\renewcommand{\contentsname}{Índice}
+\tableofcontents
+
+% ------------------------------------------------------------------------------
+% Índice de Ilustraciones (Figuras)
+% ------------------------------------------------------------------------------
+\newpage
+\phantomsection
+\renewcommand{\listfigurename}{Índice de Ilustraciones}
+\addcontentsline{toc}{section}{Índice de Ilustraciones}
+\listoffigures
+
+% ------------------------------------------------------------------------------
+% Índice de Tablas
+% ------------------------------------------------------------------------------
+\newpage
+\phantomsection
+\renewcommand{\listtablename}{Índice de Tablas}
+\addcontentsline{toc}{section}{Índice de Tablas}
+\listoftables
+
+% ------------------------------------------------------------------------------
+% Resumen y Abstract
+% ------------------------------------------------------------------------------
+\newpage
+\input{secciones/00_frontmatter/resumen.tex}
+
+\newpage
+\input{secciones/00_frontmatter/abstract.tex}
