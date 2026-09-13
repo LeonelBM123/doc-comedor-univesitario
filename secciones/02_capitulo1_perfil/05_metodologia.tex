@@ -50,6 +50,41 @@ Verificación de calidad, pruebas unitarias, de integración y de aceptación po
 Espacio para la descripción teórica del Lenguaje Unificado de Modelado (UML)...
 
 \subsubsection{5.3. Especificación de Requisitos de Software según la IEEE 830}\label{sec:ieee830_teoria}
-% [INSTRUCCIÓN]: Descripción del estándar IEEE 830 y su papel en la organización de requerimientos.
 
-Espacio para la fundamentación del estándar IEEE 830...
+Para garantizar que el desarrollo del sistema de gestión, postulación y precalificación de becas alimentarias se ejecute de forma ordenada y transparente, se empleará el estándar IEEE 830 (específicamente la recomendación IEEE Std 830-1998) para la elaboración de la Especificación de Requisitos de Software (SRS, por sus siglas en inglés, Software Requirements Specification).
+
+Este estándar constituye una guía normativa esencial en la ingeniería de software para documentar con precisión qué debe hacer el sistema, sin prescribir prematuramente cómo debe ser implementado en términos de arquitectura interna.
+
+\paragraph{5.3.1. Estructura y Propósito del Estándar IEEE 830 (IEEE 830-1998)}\label{sec:ieee830_estructura}
+El objetivo de implementar la norma IEEE 830 en este proyecto es definir un contrato claro y sin ambigüedades entre los usuarios interesados (estudiantes postulantes y personal administrativo de bienestar estudiantil) y el equipo de desarrollo tecnológico. La especificación bajo este estándar se organiza formalmente en tres secciones principales:
+
+\begin{itemize}
+    \item \textbf{Introducción:} Define el propósito del software, el alcance del sistema de becas alimentarias, la definición de términos y las referencias.
+
+    \item \textbf{Descripción General:} Describe los factores generales que afectan al producto, tales como las interfaces de usuario (portales web y móviles), las restricciones de la plataforma (almacenamiento digital de expedientes) y las suposiciones operativas.
+
+    \item \textbf{Requisitos Específicos:} Detalla en profundidad las funciones del sistema. En este proyecto se formalizarán:
+    \begin{itemize}
+        \item \textbf{Requisitos Funcionales:} Procesos de registro de postulantes, carga de carpetas socioeconómicas digitales, cálculo automatizado del puntaje de vulnerabilidad por medio del algoritmo de precalificación, y generación de listas priorizadas para auditoría administrativa.
+        \item \textbf{Requisitos No Funcionales:} Criterios de rendimiento, seguridad de la información socioeconómica confidencial, disponibilidad del portal durante picos de alta postulación y usabilidad.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{5.3.2. Relación del IEEE 830 con UML y PUDS}\label{sec:ieee830_uml_puds}
+Dentro de la metodología adoptada para este proyecto, el estándar IEEE 830 actúa como el puente de formalización entre el Proceso Unificado de Desarrollo de Software (PUDS) y el Lenguaje Unificado de Modelado (UML):
+
+\begin{itemize}
+    \item \textbf{Integración con PUDS:} En el flujo de trabajo de Captura de Requisitos durante las fases de Inicio y Elaboración, la especificación IEEE 830 consolida el levantamiento de información operacional para evitar desviaciones en el alcance del proyecto.
+
+    \item \textbf{Integración con UML:} La descripción textual de los requisitos especificados en el estándar IEEE 830 se representa gráficamente a través de diagramas UML (casos de uso, actividades y secuencias). Esto asegura que los requerimientos de los postulantes y administradores se traduzcan de manera transparente a modelos técnicos estructurados.
+\end{itemize}
+
+\paragraph{5.3.3. Reemplazo por IEEE 29148-2011 y Vigencia Actual}\label{sec:ieee830_vigencia}
+Aunque el estándar IEEE 830-1998 fue sustituido formalmente por el estándar unificado ISO/IEC/IEEE 29148:2011 (el cual consolida la ingeniería de requisitos dentro del ciclo de vida de los sistemas), la norma IEEE 830 se mantiene como el referente metodológico para este proyecto debido a:
+
+\begin{itemize}
+    \item Su estructura altamente clara, directa y didáctica para proyectos académicos de software.
+    \item Su amplia adopción histórica en el ámbito educativo universitario.
+    \item Su perfecta compatibilidad con lenguajes de modelado visual como UML y metodologías iterativas basadas en el PUDS.
+    \item Su inclusión consolidada en la bibliografía académica de ingeniería de sistemas.
+\end{itemize}
