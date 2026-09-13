@@ -12,8 +12,22 @@
 \usepackage{pgfplots}              % Gráficos nativos (barras, tortas, líneas)
 \pgfplotsset{compat=1.18}
 \usepackage{pgf-pie}               % Gráfico de torta/pastel
+\usepackage{pgfgantt}              % Diagramas de Gantt (cronograma)
+\usepackage{etoolbox}              % \patchcmd (parche de bandas de pgfgantt)
+
+% Parche de pgfgantt: inyecta \GanttBands dentro de \endganttchart para poder
+% dibujar bandas de color de fondo antes de la rejilla. La redefinición concreta
+% de \GanttBands se realiza en la sección del cronograma (08_cronograma.tex).
+\makeatletter
+\newcommand\GanttBands{}%
+\patchcmd{\endganttchart}{\ifgtt@vgrid}{\GanttBands\ifgtt@vgrid}{}{%
+  \PackageError{}{No se pudo parchear pgfgantt para las bandas}{}%
+}
+\makeatother
 
 \usepackage{booktabs}  % Tablas elegantes según estándar APA (sin líneas verticales)
+\usepackage{array}     % Columnas con formato avanzado (p{}, >{}, \arraybackslash)
+\usepackage{float}     % Posicionamiento exacto de tablas y figuras ([H])
 \usepackage{amsmath}
 \usepackage{ragged2e} % Permite forzar justificación plena (\justifying)
 \usepackage{indentfirst} % Sangría de primera línea en TODO párrafo, incluido el primero tras cada encabezado

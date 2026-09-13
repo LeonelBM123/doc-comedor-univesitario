@@ -48,3 +48,69 @@ La fase de Construcción está orientada al desarrollo e integración de los com
 
 \subparagraph{5.1.1.4. Transición}\label{sec:puds_transicion}
 La fase de Transición se dirige a la entrega, despliegue, capacitación de los usuarios y validación del sistema en un entorno de producción. Su finalidad es asegurar que el software esté disponible para los usuarios finales, que funcione de manera confiable y que se disponga del soporte adecuado para su operación \parencite[p.~379]{jacobson1999unified}. En el contexto del sistema del comedor universitario, esta fase comprende el despliegue en los servidores de la DUBSS, la capacitación del personal administrativo, la migración de los datos de los postulantes y el acompañamiento durante la primera gestión académica en que el sistema opere en forma oficial.
+
+\subsubsection{5.2. Unified Modeling Language}\label{sec:uml}
+% [INSTRUCCIÓN]: Fundamentación teórica del Lenguaje Unificado de Modelado (UML).
+
+El Lenguaje Unificado de Modelado (\textit{Unified Modeling Language}, UML) es un lenguaje gráfico estandarizado empleado para visualizar, especificar, construir y documentar los artefactos de un sistema de software \parencite{booch2005uml}. A diferencia de un método o de un proceso, UML se define estrictamente como un lenguaje de modelado: proporciona la notación y la semántica necesarias para representar las decisiones de análisis y diseño de un sistema de manera formal, comprensible y compartida entre los actores involucrados en el proyecto.
+
+El UML surge de la unificación de las metodologías orientadas a objetos más difundidas de la década de 1990, impulsada por Grady Booch, James Rumbaugh e Ivar Jacobson, y fue adoptado posteriormente por el \textit{Object Management Group} (OMG) como estándar internacional \parencite[p.~3]{booch2005uml}. Su propósito no es decir \textit{cómo} desarrollar software, sino ofrecer un vocabulario común que permita expresar los modelos sobre los cuales los equipos toman decisiones técnicas. En la Figura~\ref{fig:uml_logo} se muestra la representación gráfica del lenguaje.
+
+% ---- FIGURA: Logo UML (APA 7) -----------------------------------------------
+\begin{figure}[htbp]
+\caption{Representación gráfica del Lenguaje Unificado de Modelado (UML)}
+\label{fig:uml_logo}
+\centering
+\includegraphics[width=0.42\linewidth]{images/02_UML_logo.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Imagen de dominio público correspondiente al logo oficial del Lenguaje Unificado de Modelado, propiedad del \textit{Object Management Group} (OMG).
+\end{figure}
+
+\paragraph{5.2.1. Estructura general de UML}\label{sec:uml_estructura}
+% [INSTRUCCIÓN]: Explicar los elementos estructurales de UML: bloques de construcción (elementos, relaciones y diagramas), tipos de diagramas estructurales y de comportamiento.
+
+La estructura general de UML se compone de tres bloques de construcción principales: los elementos, las relaciones y los diagramas \parencite[p.~15]{booch2005uml}.
+
+Los elementos son las unidades abstractas que modelan el sistema y se clasifican en cuatro tipos: elementos estructurales (como clases, interfaces y componentes), elementos de comportamiento (como interacciones y máquinas de estados), elementos de agrupación (como los paquetes) y elementos de anotación (como las notas explicativas). Las relaciones expresan cómo se vinculan dichos elementos y comprenden la asociación, la dependencia, la generalización y la realización.
+
+Los diagramas, por su parte, son la representación gráfica de un conjunto de elementos y se organizan en dos grandes categorías \parencite[p.~23]{booch2005uml}:
+
+\begin{itemize}
+    \item \textbf{Diagramas estructurales:} describen la organización estática del sistema e incluyen el diagrama de clases, de objetos, de componentes, de despliegue, de paquetes y de estructura compuesta.
+
+    \item \textbf{Diagramas de comportamiento:} modelan los aspectos dinámicos del sistema e incluyen el diagrama de casos de uso, de secuencia, de comunicación, de estados, de actividades, de tiempos y de interacción general (compuestos).
+\end{itemize}
+
+Mediante esta estructura, UML permite representar tanto la arquitectura estática como el comportamiento dinámico del sistema desde diferentes perspectivas de interés \parencite{rumbaugh2004uml}.
+
+\paragraph{5.2.2. Importancia de UML en PUDS}\label{sec:uml_importancia}
+% [INSTRUCCIÓN]: Explicar el rol de UML dentro del PUDS: modelado de casos de uso, diagramas de clases, secuencias, actividades y su soporte al proceso dirigido por casos de uso y centrado en la arquitectura.
+
+La importancia de UML dentro del Proceso Unificado de Desarrollo de Software radica en que ambos comparten un mismo origen y una misma filosofía: fueron concebidos por los mismos autores para trabajar de manera complementaria \parencite{jacobson1999unified}. El PUDS es el proceso que organiza \textit{cómo} se desarrolla el software, mientras que UML es el lenguaje que permite expresar \textit{qué} se está construyendo en cada etapa del proceso.
+
+En un proceso dirigido por casos de uso, los diagramas de casos de uso de UML constituyen el artefacto central: permiten identificar a los actores del sistema y describir las funcionalidades que el sistema debe brindar, sirviendo de entrada para la planificación de las iteraciones \parencite[p.~48]{jacobson1999unified}. De manera complementaria, los diagramas de clases y de secuencia sustentan la elaboración de la arquitectura del software, capturan la estructura de los componentes y la interacción entre los objetos, respectivamente; y los diagramas de actividades modelan el flujo de los procesos de negocio que el sistema debe automatizar.
+
+En el contexto del presente proyecto, la importancia de UML se materializa en las siguientes aplicaciones concretas \parencite{booch2005uml}:
+
+\begin{itemize}
+    \item \textbf{Modelado del proceso de postulación:} mediante diagramas de casos de uso se representan las funciones de registro, postulación, evaluación y consulta de resultados del sistema del comedor universitario.
+
+    \item \textbf{Diseño de la arquitectura:} los diagramas de clases permiten modelar las entidades del dominio (postulante, expediente, solicitud, beca) y sus relaciones, sirviendo de base para el diseño de la base de datos.
+
+    \item \textbf{Modelado dinámico:} los diagramas de secuencia y de actividades describen el flujo del algoritmo de priorización socioeconómica y la interacción entre los módulos web, móvil y de inteligencia de negocios.
+\end{itemize}
+
+De esta forma, UML y PUDS se complementan mutuamente: el proceso guía la ejecución del proyecto en fases e iteraciones, y el lenguaje de modelado provee la notación para documentar y comunicar de manera precisa las decisiones de análisis y diseño adoptadas.
+
+\subsubsection{5.3. Institute of Electrical and Electronics Engineers 830}\label{sec:ieee830_teoria}
+% [INSTRUCCIÓN]: Descripción del estándar IEEE 830 y su papel en la organización de requerimientos.
+Espacio para la fundamentación del estándar IEEE 830...
+
+\paragraph{5.3.1. Institute of Electrical and Electronics Engineers 830 (IEEE 830-1998)}\label{sec:ieee830_1998}
+% [INSTRUCCIÓN]: Explicar qué es la norma IEEE 830-1998, su estructura propuesta para el documento de Especificación de Requisitos de Software (ERS) y su vigencia.
+Espacio para la descripción de la norma IEEE 830-1998...
+
+\paragraph{5.3.2. Relación entre IEEE 830 con UML y PUDS}\label{sec:ieee830_relacion}
+% [INSTRUCCIÓN]: Explicar cómo se complementan las tres perspectivas: el PUDS como proceso, UML como lenguaje de modelado y el IEEE 830 como estándar documental de requisitos.
+Espacio para la relación entre IEEE 830, UML y PUDS...

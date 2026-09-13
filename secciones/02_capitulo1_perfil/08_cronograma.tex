@@ -6,13 +6,128 @@
 \subsubsection{8.1. Plan de ejecución}\label{sec:plan_ejecucion}
 % [INSTRUCCIÓN]: Fechas estimadas y duración para cada fase del proyecto.
 
-Espacio para el plan de ejecución temporal (diagrama de Gantt o desglose por semanas)...
+% ---- Colores del cronograma (paleta Okabe-Ito, segura para daltonismo) -------
+\definecolor{gBandA}{RGB}{252,240,218}   % banda Iteración 1 (trasfondo)
+\definecolor{gBandB}{RGB}{224,238,252}   % banda Iteración 2 (trasfondo)
+\definecolor{gBandC}{RGB}{232,244,227}   % banda Iteración 3 (trasfondo)
+\definecolor{gBandAT}{RGB}{246,224,182}  % célula título Iteración 1
+\definecolor{gBandBT}{RGB}{189,217,244}  % célula título Iteración 2
+\definecolor{gBandCT}{RGB}{203,235,196}  % célula título Iteración 3
+\definecolor{colReq}{RGB}{230,159,0}     % disciplina: Requisitos
+\definecolor{colAna}{RGB}{0,114,178}     % disciplina: Análisis
+\definecolor{colDis}{RGB}{213,94,0}      % disciplina: Diseño
+\definecolor{colImp}{RGB}{0,158,115}     % disciplina: Implementación
+\definecolor{colPru}{RGB}{204,121,167}   % disciplina: Pruebas
+
+\begin{figure}[htbp]
+\caption{Diagrama de Gantt del plan de ejecución del proyecto: proceso unificado aplicado al Sistema de Gestión Integral del Comedor Universitario (24 de agosto al 30 de noviembre de 2026)}
+\label{fig:cronograma}
+\centering
+
+% Leyenda de disciplinas
+\begin{center}
+\begin{tikzpicture}
+\begin{scope}[font=\scriptsize]
+  \node[inner sep=0pt] at (0,0) {%
+    \begin{tabular}{@{}c@{\; }c@{\quad}c@{\; }c@{\quad}c@{\; }c@{\quad}c@{\; }c@{\quad}c@{\; }c@{}}
+      \tikz{\fill[colReq] (0,0) rectangle (0.42,0.42);} & \textbf{Requisitos} &
+      \tikz{\fill[colAna] (0,0) rectangle (0.42,0.42);} & \textbf{Análisis} &
+      \tikz{\fill[colDis] (0,0) rectangle (0.42,0.42);} & \textbf{Diseño} &
+      \tikz{\fill[colImp] (0,0) rectangle (0.42,0.42);} & \textbf{Implementación} &
+      \tikz{\fill[colPru] (0,0) rectangle (0.42,0.42);} & \textbf{Pruebas} \\
+    \end{tabular}%
+  };
+\end{scope}
+\end{tikzpicture}
+
+\bigskip
+
+% Redefinición de \GanttBands (requiere \makeatletter por \y@upper/\y@lower).
+% Debe ir en el cuerpo del documento y dentro del mismo tikz que el ganttchart.
+\makeatletter
+\renewcommand\GanttBands{%
+  \pgfmathsetlengthmacro\g@bnd@a{35*\ganttvalueof{x unit}}%
+  \pgfmathsetlengthmacro\g@bnd@b{70*\ganttvalueof{x unit}}%
+  \pgfmathsetlengthmacro\g@bnd@c{99*\ganttvalueof{x unit}}%
+  \fill[gBandA] (0pt,\y@upper pt) rectangle (\g@bnd@a,\y@lower pt);%
+  \fill[gBandB] (\g@bnd@a,\y@upper pt) rectangle (\g@bnd@b,\y@lower pt);%
+  \fill[gBandC] (\g@bnd@b,\y@upper pt) rectangle (\g@bnd@c,\y@lower pt);%
+}
+\makeatother
+
+% El \resizebox{\textwidth}{!} garantiza que el diagrama completo (etiquetas de
+% tareas + rejilla) quepa exactamente en el ancho del texto APA (16.51 cm).
+\resizebox{\textwidth}{!}%
+{%
+\begin{ganttchart}[
+  time slot format=isodate,
+  x unit=0.105cm,
+  y unit title=0.30cm,
+  y unit chart=0.52cm,
+  bar top shift=0.12,
+  bar height=0.6,
+  bar label font=\scriptsize,
+  title label font=\scriptsize,
+  title/.append style={draw=black!25, line width=0.3pt},
+  include title in canvas,
+  vgrid={*{6}{draw=none}, *{1}{draw=black!15, line width=0.25pt}},
+  hgrid,
+  hgrid style/.append style={draw=black!20, line width=0.3pt}
+]{2026-08-24}{2026-11-30}
+% ---- Filas de título ---------------------------------------------------------
+\gantttitle{2026}{99}\\
+\gantttitle{AGO}{8}\gantttitle{SEP}{30}\gantttitle{OCT}{31}\gantttitle{NOV}{30}\\
+\gantttitle[title/.append style={fill=gBandAT}, title label font=\scriptsize\bfseries]{Iteración 1}{35}
+\gantttitle[title/.append style={fill=gBandBT}, title label font=\scriptsize\bfseries]{Iteración 2}{35}
+\gantttitle[title/.append style={fill=gBandCT}, title label font=\scriptsize\bfseries]{Iteración 3}{29}\\
+\gantttitle{24/08}{1}\gantttitle{}{6}\gantttitle{31/08}{1}\gantttitle{}{6}\gantttitle{07/09}{1}\gantttitle{}{6}
+\gantttitle{14/09}{1}\gantttitle{}{6}\gantttitle{21/09}{1}\gantttitle{}{6}\gantttitle{28/09}{1}\gantttitle{}{6}
+\gantttitle{05/10}{1}\gantttitle{}{6}\gantttitle{12/10}{1}\gantttitle{}{6}\gantttitle{19/10}{1}\gantttitle{}{6}
+\gantttitle{26/10}{1}\gantttitle{}{6}\gantttitle{02/11}{1}\gantttitle{}{6}\gantttitle{09/11}{1}\gantttitle{}{6}
+\gantttitle{16/11}{1}\gantttitle{}{6}\gantttitle{23/11}{1}\gantttitle{}{6}\gantttitle{30/11}{1}\\
+% ---- Hitos (rombo + etiqueta) -------------------------------------------------
+\ganttmilestone[inline, milestone inline label node/.append style={anchor=north, font=\scriptsize\itshape, yshift=-2pt}]{Validación de alcance}{2026-09-27}{2026-09-27}
+\ganttmilestone[inline, milestone inline label node/.append style={anchor=north, font=\scriptsize\itshape, yshift=-2pt}]{Avance funcional}{2026-11-01}{2026-11-01}
+\ganttmilestone[inline, milestone inline label node/.append style={anchor=north, font=\scriptsize\itshape, yshift=-2pt}]{Entrega final}{2026-11-30}{2026-11-30}
+\\
+% ---- Fase de requisitos -------------------------------------------------------
+\ganttbar[bar/.append style={fill=colReq}]{Captura de requisitos\\(entrevistas DUBSS)}{2026-08-24}{2026-09-04}
+\ganttbar[bar/.append style={fill=colReq}]{Especificación de\\requisitos (SRS v1)}{2026-09-04}{2026-09-18}
+\\
+\ganttbar[bar/.append style={fill=colAna}]{Modelado de\\casos de uso}{2026-09-14}{2026-09-27}
+\ganttbar[bar/.append style={fill=colAna}]{Refinamiento de\\reglas de negocio}{2026-09-28}{2026-10-04}
+\\
+\ganttbar[bar/.append style={fill=colDis}]{Diagrama de clases\\y modelo de dominio}{2026-09-21}{2026-10-04}
+\ganttbar[bar/.append style={fill=colDis}]{Diseño de arquitectura\\y base de datos}{2026-09-28}{2026-10-11}
+\ganttbar[bar/.append style={fill=colDis}]{Diseño de interfaces\\(mockups)}{2026-10-05}{2026-10-18}
+\\
+\ganttbar[bar/.append style={fill=colImp}]{Desarrollo: autenticación\\y gestión de becas}{2026-10-12}{2026-10-25}
+\ganttbar[bar/.append style={fill=colImp}]{Desarrollo: módulo\\de consulta de menú}{2026-10-19}{2026-11-01}
+\ganttbar[bar/.append style={fill=colImp}]{Desarrollo: módulo\\de pago (caja y QR)}{2026-11-02}{2026-11-15}
+\ganttbar[bar/.append style={fill=colImp}]{Desarrollo: reportes\\de inteligencia de negocios}{2026-11-09}{2026-11-19}
+\ganttbar[bar/.append style={fill=colImp}]{Desarrollo: modelo\\predictivo (aprendizaje)}{2026-11-16}{2026-11-23}
+\\
+\ganttbar[bar/.append style={fill=colPru}]{Pruebas unitarias\\e integración}{2026-11-16}{2026-11-26}
+\ganttbar[bar/.append style={fill=colPru}]{Pruebas de aceptación\\y ajustes finales}{2026-11-23}{2026-11-30}
+\\
+% ---- Líneas punteadas de hitos (cruzan todas las filas) -----------------------
+\ganttvrule[vrule/.append style={draw=black, dashed, line width=0.5pt}]{}{2026-09-27}
+\ganttvrule[vrule/.append style={draw=black, dashed, line width=0.5pt}]{}{2026-11-01}
+\ganttvrule[vrule/.append style={draw=black, dashed, line width=0.5pt}]{}{2026-11-30}
+\end{ganttchart}%
+}
+
+\end{center}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} El proceso unificado se organiza en tres iteraciones (35, 35 y 29 días hábiles, respectivamente). Los diamantes señalan los hitos de validación de alcance, avance funcional y entrega final, y las líneas verticales punteadas cruzan las filas de tareas para facilitar el seguimiento del avance. Elaboración propia.
+\end{figure}
 
 \subsubsection{8.2. Hitos importantes}\label{sec:hitos_importantes}
 % [INSTRUCCIÓN]: Fechas clave como entrega de prototipos, pruebas y versión final del sistema.
 
 \begin{itemize}
-    \item \textbf{Hito 1:} Entrega de especificación de requisitos y prototipos iniciales.
-    \item \textbf{Hito 2:} Culminación del desarrollo de los módulos principales y modelos de IA.
-    \item \textbf{Hito 3:} Pruebas de integración, validación y entrega de la versión final.
+    \item \textbf{Hito 1 (27/09/2026):} Validación de alcance: especificación de requisitos (SRS v1) y diseño de interfaces aprobados.
+    \item \textbf{Hito 2 (01/11/2026):} Avance funcional: módulos principales (autenticación, gestión de becas y consulta de menú) y modelos de IA operativos.
+    \item \textbf{Hito 3 (30/11/2026):} Entrega final: pruebas de integración y de aceptación superadas, ajustes finales y entrega de la versión definitiva del sistema.
 \end{itemize}
