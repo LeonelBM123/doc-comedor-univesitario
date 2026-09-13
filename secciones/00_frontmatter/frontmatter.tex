@@ -1,11 +1,12 @@
 % ==============================================================================
-% FRONT MATTER (Páginas preliminares)
-% Orden exigido: Carátula → Índice General → Índice de Ilustraciones →
-% Índice de Tablas → Resumen → Abstract.
+% FRONT MATTER (Páginas preliminares: solo índices)
+% Orden: Carátula → Índice General → Índice de Ilustraciones → Índice de Tablas.
+% El Resumen y el Abstract residen en secciones/01_introduccion/.
 % ==============================================================================
 
 \newpage
-\renewcommand{\contentsname}{Índice}
+\renewcommand{\contentsname}{Índice General}
+\addcontentsline{toc}{section}{Índice General}
 \tableofcontents
 
 % ------------------------------------------------------------------------------
@@ -25,12 +26,3 @@
 \renewcommand{\listtablename}{Índice de Tablas}
 \addcontentsline{toc}{section}{Índice de Tablas}
 \listoftables
-
-% ------------------------------------------------------------------------------
-% Resumen y Abstract
-% ------------------------------------------------------------------------------
-\newpage
-\input{secciones/00_frontmatter/resumen.tex}
-
-\newpage
-\input{secciones/00_frontmatter/abstract.tex}
