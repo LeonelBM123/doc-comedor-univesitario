@@ -2,10 +2,17 @@
 % PAQUETES Y CONFIGURACIÓN GENERAL (APA 7)
 % ==============================================================================
 
+% Figuras y tablas se muestran en línea (no al final): se usa la opción de
+% clase "floatsintext" (ver main.tex), que evita que apa7 cargue endfloat.
+
 \usepackage[utf8]{inputenc}
 \usepackage[spanish, es-tabla]{babel} % es-tabla asegura "Tabla" en lugar de "Cuadro"
 \usepackage{csquotes}
 \usepackage{graphicx}
+\usepackage{pgfplots}              % Gráficos nativos (barras, tortas, líneas)
+\pgfplotsset{compat=1.18}
+\usepackage{pgf-pie}               % Gráfico de torta/pastel
+
 \usepackage{booktabs}  % Tablas elegantes según estándar APA (sin líneas verticales)
 \usepackage{amsmath}
 \usepackage{ragged2e} % Permite forzar justificación plena (\justifying)
