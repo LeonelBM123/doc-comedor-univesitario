@@ -7,16 +7,80 @@
 % [INSTRUCCIÓN]: Detallar las deficiencias, demoras, errores manuales y cuellos
 % de botella del proceso actual de evaluación y selección.
 
-Espacio para detallar la situación problemática...
+Actualmente, el proceso de postulación y asignación de la beca comedor se enfrenta a una ineficiencia estructural severa debido a la falta de herramientas tecnológicas automatizadas de filtrado y evaluación.
+
+En cada gestión académica, la universidad recibe una cifra masiva que ronda las 20,000 carpetas (folders) de postulantes. Dada la escala de esta demanda y los limitados recursos humanos administrativos para la revisión física de documentos, no se logra auditar ni el 50\% de las solicitudes presentadas, alcanzando a revisar únicamente un aproximado de 8,000 carpetas. Considerando que la disponibilidad de becas es altamente restrictiva (cubriendo únicamente a cerca de 900 beneficiarios, cifra que fluctúa según el presupuesto de cada gestión), el método actual de revisión manual introduce serios sesgos e injusticias operativas:
+
+\begin{itemize}
+    \item \textbf{Revisión por orden de llegada o al azar:} Al no poder revisar la totalidad de las 20,000 carpetas, miles de postulantes en situación de extrema vulnerabilidad quedan automáticamente descalificados o ignorados simplemente porque su expediente no llegó a ser abierto.
+
+    \item \textbf{Carga burocrática y desperdicio de recursos:} La manipulación, archivo y almacenamiento de miles de folders físicos genera un costo logístico elevado, consumo masivo de papel y el riesgo constante de extravío de documentos socioeconómicos sensibles.
+
+    \item \textbf{Falta de transparencia y lentitud:} La verificación manual de requisitos (ingresos familiares, patrimonio, procedencia, rendimiento académico) es propensa a errores humanos, duplicidades y posibles manipulaciones, ralentizando la publicación de las listas definitivas de beneficiarios.
+\end{itemize}
+
+Por lo tanto, la problemática central reside en la incapacidad del sistema manual actual para garantizar que las limitadas becas disponibles se otorguen objetivamente a los estudiantes que presentan el mayor grado de necesidad socioeconómica, derivado de un cuello de botella en la fase de revisión de documentos. La Figura~\ref{fig:distribucion_carpetas} ilustra la distribución porcentual de las solicitudes según su destino en el proceso actual.
+
+% ---- FIGURA: Distribución de carpetas (APA 7) --------------------------------
+\begin{figure}[htbp]
+\caption{Distribución porcentual de las solicitudes de beca comedor por destino en el proceso manual de revisión}
+\label{fig:distribucion_carpetas}
+\begin{tikzpicture}
+\begin{axis}[
+    xbar,
+    width=0.82\linewidth,
+    height=5.2cm,
+    bar width=14pt,
+    xmin=0, xmax=72,
+    ymin=0.4, ymax=3.6,
+    xtick={0,10,20,30,40,50,60,70},
+    xticklabel={\pgfmathprintnumber{\tick}\%},
+    xlabel={Porcentaje del total de postulantes (20{,}000 carpetas)},
+    ytick={1,2,3},
+    yticklabels={Adjudicadas, Sin beca, No revisadas},
+    nodes near coords,
+    nodes near coords align={horizontal},
+    grid=major,
+    grid style={dashed, gray!30},
+    tick label style={font=\small},
+    label style={font=\small},
+]
+\addplot[
+    fill=gray!65,
+    draw=gray!80,
+] coordinates {
+    (4.5,  1)
+    (35.5, 2)
+    (60,   3)
+};
+\end{axis}
+\end{tikzpicture}
+
+\smallskip
+\noindent\textit{Nota.} Elaboración propia en base a datos institucionales de la gestión académica vigente. De las 20,000 carpetas recibidas, aproximadamente 12,000 (60\%) no llegan a ser revisadas; 7,100 (35.5\%) son revisadas pero no obtienen el beneficio; y solo 900 (4.5\%) corresponden a becas efectivamente adjudicadas.
+\end{figure}
+% ------------------------------------------------------------------------------
+
+
 
 \subsubsection{2.2. Situación deseada}\label{sec:situacion_deseada}
 % [INSTRUCCIÓN]: Explicar el estado ideal esperado tras la implantación de la solución:
 % agilidad, transparencia, trazabilidad y automatización.
 
-Espacio para describir la situación deseada...
+La situación deseada contempla la transformación digital del proceso de selección mediante la implementación de un Sistema Web y Móvil Inteligente para la Postulación y Precalificación Automática de Becas Alimentarias. Bajo este nuevo esquema:
+
+\begin{itemize}
+    \item \textbf{Digitalización y Autogestión:} Los estudiantes realizarán su postulación 100\% en línea, adjuntando la documentación requerida en formato digital.
+
+    \item \textbf{Precalificación y Puntuación Autómata (Algoritmo de Priorización):} El sistema implementará un algoritmo de evaluación socioeconómica ponderada que analizará automáticamente los datos ingresados por el postulante (ingresos, dependientes, procedencia, estado de vulnerabilidad, promedio académico, etc.), asignando una puntuación de riesgo o necesidad en tiempo real.
+
+    \item \textbf{Optimización de la Revisión Administrativa:} En lugar de revisar 8,000 carpetas al azar de un universo de 20,000, el personal administrativo enfocará su trabajo de validación física y auditoría exclusivamente en las carpetas con los puntajes de precalificación más altos. Esto asegura matemáticamente que los expedientes revisados correspondan a los mejores y más necesitados candidatos para adjudicarse los 900 cupos disponibles.
+
+    \item \textbf{Transparencia y Trazabilidad:} Los estudiantes podrán consultar en tiempo real el estado de su solicitud y la puntuación obtenida, reduciendo la incertidumbre y garantizando la equidad del proceso.
+\end{itemize}
 
 \subsubsection{2.3. Objeto de la investigación}\label{sec:objeto_investigacion}
 % [INSTRUCCIÓN]: Delimitar con precisión el objeto de estudio/investigación
 % (p. ej., el proceso de gestión, preselección y asignación de beneficios).
 
-Espacio para el objeto de la investigación...
+El objeto de la investigación es diseñar e implementar un sistema de información para la gestión de postulaciones y precalificación automatizada de becas alimentarias, orientado a la digitalización del expediente socioeconómico estudiantil y a la optimización del proceso de selección de beneficiarios en el comedor universitario.
