@@ -1,6 +1,6 @@
 % ==============================================================================
 % FRONT MATTER (Páginas preliminares: solo índices)
-% Orden: Carátula → Índice General → Índice de Ilustraciones → Índice de Tablas.
+% Orden: Carátula → Índice General → Índice de Tablas → Índice de Figuras.
 % El Resumen y el Abstract residen en secciones/01_introduccion/.
 % ==============================================================================
 
@@ -10,15 +10,6 @@
 \tableofcontents
 
 % ------------------------------------------------------------------------------
-% Índice de Ilustraciones (Figuras)
-% ------------------------------------------------------------------------------
-\newpage
-\phantomsection
-\renewcommand{\listfigurename}{Índice de Ilustraciones}
-\addcontentsline{toc}{section}{Índice de Ilustraciones}
-\listoffigures
-
-% ------------------------------------------------------------------------------
 % Índice de Tablas
 % ------------------------------------------------------------------------------
 \newpage
@@ -26,3 +17,12 @@
 \renewcommand{\listtablename}{Índice de Tablas}
 \addcontentsline{toc}{section}{Índice de Tablas}
 \listoftables
+
+% ------------------------------------------------------------------------------
+% Índice de Figuras
+% ------------------------------------------------------------------------------
+\newpage
+\phantomsection
+\renewcommand{\listfigurename}{Índice de Figuras}
+\addcontentsline{toc}{section}{Índice de Figuras}
+\listoffigures

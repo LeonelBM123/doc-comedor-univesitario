@@ -80,3 +80,23 @@
 \makeatletter
 \renewcommand*\l@section{\@dottedtocline{1}{0em}{2.3em}}
 \makeatother
+
+% ==============================================================================
+% ÍNDICE DE TABLAS Y FIGURAS: formato "Tabla 1: ..." / "Figura 1: ..."
+% ==============================================================================
+\makeatletter
+% Índice de Tablas: anteponer "Tabla" al número de tabla
+\renewcommand*\l@table[2]{%
+  \begingroup
+    \renewcommand*\numberline[1]{\hb@xt@\@tempdima{Tabla~##1:~\hfil}}%
+    \@dottedtocline{1}{0em}{5em}{#1}{#2}%
+  \endgroup
+}
+% Índice de Figuras: anteponer "Figura" al número de figura
+\renewcommand*\l@figure[2]{%
+  \begingroup
+    \renewcommand*\numberline[1]{\hb@xt@\@tempdima{Figura~##1:~\hfil}}%
+    \@dottedtocline{1}{0em}{5em}{#1}{#2}%
+  \endgroup
+}
+\makeatother
