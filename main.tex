@@ -4,6 +4,7 @@
 % 1. PAQUETES Y CONFIGURACIÓN
 % ==============================================================================
 \input{config/paquetes.tex}
+\input{config/preportada.tex}
 
 % ==============================================================================
 % 2. METADATOS DEL DOCUMENTO (Título, Autores, Resumen)
@@ -21,18 +22,28 @@
 
 % ==============================================================================
 % 3.1 PRIMERA PARTE: PÁGINAS PRELIMINARES (Índices, Resumen y Abstract)
-% Carátula → Índice General → Índice de Tablas → Índice de Figuras → Resumen → Abstract
+% Carátula → Índice General → Índice de Ilustraciones → Índice de Tablas → Resumen → Abstract
 % ==============================================================================
-\input{secciones/00_frontmatter.tex}
+\input{secciones/00_frontmatter/frontmatter.tex}
 
 % ==============================================================================
-% 3.2 CUERPO DEL DOCUMENTO
+% 3.2 CUERPO DEL DOCUMENTO (Capítulos Modulares por Carpeta)
 % ==============================================================================
-\input{secciones/03_introduccion.tex}
+\input{secciones/01_introduccion/01_introduccion.tex}
+\input{secciones/02_capitulo1_perfil/capitulo1.tex}
+\input{secciones/03_capitulo2_tecnologias/capitulo2.tex}
+\input{secciones/04_capitulo3_empresa/capitulo3.tex}
+\input{secciones/05_capitulo4_ieee830/capitulo4.tex}
 
 % ==============================================================================
 % 4. BIBLIOGRAFÍA / REFERENCIAS (APA 7)
 % ==============================================================================
+\newpage
 \printbibliography
+
+% ==============================================================================
+% 5. APÉNDICES / ANEXOS (OPCIONAL)
+% ==============================================================================
+\input{secciones/99_anexos/anexos.tex}
 
 \end{document}

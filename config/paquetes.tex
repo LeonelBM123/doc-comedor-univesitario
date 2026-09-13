@@ -26,6 +26,22 @@
     urlcolor=black
 }
 
+% ==============================================================================
+% PROFUNDIDAD DE NUMERACIÓN Y TABLA DE CONTENIDOS (ÍNDICE)
+% secnumdepth=0 evita duplicar la numeración manual de los títulos en el índice.
+% tocdepth=5 permite incluir hasta el nivel 5 (5.1.1.1. Inicio, etc.).
+% ==============================================================================
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{5}
+
+% Corrección para que \subparagraph registre su título en el TOC bajo apa7
+\makeatletter
+\renewcommand{\subparagraph}[1]{%
+  \@startsection{subparagraph}{5}{\parindent}{\b@level@five@skip}{\e@level@five@skip}%
+  {\normalfont\normalsize\bfseries\itshape}{#1}%
+}
+\makeatother
+
 % Líneas punteadas (puntos de guía) en el Índice General para los títulos de
 % nivel 1. El article.cls actual define \l@section sin puntos; se restaura el
 % formato clásico con \@dottedtocline conservando la alineación a la izquierda.

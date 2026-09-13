@@ -18,5 +18,10 @@
 *.ttt
 *.fff
 
+# MiKTeX Biber/Engine Save-Error Artifacts
+*.bbl-SAVE-ERROR
+*.bcf-SAVE-ERROR
+texput.pdf
+
 # Output PDF (Opcional, conservar si deseas ignorar los PDF generados)
 # *.pdf
