@@ -10,7 +10,16 @@
 \usepackage{amsmath}
 \usepackage{ragged2e} % Permite forzar justificación plena (\justifying)
 \usepackage{indentfirst} % Sangría de primera línea en TODO párrafo, incluido el primero tras cada encabezado
+\usepackage{microtype} % Ajuste fino de espaciado/expansión de letras (estilo Word) para justificar sin desbordes
 \usepackage{hyperref}
+
+% Estilo "Word": justificado sin cortar palabras al final de línea.
+% Se desactiva el silabeo y se permite estirar/kern los espacios entre
+% palabras (como hace Microsoft Word) en lugar de dividir con guion.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=9999
+\emergencystretch=6em
 
 % Configuración de citas y bibliografía APA 7.ª Edición
 \usepackage[style=apa, backend=biber]{biblatex}
