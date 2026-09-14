@@ -6,14 +6,134 @@
 \subsubsection{7.1. Software y herramientas}\label{sec:recursos_software}
 % [INSTRUCCIÓN]: Lenguajes, frameworks, bases de datos, servidores, IDEs.
 
-Espacio para listar las herramientas y tecnologías requeridas...
+\begin{table}[H]
+\caption{Software y herramientas utilizados para el desarrollo del proyecto}
+\label{tab:software_herramientas}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}p{8.5cm}}
+\toprule
+Software y herramienta & Descripción \\
+\midrule
+Windows 11 & Sistema operativo utilizado como plataforma base en los equipos de desarrollo. \\
+Visual Studio Code & Editor de código fuente donde se escribe y depura el código del sistema. \\
+Bruno / Postman & Herramientas para diseñar, documentar y probar las API del sistema. \\
+GitHub & Plataforma para el control de versiones y el trabajo colaborativo del código fuente. \\
+Enterprise Architect & Herramienta de modelado UML para elaborar los diagramas del sistema. \\
+Jira & Plataforma de gestión de proyectos para organizar y dar seguimiento a las tareas de desarrollo. \\
+Docker & Plataforma de contenedores para estandarizar los entornos de desarrollo y despliegue. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{7.2. Equipos y hardware}\label{sec:recursos_hardware}
 % [INSTRUCCIÓN]: Computadoras, servidores, dispositivos IoT, dispositivos móviles, entre otros.
 
-Espacio para detallar el hardware e infraestructura física necesaria...
+\begin{table}[H]
+\caption{Equipos y hardware requeridos para el desarrollo del proyecto}
+\label{tab:equipos_hardware}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}p{8.5cm}}
+\toprule
+Recurso / equipo & Especificación y uso \\
+\midrule
+PC de desarrollo 1 & Computadora con procesador AMD Ryzen 7 8700G y 16 GB de RAM, utilizada para el desarrollo del sistema. \\
+PC de desarrollo 2 & Computadora con procesador AMD Ryzen 7 5600G y 16 GB de RAM, utilizada para el desarrollo del sistema. \\
+Redmi Note 14 Pro & Dispositivo móvil Android utilizado para probar la aplicación móvil. \\
+Honor X8 & Dispositivo móvil Android utilizado para probar la aplicación móvil. \\
+Servidor AWS & Servidor en la nube de Amazon Web Services utilizado para el despliegue de la aplicación y la base de datos. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{7.3. Presupuesto estimado}\label{sec:presupuesto_estimado}
 % [INSTRUCCIÓN]: Costos de licencias, servidores en la nube, adquisición de equipos o contratación.
 
-Espacio para consignar el presupuesto estimado...
+El presupuesto estimado del proyecto contempla los costos de hardware, software, recursos humanos, infraestructura y logística durante el periodo comprendido entre el 24 de agosto de 2026 y el 30 de noviembre de 2026 (3 meses). Sobre los equipos de hardware se aplica una depreciación del 10\% por su uso durante el desarrollo. Las Tablas~\ref{tab:presupuesto} y~\ref{tab:presupuesto_costos} detallan cada partida y su costo.
+
+\begin{table}[H]
+\caption{Presupuesto estimado del proyecto: hardware y software}
+\label{tab:presupuesto}
+\begin{threeparttable}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{1.5cm}}
+\toprule
+Recurso & \textit{Tiempo} (meses) & \textit{Cant.} & \textit{Costo unit.} (\$) & \textit{Deprec.} (\%) & \textit{Costo total} (\$) \\
+\midrule
+\multicolumn{6}{l}{\textbf{Hardware}} \\
+\midrule
+PC dev. 1 (Ryzen 7 8700G, 16 GB RAM) & --- & 1 & 850.00 & 10 & 765.00 \\
+PC dev. 2 (Ryzen 7 5600G) & --- & 1 & 600.00 & 10 & 540.00 \\
+Redmi Note 14 Pro & --- & 1 & 300.00 & 10 & 270.00 \\
+Honor X8 & --- & 1 & 200.00 & 10 & 180.00 \\
+\midrule
+\multicolumn{5}{r}{\textit{Subtotal Hardware}} & 1,755.00 \\
+\midrule
+\multicolumn{6}{l}{\textbf{Software}} \\
+\midrule
+Windows 11 & --- & 1 & 199.00 & 0 & 199.00 \\
+Visual Studio Code & --- & 1 & 0.00 & 0 & 0.00 \\
+Bruno / Postman & --- & 1 & 0.00 & 0 & 0.00 \\
+GitHub & --- & 1 & 0.00 & 0 & 0.00 \\
+Enterprise Architect & --- & 1 & 229.00 & 0 & 229.00 \\
+Jira & --- & 1 & 0.00 & 0 & 0.00 \\
+Docker & --- & 1 & 0.00 & 0 & 0.00 \\
+\midrule
+\multicolumn{5}{r}{\textit{Subtotal Software}} & 428.00 \\
+\midrule
+\multicolumn{5}{l}{\textbf{Subtotal (hardware + software)}} & \textbf{2,183.00} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. Los precios unitarios corresponden a estimaciones de mercado. Los costos de hardware consideran una depreciación del 10\%. Para el software gratuito se indica costo cero.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Presupuesto estimado del proyecto: recursos humanos, infraestructura y logística}
+\label{tab:presupuesto_costos}
+\begin{threeparttable}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{1.5cm}}
+\toprule
+Recurso & \textit{Tiempo} (meses) & \textit{Cant.} & \textit{Costo unit.} (\$) & \textit{Deprec.} (\%) & \textit{Costo total} (\$) \\
+\midrule
+\multicolumn{6}{l}{\textbf{Gente}} \\
+\midrule
+Desarrolladores fullstack & 3 & 2 & 450.00 & 0 & 2,700.00 \\
+\midrule
+\multicolumn{5}{r}{\textit{Subtotal Gente}} & 2,700.00 \\
+\midrule
+\multicolumn{6}{l}{\textbf{Infraestructura}} \\
+\midrule
+Espacio de oficina & 3 & 1 & 150.00 & 0 & 450.00 \\
+Servicio de luz & 3 & 1 & 40.00 & 0 & 120.00 \\
+Agua & 3 & 1 & 36.00 & 0 & 108.00 \\
+Internet & 3 & 1 & 40.00 & 0 & 120.00 \\
+Servidor AWS & 3 & 1 & 50.00 & 0 & 150.00 \\
+\midrule
+\multicolumn{5}{r}{\textit{Subtotal Infraestructura}} & 948.00 \\
+\midrule
+\multicolumn{6}{l}{\textbf{Logística}} \\
+\midrule
+Transporte & 3 & 1 & 25.00 & 0 & 75.00 \\
+Alimentación & 3 & 1 & 100.00 & 0 & 300.00 \\
+\midrule
+\multicolumn{5}{r}{\textit{Subtotal Logística}} & 375.00 \\
+\midrule
+\multicolumn{5}{l}{\textbf{Costo total estimado del proyecto}} & \textbf{6,206.00} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. Los servicios de oficina, luz, agua, internet y logística consideran el uso conjunto de ambos desarrolladores. El servidor AWS se estima en \$50 mensuales según el plan de cómputo básico. La depreciación de los equipos de hardware se detalla en la Tabla~\ref{tab:presupuesto}.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

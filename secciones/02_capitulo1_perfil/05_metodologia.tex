@@ -4,50 +4,75 @@
 \subsection{5. Metodología}\label{sec:metodologia}
 % [INSTRUCCIÓN]: Descripción teórica con citas bibliográficas en formato APA 7 (\parencite o \textcite).
 
-Espacio para la fundamentación metodológica teórica...
+Una metodología de desarrollo de software es un conjunto estructurado de principios, procedimientos, técnicas y herramientas que orientan el proceso de construcción de un sistema, desde la captura de requisitos hasta su entrega y mantenimiento. Su propósito es establecer un marco disciplinado y repetible que reduzca la incertidumbre, gestione los riesgos y garantice la calidad del producto final. La selección de una metodología no es un acto trivial: debe responder a las características del proyecto, tales como su tamaño, complejidad, grado de incertidumbre en los requisitos y el perfil del equipo de desarrollo.
+
+Para el presente proyecto, referente al desarrollo de un Sistema de Información Web y Móvil para la Gestión Integral del Comedor Universitario de la UAGRM, se eligió el Proceso Unificado de Desarrollo de Software (PUDS) como metodología de desarrollo. La decisión se sustenta en tres razones fundamentales. En primer lugar, el sistema involucra múltiples módulos interrelacionados (gestión de postulaciones, evaluación socioeconómica, modelo de aprendizaje automático y reportes de inteligencia de negocios), cuyo alcance se comprende mejor mediante un proceso iterativo e incremental que permita refinarlos progresivamente. En segundo lugar, la captura de requisitos requiere una participación activa de los interesados (DUBSS, estudiantes y personal administrativo), lo cual se alinea con un proceso dirigido por casos de uso. Finalmente, la arquitectura del sistema, centrada en servicios web, aplicación móvil y una base de datos centralizada, exige una modelación previa rigurosa, un aspecto central del PUDS.
 
 \subsubsection{5.1. El Proceso Unificado de Desarrollo de Software}\label{sec:puds}
-El Proceso Unificado de Desarrollo de Software (PUDS) es un marco de trabajo iterativo e incremental dirigido por casos de uso y centrado en la arquitectura...
+
+El Proceso Unificado de Desarrollo de Software (PUDS) es un marco de trabajo iterativo e incremental, dirigido por casos de uso y centrado en la arquitectura, desarrollado por Ivar Jacobson, Grady Booch y James Rumbaugh \parencite{jacobson1999unified}. A diferencia de los modelos tradicionales de cascada, el PUDS estructura el desarrollo en iteraciones que combinan, en cada una, actividades de captura de requisitos, análisis, diseño, implementación y pruebas, de modo que el riesgo se ataca desde las primeras repeticiones y el software crece de manera controlada.
+
+Tres características definen la esencia del PUDS \parencite[p.~45]{jacobson1999unified}:
+
+\begin{itemize}
+    \item \textbf{Dirigido por casos de uso:} los casos de uso guían todo el proceso de desarrollo, pues representan la funcionalidad que el sistema debe brindar a los usuarios y permiten planificar las iteraciones en función del valor que aporta cada funcionalidad.
+
+    \item \textbf{Centrado en la arquitectura:} la arquitectura del sistema se define de manera temprana y evoluciona a lo largo del proyecto, sirviendo de esqueleto sobre el cual se integran los distintos componentes.
+
+    \item \textbf{Iterativo e incremental:} el sistema se construye mediante incrementos sucesivos, cada uno de los cuales es una versión ejecutable del producto que agrega nueva funcionalidad y reduce el riesgo de manera progresiva \parencite[p.~47]{jacobson1999unified}.
+\end{itemize}
 
 \paragraph{5.1.1. Fases}\label{sec:puds_fases}
 % [INSTRUCCIÓN]: Descripción de las cuatro fases principales del ciclo de vida del PUDS.
-El ciclo de vida del PUDS se estructura a través de cuatro fases consecutivas:
+El ciclo de vida del PUDS se estructura a través de cuatro fases consecutivas, cada una de las cuales culmina con un hito o *milestone* que permite evaluar el avance del proyecto \parencite{jacobson1999unified}. La Figura~\ref{fig:puds_fases} ilustra la relación existente entre las fases y las disciplinas o flujos de trabajo del proceso.
+
+% ---- FIGURA: Fases del PUDS (APA 7) -----------------------------------------
+\begin{figure}[htbp]
+\caption{Las cuatro fases del Proceso Unificado de Desarrollo de Software y su relación con las disciplinas de ingeniería del proceso}
+\label{fig:puds_fases}
+\centering
+\includegraphics[width=0.68\linewidth]{images/01_Fases_PUDS.jpg}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Adaptada de \textit{The Unified Software Development Process}, de I. Jacobson, G. Booch y J. Rumbaugh, 1999, Addison-Wesley Professional. Reproducida con fines académicos.
+\end{figure}
 
 \subparagraph{5.1.1.1. Inicio}\label{sec:puds_inicio}
-Fase enfocada en definir el alcance del sistema, identificar actores principales y viabilidad del proyecto...
+La fase de Inicio tiene como propósito definir el alcance del sistema y establecer su viabilidad. En esta etapa se identifican los actores principales, los casos de uso más relevantes, los riesgos críticos y los objetivos del proyecto \parencite[p.~214]{jacobson1999unified}. Un análisis preliminar de negocio y una estimación aproximada de costo y tiempo forman parte de las actividades de este hito. En el contexto del presente proyecto, la fase de inicio corresponde a la elaboración del perfil que aquí se documenta: se delimitan los problemas, los objetivos, la justificación y el alcance del sistema, y se evalúan las alternativas tecnológicas para su implementación.
 
 \subparagraph{5.1.1.2. Elaboración}\label{sec:puds_elaboracion}
-Fase enfocada en la especificación detallada de casos de uso y la definición de la arquitectura base del software...
+La fase de Elaboración se orienta a la especificación detallada de los casos de uso y a la definición de la arquitectura base del software. El objetivo de esta fase es eliminar los mayores riesgos técnicos mediante la construcción de un prototipo ejecutable de la arquitectura que sirva de fundamento para las fases posteriores \parencite[p.~248]{jacobson1999unified}. En el proyecto, esta fase comprende el levantamiento detallado de requisitos funcionales y no funcionales, la elaboración de los diagramas del Lenguaje Unificado de Modelado (UML), el diseño de la base de datos y la definición de la arquitectura de los módulos web, móvil e inteligencia artificial.
 
 \subparagraph{5.1.1.3. Construcción}\label{sec:puds_construccion}
-Fase orientada al desarrollo e integración de los componentes y funcionalidades del sistema...
+La fase de Construcción está orientada al desarrollo e integración de los componentes y funcionalidades del sistema. Durante esta fase se implementan incrementalmente los casos de uso priorizados, se integran los subsistemas en una solución completa y se llevan a cabo las pruebas necesarias para verificar el cumplimiento de los requisitos \parencite[p.~332]{jacobson1999unified}. En el presente proyecto, esta fase corresponde al desarrollo de los módulos de gestión de postulaciones, el algoritmo de priorización socioeconómica, la aplicación móvil, los reportes de inteligencia de negocios y su integración con la base de datos central.
 
 \subparagraph{5.1.1.4. Transición}\label{sec:puds_transicion}
-Fase dirigida a la entrega, despliegue, capacitación de usuarios y validación en entorno de producción...
+La fase de Transición se dirige a la entrega, despliegue, capacitación de los usuarios y validación del sistema en un entorno de producción. Su finalidad es asegurar que el software esté disponible para los usuarios finales, que funcione de manera confiable y que se disponga del soporte adecuado para su operación \parencite[p.~379]{jacobson1999unified}. En el contexto del sistema del comedor universitario, esta fase comprende el despliegue en los servidores de la DUBSS, la capacitación del personal administrativo, la migración de los datos de los postulantes y el acompañamiento durante la primera gestión académica en que el sistema opere en forma oficial.
 
-\paragraph{5.1.2. Flujos de trabajo}\label{sec:puds_flujos}
-% [INSTRUCCIÓN]: Descripción de las disciplinas o flujos de trabajo de ingeniería.
-Los flujos de trabajo representan las actividades y disciplinas fundamentales a lo largo de las iteraciones:
+\subsubsection{5.2. Unified Modeling Language}\label{sec:uml}
+% [INSTRUCCIÓN]: Fundamentación teórica del Lenguaje Unificado de Modelado (UML).
 
-\subparagraph{5.1.2.1. Captura de Requisitos}\label{sec:puds_requisitos}
-Identificación, modelado y documentación de los requerimientos funcionales y no funcionales...
+El Lenguaje Unificado de Modelado (\textit{Unified Modeling Language}, UML) es un lenguaje gráfico estandarizado empleado para visualizar, especificar, construir y documentar los artefactos de un sistema de software \parencite{booch2005uml}. A diferencia de un método o de un proceso, UML se define estrictamente como un lenguaje de modelado: proporciona la notación y la semántica necesarias para representar las decisiones de análisis y diseño de un sistema de manera formal, comprensible y compartida entre los actores involucrados en el proyecto.
 
-\subparagraph{5.1.2.2. Análisis}\label{sec:puds_analisis}
-Refinamiento de los requisitos para comprender el problema y diseñar modelos conceptuales...
+El UML surge de la unificación de las metodologías orientadas a objetos más difundidas de la década de 1990, impulsada por Grady Booch, James Rumbaugh e Ivar Jacobson, y fue adoptado posteriormente por el \textit{Object Management Group} (OMG) como estándar internacional \parencite[p.~3]{booch2005uml}. Su propósito no es decir \textit{cómo} desarrollar software, sino ofrecer un vocabulario común que permita expresar los modelos sobre los cuales los equipos toman decisiones técnicas. En la Figura~\ref{fig:uml_logo} se muestra la representación gráfica del lenguaje.
 
-\subparagraph{5.1.2.3. Diseño}\label{sec:puds_diseno}
-Definición de la arquitectura técnica, estructuras de clases, interfaces e infraestructura...
+% ---- FIGURA: Logo UML (APA 7) -----------------------------------------------
+\begin{figure}[htbp]
+\caption{Representación gráfica del Lenguaje Unificado de Modelado (UML)}
+\label{fig:uml_logo}
+\centering
+\includegraphics[width=0.42\linewidth]{images/02_UML_logo.png}
 
-\subparagraph{5.1.2.4. Implementación}\label{sec:puds_implementacion}
-Codificación de módulos, integración de servicios y desarrollo de algoritmos del sistema...
+\smallskip
+\noindent\raggedright\textit{Nota.} Imagen de dominio público correspondiente al logo oficial del Lenguaje Unificado de Modelado, propiedad del \textit{Object Management Group} (OMG).
+\end{figure}
 
-\subparagraph{5.1.2.5. Pruebas}\label{sec:puds_pruebas}
-Verificación de calidad, pruebas unitarias, de integración y de aceptación por parte del usuario...
+\paragraph{5.2.1. Estructura general de UML}\label{sec:uml_estructura}
+% [INSTRUCCIÓN]: Explicar los elementos estructurales de UML: bloques de construcción (elementos, relaciones y diagramas), tipos de diagramas estructurales y de comportamiento.
 
-\subsubsection{5.2. Lenguaje Unificado de Modelado}\label{sec:uml}
-% [INSTRUCCIÓN]: Fundamentación teórica del estándar UML y diagramas utilizados (casos de uso, clases, secuencias, etc.).
+La estructura general de UML se compone de tres bloques de construcción principales: los elementos, las relaciones y los diagramas \parencite[p.~15]{booch2005uml}.
 
-Espacio para la descripción teórica del Lenguaje Unificado de Modelado (UML)...
+Los elementos son las unidades abstractas que modelan el sistema y se clasifican en cuatro tipos: elementos estructurales (como clases, interfaces y componentes), elementos de comportamiento (como interacciones y máquinas de estados), elementos de agrupación (como los paquetes) y elementos de anotación (como las notas explicativas). Las relaciones expresan cómo se vinculan dichos elementos y comprenden la asociación, la dependencia, la generalización y la realización.
 
 \subsubsection{5.3. Especificación de Requisitos de Software según la IEEE 830}\label{sec:ieee830_teoria}
 
