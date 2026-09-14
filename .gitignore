@@ -23,5 +23,5 @@
 *.bcf-SAVE-ERROR
 texput.pdf
 
-# Output PDF (Opcional, conservar si deseas ignorar los PDF generados)
-# *.pdf
+# Output PDF (autogenerado a partir de los .tex, se recompila localmente)
+main.pdf
