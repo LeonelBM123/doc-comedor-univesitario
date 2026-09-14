@@ -3,15 +3,13 @@
 % Página independiente que antecede a cada capítulo: muestra el número y el
 % nombre del capítulo, seguido de un pequeño espacio para un resumen breve.
 % ==============================================================================
-\newcommand{\preportadacapitulo}[3]{%
+\newcommand{\preportadacapitulo}[2]{%
   \clearpage
   \thispagestyle{empty}
   \begin{center}
     \vspace*{\fill}
     {\Large\scshape Capítulo #1}\\[0.8em]
-    {\huge\bfseries #2}\\[1.5em]
-    \rule{0.35\textwidth}{0.4pt}\\[2em]
-    \parbox{0.7\textwidth}{\centering\normalsize\itshape #3}
+    {\huge\bfseries #2}
     \vspace*{\fill}
   \end{center}
   \clearpage

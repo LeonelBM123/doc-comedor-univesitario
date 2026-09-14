@@ -22,7 +22,7 @@ Tres características definen la esencia del PUDS \parencite[p.~45]{jacobson1999
     \item \textbf{Iterativo e incremental:} el sistema se construye mediante incrementos sucesivos, cada uno de los cuales es una versión ejecutable del producto que agrega nueva funcionalidad y reduce el riesgo de manera progresiva \parencite[p.~47]{jacobson1999unified}.
 \end{itemize}
 
-\paragraph{5.1.1. Fases}\label{sec:puds_fases}
+\paragraph{5.1.1. Fases.}\label{sec:puds_fases}
 % [INSTRUCCIÓN]: Descripción de las cuatro fases principales del ciclo de vida del PUDS.
 El ciclo de vida del PUDS se estructura a través de cuatro fases consecutivas, cada una de las cuales culmina con un hito o *milestone* que permite evaluar el avance del proyecto \parencite{jacobson1999unified}. La Figura~\ref{fig:puds_fases} ilustra la relación existente entre las fases y las disciplinas o flujos de trabajo del proceso.
 
@@ -37,16 +37,16 @@ El ciclo de vida del PUDS se estructura a través de cuatro fases consecutivas, 
 \noindent\raggedright\textit{Nota.} Adaptada de \textit{The Unified Software Development Process}, de I. Jacobson, G. Booch y J. Rumbaugh, 1999, Addison-Wesley Professional. Reproducida con fines académicos.
 \end{figure}
 
-\subparagraph{5.1.1.1. Inicio}\label{sec:puds_inicio}
+\subparagraph{5.1.1.1. Inicio.}\label{sec:puds_inicio}
 La fase de Inicio tiene como propósito definir el alcance del sistema y establecer su viabilidad. En esta etapa se identifican los actores principales, los casos de uso más relevantes, los riesgos críticos y los objetivos del proyecto \parencite[p.~214]{jacobson1999unified}. Un análisis preliminar de negocio y una estimación aproximada de costo y tiempo forman parte de las actividades de este hito. En el contexto del presente proyecto, la fase de inicio corresponde a la elaboración del perfil que aquí se documenta: se delimitan los problemas, los objetivos, la justificación y el alcance del sistema, y se evalúan las alternativas tecnológicas para su implementación.
 
-\subparagraph{5.1.1.2. Elaboración}\label{sec:puds_elaboracion}
+\subparagraph{5.1.1.2. Elaboración.}\label{sec:puds_elaboracion}
 La fase de Elaboración se orienta a la especificación detallada de los casos de uso y a la definición de la arquitectura base del software. El objetivo de esta fase es eliminar los mayores riesgos técnicos mediante la construcción de un prototipo ejecutable de la arquitectura que sirva de fundamento para las fases posteriores \parencite[p.~248]{jacobson1999unified}. En el proyecto, esta fase comprende el levantamiento detallado de requisitos funcionales y no funcionales, la elaboración de los diagramas del Lenguaje Unificado de Modelado (UML), el diseño de la base de datos y la definición de la arquitectura de los módulos web, móvil e inteligencia artificial.
 
-\subparagraph{5.1.1.3. Construcción}\label{sec:puds_construccion}
+\subparagraph{5.1.1.3. Construcción.}\label{sec:puds_construccion}
 La fase de Construcción está orientada al desarrollo e integración de los componentes y funcionalidades del sistema. Durante esta fase se implementan incrementalmente los casos de uso priorizados, se integran los subsistemas en una solución completa y se llevan a cabo las pruebas necesarias para verificar el cumplimiento de los requisitos \parencite[p.~332]{jacobson1999unified}. En el presente proyecto, esta fase corresponde al desarrollo de los módulos de gestión de postulaciones, el algoritmo de priorización socioeconómica, la aplicación móvil, los reportes de inteligencia de negocios y su integración con la base de datos central.
 
-\subparagraph{5.1.1.4. Transición}\label{sec:puds_transicion}
+\subparagraph{5.1.1.4. Transición.}\label{sec:puds_transicion}
 La fase de Transición se dirige a la entrega, despliegue, capacitación de los usuarios y validación del sistema en un entorno de producción. Su finalidad es asegurar que el software esté disponible para los usuarios finales, que funcione de manera confiable y que se disponga del soporte adecuado para su operación \parencite[p.~379]{jacobson1999unified}. En el contexto del sistema del comedor universitario, esta fase comprende el despliegue en los servidores de la DUBSS, la capacitación del personal administrativo, la migración de los datos de los postulantes y el acompañamiento durante la primera gestión académica en que el sistema opere en forma oficial.
 
 \subsubsection{5.2. Unified Modeling Language}\label{sec:uml}
@@ -67,7 +67,7 @@ El UML surge de la unificación de las metodologías orientadas a objetos más d
 \noindent\raggedright\textit{Nota.} Imagen de dominio público correspondiente al logo oficial del Lenguaje Unificado de Modelado, propiedad del \textit{Object Management Group} (OMG).
 \end{figure}
 
-\paragraph{5.2.1. Estructura general de UML}\label{sec:uml_estructura}
+\paragraph{5.2.1. Estructura general de UML.}\label{sec:uml_estructura}
 % [INSTRUCCIÓN]: Explicar los elementos estructurales de UML: bloques de construcción (elementos, relaciones y diagramas), tipos de diagramas estructurales y de comportamiento.
 
 La estructura general de UML se compone de tres bloques de construcción principales: los elementos, las relaciones y los diagramas \parencite[p.~15]{booch2005uml}.
@@ -80,7 +80,7 @@ Para garantizar que el desarrollo del sistema de gestión, postulación y precal
 
 Este estándar constituye una guía normativa esencial en la ingeniería de software para documentar con precisión qué debe hacer el sistema, sin prescribir prematuramente cómo debe ser implementado en términos de arquitectura interna.
 
-\paragraph{5.3.1. Estructura y Propósito del Estándar IEEE 830 (IEEE 830-1998)}\label{sec:ieee830_estructura}
+\paragraph{5.3.1. Estructura y Propósito del Estándar IEEE 830 (IEEE 830-1998).}\label{sec:ieee830_estructura}
 El objetivo de implementar la norma IEEE 830 en este proyecto es definir un contrato claro y sin ambigüedades entre los usuarios interesados (estudiantes postulantes y personal administrativo de bienestar estudiantil) y el equipo de desarrollo tecnológico. La especificación bajo este estándar se organiza formalmente en tres secciones principales:
 
 \begin{itemize}
@@ -95,7 +95,7 @@ El objetivo de implementar la norma IEEE 830 en este proyecto es definir un cont
     \end{itemize}
 \end{itemize}
 
-\paragraph{5.3.2. Relación del IEEE 830 con UML y PUDS}\label{sec:ieee830_uml_puds}
+\paragraph{5.3.2. Relación del IEEE 830 con UML y PUDS.}\label{sec:ieee830_uml_puds}
 Dentro de la metodología adoptada para este proyecto, el estándar IEEE 830 actúa como el puente de formalización entre el Proceso Unificado de Desarrollo de Software (PUDS) y el Lenguaje Unificado de Modelado (UML):
 
 \begin{itemize}
@@ -104,7 +104,7 @@ Dentro de la metodología adoptada para este proyecto, el estándar IEEE 830 act
     \item \textbf{Integración con UML:} La descripción textual de los requisitos especificados en el estándar IEEE 830 se representa gráficamente a través de diagramas UML (casos de uso, actividades y secuencias). Esto asegura que los requerimientos de los postulantes y administradores se traduzcan de manera transparente a modelos técnicos estructurados.
 \end{itemize}
 
-\paragraph{5.3.3. Reemplazo por IEEE 29148-2011 y Vigencia Actual}\label{sec:ieee830_vigencia}
+\paragraph{5.3.3. Reemplazo por IEEE 29148-2011 y Vigencia Actual.}\label{sec:ieee830_vigencia}
 Aunque el estándar IEEE 830-1998 fue sustituido formalmente por el estándar unificado ISO/IEC/IEEE 29148:2011 (el cual consolida la ingeniería de requisitos dentro del ciclo de vida de los sistemas), la norma IEEE 830 se mantiene como el referente metodológico para este proyecto debido a:
 
 \begin{itemize}
