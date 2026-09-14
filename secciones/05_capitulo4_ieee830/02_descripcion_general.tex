@@ -11,7 +11,17 @@ El Sistema de Información Web y Móvil para la Postulación y Preselección Aut
 \subsubsection{4.2.2. Funciones del Producto}\label{sec:ieee_funciones}
 % [INSTRUCCIÓN]: Resumen ejecutivo de las capacidades y operaciones principales del software.
 
-De manera general, el sistema permitirá a los postulantes registrarse y enviar su postulación a la Beca Comedor completando un formulario socioeconómico digital desde la web o la aplicación móvil. Asimismo, el sistema precalificará automáticamente cada solicitud mediante un modelo de inteligencia artificial que estima el nivel de vulnerabilidad socioeconómica del postulante, y notificará a los finalistas para que presenten su documentación física de respaldo. Por su parte, el personal de la DUBSS podrá auditar y validar dichos expedientes, administrar el registro de los estudiantes efectivamente becados y controlar su asistencia al Comedor Universitario. Finalmente, el sistema generará reportes y dashboards de Business Intelligence que resuman el comportamiento histórico de las postulaciones y proyecten tendencias futuras para apoyar la planificación institucional.
+De manera general, el sistema permitirá a los postulantes registrarse y enviar su postulación a la Beca Comedor completando un formulario socioeconómico digital desde la web o la aplicación móvil. Asimismo, el sistema precalificará automáticamente cada solicitud mediante un modelo de inteligencia artificial que estima el nivel de vulnerabilidad socioeconómica del postulante, y notificará a los finalistas para que presenten su documentación física de respaldo. Por su parte, el personal de la DUBSS podrá auditar y validar dichos expedientes, administrar el registro de los estudiantes efectivamente becados y controlar su asistencia al Comedor Universitario. Finalmente, el sistema generará reportes y dashboards de Business Intelligence que resuman el comportamiento histórico de las postulaciones y proyecten tendencias futuras para apoyar la planificación institucional. La Figura~\ref{fig:diagrama_cu} representa gráficamente los actores del sistema y los casos de uso principales asociados a cada uno.
+
+\begin{figure}[H]
+\caption{Diagrama de casos de uso del Sistema Web y Móvil de Postulación y Preselección de la Beca Comedor}
+\label{fig:diagrama_cu}
+\centering
+\includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{images/18_Diagrama_CU.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
 
 \subsubsection{4.2.3. Características de los Usuarios}\label{sec:ieee_caracteristicas_usuarios}
 % [INSTRUCCIÓN]: Perfiles de usuario (estudiantes postulantes, administradores, personal de comedor, etc.).
@@ -64,3 +74,29 @@ Se asume que los postulantes y el personal de la DUBSS contarán con acceso a un
 \smallskip
 \noindent\raggedright\textit{Nota.} Elaboración propia basado en la entrevista con el personal de la DUBSS.
 \end{figure}
+
+\subsubsection{4.2.6. Modelo de Dominio}\label{sec:ieee_modelo_dominio}
+
+El modelo de dominio representa las entidades conceptuales involucradas en el proceso de postulación y adjudicación de la Beca Comedor, así como las relaciones estructurales que existen entre ellas, sin considerar aún su implementación técnica. La Figura~\ref{fig:modelo_dominio} presenta el diagrama conceptual correspondiente.
+
+\begin{figure}[H]
+\caption{Modelo de dominio del Sistema Web y Móvil de Postulación y Preselección de la Beca Comedor}
+\label{fig:modelo_dominio}
+\centering
+\includegraphics[width=0.9\textwidth,height=0.8\textheight,keepaspectratio]{images/17_Modelo_Dominio.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+El proceso gira en torno a la clase \textit{Postulación}, que agrupa la información generada durante todo el trámite: la fecha de entrega de documentación, el puntaje asignado por la revisión documental (1 a 70 puntos), el puntaje adicional otorgado según el rendimiento académico (hasta 30 puntos), el puntaje total resultante, y su estado actual dentro del flujo. Este estado está formalmente restringido a un conjunto cerrado de valores —pendiente, devuelta, archivada, calificada, adjudicada o no adjudicada—, representados mediante la enumeración \textit{EstadoPostulacion}, lo que evita que el sistema admita estados no contemplados en el proceso.
+
+Cada postulación es iniciada por un \textit{Postulante}, identificado por su nombre, carné de identidad, carrera y perfil institucional UAGRM. Un postulante puede generar más de una postulación a lo largo del tiempo —por ejemplo, si su documentación es devuelta y debe corregirla y volver a presentarla—, por lo que la relación entre ambas clases es de uno a muchos.
+
+Toda postulación incluye, de manera obligatoria, uno o más \textit{DocumentoAdjunto}, cada uno caracterizado por su tipo y el archivo correspondiente. Esta relación se modela como una composición, ya que los documentos no tienen existencia ni sentido fuera de la postulación a la que pertenecen: si la postulación se elimina, sus documentos se eliminan con ella.
+
+En el proceso intervienen dos roles de personal administrativo, representados como especializaciones de una clase abstracta común \textit{Funcionario}, que concentra los atributos compartidos de identificador y nombre. El primer rol, \textit{TrabajoSocial}, es responsable de revisar la documentación entregada y calificar la postulación; el segundo, \textit{EncargadaSistemas}, procesa esa calificación, consulta el rendimiento académico del postulante en \textit{NotaAcademica} —registro identificado por período académico y promedio— y calcula el puntaje total que determina la adjudicación.
+
+Cuando el puntaje total alcanza el mínimo requerido, la postulación genera una \textit{BecaComedor}, entidad que registra la fecha de adjudicación. Esta relación es opcional desde la perspectiva de la postulación, ya que no toda postulación calificada llega a adjudicarse.
+
+En conjunto, el modelo refleja que la postulación es el eje central del dominio: nace de un postulante, se sustenta en documentos que le pertenecen exclusivamente, es intervenida por dos roles funcionales distintos en etapas sucesivas del proceso, se apoya en un registro académico externo para el cálculo del puntaje, y —de cumplirse las condiciones— culmina en la adjudicación del beneficio.
