@@ -6,24 +6,61 @@
 \subsubsection{4.2.1. Perspectiva del Producto}\label{sec:ieee_perspectiva}
 % [INSTRUCCIÓN]: Contexto del producto: sistema autónomo o módulo integrado en un entorno universitario mayor.
 
-Espacio para la perspectiva del producto e integración con otros sistemas...
+El Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor es un producto de software independiente y de nuevo desarrollo; no constituye un módulo dentro de una plataforma empresarial mayor ni reemplaza algún sistema institucional preexistente, dado que la DUBSS gestiona actualmente este proceso de forma manual. No obstante, el sistema sí se relaciona con dos actores externos a su núcleo funcional: por un lado, el punto de control de asistencia del Comedor Universitario, donde los postulantes seleccionados validan físicamente su condición de becados; y por otro, el personal directivo de la DUBSS, que consume los reportes y proyecciones de Business Intelligence generados por el sistema para la toma de decisiones institucionales.
 
 \subsubsection{4.2.2. Funciones del Producto}\label{sec:ieee_funciones}
 % [INSTRUCCIÓN]: Resumen ejecutivo de las capacidades y operaciones principales del software.
 
-Espacio para el resumen de funciones principales del producto...
+De manera general, el sistema permitirá a los postulantes registrarse y enviar su postulación a la Beca Comedor completando un formulario socioeconómico digital desde la web o la aplicación móvil. Asimismo, el sistema precalificará automáticamente cada solicitud mediante un modelo de inteligencia artificial que estima el nivel de vulnerabilidad socioeconómica del postulante, y notificará a los finalistas para que presenten su documentación física de respaldo. Por su parte, el personal de la DUBSS podrá auditar y validar dichos expedientes, administrar el registro de los estudiantes efectivamente becados y controlar su asistencia al Comedor Universitario. Finalmente, el sistema generará reportes y dashboards de Business Intelligence que resuman el comportamiento histórico de las postulaciones y proyecten tendencias futuras para apoyar la planificación institucional.
 
 \subsubsection{4.2.3. Características de los Usuarios}\label{sec:ieee_caracteristicas_usuarios}
 % [INSTRUCCIÓN]: Perfiles de usuario (estudiantes postulantes, administradores, personal de comedor, etc.).
 
-Espacio para la descripción de los perfiles de usuario y nivel técnico...
+La Tabla~\ref{tab:caracteristicas_usuarios} describe los tipos de usuario del sistema, sus responsabilidades y el nivel de conocimiento técnico requerido para su uso.
+
+\begin{table}[H]
+\caption{Tipos de usuario del sistema y sus características}
+\label{tab:caracteristicas_usuarios}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3cm} >{\raggedright\arraybackslash}p{6.5cm} >{\raggedright\arraybackslash}p{3.5cm}}
+\toprule
+Tipo de usuario & Descripción & Conocimiento técnico requerido \\
+\midrule
+Postulante & Estudiante de la UAGRM que se registra y postula a la Beca Comedor a través de la web o la aplicación móvil. & Básico: manejo elemental de aplicaciones web y móviles. \\
+Administrador DUBSS & Personal administrativo que audita la documentación física de los finalistas y gestiona el proceso de selección dentro del sistema. & Básico: manejo de ofimática y de un panel web administrativo. \\
+Directivo DUBSS (Gerente) & Personal directivo que visualiza el dashboard de reportes gráficos y proyecciones de Business Intelligence para la toma de decisiones. & Básico: interpretación de reportes y gráficos, sin necesidad de conocimientos de programación. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. Ningún tipo de usuario requiere conocimientos técnicos avanzados de programación; únicamente se requiere acceso a un dispositivo con conexión a internet.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{4.2.4. Restricciones Generales}\label{sec:ieee_restricciones}
 % [INSTRUCCIÓN]: Políticas regulatorias, limitaciones de hardware, interfaces y protocolos de seguridad.
 
-Espacio para las restricciones generales de desarrollo y despliegue...
+El desarrollo y funcionamiento del sistema está sujeto a las siguientes restricciones:
+
+\begin{itemize}
+    \item El sistema debe desplegarse sobre un servidor en la nube de Amazon Web Services (AWS), empleando PostgreSQL como motor de base de datos relacional.
+    \item Los servicios de autenticación, notificaciones push y almacenamiento de archivos deben integrarse a través de Firebase.
+    \item La aplicación móvil debe desarrollarse bajo el framework Flutter, priorizando su compatibilidad con dispositivos Android.
+    \item El desarrollo del proyecto debe ejecutarse dentro del periodo comprendido entre el 24 de agosto y el 30 de noviembre de 2026, conforme al cronograma y al presupuesto estimado del proyecto (véase la Tabla~\ref{tab:presupuesto}).
+    \item El sistema debe garantizar la confidencialidad y el resguardo de los datos socioeconómicos de los postulantes, en cumplimiento de las políticas institucionales de protección de datos personales de la UAGRM.
+\end{itemize}
 
 \subsubsection{4.2.5. Suposiciones y Dependencias}\label{sec:ieee_suposiciones}
 % [INSTRUCCIÓN]: Factores asumidos cuya variación podría alterar los requisitos del sistema.
 
-Espacio para las suposiciones y dependencias técnicas...
+Se asume que los postulantes y el personal de la DUBSS contarán con acceso a un dispositivo (computadora o teléfono móvil) y con una conexión a internet estable durante el periodo de postulación y evaluación. El sistema depende de los servicios de Firebase para la autenticación de usuarios, el envío de notificaciones push y el almacenamiento de archivos, así como de la disponibilidad del servidor AWS para su despliegue y funcionamiento continuo. Asimismo, se asume que la DUBSS proporcionará de manera oportuna los criterios institucionales de vulnerabilidad socioeconómica requeridos para entrenar y calibrar el modelo de preselección con inteligencia artificial. La Figura~\ref{fig:postulacion_beca} describe el flujo de actividades y las dependencias entre los actores que intervienen en el proceso de postulación.
+
+\begin{figure}[H]
+\caption{Diagrama de actividades del proceso de postulación a la Beca Comedor}
+\label{fig:postulacion_beca}
+\centering
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{images/16_Postulacion_Beca.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia basado en la entrevista con el personal de la DUBSS.
+\end{figure}
