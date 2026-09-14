@@ -6,24 +6,73 @@
 \subsubsection{4.1.1. Propósito}\label{sec:ieee_proposito}
 % [INSTRUCCIÓN]: Definir el propósito específico del documento ERS y su audiencia objetivo.
 
-Espacio para el propósito del documento ERS...
+El presente documento tiene como propósito definir, de manera clara, completa y sin ambigüedades, las funcionalidades y restricciones requeridas para el desarrollo del Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor mediante Inteligencia Artificial, con Reportes de Business Intelligence para la DUBSS - UAGRM. Esta Especificación de Requisitos del Software (ERS) está dirigida al equipo de desarrollo encargado de la construcción del sistema, al personal directivo y administrativo de la Dirección Universitaria de Bienestar Social y Salud (DUBSS) y a los docentes evaluadores del proyecto de grado, con el objetivo de establecer un acuerdo formal sobre el alcance, el comportamiento esperado y las restricciones del software antes de iniciar las etapas de diseño e implementación.
 
 \subsubsection{4.1.2. Ámbito del Sistema}\label{sec:ieee_ambito}
 % [INSTRUCCIÓN]: Nombre del producto software, alcance operativo, beneficios y metas generales.
 
-Espacio para el ámbito y alcance del sistema software...
+\textbf{Nombre del proyecto:} Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor mediante Inteligencia Artificial, con Reportes de Business Intelligence para la DUBSS - UAGRM.
+
+El sistema comprenderá las siguientes funcionalidades principales:
+
+\begin{itemize}
+    \item Registro y autenticación de postulantes a través de las plataformas web y móvil.
+    \item Postulación en línea a la Beca Comedor mediante el llenado de formularios socioeconómicos digitales.
+    \item Preselección automatizada de solicitudes empleando un modelo de Inteligencia Artificial y Machine Learning que precalifica algorítmicamente el nivel de vulnerabilidad socioeconómica de cada postulante.
+    \item Gestión administrativa de los expedientes finalistas, incluyendo la auditoría física de respaldos y el registro de los estudiantes efectivamente becados.
+    \item Registro y control de la asistencia física y digital de los becarios al Comedor Universitario.
+    \item Generación de reportes y dashboards de Business Intelligence con proyecciones predictivas que apoyen la toma de decisiones institucionales.
+\end{itemize}
+
+Entre los principales beneficios que otorgará el sistema a la DUBSS se encuentran la reducción drástica del tiempo y del personal destinado a la revisión manual de carpetas, la eliminación del cuello de botella administrativo generado por las 20,000 solicitudes recibidas por gestión, la incorporación de un criterio de selección objetivo, transparente y auditable, y la disposición de información oportuna y confiable para la planificación y rendición de cuentas institucional.
 
 \subsubsection{4.1.3. Definiciones, Acrónimos y Abreviaturas}\label{sec:ieee_definiciones}
 % [INSTRUCCIÓN]: Glosario de términos técnicos, siglas y acrónimos necesarios para interpretar el documento.
 
-Espacio para la tabla o listado de definiciones y siglas...
+La Tabla~\ref{tab:definiciones_abreviaturas} resume los principales términos, siglas y acrónimos empleados a lo largo del presente documento.
+
+\begin{table}[H]
+\caption{Definiciones, acrónimos y abreviaturas empleados en el documento}
+\label{tab:definiciones_abreviaturas}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3cm} >{\raggedright\arraybackslash}p{10cm}}
+\toprule
+Nombre & Descripción \\
+\midrule
+DUBSS & Dirección Universitaria de Bienestar Social y Salud, unidad de la UAGRM responsable de la Beca Comedor. \\
+Administrador & Personal de la DUBSS que audita, valida y gestiona las postulaciones dentro del sistema. \\
+Postulante & Estudiante de la UAGRM que solicita el beneficio de la Beca Comedor a través del sistema. \\
+Usuario & Persona que interactúa con el software, ya sea en calidad de postulante o de administrador. \\
+RF & Requerimiento funcional. \\
+RNF & Requerimiento no funcional. \\
+ERS & Especificación de Requisitos del Software. \\
+PCN & Prueba de caja negra. \\
+IA & Inteligencia Artificial. \\
+ML & Machine Learning (aprendizaje automático). \\
+PLN & Procesamiento de Lenguaje Natural. \\
+API & Interfaz de Programación de Aplicaciones. \\
+UI/UX & Interfaz de Usuario y Experiencia de Usuario. \\
+JS & Lenguaje de programación JavaScript. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{4.1.4. Referencias}\label{sec:ieee_referencias}
 % [INSTRUCCIÓN]: Lista de documentos de referencia, normativas institucionales y estándares técnicos.
 
-Espacio para las referencias documentales y normativas...
+Los principales estándares, libros y artículos empleados para las definiciones y el desarrollo de este capítulo son los siguientes:
+
+\begin{itemize}
+    \item \textcite{ieee830_1998} y \textcite{iso29148_2011}.
+    \item \textcite{pressman2010ingenieria}.
+    \item \textcite{sommerville2011ingenieria}.
+\end{itemize}
 
 \subsubsection{4.1.5. Visión General del Documento}\label{sec:ieee_vision_general}
 % [INSTRUCCIÓN]: Breve descripción de la organización del resto de la especificación de requisitos.
 
-Espacio para la visión general del documento ERS...
+El presente documento se compone de tres secciones (Introducción, Descripción General y Requisitos Específicos) que describen detalladamente el producto a desarrollarse. En primer lugar, la sección de Introducción establece el propósito, el ámbito, las definiciones y la visión general del documento. A continuación, la sección de Descripción General sitúa al sistema dentro de su contexto de uso, describiendo sus funciones principales, las características de sus usuarios y las restricciones y suposiciones bajo las cuales operará. Finalmente, la sección de Requisitos Específicos detalla de manera formal cada uno de los requisitos funcionales, no funcionales y de interfaz de usuario que deberá satisfacer el sistema.
