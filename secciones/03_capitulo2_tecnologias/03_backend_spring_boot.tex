@@ -1,0 +1,26 @@
+% ------------------------------------------------------------------------------
+% 2.3. ARQUITECTURA BACKEND CON SPRING BOOT
+% ------------------------------------------------------------------------------
+\subsection{2.3. Arquitectura Backend con Spring Boot}\label{sec:backend_spring_boot}
+
+\subsubsection{2.3.1. Framework Spring Boot y Lenguaje Java}\label{sec:spring_boot_java}
+
+Spring Boot es un framework de código abierto basado en Java diseñado para simplificar el desarrollo de aplicaciones empresariales mediante la configuración automática y la creación de microservicios independientes \parencite{walls2019springboot}. Su ecosistema ofrece alta robustez, escalabilidad y un tipado fuerte, garantizando el procesamiento seguro de transacciones en la gestión del comedor universitario.
+
+\begin{figure}[H]
+\caption{Logotipo del framework Spring Boot}
+\label{fig:logo_springboot}
+\centering
+\includegraphics[width=0.35\linewidth]{images/12_Logo_SpringBoot.png}
+
+\smallskip
+\noindent\textit{Nota.} Adaptado de \textit{Spring Boot} [Logotipo], por Spring (VMware Tanzu), 2024, \url{https://spring.io/projects/spring-boot}.
+\end{figure}
+
+\subsubsection{2.3.2. Diseño de Servicios Web y Arquitectura RESTful}\label{sec:backend_restful}
+
+La arquitectura REST (\textit{Representational State Transfer}) es un estilo arquitectónico que utiliza los verbos del protocolo HTTP (GET, POST, PUT, DELETE) para desacoplar el servidor de las aplicaciones clientes \parencite{fielding2000rest}. Spring Boot permite construir \textit{endpoints} RESTful eficientes para conectar la base de datos central con el frontend web, la aplicación móvil y el microservicio de IA.
+
+\subsubsection{2.3.3. Seguridad, Autenticación y Cifrado de Datos (Spring Security y JWT)}\label{sec:backend_seguridad}
+
+Spring Security proporciona mecanismos avanzados de autenticación y control de acceso basado en roles (RBAC) \parencite{mularien2010springsecurity}. Mediante el uso de \textit{JSON Web Tokens} (JWT), el sistema autentica de forma \textit{stateless} e inalterable las sesiones de estudiantes, auditores y personal administrativo, protegiendo los datos sensibles de postulación \parencite{rouse2018jwt}.

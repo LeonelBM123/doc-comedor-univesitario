@@ -1,0 +1,26 @@
+% ------------------------------------------------------------------------------
+% 2.7. ECOSISTEMA DE DESARROLLO EN PYTHON PARA MODELOS DE IA
+% ------------------------------------------------------------------------------
+\subsection{2.7. Ecosistema de Desarrollo en Python para Modelos de IA}\label{sec:ecosistema_python}
+
+Para el desarrollo, entrenamiento y despliegue de los modelos de IA descritos en la sección 2.1, se seleccionó el lenguaje Python debido a su madurez en la comunidad científica y la robustez de sus librerías especializadas \parencite{mckinney2012python}:
+
+\begin{figure}[H]
+\caption{Logotipo del lenguaje de programación Python}
+\label{fig:logo_python}
+\centering
+\includegraphics[width=0.25\linewidth]{images/14_Logo_Python.png}
+
+\smallskip
+\noindent\textit{Nota.} Adaptado de \textit{Python} [Logotipo], por Python Software Foundation, 2024, \url{https://www.python.org/}.
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{NumPy:} Biblioteca fundamental para el cálculo numérico multidimensional eficiente, optimizada para la manipulación de vectores y matrices \parencite{harris2020numpy}.
+
+    \item \textbf{Pandas:} Herramienta de análisis y manipulación de datos estructurados que proporciona estructuras de datos como los \textit{DataFrames}, esenciales para la limpieza, transformación y preprocesamiento de los formularios socioeconómicos \parencite{mckinney2010pandas}.
+
+    \item \textbf{Scikit-Learn:} Framework de Machine Learning en Python que incluye implementaciones optimizadas de algoritmos de clasificación, regresión, evaluación de métricas (precisión, \textit{recall}, F1-score) y técnicas de validación cruzada \parencite{pedregosa2011sklearn}.
+
+    \item \textbf{FastAPI:} Framework web moderno de alto rendimiento diseñado para construir APIs RESTful en Python. Se utiliza para exponer las funcionalidades predictivas del modelo de ML como un microservicio independiente, consumible por el backend principal en Spring Boot \parencite{ramirez2019fastapi}.
+\end{itemize}

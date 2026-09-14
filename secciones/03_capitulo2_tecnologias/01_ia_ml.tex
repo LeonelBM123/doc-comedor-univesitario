@@ -1,0 +1,40 @@
+% ------------------------------------------------------------------------------
+% 2.1. FUNDAMENTOS DE INTELIGENCIA ARTIFICIAL Y APRENDIZAJE AUTOMÁTICO
+% ------------------------------------------------------------------------------
+\subsection{2.1. Fundamentos de Inteligencia Artificial y Aprendizaje Automático}\label{sec:ia_ml}
+
+\subsubsection{2.1.1. Conceptos Generales de IA Aplicados a la Gestión Social Universitaria}\label{sec:ia_conceptos_generales}
+
+La Inteligencia Artificial (IA) se define como el campo de la ciencia de la computación dedicado al desarrollo de sistemas capaces de efectuar tareas que simulan procesos cognitivos humanos, tales como la resolución de problemas, el aprendizaje adaptativo y la toma de decisiones \parencite{russellnorvig2021ia}. En las instituciones de educación superior, la IA ha ampliado su espectro desde la automatización académica hacia la optimización de la gestión social y administrativa.
+
+La aplicación de la IA en la asignación de incentivos socioeconómicos permite procesar grandes volúmenes de solicitudes de forma imparcial y expedita. En contextos universitarios masivos, la evaluación manual de expedientes suele incurrir en cuellos de botella operativos y variabilidad en la aplicación de criterios. Los sistemas inteligentes analizan variables multifactoriales —ingresos familiares, condición de vivienda, rendimiento académico y carga familiar— para establecer patrones homogéneos de vulnerabilidad, garantizando que los recursos públicos se destinen a los estudiantes con mayor prioridad socioeconómica \parencite{goodfellow2016deeplearning}.
+
+\subsubsection{2.1.2. Modelos y Algoritmos de Clasificación para Evaluación Socioeconómica}\label{sec:ia_modelos_clasificacion}
+
+El Aprendizaje Automático (\textit{Machine Learning}, ML) es un subcampo de la IA enfocado en la construcción de algoritmos que aprenden patrones a partir de datos sin ser programados explícitamente \parencite{mitchell1997ml}. Para el proceso de preselección de becados, se emplean modelos de aprendizaje supervisado, donde el algoritmo se entrena utilizando un histórico de expedientes previamente dictaminados por el equipo de Trabajadoras Sociales de la DUBS.
+
+Dentro del aprendizaje supervisado, los algoritmos de clasificación son los más adecuados para catalogar la vulnerabilidad de un postulante en categorías predefinidas (ej. Vulnerabilidad Alta, Media, Baja). Los modelos principales aplicables a este dominio incluyen:
+
+\begin{itemize}
+    \item \textbf{Árboles de Decisión (\textit{Decision Trees}):} Modelos no paramétricos que dividen el espacio de datos en regiones mediante reglas lógicas explícitas. Su principal ventaja en la gestión pública es la explicabilidad, permitiendo auditar la razón exacta por la cual un postulante fue asignado a determinado segmento \parencite{breiman1984cart}.
+
+    \item \textbf{Bosques Aleatorios (\textit{Random Forest}):} Algoritmo de ensamble (\textit{ensemble learning}) que combina múltiples árboles de decisión entrenados sobre subconjuntos aleatorios de datos. Incrementa la precisión predictiva y reduce el sobreajuste (\textit{overfitting}), resultando ideal para lidiar con variables heterogéneas \parencite{breiman2001randomforest}.
+
+    \item \textbf{Regresión Logística:} Modelo estadístico utilizado para predecir la probabilidad de una variable categórica binaria o multinomial, adecuado como línea base (\textit{baseline}) de comparación frente a modelos más complejos \parencite{james2013statlearning}.
+\end{itemize}
+
+\subsubsection{2.1.3. Scoring Automático de Vulnerabilidad y Selección Priorizada de Postulantes}\label{sec:ia_scoring_vulnerabilidad}
+
+El Scoring Socioeconómico es una técnica cuantitativa que asigna una puntuación numérica continua a cada expediente de postulación. A diferencia de una clasificación rígida, el scoring permite generar un ordenamiento jerárquico (\textit{ranking}) absoluto de los postulantes, ordenados estrictamente desde el menor al mayor nivel de capacidad económica.
+
+\begin{samepage}
+La construcción del índice de vulnerabilidad ($V$) mediante un modelo de ponderación algorítmica se expresa formalmente como:
+
+\[
+V = \sum_{i=1}^{n} w_i \cdot x_i
+\]
+\end{samepage}
+
+Donde $x_i$ representa el valor estandarizado de la variable socioeconómica $i$ (ej. ingreso per cápita, tipo de vivienda, miembros a cargo), y $w_i$ corresponde al peso o coeficiente determinado por el modelo de ML en función de la correlación histórica con la vulnerabilidad real.
+
+Este enfoque permite a la DUBS procesar de forma instantánea el universo total de carpetas (con capacidad superior a las 20,000 solicitudes) y presentar al personal administrativo una lista priorizada para la etapa de verificación de respaldos físicos.
