@@ -4,16 +4,33 @@
 \subsection{2.2. Business Intelligence y Analítica de Datos}\label{sec:business_intelligence}
 
 \subsubsection{2.2.1. Fundamentos de Business Intelligence para Auditoría Institucional}\label{sec:bi_fundamentos}
-% [INSTRUCCIÓN]: Conceptos base de Business Intelligence y su rol en la auditoría institucional del proceso de becas.
 
-Espacio para los fundamentos de Business Intelligence aplicados a la auditoría institucional...
+La Inteligencia de Negocios (\textit{Business Intelligence}, BI) engloba las estrategias, arquitecturas y tecnologías encargadas de transformar datos crudos en información estructurada y conocimiento de alto valor para el soporte en la toma de decisiones organizacionales \parencite{power2002dss}.
+
+En el contexto de la gestión social en instituciones públicas como la UAGRM, BI actúa como una herramienta fundamental de transparencia y auditoría. Permite a las autoridades universitarias y fiscalizadores externos analizar la distribución de las becas mediante paneles interactivos, identificando la dispersión geográfica de los becados, la tasa de cobertura por facultad y la correlación entre el rendimiento académico y el beneficio otorgado \parencite{golfarelli2009dw}.
 
 \subsubsection{2.2.2. Procesos ETL (Extract, Transform, Load) para la Integración de Expedientes}\label{sec:bi_etl}
-% [INSTRUCCIÓN]: Descripción del proceso ETL empleado para consolidar los expedientes digitales de los postulantes.
 
-Espacio para la descripción de los procesos ETL...
+La arquitectura de BI se fundamenta en los procesos de Extracción, Transformación y Carga (ETL). Estos procesos consolidan la información dispersa de las postulaciones web y móviles en un repositorio analítico o \textit{Data Warehouse} optimizado para consultas multidimensionales \parencite{kimball2004etl}:
+
+\begin{itemize}
+    \item \textbf{Extracción (\textit{Extract}):} Captura de datos transaccionales de las postulaciones, adjuntos y registros de asistencia alojados en la base de datos operativa.
+
+    \item \textbf{Transformación (\textit{Transform}):} Limpieza de datos (eliminación de duplicados, estandarización de campos de texto), imputación de valores faltantes y homologación de variables socioeconómicas y académicas.
+
+    \item \textbf{Carga (\textit{Load}):} Inserción de los datos transformados en esquemas analíticos (ej. esquema en estrella o en copo de nieve), facilitando el procesamiento analítico en tiempo real (OLAP).
+\end{itemize}
 
 \subsubsection{2.2.3. Dashboards y Visualización Dinámica de Indicadores Socioeconómicos}\label{sec:bi_dashboards}
-% [INSTRUCCIÓN]: Herramientas y criterios de diseño de los dashboards analíticos del sistema.
 
-Espacio para la descripción de los dashboards y la visualización de indicadores...
+La visualización de datos constituye la capa superior del sistema de BI. A través de cuadros de mando o \textit{dashboards} interactivos, las autoridades pueden monitorear los Indicadores Clave de Desempeño (KPIs) del programa de becas en tiempo real \parencite{few2006dashboard}.
+
+Entre los indicadores principales integrados en la plataforma destacan:
+
+\begin{itemize}
+    \item \textbf{Tasa de Vulnerabilidad General:} Proporción de postulantes clasificados por estratos socioeconómicos.
+
+    \item \textbf{Índice de Cobertura y Demanda:} Relación entre el total de cupos disponibles (900 becados) y el volumen total de postulantes por gestión académica.
+
+    \item \textbf{Métricas de Asistencia y Eficiencia:} Control cruzado entre la asistencia registrada en el comedor y los respaldos físicos exigidos por auditoría.
+\end{itemize}
