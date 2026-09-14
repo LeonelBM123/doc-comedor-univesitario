@@ -1,0 +1,91 @@
+Requisitos Funcionales y No Funcionales
+Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor
+Basado en el capítulo 4 (Especificación de Requisitos según IEEE 830) del documento del proyecto
+4.3.1. Requisitos Funcionales
+A continuación se detallan los requisitos funcionales que completan los cuatro ya titulados en el documento (RF-01 a RF-04), y se proponen tres adicionales (RF-05 a RF-07) derivados directamente de las funciones principales ya definidas en la sección 6.1 del perfil de proyecto, que aún no estaban cubiertas por los cuatro primeros.
+RF-01: Registro y autenticación de usuarios
+Descripción:
+El sistema debe permitir el registro y la autenticación de los distintos tipos de usuario definidos en el proyecto (Postulante, Administrador DUBSS y Directivo DUBSS) tanto desde el portal web como desde la aplicación móvil, validando sus credenciales mediante el servicio de autenticación de Firebase antes de otorgar acceso a las funcionalidades correspondientes a su rol.
+Criterios de aceptación:
+●	El sistema permite crear una cuenta y autenticarse desde la web y desde la aplicación móvil.
+●	El sistema identifica el rol del usuario autenticado (Postulante, Administrador o Directivo) y lo redirige al módulo correspondiente.
+●	El sistema rechaza credenciales inválidas y muestra un mensaje de error correspondiente.
+RF-02: Envío de postulación a la Beca Comedor
+Descripción:
+El sistema debe permitir al Postulante completar un formulario socioeconómico digital y adjuntar la documentación de respaldo digitalizada requerida, desde el portal web o la aplicación móvil, para iniciar formalmente su proceso de postulación a la Beca Comedor.
+Criterios de aceptación:
+●	El Postulante puede completar la totalidad de los campos del formulario socioeconómico.
+●	El Postulante puede adjuntar uno o más archivos digitales como respaldo documental.
+●	El sistema no permite enviar la postulación si falta algún campo o documento obligatorio.
+●	El sistema confirma la recepción de la postulación y la asocia a la gestión académica vigente.
+RF-03: Preselección automatizada con Inteligencia Artificial
+Descripción:
+El sistema debe precalificar automáticamente cada postulación recibida mediante un modelo de inteligencia artificial que evalúe las variables socioeconómicas y académicas declaradas por el Postulante, generando un puntaje de vulnerabilidad que permita ordenar objetivamente a los postulantes según su nivel de necesidad, sin intervención manual sobre el total de solicitudes recibidas (hasta 20,000 o más por gestión).
+Criterios de aceptación:
+●	El sistema calcula un puntaje de vulnerabilidad para cada postulación dentro de un tiempo razonable tras su envío.
+●	El sistema procesa automáticamente la totalidad de las postulaciones recibidas, sin requerir revisión manual previa.
+●	El sistema registra el puntaje obtenido y la fecha de cálculo, permitiendo su trazabilidad posterior.
+RF-04: Panel de monitoreo y toma de decisiones (auditoría y adjudicación)
+Descripción:
+El sistema debe proveer al Administrador DUBSS un panel administrativo donde pueda visualizar la lista priorizada de postulantes según su puntaje de vulnerabilidad, auditar los expedientes finalistas, aprobar o rechazar la adjudicación de la beca, y generar las actas o comprobantes correspondientes para los beneficiarios aprobados.
+Criterios de aceptación:
+●	El Administrador visualiza la lista de postulantes ordenada de mayor a menor puntaje de vulnerabilidad.
+●	El Administrador puede marcar un expediente como auditado o validado tras revisar el respaldo físico.
+●	El Administrador puede aprobar o rechazar la adjudicación de la beca para cada postulante auditado.
+●	El sistema genera un acta o comprobante digital de adjudicación para cada beneficiario aprobado.
+RF-05: Registro e impresión de planillas de asistencia
+Descripción:
+El sistema debe generar las planillas y comprobantes de asistencia (físicos y digitales) de los estudiantes becados para su firma y fotocopia de carnet en el punto de control del Comedor Universitario, y debe permitir registrar digitalmente la asistencia diaria ya verificada por el personal del comedor, con el fin de mantener un respaldo cruzable frente a las auditorías externas. La identificación física del becado en el comedor (por ejemplo, mediante el dispositivo biométrico existente) es responsabilidad de la empresa concesionaria y queda fuera del alcance de este sistema; el sistema solo recibe y registra el resultado de esa verificación.
+Criterios de aceptación:
+●	El sistema genera planillas de asistencia imprimibles, listas para firma física y fotocopia de carnet.
+●	El sistema permite registrar digitalmente la asistencia diaria de cada becario, una vez verificada su identidad por el personal del comedor.
+●	El sistema permite cotejar el registro digital de asistencia contra el respaldo físico (planilla firmada) durante una auditoría.
+●	El sistema no depende de ningún dispositivo de identificación biométrica propio; esa verificación es externa al sistema.
+RF-06: Consultas y notificaciones al postulante
+Descripción:
+El sistema debe permitir al Postulante realizar seguimiento en tiempo real del estado de su postulación (recibida, en evaluación, finalista, adjudicada, rechazada) y recibir notificaciones push sobre eventos relevantes de su beneficio a través de Firebase.
+Criterios de aceptación:
+●	El Postulante puede consultar en todo momento el estado actual de su postulación.
+●	El sistema notifica automáticamente al Postulante cuando su estado cambia (por ejemplo, al ser seleccionado como finalista o al adjudicársele la beca).
+RF-07: Generación de reportes y dashboards de Business Intelligence
+Descripción:
+El sistema debe generar reportes y dashboards interactivos de Business Intelligence dirigidos al Directivo DUBSS, que resuman el comportamiento histórico de las postulaciones, el uso del beneficio y proyecciones de tendencias futuras, para apoyar la planificación institucional y la rendición de cuentas.
+Criterios de aceptación:
+●	El Directivo puede visualizar indicadores clave (postulaciones recibidas, becas adjudicadas, asistencia) en un dashboard interactivo.
+●	El sistema permite filtrar los reportes por gestión académica.
+●	El sistema genera proyecciones o tendencias a partir del histórico de postulaciones y asistencia.
+4.3.2. Requisitos No Funcionales
+Se detallan los tres requisitos no funcionales ya titulados en el documento (RNF-01 a RNF-03), y se proponen dos adicionales (RNF-04 y RNF-05) derivados de las restricciones generales ya definidas en la sección 4.2.4.
+RNF-01: Seguridad y protección de datos personales
+Descripción:
+El sistema debe garantizar la confidencialidad, integridad y protección de los datos socioeconómicos y personales de los postulantes, aplicando control de acceso basado en roles y cifrado de la información sensible almacenada y transmitida, en cumplimiento de las políticas institucionales de protección de datos personales de la UAGRM.
+Criterios de aceptación:
+●	El acceso a los expedientes socioeconómicos está restringido según el rol del usuario autenticado.
+●	La información sensible se transmite y almacena de forma cifrada.
+●	El sistema mantiene un registro (log) de los accesos realizados a cada expediente.
+RNF-02: Disponibilidad del servicio
+Descripción:
+El sistema debe mantenerse operativo y accesible durante los periodos de alta demanda, particularmente durante las fechas de apertura y cierre de la convocatoria de postulación, minimizando el riesgo de interrupciones del servicio desplegado en AWS.
+Criterios de aceptación:
+●	El portal web y la aplicación móvil permanecen disponibles durante los picos de postulación.
+●	El sistema cuenta con un mecanismo de recuperación ante caídas del servidor.
+RNF-03: Tiempo de respuesta y concurrencia
+Descripción:
+El sistema debe procesar la precalificación automática y las operaciones de consulta dentro de tiempos de respuesta aceptables, incluso bajo condiciones de alta concurrencia, considerando el volumen de hasta 20,000 postulaciones por gestión y la revisión masiva simultánea por parte de los auditores.
+Criterios de aceptación:
+●	El algoritmo de precalificación procesa el total de postulaciones dentro de un tiempo máximo a definir mediante pruebas de carga.
+●	El sistema atiende solicitudes concurrentes de múltiples usuarios sin degradar significativamente su rendimiento.
+●	El sistema maneja correctamente peticiones HTTP duplicadas durante la revisión masiva de carpetas, evitando registros o acciones repetidas (idempotencia).
+RNF-04: Usabilidad
+Descripción:
+El sistema debe ofrecer interfaces simples e intuitivas, acordes al nivel de conocimiento técnico básico de sus usuarios (Postulante, Administrador y Directivo), sin requerir conocimientos de programación para su uso.
+Criterios de aceptación:
+●	Un usuario sin experiencia previa en el sistema puede completar el flujo de postulación sin asistencia externa.
+●	El panel de reportes del Directivo se interpreta sin necesidad de conocimientos técnicos.
+RNF-05: Compatibilidad y restricciones tecnológicas
+Descripción:
+El sistema debe cumplir con las restricciones tecnológicas ya definidas para el proyecto: despliegue en un servidor en la nube de AWS, motor de base de datos PostgreSQL, servicios de autenticación, notificaciones push y almacenamiento de archivos a través de Firebase, y aplicación móvil desarrollada en Flutter con prioridad de compatibilidad para dispositivos Android.
+Criterios de aceptación:
+●	El backend del sistema se despliega correctamente sobre AWS utilizando PostgreSQL.
+●	La autenticación, las notificaciones push y el almacenamiento de archivos operan a través de Firebase.
+●	La aplicación móvil funciona correctamente en dispositivos Android.

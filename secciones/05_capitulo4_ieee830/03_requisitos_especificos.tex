@@ -6,23 +6,399 @@
 \subsubsection{4.3.1. Requisitos Funcionales}\label{sec:ieee_rf}
 % [INSTRUCCIÓN]: Especificación formal de cada requisito funcional (RF-01, RF-02, etc.).
 
+A continuación se detallan los requisitos funcionales identificados para el sistema, formulados bajo el esquema de historia de usuario (¿quién?, ¿qué? y ¿por qué?) y acompañados de sus respectivos criterios de aceptación. Las Tablas~\ref{tab:rf01} a~\ref{tab:rf07} presentan cada uno de estos requisitos.
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-01: Registro y autenticación de usuarios}
+\label{tab:rf01}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Postulante, Administrador DUBSS y Directivo DUBSS. \\
+¿Qué? & Quiere registrarse y autenticarse en el sistema desde el portal web o la aplicación móvil. \\
+¿Por qué? & Para acceder de forma segura a las funcionalidades correspondientes a su rol, validado mediante el servicio de autenticación de Firebase. \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
 \begin{itemize}
-    \item \textbf{RF-01: Registro y autenticación de usuarios.} Espacio para la descripción del requisito...
-    \item \textbf{RF-02: Envío de postulación a beca comedor.} Espacio para la descripción del requisito...
-    \item \textbf{RF-03: Preselección automatizada con IA.} Espacio para la descripción del requisito...
-    \item \textbf{RF-04: Panel de monitoreo y toma de decisiones.} Espacio para la descripción del requisito...
+    \item El sistema permite crear una cuenta y autenticarse desde la web y desde la aplicación móvil.
+    \item El sistema identifica el rol del usuario autenticado (Postulante, Administrador o Directivo) y lo redirige al módulo correspondiente.
+    \item El sistema rechaza credenciales inválidas y muestra un mensaje de error correspondiente.
 \end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-02: Envío de postulación a la Beca Comedor}
+\label{tab:rf02}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Postulante. \\
+¿Qué? & Quiere completar un formulario socioeconómico digital y adjuntar la documentación de respaldo digitalizada, desde el portal web o la aplicación móvil. \\
+¿Por qué? & Para iniciar formalmente su proceso de postulación a la Beca Comedor. \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El Postulante puede completar la totalidad de los campos del formulario socioeconómico.
+    \item El Postulante puede adjuntar uno o más archivos digitales como respaldo documental.
+    \item El sistema no permite enviar la postulación si falta algún campo o documento obligatorio.
+    \item El sistema confirma la recepción de la postulación y la asocia a la gestión académica vigente.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-03: Preselección automatizada con Inteligencia Artificial}
+\label{tab:rf03}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Sistema (módulo de preselección con Inteligencia Artificial). \\
+¿Qué? & Quiere precalificar automáticamente cada postulación recibida mediante un modelo de inteligencia artificial que evalúe las variables socioeconómicas y académicas declaradas. \\
+¿Por qué? & Para generar un puntaje de vulnerabilidad que permita ordenar objetivamente a los postulantes según su nivel de necesidad, sin intervención manual sobre el total de solicitudes recibidas (hasta 20,000 o más por gestión). \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El sistema calcula un puntaje de vulnerabilidad para cada postulación dentro de un tiempo razonable tras su envío.
+    \item El sistema procesa automáticamente la totalidad de las postulaciones recibidas, sin requerir revisión manual previa.
+    \item El sistema registra el puntaje obtenido y la fecha de cálculo, permitiendo su trazabilidad posterior.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-04: Panel de monitoreo y toma de decisiones (auditoría y adjudicación)}
+\label{tab:rf04}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Administrador DUBSS. \\
+¿Qué? & Quiere visualizar la lista priorizada de postulantes según su puntaje de vulnerabilidad, auditar los expedientes finalistas y aprobar o rechazar la adjudicación de la beca. \\
+¿Por qué? & Para validar los expedientes físicos de los finalistas y generar las actas o comprobantes correspondientes a los beneficiarios aprobados. \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El Administrador visualiza la lista de postulantes ordenada de mayor a menor puntaje de vulnerabilidad.
+    \item El Administrador puede marcar un expediente como auditado o validado tras revisar el respaldo físico.
+    \item El Administrador puede aprobar o rechazar la adjudicación de la beca para cada postulante auditado.
+    \item El sistema genera un acta o comprobante digital de adjudicación para cada beneficiario aprobado.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-05: Registro e impresión de planillas de asistencia}
+\label{tab:rf05}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Administrador DUBSS y personal del Comedor Universitario. \\
+¿Qué? & Quiere generar planillas de asistencia física y digital para su firma y fotocopia de carnet, y registrar digitalmente la asistencia diaria ya verificada de los becados. \\
+¿Por qué? & Para mantener un respaldo cruzable frente a las auditorías externas, sin que el sistema dependa de ningún dispositivo de identificación biométrica propio, dado que dicha verificación física es responsabilidad de la empresa concesionaria. \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El sistema genera planillas de asistencia imprimibles, listas para firma física y fotocopia de carnet.
+    \item El sistema permite registrar digitalmente la asistencia diaria de cada becario, una vez verificada su identidad por el personal del comedor.
+    \item El sistema permite cotejar el registro digital de asistencia contra el respaldo físico (planilla firmada) durante una auditoría.
+    \item El sistema no depende de ningún dispositivo de identificación biométrica propio; esa verificación es externa al sistema.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-06: Consultas y notificaciones al postulante}
+\label{tab:rf06}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Postulante. \\
+¿Qué? & Quiere realizar seguimiento en tiempo real del estado de su postulación (recibida, en evaluación, finalista, adjudicada, rechazada) y recibir notificaciones push sobre eventos relevantes. \\
+¿Por qué? & Para mantenerse informado del avance y del resultado de su beneficio sin necesidad de acudir presencialmente a la DUBSS. \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El Postulante puede consultar en todo momento el estado actual de su postulación.
+    \item El sistema notifica automáticamente al Postulante cuando su estado cambia (por ejemplo, al ser seleccionado como finalista o al adjudicársele la beca).
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento funcional RF-07: Generación de reportes y dashboards de Business Intelligence}
+\label{tab:rf07}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+¿Quién? & Directivo DUBSS. \\
+¿Qué? & Quiere visualizar reportes y dashboards interactivos de Business Intelligence sobre el comportamiento histórico de las postulaciones y el uso del beneficio. \\
+¿Por qué? & Para apoyar la planificación institucional y la rendición de cuentas mediante proyecciones y tendencias futuras. \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El Directivo puede visualizar indicadores clave (postulaciones recibidas, becas adjudicadas, asistencia) en un dashboard interactivo.
+    \item El sistema permite filtrar los reportes por gestión académica.
+    \item El sistema genera proyecciones o tendencias a partir del histórico de postulaciones y asistencia.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{4.3.2. Requisitos No Funcionales}\label{sec:ieee_rnf}
 % [INSTRUCCIÓN]: Rendimiento, seguridad, disponibilidad, mantenibilidad y fiabilidad (RNF-01, etc.).
 
-\begin{itemize}
-    \item \textbf{RNF-01: Seguridad y protección de datos personales.} Espacio para la descripción del requisito...
-    \item \textbf{RNF-02: Disponibilidad del servicio.} Espacio para la descripción del requisito...
-    \item \textbf{RNF-03: Tiempo de respuesta y concurrencia.} Espacio para la descripción del requisito...
-\end{itemize}
+A continuación se detallan los requisitos no funcionales identificados para el sistema, describiendo los atributos de calidad exigidos y sus respectivos criterios de aceptación. Las Tablas~\ref{tab:rnf01} a~\ref{tab:rnf05} presentan cada uno de estos requisitos.
 
-\subsubsection{4.3.3. Requisitos de Interfaz de Usuario}\label{sec:ieee_interfaces}
+\begin{table}[H]
+\caption{Requerimiento no funcional RNF-01: Seguridad y protección de datos personales}
+\label{tab:rnf01}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+\multicolumn{2}{l}{\textbf{Descripción}} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe garantizar la confidencialidad, integridad y protección de los datos socioeconómicos y personales de los postulantes, aplicando control de acceso basado en roles y cifrado de la información sensible almacenada y transmitida, en cumplimiento de las políticas institucionales de protección de datos personales de la UAGRM.} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El acceso a los expedientes socioeconómicos está restringido según el rol del usuario autenticado.
+    \item La información sensible se transmite y almacena de forma cifrada.
+    \item El sistema mantiene un registro (log) de los accesos realizados a cada expediente.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento no funcional RNF-02: Disponibilidad del servicio}
+\label{tab:rnf02}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+\multicolumn{2}{l}{\textbf{Descripción}} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe mantenerse operativo y accesible durante los periodos de alta demanda, particularmente durante las fechas de apertura y cierre de la convocatoria de postulación, minimizando el riesgo de interrupciones del servicio desplegado en AWS.} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El portal web y la aplicación móvil permanecen disponibles durante los picos de postulación.
+    \item El sistema cuenta con un mecanismo de recuperación ante caídas del servidor.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento no funcional RNF-03: Tiempo de respuesta y concurrencia}
+\label{tab:rnf03}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+\multicolumn{2}{l}{\textbf{Descripción}} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe procesar la precalificación automática y las operaciones de consulta dentro de tiempos de respuesta aceptables, incluso bajo condiciones de alta concurrencia, considerando el volumen de hasta 20,000 postulaciones por gestión y la revisión masiva simultánea por parte de los auditores.} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El algoritmo de precalificación procesa el total de postulaciones dentro de un tiempo máximo a definir mediante pruebas de carga.
+    \item El sistema atiende solicitudes concurrentes de múltiples usuarios sin degradar significativamente su rendimiento.
+    \item El sistema maneja correctamente peticiones HTTP duplicadas durante la revisión masiva de carpetas, evitando registros o acciones repetidas (idempotencia).
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento no funcional RNF-04: Usabilidad}
+\label{tab:rnf04}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+\multicolumn{2}{l}{\textbf{Descripción}} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe ofrecer interfaces simples e intuitivas, acordes al nivel de conocimiento técnico básico de sus usuarios (Postulante, Administrador y Directivo), sin requerir conocimientos de programación para su uso.} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item Un usuario sin experiencia previa en el sistema puede completar el flujo de postulación sin asistencia externa.
+    \item El panel de reportes del Directivo se interpreta sin necesidad de conocimientos técnicos.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Requerimiento no funcional RNF-05: Compatibilidad y restricciones tecnológicas}
+\label{tab:rnf05}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+\toprule
+\multicolumn{2}{l}{\textbf{Descripción}} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe cumplir con las restricciones tecnológicas ya definidas para el proyecto: despliegue en un servidor en la nube de AWS, motor de base de datos PostgreSQL, servicios de autenticación, notificaciones push y almacenamiento de archivos a través de Firebase, y aplicación móvil desarrollada en Flutter con prioridad de compatibilidad para dispositivos Android.} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
+\multicolumn{2}{p{12.5cm}}{
+\begin{itemize}
+    \item El backend del sistema se despliega correctamente sobre AWS utilizando PostgreSQL.
+    \item La autenticación, las notificaciones push y el almacenamiento de archivos operan a través de Firebase.
+    \item La aplicación móvil funciona correctamente en dispositivos Android.
+\end{itemize}
+} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{4.3.3. Requisitos de Interfaz}\label{sec:ieee_interfaces}
 % [INSTRUCCIÓN]: Directrices de diseño responsivo, accesibilidad y prototipos de pantalla principales.
 
-Espacio para las especificaciones de interfaz de usuario y usabilidad...
+Los requisitos de interfaz definen cómo el sistema interactúa con sus usuarios, con el hardware disponible y con otros componentes de software, y se organizan en cuatro categorías.
+
+\begin{itemize}
+    \item \textbf{Interfaz de usuario:} el portal web debe desarrollarse con React y TypeScript, y la aplicación móvil con Flutter, ambos bajo un diseño responsivo que se adapte a distintos tamaños de pantalla. La interfaz gráfica de la aplicación móvil debe seguir las directrices de \textit{Material Design}, propias del framework Flutter, garantizando coherencia visual y accesibilidad básica (contraste adecuado, tamaños de fuente legibles) para usuarios sin experiencia técnica previa.
+    \item \textbf{Interfaz de hardware:} la aplicación móvil debe ser compatible con dispositivos Android de gama media, como los equipos utilizados para las pruebas del proyecto (Redmi Note 14 Pro y Honor X8), y debe permitir el uso de la cámara del dispositivo para la digitalización de documentos de respaldo.
+    \item \textbf{Interfaz de software:} el sistema debe exponer e integrar servicios mediante una API REST desarrollada en Spring Boot, que comunique al frontend web y a la aplicación móvil con la base de datos PostgreSQL y con el módulo de preselección desarrollado en Python. Asimismo, debe integrarse con los servicios de Firebase para la autenticación, el almacenamiento de archivos y el envío de notificaciones push.
+    \item \textbf{Interfaz de comunicación:} toda transmisión de datos entre los clientes (web y móvil) y el servidor debe realizarse mediante el protocolo HTTPS, y la autenticación de las peticiones debe validarse mediante JSON Web Tokens (JWT), a fin de proteger la información socioeconómica sensible de los postulantes durante su transmisión.
+\end{itemize}
+
+\subsubsection{4.3.4. Requisitos de Base de Datos}\label{sec:ieee_requisitos_bd}
+% [INSTRUCCIÓN]: Entidades principales, integridad referencial, respaldos y políticas de retención de datos.
+
+Los requisitos de base de datos definen la estructura y las reglas de gestión de los datos del sistema, sin entrar en el diseño detallado de las tablas, el cual corresponde a una etapa posterior del proyecto.
+
+\begin{itemize}
+    \item El sistema debe almacenar los registros de usuarios, postulaciones, expedientes, calificaciones de vulnerabilidad y asistencia en una base de datos relacional PostgreSQL.
+    \item El campo correspondiente al carnet de identidad (CI) y al correo electrónico debe ser único dentro de la tabla de usuarios, impidiendo el registro de cuentas duplicadas.
+    \item Las tablas de postulaciones, expedientes y asistencia deben mantener integridad referencial mediante claves foráneas hacia la tabla de usuarios, evitando registros huérfanos.
+    \item La base de datos debe tener capacidad para almacenar, como mínimo, los registros correspondientes a las 20,000 postulaciones recibidas por gestión académica, conservando el histórico de gestiones anteriores para su explotación en los reportes de Business Intelligence.
+\end{itemize}
+
+\subsubsection{4.3.5. Restricciones de Diseño}\label{sec:ieee_restricciones_diseno}
+% [INSTRUCCIÓN]: Estándares, lenguajes, herramientas o patrones de arquitectura obligatorios para el diseño del sistema.
+
+El diseño e implementación del sistema está sujeto a las siguientes restricciones técnicas y normativas:
+
+\begin{itemize}
+    \item El backend debe desarrollarse en el lenguaje Java utilizando el framework Spring Boot, bajo una arquitectura de servicios RESTful.
+    \item El frontend web debe desarrollarse con React y TypeScript, y la aplicación móvil con Flutter y el lenguaje Dart.
+    \item El módulo de preselección con Inteligencia Artificial debe desarrollarse en Python, como un componente independiente del backend principal, consumido a través de una API.
+    \item El control de versiones del código fuente debe llevarse a cabo en GitHub, y los entornos de desarrollo deben estandarizarse mediante contenedores Docker.
+    \item El diseño de la Especificación de Requisitos del Software debe ajustarse al estándar IEEE 830, y el manejo de los datos socioeconómicos de los postulantes debe cumplir con las políticas institucionales de protección de datos personales de la UAGRM.
+\end{itemize}
+
+\subsubsection{4.3.6. Requisitos de Rendimiento}\label{sec:ieee_requisitos_rendimiento}
+% [INSTRUCCIÓN]: Tiempos de respuesta, capacidad de procesamiento, concurrencia y escalabilidad esperados.
+
+\paragraph{4.3.6.1. Tiempo de respuesta.}
+
+\begin{itemize}
+    \item La interfaz principal del portal web y de la aplicación móvil no debe tardar más de 3 segundos en cargar bajo condiciones normales de operación.
+    \item El sistema debe mostrar la lista priorizada de postulantes al Administrador DUBSS en un tiempo no mayor a 3 segundos.
+    \item El cálculo del puntaje de vulnerabilidad de una postulación individual no debe exceder los 5 segundos desde su envío.
+\end{itemize}
+
+\paragraph{4.3.6.2. Capacidad y carga máxima.}
+
+\begin{itemize}
+    \item El sistema debe procesar la totalidad de las postulaciones recibidas por gestión (hasta 20,000) sin degradar su rendimiento.
+    \item El sistema debe soportar al menos 50 usuarios administrativos concurrentes durante la fase de auditoría de expedientes, sin afectar el tiempo de respuesta.
+\end{itemize}
+
+\paragraph{4.3.6.3. Uso de recursos (CPU, memoria y ancho de banda).}
+
+\begin{itemize}
+    \item El servidor desplegado en AWS no debe superar el 80\% de uso de CPU ni de memoria durante los picos de carga esperados (apertura y cierre de la convocatoria).
+    \item El consumo de ancho de banda de un usuario concurrente no debe degradar de forma perceptible la experiencia de otros usuarios conectados simultáneamente.
+\end{itemize}
+
+\paragraph{4.3.6.4. Disponibilidad y tiempo de actividad (\textit{uptime}).}
+
+\begin{itemize}
+    \item El sistema debe garantizar una disponibilidad mínima del 99\% durante los periodos de postulación y evaluación de cada gestión académica.
+    \item Los mantenimientos o actualizaciones programadas deben realizarse fuera del horario de atención administrativa de la DUBSS.
+\end{itemize}
+
+\paragraph{4.3.6.5. Escalabilidad.}
+
+\begin{itemize}
+    \item La arquitectura del sistema debe permitir el incremento del volumen de postulaciones en gestiones futuras sin requerir un rediseño estructural.
+    \item El backend debe poder escalar mediante la incorporación de instancias adicionales en AWS conforme crezca la demanda del servicio.
+\end{itemize}
+
+\paragraph{4.3.6.6. Procesamiento en lote o en tiempo real.}
+
+\begin{itemize}
+    \item La autenticación, el envío de postulaciones y la consulta del estado de la beca deben procesarse en tiempo real.
+    \item La generación de los reportes y dashboards de Business Intelligence puede procesarse en lotes programados (por ejemplo, de forma diaria o al cierre de la gestión), sin requerir actualización instantánea.
+\end{itemize}
