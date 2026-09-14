@@ -3,18 +3,48 @@
 % ------------------------------------------------------------------------------
 \subsection{6. Alcances y limitaciones}\label{sec:alcances_limitaciones}
 
-\subsubsection{6.1. Funciones principales}\label{sec:funciones_principales}
-% [INSTRUCCIÓN]: Por cada Módulo indicar las funciones que se va a realizar.
+El presente proyecto abarca el diseño y desarrollo de un sistema de información web y móvil para la automatización, gestión y precalificación del proceso de postulación a la beca comedor universitaria, así como el seguimiento del beneficio otorgado. A continuación, se detallan las funciones cubiertas, los actores involucrados y las restricciones del software.
 
-Espacio para indicar las funciones principales por cada módulo del sistema...
+\subsubsection{6.1. Funciones principales}\label{sec:funciones_principales}
+
+\begin{itemize}
+    \item \textbf{Gestión de Postulaciones en Línea (Web y Móvil):} Permitir a los estudiantes registrar sus datos socioeconómicos y adjuntar sus documentos de respaldo digitalizados mediante un portal web o aplicación móvil.
+
+    \item \textbf{Algoritmo de Precalificación Automática:} Evaluación y ponderación en tiempo real de los expedientes digitales en función de variables socioeconómicas y académicas, generando un puntaje de vulnerabilidad por postulante.
+
+    \item \textbf{Priorización de Carpetas para Auditoría:} Ordenamiento automatizado del total de postulantes (con capacidad para procesar las 20 000 solicitudes o más), garantizando que el personal de Bienestar Estudiantil audite prioritariamente los expedientes con mayor requerimiento económico.
+
+    \item \textbf{Panel de Auditoría y Adjudicación:} Módulo administrativo para la verificación final de expedientes priorizados, aprobación de becas y emisión de actas de adjudicación para los aproximadamente 900 beneficiarios.
+
+    \item \textbf{Módulo de Registro e Impresión de Asistencia Físico/Digital:} Generación de planillas y comprobantes de asistencia con firma física y fotocopia de carnet del becado (requeridos para las auditorías externas), integrados con el registro digital del sistema para auditorías cruzadas.
+
+    \item \textbf{Módulo de Consultas y Notificaciones:} Seguimiento en tiempo real por parte del estudiante sobre el estado de su postulación y alertas sobre el beneficio.
+\end{itemize}
 
 \subsubsection{6.2. Usuarios o beneficiarios}\label{sec:usuarios_beneficiarios}
-% [INSTRUCCIÓN]: Quiénes usarán el sistema (usuarios finales, postulantes, administradores, personal de comedor, etc.).
 
-Espacio para describir los usuarios y beneficiarios del sistema...
+\begin{itemize}
+    \item \textbf{Estudiantes Postulantes:} Alumnos matriculados que realizan su proceso de postulación y carga de documentos de forma digital mediante la aplicación móvil o la plataforma web.
+
+    \item \textbf{Estudiantes Adjudicados (Becados):} Beneficiarios que consultan el estado de su beca y gestionan los requisitos de asistencia diarios.
+
+    \item \textbf{Personal Administrativo de Bienestar Estudiantil:} Encargados de revisar y auditar las carpetas digitalizadas priorizadas por el sistema y gestionar las convocatorias.
+
+    \item \textbf{Auditores Institucionales:} Personal fiscalizador interno/externo que valida la entrega efectiva del beneficio mediante el cotejo entre el registro digital y los respaldos físicos (fotocopias y firmas).
+
+    \item \textbf{Personal del Comedor / Empresa Concesionaria:} Encargados de verificar la identidad del estudiante e intermediar en el registro de asistencia diaria.
+\end{itemize}
 
 \subsubsection{6.3. Limitaciones y Restricciones}\label{sec:limitaciones_restricciones}
-% [INSTRUCCIÓN]: Requisitos técnicos, de seguridad y normativos que deben cumplirse.
-% Restricciones de tiempo, presupuesto o infraestructura.
 
-Espacio para detallar las limitaciones técnicas, normativas y restricciones de recursos...
+\begin{itemize}
+    \item \textbf{Requisito de Auditoría Física (Restricción Normativa):} El sistema no elimina por completo el uso de papel en la fase de asistencia diaria, debido a la exigencia reglamentaria de los organismos auditores que requieren carpetas físicas con fotocopia de carnet y firma manuscrita para validar la entrega del alimento a cada becado. El software actuará como un medio de control, validación y archivo digitalizador complementario.
+
+    \item \textbf{Operación Interna de la Cocina:} El sistema no gestiona el control de inventarios de insumos, compras de materia prima ni la contabilidad interna de la empresa privada concesionaria del comedor.
+
+    \item \textbf{Comercialización a No Becados:} La venta de almuerzos y platos a estudiantes regulares no becados y personal universitario queda fuera del alcance del sistema, correspondiendo a la gestión propia de la empresa privada.
+
+    \item \textbf{Dependencia de Conectividad:} La carga de expedientes y la sincronización de asistencias requieren conexión a Internet activa.
+
+    \item \textbf{Límites de Verificación Automática:} El sistema realiza una precalificación algorítmica basada en la información declarada y digitalizada; sin embargo, la verificación presencial o visitas domiciliarias mantendrán el criterio operativo del personal de Trabajo Social.
+\end{itemize}
