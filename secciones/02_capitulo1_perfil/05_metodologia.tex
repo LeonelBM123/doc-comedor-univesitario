@@ -49,6 +49,24 @@ La fase de Construcción está orientada al desarrollo e integración de los com
 \subparagraph{5.1.1.4. Transición.}\label{sec:puds_transicion}
 La fase de Transición se dirige a la entrega, despliegue, capacitación de los usuarios y validación del sistema en un entorno de producción. Su finalidad es asegurar que el software esté disponible para los usuarios finales, que funcione de manera confiable y que se disponga del soporte adecuado para su operación \parencite[p.~379]{jacobson1999unified}. En el contexto del sistema del comedor universitario, esta fase comprende el despliegue en los servidores de la DUBSS, la capacitación del personal administrativo, la migración de los datos de los postulantes y el acompañamiento durante la primera gestión académica en que el sistema opere en forma oficial.
 
+\paragraph{5.1.2. Flujos de trabajo.}\label{sec:puds_flujos}
+Además de las fases, el PUDS organiza las actividades del proyecto en flujos de trabajo o disciplinas (captura de requisitos, análisis, diseño, implementación y pruebas), que se ejecutan en cada iteración con mayor o menor intensidad según la fase en que se encuentre el proyecto \parencite{jacobson1999unified}. Mientras las fases responden a \textit{cuándo} se avanza, los flujos de trabajo responden a \textit{qué} se hace en cada momento. A continuación se describe cada uno y su aplicación en el presente proyecto.
+
+\subparagraph{5.1.2.1. Captura de requisitos.}\label{sec:puds_requisitos}
+Este flujo busca identificar qué debe hacer el sistema desde la perspectiva de los usuarios y acordarlo con ellos. Sus resultados son el modelo de casos de uso, que agrupa a los actores y las funcionalidades esperadas, y la especificación de los requisitos funcionales y no funcionales \parencite{jacobson1999unified}. En el proyecto, se realiza mediante entrevistas con el personal de la DUBSS y el estudio del proceso actual de postulación, y se documenta con el estándar IEEE 830.
+
+\subparagraph{5.1.2.2. Análisis.}\label{sec:puds_analisis}
+El análisis refina y estructura los requisitos capturados, describiéndolos en el lenguaje de los desarrolladores y construyendo un modelo conceptual del sistema que no depende de la tecnología de implementación \parencite{jacobson1999unified}. En el proyecto, este flujo comprende el modelado de los casos de uso y del dominio con UML, y la definición de las reglas de negocio que gobiernan la calificación y la adjudicación de la beca.
+
+\subparagraph{5.1.2.3. Diseño.}\label{sec:puds_diseno}
+El diseño adapta el modelo de análisis a la tecnología elegida, definiendo la arquitectura del sistema, sus componentes y las interfaces entre ellos \parencite{jacobson1999unified}. En el proyecto, se traduce en la arquitectura del sistema web y móvil, sus módulos de inteligencia artificial y de Business Intelligence, y el diseño de las interfaces de usuario.
+
+\subparagraph{5.1.2.4. Implementación.}\label{sec:puds_implementacion}
+En este flujo se construye el sistema a partir del diseño, codificando los componentes y organizándolos en subsistemas que se integran de forma incremental \parencite{jacobson1999unified}. En el proyecto, se desarrollan los módulos de postulación, preselección automatizada, gestión administrativa, asistencia y reportes, tanto en su versión web como móvil.
+
+\subparagraph{5.1.2.5. Pruebas.}\label{sec:puds_pruebas}
+Las pruebas verifican que el sistema funcione como se especificó y que los requisitos se hayan implementado correctamente, detectando defectos antes de la entrega \parencite{jacobson1999unified}. En el proyecto, se aplican pruebas de caja negra, que validan el comportamiento del sistema a partir de sus entradas y salidas sin considerar su código, y pruebas de caja blanca, que examinan la estructura interna y la lógica del código.
+
 \subsubsection{5.2. Unified Modeling Language}\label{sec:uml}
 % [INSTRUCCIÓN]: Fundamentación teórica del Lenguaje Unificado de Modelado (UML).
 

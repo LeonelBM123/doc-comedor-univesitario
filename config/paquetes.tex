@@ -12,6 +12,7 @@
 \usepackage{float}                 % Habilita el especificador [H] para fijar figuras en su lugar exacto
 \usepackage{pgfplots}              % Gráficos nativos (barras, tortas, líneas)
 \pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning,arrows.meta,fit,backgrounds}
 \usepackage{pgf-pie}               % Gráfico de torta/pastel
 \usepackage{pgfgantt}              % Diagramas de Gantt (cronograma)
 \usepackage{etoolbox}              % \patchcmd (parche de bandas de pgfgantt)
@@ -97,21 +98,21 @@
 \makeatother
 
 % ==============================================================================
-% ÍNDICE DE TABLAS Y FIGURAS: formato "Tabla 1: ..." / "Figura 1: ..."
+% ÍNDICE DE TABLAS Y FIGURAS: formato "Tabla 1. ..." / "Figura 1. ..."
 % ==============================================================================
 \makeatletter
 % Índice de Tablas: anteponer "Tabla" al número de tabla
 \renewcommand*\l@table[2]{%
   \begingroup
-    \renewcommand*\numberline[1]{\hb@xt@\@tempdima{Tabla~##1:~\hfil}}%
-    \@dottedtocline{1}{0em}{5em}{#1}{#2}%
+    \renewcommand*\numberline[1]{\hb@xt@\@tempdima{\textbf{Tabla~##1.}~\hfil}}%
+    \@dottedtocline{1}{0em}{6.4em}{#1}{#2}%
   \endgroup
 }
 % Índice de Figuras: anteponer "Figura" al número de figura
 \renewcommand*\l@figure[2]{%
   \begingroup
-    \renewcommand*\numberline[1]{\hb@xt@\@tempdima{Figura~##1:~\hfil}}%
-    \@dottedtocline{1}{0em}{5em}{#1}{#2}%
+    \renewcommand*\numberline[1]{\hb@xt@\@tempdima{\textbf{Figura~##1.}~\hfil}}%
+    \@dottedtocline{1}{0em}{6.4em}{#1}{#2}%
   \endgroup
 }
 \makeatother

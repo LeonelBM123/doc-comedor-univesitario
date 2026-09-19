@@ -7,33 +7,86 @@ El presente proyecto abarca el diseño y desarrollo de un sistema de informació
 
 \subsubsection{6.1. Funciones principales}\label{sec:funciones_principales}
 
-\begin{itemize}
-    \item \textbf{Gestión de Postulaciones en Línea (Web y Móvil):} Permitir a los estudiantes registrar sus datos socioeconómicos y adjuntar sus documentos de respaldo digitalizados mediante un portal web o aplicación móvil.
+% Lista con incisos a), b), c)... para detallar cada módulo
+\newenvironment{incisos}{\begin{enumerate}\renewcommand{\labelenumi}{\alph{enumi})}}{\end{enumerate}}
 
-    \item \textbf{Algoritmo de Precalificación Automática:} Evaluación y ponderación en tiempo real de los expedientes digitales en función de variables socioeconómicas y académicas, generando un puntaje de vulnerabilidad por postulante.
+\noindent\textbf{Registro y autenticación:}
+\begin{incisos}
+    \item Permite a los postulantes, al personal administrativo de la DUBSS y a los directivos crear una cuenta e ingresar de forma segura desde el portal web o la aplicación móvil.
+    \item Identifica el rol de cada usuario y lo dirige al módulo que le corresponde.
+    \item Rechaza las credenciales inválidas y muestra un mensaje de error.
+\end{incisos}
 
-    \item \textbf{Priorización de Carpetas para Auditoría:} Ordenamiento automatizado del total de postulantes (con capacidad para procesar las 20,000 solicitudes o más), garantizando que el personal de Bienestar Estudiantil audite prioritariamente los expedientes con mayor requerimiento económico.
+\noindent\textbf{Postulación en línea:}
+\begin{incisos}
+    \item Permite al estudiante completar el formulario socioeconómico (ingresos, dependientes, procedencia, carrera, entre otros).
+    \item Permite adjuntar los documentos de respaldo digitalizados y enviar la solicitud.
+    \item Valida que los datos y los documentos obligatorios estén completos y registra la fecha de envío.
+\end{incisos}
 
-    \item \textbf{Panel de Auditoría y Adjudicación:} Módulo administrativo para la verificación final de expedientes priorizados, aprobación de becas y emisión de actas de adjudicación para los aproximadamente 900 beneficiarios.
+\noindent\textbf{Preselección con inteligencia artificial:}
+\begin{incisos}
+    \item Evalúa cada solicitud recibida (20,000 o más por gestión) a partir de las variables socioeconómicas y académicas declaradas.
+    \item Calcula un puntaje de vulnerabilidad por postulante y registra su valor y la fecha de cálculo para garantizar la trazabilidad.
+    \item Genera una lista ordenada que prioriza a los estudiantes con mayor necesidad.
+\end{incisos}
 
-    \item \textbf{Módulo de Registro e Impresión de Asistencia Físico/Digital:} Generación de planillas y comprobantes de asistencia con firma física y fotocopia de carnet del becado (requeridos para las auditorías externas), integrados con el registro digital del sistema para auditorías cruzadas.
+\noindent\textbf{Priorización de carpetas para auditoría:}
+\begin{incisos}
+    \item Ordena las solicitudes según el puntaje obtenido.
+    \item Presenta al personal de la DUBSS, en primer lugar, los expedientes con mayor requerimiento económico, evitando la revisión al azar.
+\end{incisos}
 
-    \item \textbf{Módulo de Consultas y Notificaciones:} Seguimiento en tiempo real por parte del estudiante sobre el estado de su postulación y alertas sobre el beneficio.
-\end{itemize}
+\noindent\textbf{Auditoría y adjudicación:}
+\begin{incisos}
+    \item Permite al personal de la DUBSS revisar los expedientes priorizados y contrastar los datos declarados con la documentación física de los finalistas.
+    \item Permite aprobar, devolver o archivar una postulación.
+    \item Adjudica la beca a los aproximadamente 900 beneficiarios y emite el acta de adjudicación.
+\end{incisos}
+
+\noindent\textbf{Asistencia (físico y digital):}
+\begin{incisos}
+    \item Registra la asistencia diaria de los becados al comedor.
+    \item Genera las planillas y comprobantes impresos, con espacio para la firma y la fotocopia del carnet que exigen las auditorías externas.
+    \item Sincroniza la información con el registro digital para permitir auditorías cruzadas.
+\end{incisos}
+
+\noindent\textbf{Consultas y notificaciones:}
+\begin{incisos}
+    \item Permite al estudiante consultar en tiempo real el estado de su postulación y su puntaje.
+    \item Envía alertas (notificaciones push) sobre la convocatoria, la solicitud de documentación física y el resultado de la adjudicación.
+\end{incisos}
+
+\noindent\textbf{Reportes y tableros de Business Intelligence:}
+\begin{incisos}
+    \item Ofrece a las autoridades tableros interactivos con indicadores sobre postulaciones, eficiencia de la preselección y asistencia al comedor.
+    \item Presenta proyecciones predictivas que apoyan la planificación y la rendición de cuentas.
+\end{incisos}
 
 \subsubsection{6.2. Usuarios o beneficiarios}\label{sec:usuarios_beneficiarios}
 
-\begin{itemize}
-    \item \textbf{Estudiantes Postulantes:} Alumnos matriculados que realizan su proceso de postulación y carga de documentos de forma digital mediante la aplicación móvil o la plataforma web.
+La Tabla~\ref{tab:usuarios_beneficiarios} resume los usuarios del sistema y la forma en que cada uno interactúa con él.
 
-    \item \textbf{Estudiantes Adjudicados (Becados):} Beneficiarios que consultan el estado de su beca y gestionan los requisitos de asistencia diarios.
-
-    \item \textbf{Personal Administrativo de Bienestar Estudiantil:} Encargados de revisar y auditar las carpetas digitalizadas priorizadas por el sistema y gestionar las convocatorias.
-
-    \item \textbf{Auditores Institucionales:} Personal fiscalizador interno/externo que valida la entrega efectiva del beneficio mediante el cotejo entre el registro digital y los respaldos físicos (fotocopias y firmas).
-
-    \item \textbf{Personal del Comedor / Empresa Concesionaria:} Encargados de verificar la identidad del estudiante e intermediar en el registro de asistencia diaria.
-\end{itemize}
+\begin{table}[H]
+\caption{Usuarios y beneficiarios del sistema}
+\label{tab:usuarios_beneficiarios}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{5.2cm} >{\raggedright\arraybackslash}p{4.4cm}}
+\toprule
+Usuario o beneficiario & Descripción & Interacción con el sistema \\
+\midrule
+Estudiantes postulantes & Alumnos matriculados que solicitan la Beca Comedor. & Registran su postulación y cargan sus documentos desde la aplicación móvil o la plataforma web. \\
+Estudiantes adjudicados (becados) & Beneficiarios de la beca. & Consultan el estado de su beca y gestionan sus requisitos de asistencia diaria. \\
+Personal administrativo de Bienestar Estudiantil & Encargados de la gestión del proceso dentro de la DUBSS. & Revisan y auditan las carpetas priorizadas por el sistema y gestionan las convocatorias. \\
+Auditores institucionales & Personal fiscalizador interno o externo. & Validan la entrega del beneficio cotejando el registro digital con los respaldos físicos (fotocopias y firmas). \\
+Personal del comedor / empresa concesionaria & Encargados del servicio de alimentación. & Verifican la identidad del estudiante y participan en el registro de la asistencia diaria. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{6.3. Limitaciones y Restricciones}\label{sec:limitaciones_restricciones}
 
