@@ -3,4 +3,104 @@
 % ------------------------------------------------------------------------------
 \subsection{5.3. Priorización de Casos de Uso}\label{sec:cap5_priorizacion_cu}
 
-% [PENDIENTE]: Redactar la priorización de casos de uso.
+La priorización de los casos de uso se realizó según su aporte al objetivo del proyecto y sus dependencias, y se clasificó en tres niveles:
+
+\begin{itemize}
+    \item \textbf{Alta:} caso de uso indispensable; sin él el sistema no cumple su función.
+    \item \textbf{Media:} caso de uso necesario para que el sistema opere de forma completa.
+    \item \textbf{Baja:} caso de uso complementario, cuya ausencia no bloquea el flujo principal.
+\end{itemize}
+
+Además, dentro de cada nivel se definió un orden de implementación sugerido que respeta las dependencias entre casos de uso, indicadas en la columna «Depende de». Del total de veintiséis casos de uso, dieciséis tienen prioridad alta, siete media y tres baja. Las Tablas~\ref{tab:prioridad_alta}, \ref{tab:prioridad_media} y~\ref{tab:prioridad_baja} presentan los casos de uso de cada nivel.
+
+\refstepcounter{table}\label{tab:prioridad_alta}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Casos de uso de prioridad alta}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Casos de uso de prioridad alta}\par\nopagebreak
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\toprule
+Orden & ID & Caso de uso & Depende de & Justificación \\
+\midrule
+\endfirsthead
+\toprule
+Orden & ID & Caso de uso & Depende de & Justificación \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{5}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+1 & CU-01 & Registrarse y autenticarse & --- & Base de seguridad y roles de todo el sistema. \\
+2 & CU-14 & Gestionar usuarios y roles & CU-01 & Habilita las cuentas del personal de la DUBSS. \\
+3 & CU-13 & Gestionar convocatoria y gestión académica & CU-14 & Sin convocatoria abierta no hay postulaciones. \\
+4 & CU-16 & Digitalizar y adjuntar documentos & CU-01 & Parte esencial de la postulación. \\
+5 & CU-18 & Validar elegibilidad y duplicados & CU-13 & Garantiza la integridad de las postulaciones. \\
+6 & CU-02 & Enviar postulación a Beca Comedor & CU-13, CU-16, CU-18 & Entrada principal de datos del sistema. \\
+7 & CU-03 & Precalificar postulación con Inteligencia Artificial & CU-02 & Núcleo diferenciador del proyecto. \\
+8 & CU-04 & Consultar estado de postulación & CU-02 & Transparencia para el postulante. \\
+9 & CU-06 & Visualizar lista priorizada de postulantes & CU-03 & Resuelve la revisión al azar de expedientes. \\
+10 & CU-05 & Auditar y adjudicar becas & CU-06 & Decisión final del proceso. \\
+11 & CU-07 & Auditar expediente finalista & CU-06 & Validación física de los finalistas. \\
+12 & CU-19 & Devolver postulación para corrección & CU-07 & Evita descartar expedientes subsanables. \\
+13 & CU-20 & Archivar o rechazar postulación & CU-07 & Cierra formalmente los expedientes. \\
+14 & CU-21 & Notificar finalistas y registrar entrega de documentación física & CU-07 & Coordina la auditoría física. \\
+15 & CU-22 & Publicar resultados de adjudicación & CU-05 & Cierra el proceso de selección. \\
+16 & CU-12 & Visualizar dashboard de indicadores BI & CU-02, CU-05, CU-10 & Objetivo del proyecto; requiere datos acumulados. \\
+\end{longtable}
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:prioridad_media}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Casos de uso de prioridad media}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Casos de uso de prioridad media}\par\nopagebreak
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\toprule
+Orden & ID & Caso de uso & Depende de & Justificación \\
+\midrule
+\endfirsthead
+\toprule
+Orden & ID & Caso de uso & Depende de & Justificación \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{5}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+1 & CU-23 & Gestionar padrón de becados & CU-05 & Base del control de asistencia. \\
+2 & CU-09 & Generar planilla de asistencia & CU-23 & Exigida por las auditorías externas. \\
+3 & CU-10 & Registrar asistencia digital & CU-23 & Registra la asistencia diaria de los becados. \\
+4 & CU-24 & Consultar historial de asistencia y estado de beca & CU-10 & Vista de seguimiento para el becado. \\
+5 & CU-08 & Generar acta de adjudicación & CU-05 & Formaliza el resultado de la adjudicación. \\
+6 & CU-11 & Cotejar registro contra respaldo físico & CU-10 & Contrasta el registro digital con las planillas físicas. \\
+7 & CU-25 & Consultar bitácora de acciones & CU-01 & Trazabilidad transversal del sistema. \\
+\end{longtable}
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:prioridad_baja}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Casos de uso de prioridad baja}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Casos de uso de prioridad baja}\par\nopagebreak
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\toprule
+Orden & ID & Caso de uso & Depende de & Justificación \\
+\midrule
+\endfirsthead
+\toprule
+Orden & ID & Caso de uso & Depende de & Justificación \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{5}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+1 & CU-15 & Recuperar contraseña / gestionar perfil & CU-01 & Comodidad; no bloquea el flujo principal. \\
+2 & CU-17 & Guardar borrador de postulación & CU-02 & Facilita completar la postulación en varias sesiones. \\
+3 & CU-26 & Parametrizar modelo de preselección y reprocesar puntajes & CU-03 & Ajuste fino posterior al modelo. \\
+\end{longtable}
+\addtocounter{table}{-1}

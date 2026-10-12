@@ -3,4 +3,52 @@
 % ------------------------------------------------------------------------------
 \subsection{5.2. Identificación de Casos de Uso}\label{sec:cap5_identificacion_cu}
 
-% [PENDIENTE]: Redactar la identificación de casos de uso (ver CLAUDE.md §6 y §8).
+A partir de los actores identificados en la Sección~5.1 y de los requisitos funcionales especificados en el Capítulo~4, se identificaron veintiséis casos de uso que cubren el ciclo completo de la Beca Comedor. La Tabla~\ref{tab:identificacion_cu} presenta cada caso de uso con su actor principal y el requisito funcional que lo respalda.
+
+\refstepcounter{table}\label{tab:identificacion_cu}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Identificación de casos de uso del sistema}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Identificación de casos de uso del sistema}\par\nopagebreak
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{6.4cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{1.5cm}}
+\toprule
+ID & Caso de uso & Actor principal & RF \\
+\midrule
+\endfirsthead
+\toprule
+ID & Caso de uso & Actor principal & RF \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \
+\endfoot
+\bottomrule
+\multicolumn{4}{l}{\textit{Nota.} Elaboración propia.} \
+\endlastfoot
+CU-01 & Registrarse y autenticarse & Usuario del Sistema & RF-01 \\
+CU-02 & Enviar postulación a Beca Comedor & Postulante & RF-02 \\
+CU-03 & Precalificar postulación con Inteligencia Artificial & Sistema (Módulo IA) & RF-03 \\
+CU-04 & Consultar estado de postulación & Postulante & RF-06 \\
+CU-05 & Auditar y adjudicar becas & Administrador DUBSS & RF-04 \\
+CU-06 & Visualizar lista priorizada de postulantes & Administrador DUBSS & RF-04 \\
+CU-07 & Auditar expediente finalista & Administrador DUBSS & RF-04 \\
+CU-08 & Generar acta de adjudicación & Administrador DUBSS & RF-04 \\
+CU-09 & Generar planilla de asistencia & Administrador DUBSS & RF-05 \\
+CU-10 & Registrar asistencia digital & Personal del Comedor & RF-05 \\
+CU-11 & Cotejar registro contra respaldo físico & Administrador DUBSS & RF-05 \\
+CU-12 & Visualizar dashboard de indicadores BI & Directivo & RF-07 \\
+CU-13 & Gestionar convocatoria y gestión académica & Administrador DUBSS & RF-09 \\
+CU-14 & Gestionar usuarios y roles & Administrador DUBSS & RF-10 \\
+CU-15 & Recuperar contraseña / gestionar perfil & Usuario del Sistema & RF-11 \\
+CU-16 & Digitalizar y adjuntar documentos & Postulante & RF-12 \\
+CU-17 & Guardar borrador de postulación & Postulante & RF-13 \\
+CU-18 & Validar elegibilidad y duplicados & Sistema (Módulo IA) & RF-14 \\
+CU-19 & Devolver postulación para corrección & Administrador DUBSS & RF-15 \\
+CU-20 & Archivar o rechazar postulación & Administrador DUBSS & RF-16 \\
+CU-21 & Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos & Administrador DUBSS & RF-17 \\
+CU-22 & Publicar resultados de adjudicación & Administrador DUBSS & RF-18 \\
+CU-23 & Gestionar padrón de becados (baja, suspensión, reemplazo) & Administrador DUBSS & RF-19 \\
+CU-24 & Consultar historial de asistencia y estado de beca & Postulante (becado) & RF-20 \\
+CU-25 & Consultar bitácora de acciones & Administrador DUBSS & RF-21 \\
+CU-26 & Parametrizar modelo de preselección y reprocesar puntajes & Administrador DUBSS & RF-22 \\
+\end{longtable}
+\addtocounter{table}{-1}
