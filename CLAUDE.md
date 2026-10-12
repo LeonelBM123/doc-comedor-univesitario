@@ -23,24 +23,26 @@ Postulación 100 % en línea → **puntaje de vulnerabilidad calculado con IA** 
 
 ## 2. Actores
 
-| Actor | Rol en el sistema | Fuente |
-|---|---|---|
-| **Postulante** | Estudiante UAGRM; se registra, postula, consulta estado, recibe notificaciones. | Cap. 4.2.3 |
-| **Administrador DUBSS** | Personal administrativo; prioriza, audita, adjudica, genera actas/planillas, gestiona convocatorias. | Cap. 4.2.3 |
-| **Directivo DUBSS (Gerente)** | Consume dashboards y proyecciones BI. | Cap. 4.2.3 |
-| **Personal del Comedor Universitario** | Verifica identidad física del becado y registra asistencia diaria. | Diagrama CU, RF-05 |
-| **Sistema / Módulo IA (Python)** | Actor secundario: precalifica y calcula puntaje. | RF-03 |
-| **Firebase** (Auth, FCM, Storage) | Actor secundario externo. | Cap. 4.2.4 |
-| *Auditor institucional* | Fiscalizador interno/externo; coteja registro digital vs. respaldo físico. Aparece en §6.2 pero **no** está en el diagrama de CU ni en los RF. | Cap. 1 §6.2 |
-| *Trabajo Social* / *Encargada de Sistemas* | Roles del proceso actual (modelo de dominio y flujo operativo): revisión documental/calificación y cálculo del puntaje total. Hoy colapsados en "Administrador DUBSS". | Cap. 3.5, 4.2.6 |
+Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24, §5.5 del documento; también en §4.2.2 como Fig. 22).
 
-> ⚠️ **Inconsistencia a resolver:** el RF habla de 3 roles autenticables, el diagrama de CU incluye 4 actores y el dominio usa `TrabajoSocial`/`EncargadaSistemas`. Decidir si se mantienen como subroles de "Administrador DUBSS" o roles propios, y si "Auditor" y "Personal del Comedor" se autentican en el sistema.
+| Actor | Rol en el sistema | Notas |
+|---|---|---|
+| **Usuario del Sistema** | Actor abstracto (generalización). Hereda de él Personal del Comedor, Directivo, Postulante y Administrador. Se asocia a CU-01 y CU-15. | Aparece solo en el diagrama general. |
+| **Postulante** | Estudiante UAGRM; se registra, postula, consulta estado y, una vez becado, su historial de asistencia (CU-24). | El diagrama ya no incluye al actor «Becado»: el becado es el Postulante adjudicado. |
+| **Administrador DUBSS** | Prioriza, audita, adjudica, publica resultados, gestiona convocatorias, usuarios, padrón, bitácora y parámetros del modelo. | Agrupa a Trabajo Social y Encargada de Sistemas del modelo de dominio. |
+| **Directivo** | Consume el dashboard de indicadores BI (CU-12). | Antes «Directivo DUBSS (Gerente)». |
+| **Personal del Comedor Universitario** | Registra la asistencia digital diaria (CU-10). | Se autentica vía Usuario del Sistema. |
+| **Sistema / Módulo IA (Python)** | Actor secundario: precalifica (CU-03) y valida elegibilidad (CU-18). | No dibujado como actor en el diagrama; CU-03 y CU-18 son incluidos por CU-02. |
+| **Firebase** (Auth, FCM, Storage) | Actor secundario externo. | Cap. 4.2.4. |
+| *Auditor institucional* | Fiscalizador; coteja registro digital vs. respaldo físico. | La consulta de auditoría para este actor (ex CU-33) fue **descartada**; no es actor del diagrama. |
+
+> ⚠️ Pendiente: confirmar si «Administrador DUBSS» se divide en subroles (Trabajo Social / Encargada de Sistemas) y qué actor ejecuta CU-11 (en el diagrama no tiene asociación directa; solo extiende CU-10).
 
 ---
 
 ## 3. Dominio y reglas de negocio
 
-**Entidades** (Fig. 17, modelo de dominio): `Postulante` (nombre, CI, carrera, perfil UAGRM) 1—* `Postulacion` ◆— 1..* `DocumentoAdjunto` (tipo, archivo); `Funcionario` (abstracta) ← `TrabajoSocial`, `EncargadaSistemas`; `NotaAcademica` (periodo, promedio); `Postulacion` 0..1 → `BecaComedor` (fecha de adjudicación).
+**Entidades** (Fig. 23, modelo de dominio): `Postulante` (nombre, CI, carrera, perfil UAGRM) 1—* `Postulacion` ◆— 1..* `DocumentoAdjunto` (tipo, archivo); `Funcionario` (abstracta) ← `TrabajoSocial`, `EncargadaSistemas`; `NotaAcademica` (periodo, promedio); `Postulacion` 0..1 → `BecaComedor` (fecha de adjudicación).
 
 **Estados de `Postulacion` (enum `EstadoPostulacion`):** `pendiente`, `devuelta`, `archivada`, `calificada`, `adjudicada`, `no adjudicada`.
 > ⚠️ RF-06 lista otros estados (recibida, en evaluación, finalista, adjudicada, rechazada). Unificar nomenclatura antes de redactar CU.
@@ -74,103 +76,91 @@ Postulación 100 % en línea → **puntaje de vulnerabilidad calculado con IA** 
 
 | Contenido | Archivo |
 |---|---|
-| Requisitos funcionales / no funcionales (RF-01…07, RNF-01…05) | [`secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex`](secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex) |
-| Diagrama de CU actual | `images/18_Diagrama_CU.png` (referenciado en [`02_descripcion_general.tex`](secciones/05_capitulo4_ieee830/02_descripcion_general.tex)) |
+| Requisitos funcionales / no funcionales (RF-01…07 redactados, RNF-01…05) | [`secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex`](secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex) |
+| Diagrama general de CU (Fig. 22 en §4.2.2 y Fig. 24 en §5.5) | `images/18_Diagrama_General_CU.jpg` (referenciado en [`02_descripcion_general.tex`](secciones/05_capitulo4_ieee830/02_descripcion_general.tex) y [`05_diagrama_general_casos_uso.tex`](secciones/07_capitulo5_requisitos/05_diagrama_general_casos_uso.tex)) |
 | Modelo de dominio / actores / restricciones | [`02_descripcion_general.tex`](secciones/05_capitulo4_ieee830/02_descripcion_general.tex) |
 | Funciones principales y alcance | [`secciones/02_capitulo1_perfil/06_alcances_limitaciones.tex`](secciones/02_capitulo1_perfil/06_alcances_limitaciones.tex) |
 | Flujo operativo actual (actividades) | [`secciones/04_capitulo3_empresa/05_flujo_operativo.tex`](secciones/04_capitulo3_empresa/05_flujo_operativo.tex) |
+| **Cap. 5 Captura de Requisitos** (5.1 Actores · 5.2 Identificación CU · 5.3 Priorización · 5.4 Detalle CU · 5.5 Diagrama general). Solo títulos y `[PENDIENTE]`; 5.5 ya tiene la figura | `secciones/07_capitulo5_requisitos/` |
+| **Cap. 6 Análisis** (6.1 Arquitectura: 6.1.1 Identificación, 6.1.2 Relación, 6.1.3 Encapsulamiento de CU por paquetes · 6.2 Análisis de CU · 6.3 Análisis de paquetes). Solo títulos y `[PENDIENTE]` | `secciones/08_capitulo6_analisis/` |
+| **Lista vigente de 26 CU, paquetes, priorización y reparto del trabajo** (fuente de verdad de la numeración) | [`casos_de_uso_filtrados.md`](casos_de_uso_filtrados.md) |
+| Borrador de RF-08…RF-22 (⚠️ usa numeración de CU **antigua**; ver §7) | [`requisitos_funcionales_propuestos.md`](requisitos_funcionales_propuestos.md) |
 | Borrador de RF/RNF en texto plano (buzón, solo lectura) | `texto_formatter/rf_y_rnf.txt` |
 
 ---
 
-## 6. Casos de uso actuales (diagrama, Fig. 18)
+## 6. Casos de uso vigentes (diagrama, Fig. 24)
 
-| ID | Caso de uso | Actor | Relaciones | RF |
-|---|---|---|---|---|
-| CU-01 | Registrarse y autenticarse | Postulante, Admin, Directivo | — | RF-01 |
-| CU-02 | Enviar postulación a Beca Comedor | Postulante | «include» CU-03 | RF-02 |
-| CU-03 | Precalificar postulación con IA | Sistema | — | RF-03 |
-| CU-04 | Consultar estado de postulación | Postulante | «extend» CU-05 | RF-06 |
-| CU-05 | Recibir notificación push | Postulante | — | RF-06 |
-| CU-06 | Auditar y adjudicar becas | Admin | «include» CU-07, CU-08; «extend» CU-09 | RF-04 |
-| CU-07 | Visualizar lista priorizada de postulantes | Admin | — | RF-04 |
-| CU-08 | Auditar expediente finalista | Admin | — | RF-04 |
-| CU-09 | Generar acta de adjudicación | Admin | — | RF-04 | (preguntar)
-| CU-10 | Generar planilla de asistencia | Admin | — | RF-05 |
-| CU-11 | Registrar asistencia digital | Personal Comedor | «extend» CU-12 | RF-05 |(Observado)
-| CU-12 | Cotejar registro contra respaldo físico | Admin | — | RF-05 | (preguntar)
-| CU-13 | Generar reportes y dashboards BI | Directivo | «include» CU-14, CU-15; «extend» CU-16 | RF-07 |(Separarlo)
-| CU-14 | Visualizar indicadores clave | Directivo | — | RF-07 | (Descartado)
-| CU-15 | Filtrar por gestión académica | Directivo | — | RF-07 | (Descartado)
-| CU-16 | Generar proyecciones y tendencias | Directivo | — | RF-07 | (Descartado)
+26 CU, numeración consecutiva CU-01…CU-26, tal como figura en el diagrama general. «ID previo» conserva la trazabilidad con la versión anterior de este archivo.
 
----
+| ID | ID previo | Caso de uso | Actor | Relaciones (según lista filtrada) | RF | Estado |
+|---|---|---|---|---|---|---|
+| CU-01 | CU-01 | Registrarse y autenticarse | Usuario del Sistema | — | RF-01 | OK |
+| CU-02 | CU-02 | Enviar postulación a Beca Comedor | Postulante | «include» CU-03, CU-16, CU-18 | RF-02 | OK |
+| CU-03 | CU-03 | Precalificar postulación con Inteligencia Artificial | Sistema | — | RF-03 | OK |
+| CU-04 | CU-04 | Consultar estado de postulación | Postulante | — | RF-06 | OK |
+| CU-05 | CU-06 | Auditar y adjudicar becas | Admin | «include» CU-06, CU-07; «extend» CU-08, CU-22 | RF-04 | OK |
+| CU-06 | CU-07 | Visualizar lista priorizada de postulantes | Admin | — | RF-04 | OK |
+| CU-07 | CU-08 | Auditar expediente finalista | Admin | «include» CU-21; «extend» CU-19, CU-20 | RF-04 | OK |
+| CU-08 | CU-09 | Generar acta de adjudicación | Admin | — | RF-04 | ❓ Preguntar |
+| CU-09 | CU-10 | Generar planilla de asistencia | Admin | — | RF-05 | OK |
+| CU-10 | CU-11 | Registrar asistencia digital | Personal del Comedor | ver nota de inconsistencias | RF-05 | ⚠️ Observado |
+| CU-11 | CU-12 | Cotejar registro contra respaldo físico | Admin | ver nota de inconsistencias | RF-05 | ❓ Preguntar |
+| CU-12 | CU-13 (parte 1) | Visualizar dashboard de indicadores BI | Directivo | — | RF-07 | Separado |
+| CU-13 | CU-17 | Gestionar convocatoria y gestión académica | Admin | — | RF-09 | OK |
+| CU-14 | CU-18 | Gestionar usuarios y roles | Admin | — | RF-10 | OK |
+| CU-15 | CU-19 | Recuperar contraseña / gestionar perfil | Usuario del Sistema | «extend» CU-01 (no dibujado) | RF-11 | OK |
+| CU-16 | CU-20 | Digitalizar y adjuntar documentos | Postulante | incluido por CU-02 | RF-12 | OK |
+| CU-17 | CU-21 | Guardar borrador de postulación | Postulante | «extend» CU-02 | RF-13 | ⚠️ Observado |
+| CU-18 | CU-22 | Validar elegibilidad y duplicados | Sistema | incluido por CU-02 | RF-14 | OK |
+| CU-19 | CU-26 | Devolver postulación para corrección | Admin | «extend» CU-07 | RF-15 | OK |
+| CU-20 | CU-27 | Archivar o rechazar postulación | Admin | «extend» CU-07 | RF-16 | OK |
+| CU-21 | CU-28 | Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos | Admin | incluido por CU-07 | RF-17 | OK (fusiona ex CU-37) |
+| CU-22 | CU-30 | Publicar resultados de adjudicación | Admin | «extend» CU-05 | RF-18 | OK |
+| CU-23 | CU-31 | Gestionar padrón de becados (baja, suspensión, reemplazo) | Admin | — | RF-19 | OK |
+| CU-24 | CU-32 | Consultar historial de asistencia y estado de beca | Postulante (becado) | — | RF-20 | OK |
+| CU-25 | CU-34 | Consultar bitácora de acciones | Admin | — | RF-21 | OK |
+| CU-26 | CU-35 | Parametrizar modelo de preselección y reprocesar puntajes | Admin | «extend» CU-03 | RF-22 | OK |
 
-## 7. Requisitos funcionales: situación y ampliación
+**Descartados** (no reintroducir al redactar): consultar puntaje y detalle (ex CU-29), recibir notificación push como CU propio (ex CU-05), filtrar por gestión (ex CU-15), indicadores clave (ex CU-14), proyecciones y tendencias (ex CU-16), registrar/consultar rendimiento académico, revisar/calificar documentos y calcular puntaje total (ex CU-23/24/25), consulta de auditoría para Auditor (ex CU-33), exportar reportes (ex CU-36), avisos como CU separado (ex CU-37, fusionado en CU-21).
 
-Hoy hay **7 RF** (RF-01…07). La meta es **≥ 20**. Los RF-08…RF-25 siguientes están **propuestos**, derivados de lo que ya afirman los capítulos 1, 3 y 4 (funciones principales §6.1, flujo operativo, modelo de dominio) y de huecos evidentes del proceso. **Requieren validación con la DUBSS** antes de pasar a LaTeX. Formato obligatorio al llevarlos al documento: tabla *¿Quién? / ¿Qué? / ¿Por qué?* + criterios de aceptación (ver los existentes).
-
-### 7.1 Existentes (no modificar sin pedido expreso)
-RF-01 Registro y autenticación · RF-02 Envío de postulación · RF-03 Preselección con IA · RF-04 Panel de auditoría y adjudicación · RF-05 Planillas y asistencia · RF-06 Consultas y notificaciones · RF-07 Reportes y dashboards BI.
-
-### 7.2 Propuestos
-
-| ID | Requisito (resumen) | Actor | Origen / justificación |
-|---|---|---|---|
-| RF-08 | **Gestión de convocatorias y gestiones académicas:** abrir/cerrar convocatoria, definir fechas, cupos (~900) y requisitos documentales. | Admin | §6.1 "gestionan las convocatorias"; RF-02 "gestión vigente" |
-| RF-09 | **Gestión de usuarios y roles:** alta/baja/edición de cuentas administrativas, directivas y de comedor; asignación de roles. | Admin | RNF-01 control de acceso por rol |
-| RF-10 | **Recuperación de contraseña y gestión de perfil** (datos de contacto, cambio de clave). | Todos | Complementa RF-01 (Firebase Auth) |
-| RF-11 | **Digitalización de documentos con la cámara móvil** y carga desde web; validación de formato, tamaño y legibilidad. | Postulante | Interfaz de hardware (4.3.3) |
-| RF-12 | **Guardar borrador y editar la postulación** antes del cierre de la convocatoria. | Postulante | Formulario extenso (RF-02); usabilidad RNF-04 |
-| RF-13 | **Validación de elegibilidad y unicidad:** verificar matrícula/CI, impedir postulaciones duplicadas en la misma gestión. | Sistema | Reglas de BD (CI único) y 4.3.4 |
-| RF-14 | **Registro/consulta del rendimiento académico** del postulante (`NotaAcademica`: periodo y promedio). | Admin / Sistema | Dominio: Encargada de Sistemas consulta NotaAcademica |
-| RF-15 | **Revisión documental y calificación (1–70 pts)** de la postulación. | Admin (Trabajo Social) | Dominio y flujo operativo (Fig. 16/17) |
-| RF-16 | **Cálculo del puntaje total** (documental + académico ≤ 30) y verificación del mínimo requerido. | Sistema / Admin | Dominio: puntaje total determina adjudicación |
-| RF-17 | **Devolver postulación para corrección** con observaciones; el postulante reenvía documentos. | Admin / Postulante | Estado `devuelta`; §6.1 "devolver" |
-| RF-18 | **Archivar o rechazar postulación** registrando el motivo. | Admin | Estados `archivada`/`no adjudicada`; §6.1 |
-| RF-19 | **Notificar a finalistas y registrar la entrega de documentación física** (fecha de entrega, expediente recibido). | Admin / Postulante | §6.1 "solicitud de documentación física"; atributo `fechaEntrega` |
-| RF-20 | **Consulta del puntaje y detalle de la calificación** por el propio postulante. | Postulante | §2.2 y §6.1 (transparencia) |
-| RF-21 | **Publicación de resultados:** lista oficial de adjudicados y no adjudicados por gestión, con aviso masivo. | Admin | Situación deseada: publicar listas definitivas |
-| RF-22 | **Gestión del padrón de becados:** altas, bajas, suspensión y reemplazo (lista de espera) durante la gestión. | Admin | `BecaComedor`; cupos limitados |
-| RF-23 | **Historial de asistencia y estado de la beca** consultable por el becado. | Becado (Postulante) | §6.2 "gestionan sus requisitos de asistencia" |
-| RF-24 | **Consulta de auditoría (solo lectura)** para auditores institucionales: cotejo asistencia digital vs. planillas/respaldos. | Auditor | §6.2 Auditores institucionales |
-| RF-25 | **Bitácora de acciones** (quién auditó/adjudicó/modificó qué y cuándo) y consulta por el Administrador. | Admin | RNF-01 (log de accesos), trazabilidad RF-03 |
-| RF-26 | **Parametrización del modelo de preselección:** criterios y ponderaciones de vulnerabilidad, y recálculo/reproceso de puntajes. | Admin | Supuesto: DUBSS aporta criterios para calibrar el modelo |
-| RF-27 | **Exportación de reportes** (PDF/Excel) de postulaciones, adjudicaciones y asistencia. | Admin / Directivo | RF-07 "rendición de cuentas" |
-| RF-28 | **Publicación de avisos y comunicados** a postulantes/becados (convocatoria, plazos, cambios). | Admin | §6.1 alertas sobre la convocatoria |
-
-> Total propuesto: 7 existentes + 21 nuevos = **28** (margen sobre el mínimo de 20; se pueden descartar los de menor prioridad: RF-10, RF-12, RF-27, RF-28).
-> Posible **apelación/reclamo del postulante** no figura en ningún capítulo: consultarlo con la DUBSS antes de agregarlo.
+> ⚠️ **Inconsistencias entre el diagrama y `casos_de_uso_filtrados.md` (resolver antes de redactar 5.4):**
+> - **CU-10 ↔ CU-11:** el diagrama dibuja «extend» de CU-11 hacia CU-10 (sentido UML correcto: el cotejo amplía el registro); la lista filtrada lo escribe al revés («CU-10 extend CU-11»).
+> - **CU-17 ↔ CU-02:** en el diagrama la flecha «extend» apunta de CU-02 hacia CU-17 (invertida); en la lista el sentido es CU-17 → CU-02.
+> - **CU-19:** la tabla de relaciones del `.md` dice «extend» CU-03, pero la clasificación por paquetes y CU-07 dicen «extend» CU-07. Se asume CU-07.
+> - **Relaciones no dibujadas:** el diagrama no muestra «include» CU-07→CU-21, «extend» de CU-19/CU-20 hacia CU-07, ni «extend» de CU-08/CU-22 hacia CU-05 (solo asociaciones directas con el Administrador); tampoco «extend» CU-15→CU-01 ni CU-26→CU-03. Actualizar el diagrama o la lista.
+> - **Notificación push:** al descartarse el CU propio, queda por definir que viva dentro de CU-21 y CU-22 (y de CU-04, antes «extend» del push).
 
 ---
 
-## 8. Casos de uso propuestos (nuevos)
+## 7. Requisitos funcionales: situación
 
-Cada CU nuevo se mapea a su RF. Añadirlos al diagrama (Fig. 18) con `include`/`extend` cuando aplique.
+- **Redactados en LaTeX:** RF-01…RF-07 (`03_requisitos_especificos.tex`). RF-07 debe ajustarse a solo dashboard BI (la proyección de tendencias se descartó con ex CU-16).
+- **Mapeo vigente CU → RF** (columna RF de §6): RF-01 CU-01 · RF-02 CU-02 · RF-03 CU-03 · RF-04 CU-05…08 · RF-05 CU-09…11 · RF-06 CU-04 · RF-07 CU-12 · RF-09 CU-13 · RF-10 CU-14 · RF-11 CU-15 · RF-12 CU-16 · RF-13 CU-17 · RF-14 CU-18 · RF-15 CU-19 · RF-16 CU-20 · RF-17 CU-21 · RF-18 CU-22 · RF-19 CU-23 · RF-20 CU-24 · RF-21 CU-25 · RF-22 CU-26.
+- **RF-08 queda vacío** (era «Proyecciones y tendencias», descartado). Decidir si se renumera RF-09…22 → RF-08…21 o se deja el hueco. Con el hueco hay 21 RF efectivos (≥ 20 requeridos).
+- **RF-06** perdió las notificaciones push como CU propio: revisar su redacción (¿notificar vive en CU-21/CU-22?).
+- **Estado de los borradores:** `requisitos_funcionales_propuestos.md` aún usa la numeración de CU anterior (CU-13…28) e incluye RF-08; **no** copiarlo a `secciones/` sin reconciliarlo con §6.
+- Pendiente de consulta con la DUBSS: apelación/reclamo del postulante (no figura en ningún capítulo), umbral mínimo de puntaje, número exacto de cupos.
+- Formato obligatorio al llevarlos al documento: tabla *¿Quién? / ¿Qué? / ¿Por qué?* + criterios de aceptación.
 
-| ID | Caso de uso | Actor | RF | Relación sugerida |
-|---|---|---|---|---|
-| CU-17 | Gestionar convocatoria y gestión académica | Admin | RF-08 | — |
-| CU-18 | Gestionar usuarios y roles | Admin | RF-09 | — |
-| CU-19 | Recuperar contraseña / gestionar perfil | Todos | RF-10 | «extend» CU-01 |
-| CU-20 | Digitalizar y adjuntar documentos | Postulante | RF-11 | «include» en CU-02 |
-| CU-21 | Guardar borrador de postulación | Postulante | RF-12 | «extend» CU-02 | (Observado)
-| CU-22 | Validar elegibilidad y duplicados | Sistema | RF-13 | «include» en CU-02 |
-| CU-23 | Registrar/consultar rendimiento académico | Admin / Sistema | RF-14 | «include» en CU-24 | (Descartado)
-| CU-24 | Revisar documentos y calificar postulación | Admin | RF-15 | — | (Descartado)
-| CU-25 | Calcular puntaje total | Sistema | RF-16 | «include» en CU-24 | (Descartado)
-| CU-26 | Devolver postulación para corrección | Admin | RF-17 | «extend» CU-24 |
-| CU-27 | Archivar o rechazar postulación | Admin | RF-18 | «extend» CU-24 |
-| CU-28 | Notificar finalistas y registrar entrega de documentación física y comunicados/avisos| Admin | RF-19 | «include» en CU-08 |
-| CU-29 | Consultar puntaje y detalle de calificación | Postulante | RF-20 | «extend» CU-04 | (Descartado)
-| CU-30 | Publicar resultados de adjudicación | Admin | RF-21 | «extend» CU-06 |
-| CU-31 | Gestionar padrón de becados (baja/suspensión/reemplazo) | Admin | RF-22 | — |
-| CU-32 | Consultar historial de asistencia y estado de beca | Becado | RF-23 | — |
-| CU-33 | Consultar auditoría de asistencia (solo lectura) | Auditor | RF-24 | «include» CU-12 | (Descartado)
-| CU-34 | Consultar bitácora de acciones | Admin | RF-25 | — |
-| CU-35 | Parametrizar modelo de preselección y reprocesar puntajes | Admin | RF-26 | «extend» CU-03 |
-| CU-36 | Exportar reportes (PDF/Excel) | Admin / Directivo | RF-27 | «extend» CU-13 | (Descartado)
-| CU-37 | Publicar avisos y comunicados | Admin | RF-28 | «include» CU-05 | (Descartado)
+---
+
+## 8. Paquetes, priorización y reparto (insumo de Cap. 5.3 y Cap. 6)
+
+Detalle completo en [`casos_de_uso_filtrados.md`](casos_de_uso_filtrados.md) §2–§4. Resumen:
+
+| Paquete | CU | Cant. |
+|---|---|---|
+| P1 Cuentas y acceso | CU-01, 14, 15 | 3 |
+| P2 Convocatoria y postulación | CU-13, 02, 16, 18, 17, 04 | 6 |
+| P3 Preselección con IA | CU-03, 26 | 2 |
+| P4 Auditoría y adjudicación | CU-05, 06, 07, 19, 20, 21, 08, 22 | 8 |
+| P5 Becados y asistencia | CU-23, 09, 10, 11, 24 | 5 |
+| P6 Reportes y trazabilidad | CU-12, 25 | 2 |
+
+- **Prioridad:** Alta 16 CU · Media 7 · Baja 3 (Baja: CU-15, CU-17, CU-26). Orden de implementación sugerido en el `.md` §3.
+- **Reparto** (13 CU c/u): Persona A = cuentas, postulación, IA y notificaciones (54 pts); Persona B = auditoría, adjudicación, asistencia y reportes (53 pts).
+- Estos paquetes son el punto de partida para **6.1.1 Identificación de Paquetes** y **6.1.3 Encapsulamiento de CU por paquetes**; la relación entre paquetes (6.1.2) debe derivarse de la columna «Relación» del `.md`.
 
 ---
 
@@ -197,6 +187,7 @@ RNF relacionados:
 
 1. **No inventar** datos institucionales (umbral mínimo de puntaje, número exacto de cupos, formatos de documento). Marcarlos como "por definir con la DUBSS".
 2. Mantener consistencia **RF ↔ CU ↔ actor ↔ estado** con las tablas de §6–§8; todo CU nuevo debe trazarse a ≥ 1 RF.
-3. Los RF propuestos son **borrador**: no escribirlos en `secciones/` ni en el diagrama hasta que el usuario los apruebe. Al aprobarlos, editar solo `03_requisitos_especificos.tex` (y actualizar el rango de referencias `\ref{tab:rf01}`–`\ref{tab:rfNN}`), respetando `AGENTS.md`.
+3. Los RF nuevos (RF-09…RF-22) son **borrador**: no escribirlos en `secciones/` hasta que el usuario los apruebe. Al aprobarlos, editar solo `03_requisitos_especificos.tex` (y actualizar el rango de referencias `\ref{tab:rf01}`–`\ref{tab:rfNN}`), respetando `AGENTS.md`.
+3. bis. La numeración vigente de CU es la de §6 (26 CU). Si algún archivo (p. ej. `requisitos_funcionales_propuestos.md`) usa otra numeración, prevalece §6 y se avisa al usuario.
 4. `texto_formatter/` es de solo lectura.
 5. Idioma: español académico formal; tercera persona o primera del plural.
