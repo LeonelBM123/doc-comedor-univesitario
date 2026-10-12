@@ -104,8 +104,8 @@ Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24,
 | CU-07 | CU-08 | Auditar expediente finalista | Admin | «include» CU-21; «extend» CU-19, CU-20 | RF-04 | OK |
 | CU-08 | CU-09 | Generar acta de adjudicación | Admin | — | RF-04 | ❓ Preguntar |
 | CU-09 | CU-10 | Generar planilla de asistencia | Admin | — | RF-05 | OK |
-| CU-10 | CU-11 | Registrar asistencia digital | Personal del Comedor | ver nota de inconsistencias | RF-05 | ⚠️ Observado |
-| CU-11 | CU-12 | Cotejar registro contra respaldo físico | Admin | ver nota de inconsistencias | RF-05 | ❓ Preguntar |
+| CU-10 | CU-11 | Registrar asistencia digital | Personal del Comedor | extendido por CU-11 (cotejo opcional) | RF-05 | ⚠️ Observado |
+| CU-11 | CU-12 | Cotejar registro contra respaldo físico | Admin | «extend» CU-10 | RF-05 | ❓ Preguntar |
 | CU-12 | CU-13 (parte 1) | Visualizar dashboard de indicadores BI | Directivo | — | RF-07 | Separado |
 | CU-13 | CU-17 | Gestionar convocatoria y gestión académica | Admin | — | RF-09 | OK |
 | CU-14 | CU-18 | Gestionar usuarios y roles | Admin | — | RF-10 | OK |
@@ -124,10 +124,8 @@ Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24,
 
 **Descartados** (no reintroducir al redactar): consultar puntaje y detalle (ex CU-29), recibir notificación push como CU propio (ex CU-05), filtrar por gestión (ex CU-15), indicadores clave (ex CU-14), proyecciones y tendencias (ex CU-16), registrar/consultar rendimiento académico, revisar/calificar documentos y calcular puntaje total (ex CU-23/24/25), consulta de auditoría para Auditor (ex CU-33), exportar reportes (ex CU-36), avisos como CU separado (ex CU-37, fusionado en CU-21).
 
-> ⚠️ **Inconsistencias entre el diagrama y `casos_de_uso_filtrados.md` (resolver antes de redactar 5.4):**
-> - **CU-10 ↔ CU-11:** el diagrama dibuja «extend» de CU-11 hacia CU-10 (sentido UML correcto: el cotejo amplía el registro); la lista filtrada lo escribe al revés («CU-10 extend CU-11»).
-> - **CU-17 ↔ CU-02:** en el diagrama la flecha «extend» apunta de CU-02 hacia CU-17 (invertida); en la lista el sentido es CU-17 → CU-02.
-> - **CU-19:** la tabla de relaciones del `.md` dice «extend» CU-03, pero la clasificación por paquetes y CU-07 dicen «extend» CU-07. Se asume CU-07.
+> ✅ **Corregido** en `casos_de_uso_filtrados.md` y en este archivo: CU-11 «extend» CU-10 (sentido del diagrama), CU-17 «extend» CU-02 y CU-19 «extend» CU-07 (no CU-03: devolver ocurre durante la auditoría del expediente).
+> ⚠️ **Pendiente entre el diagrama y la lista:**
 > - **Relaciones no dibujadas:** el diagrama no muestra «include» CU-07→CU-21, «extend» de CU-19/CU-20 hacia CU-07, ni «extend» de CU-08/CU-22 hacia CU-05 (solo asociaciones directas con el Administrador); tampoco «extend» CU-15→CU-01 ni CU-26→CU-03. Actualizar el diagrama o la lista.
 > - **Notificación push:** al descartarse el CU propio, queda por definir que viva dentro de CU-21 y CU-22 (y de CU-04, antes «extend» del push).
 

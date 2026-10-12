@@ -27,8 +27,8 @@ Filtrada a partir de las anotaciones hechas en [`CLAUDE.md`](CLAUDE.md) §6 y §
 | CU-07 | CU-08           | Auditar expediente finalista                                                                  | Admin                        | «include» CU-21; «extend» CU-19, CU-20        | RF-04 | OK                          |
 | CU-08 | CU-09           | Generar acta de adjudicación                                                                  | Admin                        | —                                             | RF-04 | ❓ Preguntar                |
 | CU-09 | CU-10           | Generar planilla de asistencia                                                                | Admin                        | —                                             | RF-05 | OK                          |
-| CU-10 | CU-11           | Registrar asistencia digital                                                                  | Personal del Comedor         | «extend» CU-11                                | RF-05 | ⚠️ Observado                |
-| CU-11 | CU-12           | Cotejar registro contra respaldo físico                                                       | Admin                        | —                                             | RF-05 | ❓ Preguntar                |
+| CU-10 | CU-11           | Registrar asistencia digital                                                                  | Personal del Comedor         | extendido por CU-11                           | RF-05 | ⚠️ Observado                |
+| CU-11 | CU-12           | Cotejar registro contra respaldo físico                                                       | Admin                        | «extend» CU-10                                | RF-05 | ❓ Preguntar                |
 | CU-12 | CU-13 (parte 1) | Visualizar dashboard de indicadores BI                                                        | Directivo                    | —                                             | RF-07 | Separado                    |
 | CU-13 | CU-17           | Gestionar convocatoria y gestión académica                                                    | Admin                        | —                                             | RF-09 | OK                          |
 | CU-14 | CU-18           | Gestionar usuarios y roles                                                                    | Admin                        | —                                             | RF-10 | OK                          |
@@ -36,7 +36,7 @@ Filtrada a partir de las anotaciones hechas en [`CLAUDE.md`](CLAUDE.md) §6 y §
 | CU-16 | CU-20           | Digitalizar y adjuntar documentos                                                             | Postulante                   | —                                             | RF-12 | OK                          |
 | CU-17 | CU-21           | Guardar borrador de postulación                                                               | Postulante                   | «extend» CU-02                                | RF-13 | ⚠️ Observado                |
 | CU-18 | CU-22           | Validar elegibilidad y duplicados                                                             | Sistema                      | —                                             | RF-14 | OK                          |
-| CU-19 | CU-26           | Devolver postulación para corrección                                                          | Admin                        | «extend» CU-03                                | RF-15 | OK                          |
+| CU-19 | CU-26           | Devolver postulación para corrección                                                          | Admin                        | «extend» CU-07                                | RF-15 | OK                          |
 | CU-20 | CU-27           | Archivar o rechazar postulación                                                               | Admin                        | —                                             | RF-16 | OK                          |
 | CU-21 | CU-28           | Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos | Admin                        | —                                             | RF-17 | OK (fusionado con ex CU-37) |
 | CU-22 | CU-30           | Publicar resultados de adjudicación                                                           | Admin                        | —                                             | RF-18 | OK                          |
@@ -49,7 +49,7 @@ Filtrada a partir de las anotaciones hechas en [`CLAUDE.md`](CLAUDE.md) §6 y §
 
 - La columna _Relaciones_ ya está reescrita con la numeración nueva (antes usaba los IDs previos).
 - Al eliminar "Recibir notificación push" (ex CU-05) y "Proyecciones y tendencias" (ex CU-14) quedaron huérfanos: el «extend» de CU-04 hacia el push, el «include» de CU-21 hacia el push, y los RF-08 (proyecciones) y parte de RF-06 (notificaciones). Falta decidir dónde vive la notificación push (probablemente dentro de CU-21 y CU-22) y si RF-08 se descarta.
-- CU-19 y CU-20 (devolver, archivar) quedan como «extend» de CU-07 (Auditar expediente finalista); confirmar.
+- CU-19 y CU-20 (devolver, archivar) son «extend» de CU-07 (Auditar expediente finalista): ocurren durante la auditoría del expediente. Antes CU-19 figuraba por error como «extend» de CU-03.
 
 ---
 
@@ -102,8 +102,8 @@ Filtrada a partir de las anotaciones hechas en [`CLAUDE.md`](CLAUDE.md) §6 y §
 | ----- | --------------------------------------------------------- | -------------------------------------------------------------------------- |
 | CU-23 | Gestionar padrón de becados (baja, suspensión, reemplazo) | Parte de los adjudicados de CU-05                                          |
 | CU-09 | Generar planilla de asistencia                            | Usa el padrón de CU-23                                                     |
-| CU-10 | Registrar asistencia digital                              | «extend» CU-11 (la relación se mantiene como está en el diagrama original) |
-| CU-11 | Cotejar registro contra respaldo físico                   | Extiende a CU-10                                                           |
+| CU-10 | Registrar asistencia digital                              | Extendido por CU-11 (cotejo opcional)                                      |
+| CU-11 | Cotejar registro contra respaldo físico                   | «extend» CU-10                                                             |
 | CU-24 | Consultar historial de asistencia y estado de beca        | Lee lo registrado por CU-10                                                |
 
 ### Paquete 6 — Reportes y trazabilidad (2 CU)
@@ -113,7 +113,7 @@ Filtrada a partir de las anotaciones hechas en [`CLAUDE.md`](CLAUDE.md) §6 y §
 | CU-12 | Visualizar dashboard de indicadores BI | Consume datos de los paquetes 2, 4 y 5     |
 | CU-25 | Consultar bitácora de acciones         | Registra acciones de los paquetes 1, 4 y 5 |
 
-> Nota sobre CU-10/CU-11: en el diagrama original, "Registrar asistencia digital" tiene una flecha «extend» hacia "Cotejar registro contra respaldo físico" (el cotejo es una ampliación opcional del registro). Esa es la dirección que respeto.
+> Nota sobre CU-10/CU-11: en el diagrama vigente, "Cotejar registro contra respaldo físico" (CU-11) tiene la flecha «extend» hacia "Registrar asistencia digital" (CU-10): el cotejo es una ampliación opcional del registro. Esa es la dirección que se respeta.
 
 ---
 
