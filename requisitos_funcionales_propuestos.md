@@ -1,3 +1,5 @@
+> ⚠️ **Superado.** Los RF ya se redactaron en `secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex` con numeración definitiva: se eliminó RF-08 (proyecciones) y RF-09…RF-22 pasaron a RF-08…RF-21 (21 RF en total). Este archivo conserva la numeración antigua solo como histórico.
+
 # Requisitos funcionales — Beca Comedor (DUBSS–UAGRM)
 
 Derivados de la lista filtrada de casos de uso ([`casos_de_uso_filtrados.md`](casos_de_uso_filtrados.md)).
