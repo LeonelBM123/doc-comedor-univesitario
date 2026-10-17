@@ -84,7 +84,7 @@ Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24,
 | **Cap. 5 Captura de Requisitos** (5.1 Actores · 5.2 Identificación CU · 5.3 Priorización · 5.4 Detalle CU · 5.5 Diagrama general). Solo títulos y `[PENDIENTE]`; 5.5 ya tiene la figura | `secciones/07_capitulo5_requisitos/` |
 | **Cap. 6 Análisis** (6.1 Arquitectura: 6.1.1 Identificación, 6.1.2 Relación, 6.1.3 Encapsulamiento de CU por paquetes · 6.2 Análisis de CU · 6.3 Análisis de paquetes). Solo títulos y `[PENDIENTE]` | `secciones/08_capitulo6_analisis/` |
 | **Lista vigente de 26 CU, paquetes, priorización y reparto del trabajo** (fuente de verdad de la numeración) | [`casos_de_uso_filtrados.md`](casos_de_uso_filtrados.md) |
-| Borrador de RF-08…RF-22 (⚠️ usa numeración de CU **antigua**; ver §7) | [`requisitos_funcionales_propuestos.md`](requisitos_funcionales_propuestos.md) |
+| Borrador original de RF (⚠️ numeración **antigua**, ya superado: los RF-08…RF-21 vigentes están redactados en `03_requisitos_especificos.tex`; ver §7) | [`requisitos_funcionales_propuestos.md`](requisitos_funcionales_propuestos.md) |
 | Borrador de RF/RNF en texto plano (buzón, solo lectura) | `texto_formatter/rf_y_rnf.txt` |
 
 ---
@@ -107,20 +107,20 @@ Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24,
 | CU-10 | CU-11 | Registrar asistencia digital | Personal del Comedor | extendido por CU-11 (cotejo opcional) | RF-05 | ⚠️ Observado |
 | CU-11 | CU-12 | Cotejar registro contra respaldo físico | Admin | «extend» CU-10 | RF-05 | ❓ Preguntar |
 | CU-12 | CU-13 (parte 1) | Visualizar dashboard de indicadores BI | Directivo | — | RF-07 | Separado |
-| CU-13 | CU-17 | Gestionar convocatoria y gestión académica | Admin | — | RF-09 | OK |
-| CU-14 | CU-18 | Gestionar usuarios y roles | Admin | — | RF-10 | OK |
-| CU-15 | CU-19 | Recuperar contraseña / gestionar perfil | Usuario del Sistema | «extend» CU-01 (no dibujado) | RF-11 | OK |
-| CU-16 | CU-20 | Digitalizar y adjuntar documentos | Postulante | incluido por CU-02 | RF-12 | OK |
-| CU-17 | CU-21 | Guardar borrador de postulación | Postulante | «extend» CU-02 | RF-13 | ⚠️ Observado |
-| CU-18 | CU-22 | Validar elegibilidad y duplicados | Sistema | incluido por CU-02 | RF-14 | OK |
-| CU-19 | CU-26 | Devolver postulación para corrección | Admin | «extend» CU-07 | RF-15 | OK |
-| CU-20 | CU-27 | Archivar o rechazar postulación | Admin | «extend» CU-07 | RF-16 | OK |
-| CU-21 | CU-28 | Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos | Admin | incluido por CU-07 | RF-17 | OK (fusiona ex CU-37) |
-| CU-22 | CU-30 | Publicar resultados de adjudicación | Admin | «extend» CU-05 | RF-18 | OK |
-| CU-23 | CU-31 | Gestionar padrón de becados (baja, suspensión, reemplazo) | Admin | — | RF-19 | OK |
-| CU-24 | CU-32 | Consultar historial de asistencia y estado de beca | Postulante (becado) | — | RF-20 | OK |
-| CU-25 | CU-34 | Consultar bitácora de acciones | Admin | — | RF-21 | OK |
-| CU-26 | CU-35 | Parametrizar modelo de preselección y reprocesar puntajes | Admin | «extend» CU-03 | RF-22 | OK |
+| CU-13 | CU-17 | Gestionar convocatoria y gestión académica | Admin | — | RF-08 | OK |
+| CU-14 | CU-18 | Gestionar usuarios y roles | Admin | — | RF-09 | OK |
+| CU-15 | CU-19 | Recuperar contraseña / gestionar perfil | Usuario del Sistema | «extend» CU-01 (no dibujado) | RF-10 | OK |
+| CU-16 | CU-20 | Digitalizar y adjuntar documentos | Postulante | incluido por CU-02 | RF-11 | OK |
+| CU-17 | CU-21 | Guardar borrador de postulación | Postulante | «extend» CU-02 | RF-12 | ⚠️ Observado |
+| CU-18 | CU-22 | Validar elegibilidad y duplicados | Sistema | incluido por CU-02 | RF-13 | OK |
+| CU-19 | CU-26 | Devolver postulación para corrección | Admin | «extend» CU-07 | RF-14 | OK |
+| CU-20 | CU-27 | Archivar o rechazar postulación | Admin | «extend» CU-07 | RF-15 | OK |
+| CU-21 | CU-28 | Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos | Admin | incluido por CU-07 | RF-16 | OK (fusiona ex CU-37) |
+| CU-22 | CU-30 | Publicar resultados de adjudicación | Admin | «extend» CU-05 | RF-17 | OK |
+| CU-23 | CU-31 | Gestionar padrón de becados (baja, suspensión, reemplazo) | Admin | — | RF-18 | OK |
+| CU-24 | CU-32 | Consultar historial de asistencia y estado de beca | Postulante (becado) | — | RF-19 | OK |
+| CU-25 | CU-34 | Consultar bitácora de acciones | Admin | — | RF-20 | OK |
+| CU-26 | CU-35 | Parametrizar modelo de preselección y reprocesar puntajes | Admin | «extend» CU-03 | RF-21 | OK |
 
 **Descartados** (no reintroducir al redactar): consultar puntaje y detalle (ex CU-29), recibir notificación push como CU propio (ex CU-05), filtrar por gestión (ex CU-15), indicadores clave (ex CU-14), proyecciones y tendencias (ex CU-16), registrar/consultar rendimiento académico, revisar/calificar documentos y calcular puntaje total (ex CU-23/24/25), consulta de auditoría para Auditor (ex CU-33), exportar reportes (ex CU-36), avisos como CU separado (ex CU-37, fusionado en CU-21).
 
@@ -133,11 +133,11 @@ Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24,
 
 ## 7. Requisitos funcionales: situación
 
-- **Redactados en LaTeX:** RF-01…RF-07 (`03_requisitos_especificos.tex`). RF-07 debe ajustarse a solo dashboard BI (la proyección de tendencias se descartó con ex CU-16).
-- **Mapeo vigente CU → RF** (columna RF de §6): RF-01 CU-01 · RF-02 CU-02 · RF-03 CU-03 · RF-04 CU-05…08 · RF-05 CU-09…11 · RF-06 CU-04 · RF-07 CU-12 · RF-09 CU-13 · RF-10 CU-14 · RF-11 CU-15 · RF-12 CU-16 · RF-13 CU-17 · RF-14 CU-18 · RF-15 CU-19 · RF-16 CU-20 · RF-17 CU-21 · RF-18 CU-22 · RF-19 CU-23 · RF-20 CU-24 · RF-21 CU-25 · RF-22 CU-26.
-- **RF-08 queda vacío** (era «Proyecciones y tendencias», descartado). Decidir si se renumera RF-09…22 → RF-08…21 o se deja el hueco. Con el hueco hay 21 RF efectivos (≥ 20 requeridos).
+- **Redactados en LaTeX:** RF-01…RF-21 (`03_requisitos_especificos.tex`, Tablas `ef{tab:rf01}`–`ef{tab:rf21}`), 21 RF en total (≥ 20 requeridos). RF-07 ya quedó ajustado a solo dashboard BI.
+- **Mapeo vigente CU → RF** (columna RF de §6): RF-01 CU-01 · RF-02 CU-02 · RF-03 CU-03 · RF-04 CU-05…08 · RF-05 CU-09…11 · RF-06 CU-04 · RF-07 CU-12 · RF-08 CU-13 · RF-09 CU-14 · RF-10 CU-15 · RF-11 CU-16 · RF-12 CU-17 · RF-13 CU-18 · RF-14 CU-19 · RF-15 CU-20 · RF-16 CU-21 · RF-17 CU-22 · RF-18 CU-23 · RF-19 CU-24 · RF-20 CU-25 · RF-21 CU-26.
+- **Renumeración aplicada:** el RF-08 descartado («Proyecciones y tendencias») se eliminó y los antiguos RF-09…22 pasaron a RF-08…21, sin huecos. Las referencias cruzadas internas (RF-13→RF-14, RF-17→RF-20) ya están actualizadas.
 - **RF-06** perdió las notificaciones push como CU propio: revisar su redacción (¿notificar vive en CU-21/CU-22?).
-- **Estado de los borradores:** `requisitos_funcionales_propuestos.md` aún usa la numeración de CU anterior (CU-13…28) e incluye RF-08; **no** copiarlo a `secciones/` sin reconciliarlo con §6.
+- **Estado del borrador:** `requisitos_funcionales_propuestos.md` conserva la numeración antigua (RF-08 proyecciones, RF-09…22, CU-13…28); queda solo como histórico. Para cualquier cambio manda `03_requisitos_especificos.tex`.
 - Pendiente de consulta con la DUBSS: apelación/reclamo del postulante (no figura en ningún capítulo), umbral mínimo de puntaje, número exacto de cupos.
 - Formato obligatorio al llevarlos al documento: tabla *¿Quién? / ¿Qué? / ¿Por qué?* + criterios de aceptación.
 
@@ -185,7 +185,7 @@ RNF relacionados:
 
 1. **No inventar** datos institucionales (umbral mínimo de puntaje, número exacto de cupos, formatos de documento). Marcarlos como "por definir con la DUBSS".
 2. Mantener consistencia **RF ↔ CU ↔ actor ↔ estado** con las tablas de §6–§8; todo CU nuevo debe trazarse a ≥ 1 RF.
-3. Los RF nuevos (RF-09…RF-22) son **borrador**: no escribirlos en `secciones/` hasta que el usuario los apruebe. Al aprobarlos, editar solo `03_requisitos_especificos.tex` (y actualizar el rango de referencias `\ref{tab:rf01}`–`\ref{tab:rfNN}`), respetando `AGENTS.md`.
+3. Los RF-08…RF-21 ya están en `secciones/` (aprobados). Para modificarlos editar solo `03_requisitos_especificos.tex` (y el rango `ef{tab:rf01}`–`ef{tab:rfNN}` si cambia la cantidad), respetando `AGENTS.md`.
 3. bis. La numeración vigente de CU es la de §6 (26 CU). Si algún archivo (p. ej. `requisitos_funcionales_propuestos.md`) usa otra numeración, prevalece §6 y se avisa al usuario.
 4. `texto_formatter/` es de solo lectura.
 5. Idioma: español académico formal; tercera persona o primera del plural.
