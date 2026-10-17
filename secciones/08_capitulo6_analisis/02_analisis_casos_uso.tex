@@ -3,4 +3,270 @@
 % ------------------------------------------------------------------------------
 \subsection{6.2. Análisis de Casos de Uso}\label{sec:cap6_analisis_cu}
 
-% [PENDIENTE]: Realizar el análisis de cada caso de uso (clases de análisis y diagramas de colaboración/secuencia).
+El análisis de cada caso de uso se realizó mediante diagramas de colaboración que representan las clases de análisis que intervienen y los mensajes que intercambian. Siguiendo el Proceso Unificado de Desarrollo de Software, el modelo de análisis distingue tres tipos de clases: las clases de interfaz (\textit{boundary}), que modelan la interacción del actor con el sistema; las clases de control (\textit{control}), que coordinan la lógica de cada caso de uso; y las clases de entidad (\textit{entity}), que representan la información persistente del dominio \parencite{jacobson1999unified}. Estos diagramas se expresan en el Lenguaje Unificado de Modelado \parencite{booch2005uml}.
+
+En todos los diagramas, el actor se comunica con la interfaz (clase terminada en \textit{View}), esta con el controlador (clase terminada en \textit{Controller}) y el controlador con las entidades; no existe comunicación directa entre el actor y el controlador ni entre la interfaz y las entidades. Los mensajes se numeran jerárquicamente: el número entero corresponde a la operación que solicita el actor, y los subniveles (1.1, 1.2, etc.) a los mensajes que se derivan de ella hacia el controlador y las entidades. Las flechas se diferencian por color según el tipo de operación. Los nombres de las entidades se corresponden con las tablas del modelo de datos del sistema.
+
+A continuación se presenta el análisis de trece casos de uso: CU-01, CU-02, CU-03, CU-04, CU-13, CU-14, CU-15, CU-16, CU-17, CU-18, CU-21, CU-24 y CU-26.
+
+% [PENDIENTE]: Análisis de los casos de uso restantes (CU-05 a CU-12, CU-19, CU-20, CU-22, CU-23 y CU-25).
+
+\subsubsection{6.2.1. Analizar CU-01 Registrarse y autenticarse}\label{sec:cap6_analisis_cu01}
+
+En el análisis del CU-01 participa el actor Usuario del Sistema, generalizado por los cuatro roles del sistema (Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario), de modo que cualquiera de ellos puede registrarse o iniciar sesión. El actor interactúa con la interfaz \textit{AuthView}, que delega las solicitudes en el controlador \textit{AuthController}, y este accede a las entidades \textit{Usuario} y \textit{Postulante}. La Figura~\ref{fig:analisis_cu01} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-01 Registrarse y autenticarse}
+\label{fig:analisis_cu01}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/50_Analisis_CU01_Registrarse_Autenticarse.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+El registro (mensaje 1) verifica que el CI y el correo electrónico no existan (1.2), crea el usuario (1.3) y, para el rol Postulante, crea su perfil (1.4). El inicio de sesión (mensaje 2) valida las credenciales consultando al usuario por su correo electrónico (2.2); si son válidas, el controlador emite el token JWT con el que se autentican las siguientes peticiones \parencite{rouse2018jwt}.
+
+
+\subsubsection{6.2.2. Analizar CU-02 Enviar postulación a Beca Comedor}\label{sec:cap6_analisis_cu02}
+
+El CU-02 es iniciado por el Postulante a través de \textit{PostulacionView}, que se comunica con \textit{PostulacionController}. Este controlador utiliza las entidades \textit{Convocatoria}, \textit{Postulacion} y \textit{RespuestaSocioeconomica}. La digitalización de documentos, la validación de elegibilidad y la precalificación se resuelven en los casos de uso incluidos (CU-16, CU-18 y CU-03), por lo que no se repiten en este diagrama. La Figura~\ref{fig:analisis_cu02} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-02 Enviar postulación a Beca Comedor}
+\label{fig:analisis_cu02}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/51_Analisis_CU02_Enviar_Postulacion_Beca_Comedor.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+Al iniciar una nueva postulación (mensaje 1), el controlador consulta la convocatoria abierta (1.2). Al enviar el formulario (mensaje 2), crea la postulación (2.2) y su respuesta socioeconómica (2.3). Si la postulación fue devuelta para corrección, el Postulante la corrige y la reenvía (mensaje 3), con lo cual se actualizan la postulación (3.2) y la respuesta socioeconómica (3.3) sobre los mismos registros.
+
+
+\subsubsection{6.2.3. Analizar CU-03 Precalificar postulación con Inteligencia Artificial}\label{sec:cap6_analisis_cu03}
+
+El CU-03 se dispara cuando el Postulante envía su postulación desde \textit{PostulacionView}. El controlador \textit{PrecalificacionController} recibe la solicitud de precalificación y colabora con las entidades \textit{Postulacion}, \textit{ModeloPreseleccion}, \textit{ParametroModelo} y \textit{PuntajePostulacion}. El módulo de Inteligencia Artificial no se representa como objeto independiente: su ejecución se modela como el mensaje 1.5 del propio controlador. La Figura~\ref{fig:analisis_cu03} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-03 Precalificar postulación con Inteligencia Artificial}
+\label{fig:analisis_cu03}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/52_Analisis_CU03_Precalificar_Postulacion_IA.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+El controlador obtiene la postulación (1.2), el modelo de preselección activo (1.3) y sus parámetros (1.4); calcula el puntaje de vulnerabilidad (1.5); registra el puntaje con su fecha de cálculo (1.6) y actualiza el estado de la postulación (1.7), lo que permite conservar la trazabilidad de cada cálculo.
+
+
+\subsubsection{6.2.4. Analizar CU-04 Consultar estado de postulación}\label{sec:cap6_analisis_cu04}
+
+En el CU-04, el Postulante consulta sus postulaciones mediante \textit{EstadoPostulacionView}, que se apoya en \textit{EstadoPostulacionController}. Las entidades involucradas son \textit{Postulacion} y \textit{PostulacionHistorial}. La Figura~\ref{fig:analisis_cu04} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-04 Consultar estado de postulación}
+\label{fig:analisis_cu04}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/53_Analisis_CU04_Consultar_Estado_Postulacion.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+El actor puede listar sus postulaciones (mensaje 1), ver el detalle de una de ellas (mensaje 2), lo que implica obtener la postulación (2.2) y su historial de cambios de estado (2.3), y filtrar las postulaciones por gestión académica (mensaje 3). Se trata de operaciones de solo lectura.
+
+
+\subsubsection{6.2.5. Analizar CU-05 Auditar y adjudicar becas}\label{sec:cap6_analisis_cu05}
+
+
+\subsubsection{6.2.6. Analizar CU-06 Visualizar lista priorizada de postulantes}\label{sec:cap6_analisis_cu06}
+
+
+\subsubsection{6.2.7. Analizar CU-07 Auditar expediente finalista}\label{sec:cap6_analisis_cu07}
+
+
+\subsubsection{6.2.8. Analizar CU-08 Generar acta de adjudicación}\label{sec:cap6_analisis_cu08}
+
+
+\subsubsection{6.2.9. Analizar CU-09 Generar planilla de asistencia}\label{sec:cap6_analisis_cu09}
+
+
+\subsubsection{6.2.10. Analizar CU-10 Registrar asistencia digital}\label{sec:cap6_analisis_cu10}
+
+
+\subsubsection{6.2.11. Analizar CU-11 Cotejar registro contra respaldo físico}\label{sec:cap6_analisis_cu11}
+
+
+\subsubsection{6.2.12. Analizar CU-12 Visualizar dashboard de indicadores BI}\label{sec:cap6_analisis_cu12}
+
+
+\subsubsection{6.2.13. Analizar CU-13 Gestionar convocatoria y gestión académica}\label{sec:cap6_analisis_cu13}
+
+En el CU-13, el Administrador DUBSS gestiona las convocatorias mediante \textit{ConvocatoriaView} y \textit{ConvocatoriaController}, que trabajan con las entidades \textit{Convocatoria}, \textit{GestionAcademica} y \textit{ConvocatoriaDocumento}. La Figura~\ref{fig:analisis_cu13} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-13 Gestionar convocatoria y gestión académica}
+\label{fig:analisis_cu13}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/54_Analisis_CU13_Gestionar_Convocatoria_Gestion_Academica.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+El registro de una convocatoria (mensaje 1) consulta la gestión académica (1.2), crea la convocatoria (1.3) y crea la lista de documentos requeridos (1.4). El listado (mensaje 2) recupera las convocatorias (2.2). La actualización (mensaje 3) modifica la convocatoria (3.2) y sus documentos requeridos (3.3). Finalmente, abrir o cerrar una convocatoria (mensaje 4) actualiza su estado (4.2). No se incluye una operación de eliminación, pues una convocatoria con postulaciones asociadas solo puede cerrarse.
+
+
+\subsubsection{6.2.14. Analizar CU-14 Gestionar usuarios y roles}\label{sec:cap6_analisis_cu14}
+
+En el CU-14, el Administrador DUBSS administra las cuentas del personal mediante \textit{UsuarioView} y \textit{UsuarioController}, que utilizan las entidades \textit{Usuario} y \textit{Rol}. La Figura~\ref{fig:analisis_cu14} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-14 Gestionar usuarios y roles}
+\label{fig:analisis_cu14}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/55_Analisis_CU14_Gestionar_Usuarios_Roles.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+Para registrar una cuenta (mensaje 1), el controlador verifica que el CI y el correo no existan (1.2), consulta el rol asignado (1.3) y crea el usuario (1.4). El listado (mensaje 2) recupera los usuarios según los filtros indicados (2.2). La baja (mensaje 3) desactiva la cuenta mediante la actualización del campo de actividad (3.2), sin eliminar el registro, de modo que se preserve la trazabilidad. La actualización (mensaje 4) modifica los datos del usuario (4.2) y su rol (4.3).
+
+
+\subsubsection{6.2.15. Analizar CU-15 Recuperar contraseña / gestionar perfil}\label{sec:cap6_analisis_cu15}
+
+En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro roles, quien interactúa con \textit{PerfilView}. El controlador \textit{PerfilController} colabora con las entidades \textit{Usuario}, \textit{Postulante} y \textit{TokenRestablecimiento}. La Figura~\ref{fig:analisis_cu15} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-15 Recuperar contraseña / gestionar perfil}
+\label{fig:analisis_cu15}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/56_Analisis_CU15_Recuperar_Contrasena_Gestionar_Perfil.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+La solicitud de recuperación (mensaje 1) consulta al usuario por su correo (1.2) y genera un token de restablecimiento de un solo uso (1.3). El restablecimiento (mensaje 2) verifica el token (2.2) y actualiza la contraseña del usuario (2.3). La consulta del perfil (mensaje 3) obtiene los datos del usuario (3.2) y su actualización (mensaje 4) modifica los datos del usuario (4.2) y los datos de contacto del postulante (4.3).
+
+
+\subsubsection{6.2.16. Analizar CU-16 Digitalizar y adjuntar documentos}\label{sec:cap6_analisis_cu16}
+
+En el CU-16, el Postulante adjunta los documentos de respaldo mediante \textit{DocumentoView} y \textit{DocumentoController}, que utilizan las entidades \textit{ConvocatoriaDocumento} y \textit{DocumentoAdjunto}. La Figura~\ref{fig:analisis_cu16} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-16 Digitalizar y adjuntar documentos}
+\label{fig:analisis_cu16}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/57_Analisis_CU16_Digitalizar_Adjuntar_Documentos.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+Primero se listan los documentos requeridos por la convocatoria y los ya adjuntados (mensaje 1, con los pasos 1.2 y 1.3). Al adjuntar un archivo (mensaje 2), el controlador valida su formato (2.2) y crea el documento adjunto (2.3). El reemplazo (mensaje 3) actualiza el documento (3.2) y la eliminación (mensaje 4) lo elimina (4.2), operaciones permitidas antes del envío de la postulación o cuando esta fue devuelta.
+
+
+\subsubsection{6.2.17. Analizar CU-17 Guardar borrador de postulación}\label{sec:cap6_analisis_cu17}
+
+En el CU-17, el Postulante guarda y retoma su postulación incompleta mediante \textit{BorradorView} y \textit{BorradorController}, que trabajan con las entidades \textit{Convocatoria}, \textit{Postulacion} y \textit{RespuestaSocioeconomica}. La Figura~\ref{fig:analisis_cu17} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-17 Guardar borrador de postulación}
+\label{fig:analisis_cu17}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/58_Analisis_CU17_Guardar_Borrador_Postulacion.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+Al guardar el borrador (mensaje 1), el controlador verifica que la convocatoria esté abierta (1.2) y crea la postulación en estado de borrador (1.3) con las respuestas ingresadas (1.4), sin exigir los campos obligatorios. Al retomarlo (mensaje 2) se recuperan el borrador (2.2) y sus respuestas (2.3), y al continuar editándolo (mensaje 3) se actualizan ambos (3.2 y 3.3). El borrador no se envía al módulo de precalificación.
+
+
+\subsubsection{6.2.18. Analizar CU-18 Validar elegibilidad y duplicados}\label{sec:cap6_analisis_cu18}
+
+El CU-18 es incluido por el CU-02: se ejecuta cuando el Postulante envía su postulación a través de \textit{PostulacionView}. El controlador \textit{ValidacionController} colabora con las entidades \textit{Postulante}, \textit{Convocatoria} y \textit{Postulacion}. La Figura~\ref{fig:analisis_cu18} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-18 Validar elegibilidad y duplicados}
+\label{fig:analisis_cu18}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/59_Analisis_CU18_Validar_Elegibilidad_Duplicados.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+Con la solicitud de validación (mensaje 1.1), el controlador consulta al postulante (1.2), la convocatoria (1.3) y la postulación vigente del postulante en la misma gestión (1.4), y verifica las condiciones de elegibilidad (1.5). El resultado determina si el CU-02 puede registrar la postulación o debe rechazarla indicando el motivo.
+
+
+\subsubsection{6.2.19. Analizar CU-19 Devolver postulación para corrección}\label{sec:cap6_analisis_cu19}
+
+
+\subsubsection{6.2.20. Analizar CU-20 Archivar o rechazar postulación}\label{sec:cap6_analisis_cu20}
+
+
+\subsubsection{6.2.21. Analizar CU-21 Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos}\label{sec:cap6_analisis_cu21}
+
+En el CU-21 participan dos actores: el Administrador DUBSS, que gestiona a los finalistas mediante \textit{FinalistaView}, y el Postulante, que recibe los avisos mediante \textit{AvisoView}. Ambas interfaces se comunican con un único controlador, \textit{NotificacionController}, que utiliza las entidades \textit{Finalista}, \textit{Notificacion} y \textit{Comunicado}. El envío de la notificación push se modela como un mensaje del propio controlador (2.4 y 4.4). La Figura~\ref{fig:analisis_cu21} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-21 Notificar finalistas, registrar entrega de documentación física y publicar comunicados/avisos}
+\label{fig:analisis_cu21}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/60_Analisis_CU21_Notificar_Finalistas_Publicar_Avisos.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+El Administrador puede listar los finalistas (mensaje 1), notificarlos con el plazo y los documentos que deben presentar (mensaje 2), lo que actualiza al finalista (2.2) y crea la notificación (2.3); registrar la entrega de la documentación física (mensaje 3), que actualiza al finalista (3.2); y publicar un comunicado (mensaje 4), que crea el comunicado (4.2) y las notificaciones correspondientes (4.3). El Postulante consulta sus avisos (mensaje 5), con lo que se listan sus notificaciones (5.2) y los comunicados (5.3).
+
+
+\subsubsection{6.2.22. Analizar CU-22 Publicar resultados de adjudicación}\label{sec:cap6_analisis_cu22}
+
+
+\subsubsection{6.2.23. Analizar CU-23 Gestionar padrón de becados (baja, suspensión, reemplazo)}\label{sec:cap6_analisis_cu23}
+
+
+\subsubsection{6.2.24. Analizar CU-24 Consultar historial de asistencia y estado de beca}\label{sec:cap6_analisis_cu24}
+
+En el CU-24, el Postulante adjudicado (becado) consulta su beca mediante \textit{MiBecaView}, que se apoya en \textit{MiBecaController}. Las entidades involucradas son \textit{Beca}, \textit{MovimientoBeca} y \textit{Asistencia}. La Figura~\ref{fig:analisis_cu24} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-24 Consultar historial de asistencia y estado de beca}
+\label{fig:analisis_cu24}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/61_Analisis_CU24_Consultar_Historial_Asistencia_Beca.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+Para ver el estado de su beca (mensaje 1), el controlador obtiene la beca del postulante (1.2) y sus movimientos de baja, suspensión o reemplazo (1.3). Para ver el historial de asistencia (mensaje 2), lista las asistencias de la beca dentro del rango indicado (2.2). Ambas operaciones son de solo lectura y el becado accede únicamente a su propia información.
+
+
+\subsubsection{6.2.25. Analizar CU-25 Consultar bitácora de acciones}\label{sec:cap6_analisis_cu25}
+
+
+\subsubsection{6.2.26. Analizar CU-26 Parametrizar modelo de preselección y reprocesar puntajes}\label{sec:cap6_analisis_cu26}
+
+En el CU-26, el Administrador DUBSS ajusta el modelo de preselección mediante \textit{ModeloPreseleccionView} y \textit{ModeloPreseleccionController}, que colaboran con las entidades \textit{ModeloPreseleccion}, \textit{ParametroModelo}, \textit{LoteReprocesamiento} y \textit{PuntajePostulacion}. El recálculo de puntajes se modela como el mensaje 3.3 del propio controlador. La Figura~\ref{fig:analisis_cu26} presenta el diagrama de análisis.
+
+\begin{figure}[H]
+\caption{Análisis del CU-26 Parametrizar modelo de preselección y reprocesar puntajes}
+\label{fig:analisis_cu26}
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/62_Analisis_CU26_Parametrizar_Modelo_Preseleccion.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
+
+La consulta de parámetros (mensaje 1) obtiene el modelo activo (1.2) y sus parámetros (1.3). Al actualizarlos (mensaje 2), se crea una nueva versión del modelo (2.2) con sus parámetros (2.3), conservando las versiones anteriores. El reprocesamiento (mensaje 3) crea un lote (3.2), recalcula el puntaje de las postulaciones (3.3), registra los nuevos puntajes (3.4), conservando los anteriores, y actualiza el estado del lote (3.5).
+
