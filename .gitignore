@@ -16,6 +16,7 @@
 *.snm
 *.vrb
 *.ttt
+*.pdf
 *.fff
 
 # MiKTeX Biber/Engine Save-Error Artifacts

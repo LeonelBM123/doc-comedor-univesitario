@@ -11,14 +11,35 @@ Propuesta de modelo relacional (**PostgreSQL**) derivada de los 26 CU vigentes (
 | Criterio | Decisión |
 |---|---|
 | Organización | Un esquema lógico por paquete de análisis (P1…P6), mismo agrupamiento de 6.1.1. Se pueden implementar como esquemas PostgreSQL (`cuentas`, `postulacion`, `ia`, `adjudicacion`, `becados`, `reportes`) o como prefijos. |
-| Nombres | `snake_case`, singular, en español. PK `id` (`bigint generated always as identity`). FK `<tabla>_id`. |
+| Nombres | `snake_case`, singular, en español. PK `id` (`bigint generated always as identity`, uso **interno**). FK `<tabla>_id`. |
+| Identificador público | **Toda tabla** tiene `codigo_<tabla>` (**UUID v7**, `uuid`, UQ, NN, default generado). Es el único identificador que viaja a la API y al frontend (web y móvil); la PK `id` y las FK `<tabla>_id` nunca se exponen. Ver §1.1. |
 | Autenticación | La contraseña **no** se guarda en PostgreSQL: la gestiona **Firebase Auth**. Se guarda `firebase_uid` para enlazar. |
 | Archivos | Los binarios van en **Firebase Storage**; la BD guarda solo la ruta (`storage_path`), tipo y tamaño. |
-| Unicidad | `usuario.ci` y `usuario.correo` únicos. Una sola postulación por (postulante, convocatoria). |
+| Unicidad | `usuario.ci` y `usuario.correo` únicos. Una sola postulación por (postulante, convocatoria). Las unicidades son índices parciales `WHERE eliminado_en IS NULL` (§1.1). |
 | Trazabilidad | Todo cambio de estado de postulación y toda acción relevante deja fila en `postulacion_historial` y `bitacora` (append-only). El puntaje se guarda con fecha de cálculo y los puntajes antiguos se conservan. |
 | Idempotencia (RNF-03) | `UNIQUE (beca_id, fecha)` en `asistencia`; `UNIQUE (postulante_id, convocatoria_id)` en `postulacion`. Reintentos de la misma petición no duplican filas. |
 | Volumen | ~20,000 postulaciones/gestión → índices sobre `(convocatoria_id, estado)` y sobre el puntaje vigente (ver §5). |
-| Auditoría de filas | Tablas transaccionales con `creado_en` y `actualizado_en` (`timestamptz`). |
+| Auditoría de filas | **Toda tabla** tiene `creado_en`, `actualizado_en` y `eliminado_en` (`timestamptz`). El borrado es **lógico** (`eliminado_en` no nulo). Ver §1.1. |
+
+### 1.1. Columnas comunes a todas las tablas
+
+Se agregan a **cada** tabla de §3 (no se repiten en cada ficha ni en los diagramas; las fichas solo listan las columnas propias de la tabla):
+
+| Columna | Tipo | Restricciones | Nota |
+|---|---|---|---|
+| `codigo_<tabla>` | uuid | UQ, NN, default `uuidv7()` | Ej.: `codigo_usuario`, `codigo_postulacion`, `codigo_beca`. Se genera en el backend (o con `uuidv7()` de PostgreSQL 18+). UUID v7 es ordenable por tiempo, lo que reduce la fragmentación del índice único. |
+| `creado_en` | timestamptz | NN, default `now()` | |
+| `actualizado_en` | timestamptz | NN, default `now()` | se actualiza en cada `UPDATE` (trigger o `@LastModifiedDate`) |
+| `eliminado_en` | timestamptz | NULL | `NULL` = fila activa; con valor = eliminada lógicamente |
+
+Reglas:
+
+- **El frontend nunca usa la PK.** Las rutas y respuestas REST usan el código (p. ej. `GET /postulaciones/{codigo_postulacion}`); el backend lo traduce a `id` al consultar. Esto evita exponer identificadores secuenciales y la enumeración de recursos (IDOR).
+- **Borrado lógico.** Ninguna operación de la aplicación hace `DELETE` físico; se registra `eliminado_en`. Las consultas filtran `eliminado_en IS NULL` (p. ej. `@SQLRestriction("eliminado_en IS NULL")` en Hibernate).
+- Las restricciones de unicidad que deban respetar el borrado lógico se definen como **índices únicos parciales** `... WHERE eliminado_en IS NULL` (p. ej. `usuario.ci`, `usuario.correo`, `UNIQUE (postulante_id, convocatoria_id)`, `UNIQUE (beca_id, fecha)`). Los índices de §5 también se declaran con ese filtro.
+- Tablas *append-only* (`bitacora`, `postulacion_historial`): llevan las columnas por uniformidad, pero `actualizado_en` = `creado_en` y `eliminado_en` permanece siempre `NULL` (sin `UPDATE`/`DELETE` para el rol de la aplicación).
+- Tablas con PK compuesta o PK=FK (`postulante`, `respuesta_socioeconomica`, `convocatoria_documento`) también llevan `codigo_<tabla>`; su PK no cambia.
+- Los `ON DELETE CASCADE` de §5 se reemplazan por el borrado lógico en cascada hecho en el servicio (misma transacción).
 
 ---
 
@@ -103,7 +124,6 @@ erDiagram
 | nombres, apellidos | varchar(100) | NN | |
 | rol_id | bigint | FK→rol, NN | CU-14: asignación de rol |
 | activo | boolean | NN, default true | CU-14: desactivar sin borrar |
-| creado_en, actualizado_en | timestamptz | NN | |
 
 **`postulante`** (extensión 1:1 de `usuario` solo para rol POSTULANTE)
 
@@ -187,7 +207,6 @@ Regla: **una sola convocatoria vigente por gestión** → índice único parcial
 | estado | enum `estado_postulacion` | NN | ver §4 |
 | fecha_envio | timestamptz | NULL mientras sea borrador | |
 | numero_envios | smallint | NN, default 0 | se incrementa en cada reenvío tras *devuelta* |
-| creado_en, actualizado_en | timestamptz | NN | |
 
 - `UNIQUE (postulante_id, convocatoria_id)` → implementa CU-18 (duplicados) y la regla «una postulación por postulante y gestión». Una postulación *devuelta* **se reenvía sobre la misma fila** (no se crea otra); el detalle queda en `postulacion_historial`.
 - CU-17 (borrador): estado `borrador` (ver pregunta abierta Q1). Un borrador no se envía al módulo IA.
@@ -229,7 +248,6 @@ Regla: **una sola convocatoria vigente por gestión** → índice único parcial
 | estado_anterior / estado_nuevo | `estado_postulacion` | |
 | usuario_id | bigint FK→usuario | quién cambió el estado (NULL si fue el sistema) |
 | motivo | text | obligatorio al devolver, archivar o rechazar (CHECK en servicio) |
-| creado_en | timestamptz NN | |
 
 ---
 
@@ -261,7 +279,7 @@ erDiagram
                            varchar estado }
 ```
 
-**`modelo_preseleccion`**: `id`, `version` (UQ), `descripcion`, `activo` (boolean; solo uno `true` → índice único parcial), `creado_por`, `creado_en`.
+**`modelo_preseleccion`**: `id`, `version` (UQ), `descripcion`, `activo` (boolean; solo uno `true` → índice único parcial), `creado_por`.
 **`parametro_modelo`** (CU-26): `id`, `modelo_id` FK, `clave`, `ponderacion` numeric, `valor` jsonb. `UNIQUE (modelo_id, clave)`. Contenido **[criterios y ponderaciones por definir con la DUBSS]**.
 
 **`puntaje_postulacion`** (CU-03) — **historial de puntajes** (RF-03, RF-21: se conserva el anterior)
@@ -351,9 +369,8 @@ erDiagram
 | postulacion_id / comunicado_id | bigint FK, nullable | referencia de contexto |
 | leida | boolean NN default false | consultable desde la app |
 | enviada_en | timestamptz | NULL si falló el push |
-| creado_en | timestamptz NN | |
 
-**`dispositivo_fcm`**: `id`, `usuario_id` FK, `token` (UQ), `plataforma` (`ANDROID`, `IOS`, `WEB`), `actualizado_en`.
+**`dispositivo_fcm`**: `id`, `usuario_id` FK, `token` (UQ), `plataforma` (`ANDROID`, `IOS`, `WEB`).
 
 ---
 
@@ -433,7 +450,6 @@ Opcional `cotejo_detalle` (`cotejo_id`, `asistencia_id`, `firmado_en_planilla` b
 | entidad_id | bigint | |
 | detalle | jsonb | valores antes/después |
 | ip | inet | |
-| creado_en | timestamptz NN | |
 
 Sin `UPDATE`/`DELETE` para el rol de la aplicación (`REVOKE UPDATE, DELETE ON bitacora FROM app_user`). Índices: `(usuario_id, creado_en)`, `(accion, creado_en)`.
 
@@ -485,7 +501,7 @@ stateDiagram-v2
 | Búsqueda de usuarios | `usuario (ci)`, `usuario (correo)` (ya únicos) |
 | Notificaciones no leídas | `notificacion (usuario_id, leida, creado_en DESC)` |
 | Reglas de negocio en BD | `CHECK` de rangos (puntajes 0–100, fechas, cupos > 0). Las reglas con estados (p. ej. «publicar solo si todas las adjudicaciones están decididas», «motivo obligatorio al archivar») se validan en la capa de servicio con transacción. |
-| Integridad referencial | `ON DELETE RESTRICT` en general; no se borran postulaciones ni usuarios (se archivan / desactivan). `ON DELETE CASCADE` solo para `documento_adjunto` y `respuesta_socioeconomica` al eliminar un **borrador**. |
+| Integridad referencial | `ON DELETE RESTRICT` en general; no se borran postulaciones ni usuarios (se archivan / desactivan). al eliminar un **borrador** se marca `eliminado_en` (en cascada, desde el servicio) en `documento_adjunto` y `respuesta_socioeconomica`; no hay `DELETE` físico (§1.1). |
 
 ---
 
@@ -543,7 +559,7 @@ Cobertura: los 26 CU tienen al menos una tabla; los CU del P4 de cierre de exped
 
 | # | Pregunta | Impacto en el modelo |
 |---|---|---|
-| Q1 | ¿El borrador (CU-17, *observado*) se modela como estado `borrador` o como tabla aparte? | Si se descarta CU-17: quitar `borrador`, `ON DELETE CASCADE` y `fecha_envio` nullable. |
+| Q1 | ¿El borrador (CU-17, *observado*) se modela como estado `borrador` o como tabla aparte? | Si se descarta CU-17: quitar `borrador`, el borrado lógico en cascada de borradores y `fecha_envio` nullable. |
 | Q2 | Unificar estados de `Postulacion` (dominio vs. RF-06: recibida, en evaluación, finalista…). ¿«Finalista» es un estado o solo la fila en `finalista`? | Cambia el enum y las transiciones; hoy «finalista» es una tabla, no un estado. |
 | Q3 | ¿Se recupera el puntaje 1–70 documental + 30 académico del dominio, o todo lo calcula la IA? | Añadir `puntaje_documental`, `puntaje_academico` y una tabla de calificación por documento. |
 | Q4 | Umbral mínimo de puntaje y número exacto de cupos. | `convocatoria.puntaje_minimo`, `cupos` quedan sin valor por defecto. |
