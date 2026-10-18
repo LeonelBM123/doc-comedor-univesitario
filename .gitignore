@@ -25,3 +25,5 @@ texput.pdf
 
 # Output PDF (autogenerado a partir de los .tex, se recompila localmente)
 main.pdf
+
+_ea_tmp
