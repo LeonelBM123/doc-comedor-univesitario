@@ -16,6 +16,7 @@
 *.snm
 *.vrb
 *.ttt
+*.pdf
 *.fff
 
 # MiKTeX Biber/Engine Save-Error Artifacts
@@ -25,3 +26,5 @@ texput.pdf
 
 # Output PDF (autogenerado a partir de los .tex, se recompila localmente)
 main.pdf
+
+_ea_tmp

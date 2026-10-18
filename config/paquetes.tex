@@ -30,6 +30,21 @@
 \usepackage{booktabs}  % Tablas elegantes según estándar APA (sin líneas verticales)
 \usepackage{array}     % Columnas con formato avanzado (p{}, >{}, \arraybackslash)
 \usepackage{longtable} % Tablas que se extienden por varias páginas
+\usepackage{pdflscape} % Páginas horizontales para diagramas anchos (diagrama de clases)
+\usepackage{listings}  % Código fuente (script SQL del diseño de datos)
+\lstset{
+    language=SQL,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\bfseries,
+    commentstyle=\itshape,
+    columns=fullflexible,
+    keepspaces=true,
+    breaklines=true,
+    frame=none,
+    showstringspaces=false,
+    upquote=true,
+    morekeywords={TYPE,ENUM,GENERATED,ALWAYS,IDENTITY,RETURNS,TRIGGER,REPLACE,FUNCTION,LANGUAGE,BEGIN,END,RETURN,EXECUTE,EACH,ROW,BEFORE,REVOKE,BOOLEAN,BIGINT,SMALLINT,TIMESTAMPTZ,JSONB,UUID,INET,TEXT,NUMERIC,DATE,REFERENCES,RESTRICT,EXTENSION,IF,EXISTS}
+}
 \usepackage{float}     % Posicionamiento exacto de tablas y figuras ([H])
 \usepackage{amsmath}
 \usepackage{ragged2e} % Permite forzar justificación plena (\justifying)
