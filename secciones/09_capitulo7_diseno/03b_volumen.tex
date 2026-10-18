@@ -1,0 +1,993 @@
+% ------------------------------------------------------------------------------
+% 7.3.2.1. VOLUMEN (generado a partir del diagrama lógico de la base de datos)
+% ------------------------------------------------------------------------------
+
+\refstepcounter{table}\label{tab:volumen_rol}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla rol}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla rol}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+nombre & varchar(50) & Nombre del rol (POSTULANTE, ADMINISTRADOR\_\allowbreak{}DUBSS, DIRECTIVO o PERSONAL\_\allowbreak{}COMEDOR) & 50 & No & UQ \\
+codigo\_\allowbreak{}rol & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_usuario}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla usuario}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla usuario}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+firebase\_\allowbreak{}uid & varchar(128) & Identificador del usuario en Firebase Authentication & 128 & No & UQ \\
+ci & varchar(20) & Cédula de identidad del usuario & 20 & No & UQ \\
+correo & varchar(150) & Correo electrónico del usuario & 150 & No & UQ \\
+nombres & varchar(100) & Nombres del usuario & 100 & No & No \\
+apellidos & varchar(100) & Apellidos del usuario & 100 & No & No \\
+activo & boolean & Indica si la cuenta está habilitada & — & No & No \\
+rol\_\allowbreak{}id & bigint & Identificador del rol asignado & — & No & FK \\
+codigo\_\allowbreak{}usuario & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_carrera}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla carrera}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla carrera}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+nombre & varchar(150) & Nombre de la carrera & 150 & No & UQ \\
+facultad & varchar(150) & Facultad a la que pertenece la carrera & 150 & No & No \\
+codigo\_\allowbreak{}carrera & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_postulante}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla postulante}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla postulante}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+usuario\_\allowbreak{}id & bigint & Identificador del usuario (clave primaria y foránea) & — & No & PK, FK \\
+carrera\_\allowbreak{}id & bigint & Identificador de la carrera que cursa & — & No & FK \\
+registro\_\allowbreak{}universitario & varchar(20) & Registro universitario del estudiante (formato por definir con la DUBSS) & 20 & Sí & UQ \\
+telefono & varchar(20) & Teléfono de contacto & 20 & Sí & No \\
+codigo\_\allowbreak{}postulante & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_gestion_academica}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla gestion\_\allowbreak{}academica}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla gestion\_\allowbreak{}academica}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+etiqueta & varchar(20) & Identificación de la gestión, p. ej. 2026-II (formato por definir con la DUBSS) & 20 & No & UQ \\
+fecha\_\allowbreak{}inicio & date & Fecha de inicio de la gestión & — & No & No \\
+fecha\_\allowbreak{}fin & date & Fecha de finalización de la gestión & — & No & No \\
+codigo\_\allowbreak{}gestion\_\allowbreak{}academica & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_convocatoria}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla convocatoria}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla convocatoria}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+gestion\_\allowbreak{}id & bigint & Identificador de la gestión académica & — & No & FK \\
+nombre & varchar(150) & Nombre de la convocatoria & 150 & No & No \\
+fecha\_\allowbreak{}apertura & timestamptz & Fecha y hora de apertura de la convocatoria & — & No & No \\
+fecha\_\allowbreak{}cierre & timestamptz & Fecha y hora de cierre de la convocatoria & — & No & No \\
+cupos & integer & Número de becas disponibles (por definir con la DUBSS) & — & Sí & No \\
+puntaje\_\allowbreak{}minimo & numeric(5,2) & Puntaje mínimo requerido para adjudicar (por definir con la DUBSS) & 5,2 & Sí & No \\
+estado & estado\_\allowbreak{}convocatoria & Estado de la convocatoria (BORRADOR, ABIERTA o CERRADA) & — & No & No \\
+creado\_\allowbreak{}por & bigint & Identificador del administrador que registró la convocatoria & — & No & FK \\
+codigo\_\allowbreak{}convocatoria & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_tipo_documento}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla tipo\_\allowbreak{}documento}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla tipo\_\allowbreak{}documento}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+nombre & varchar(100) & Nombre del tipo de documento (por definir con la DUBSS) & 100 & No & No \\
+descripcion & varchar(255) & Descripción del tipo de documento & 255 & Sí & No \\
+codigo\_\allowbreak{}tipo\_\allowbreak{}documento & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_convocatoria_documento}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla convocatoria\_\allowbreak{}documento}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla convocatoria\_\allowbreak{}documento}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria (clave primaria compuesta) & — & No & PK, FK \\
+tipo\_\allowbreak{}documento\_\allowbreak{}id & bigint & Identificador del tipo de documento (clave primaria compuesta) & — & No & PK, FK \\
+obligatorio & boolean & Indica si el documento es obligatorio & — & No & No \\
+codigo\_\allowbreak{}convocatoria\_\allowbreak{}documento & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_postulacion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla postulacion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla postulacion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulante\_\allowbreak{}id & bigint & Identificador del postulante & — & No & FK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
+estado & estado\_\allowbreak{}postulacion & Estado de la postulación & — & No & No \\
+fecha\_\allowbreak{}envio & timestamptz & Fecha y hora del último envío (nula mientras es borrador) & — & Sí & No \\
+numero\_\allowbreak{}envios & smallint & Cantidad de envíos (aumenta con cada reenvío tras una devolución) & — & No & No \\
+codigo\_\allowbreak{}postulacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_respuesta_socioeconomica}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla respuesta\_\allowbreak{}socioeconomica}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla respuesta\_\allowbreak{}socioeconomica}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación (clave primaria y foránea) & — & No & PK, FK \\
+ingresos\_\allowbreak{}familiares & numeric(12,2) & Ingresos familiares declarados & 12,2 & Sí & No \\
+dependientes & smallint & Número de dependientes del grupo familiar & — & Sí & No \\
+procedencia & varchar(150) & Lugar de procedencia del postulante & 150 & Sí & No \\
+patrimonio & varchar(255) & Descripción o categoría del patrimonio (por definir con la DUBSS) & 255 & Sí & No \\
+estado\_\allowbreak{}vulnerabilidad & varchar(50) & Estado de vulnerabilidad declarado (catálogo por definir con la DUBSS) & 50 & Sí & No \\
+promedio\_\allowbreak{}academico & numeric(5,2) & Promedio académico declarado & 5,2 & Sí & No \\
+datos\_\allowbreak{}extra & jsonb & Variables adicionales del formulario & — & Sí & No \\
+codigo\_\allowbreak{}respuesta\_\allowbreak{}socioeconomica & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_nota_academica}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla nota\_\allowbreak{}academica}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla nota\_\allowbreak{}academica}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
+periodo & varchar(20) & Periodo académico de la nota & 20 & No & No \\
+promedio & numeric & Promedio obtenido en el periodo & — & No & No \\
+codigo\_\allowbreak{}nota\_\allowbreak{}academica & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_documento_adjunto}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla documento\_\allowbreak{}adjunto}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla documento\_\allowbreak{}adjunto}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
+tipo\_\allowbreak{}documento\_\allowbreak{}id & bigint & Identificador del tipo de documento & — & No & FK \\
+nombre\_\allowbreak{}archivo & varchar(255) & Nombre original del archivo & 255 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del archivo en Firebase Storage & 500 & No & No \\
+mime\_\allowbreak{}type & varchar(100) & Tipo de contenido del archivo & 100 & No & No \\
+tamano\_\allowbreak{}bytes & bigint & Tamaño del archivo en bytes & — & No & No \\
+subido\_\allowbreak{}en & timestamptz & Fecha y hora de carga del archivo & — & No & No \\
+codigo\_\allowbreak{}documento\_\allowbreak{}adjunto & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_postulacion_historial}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla postulacion\_\allowbreak{}historial}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla postulacion\_\allowbreak{}historial}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
+estado\_\allowbreak{}anterior & estado\_\allowbreak{}postulacion & Estado previo al cambio (nulo en el primer registro) & — & Sí & No \\
+estado\_\allowbreak{}nuevo & estado\_\allowbreak{}postulacion & Estado resultante del cambio & — & No & No \\
+usuario\_\allowbreak{}id & bigint & Identificador del usuario que realizó el cambio (nulo si fue el sistema) & — & Sí & FK \\
+motivo & text & Motivo u observaciones del cambio (obligatorio al devolver, archivar o rechazar) & — & Sí & No \\
+codigo\_\allowbreak{}postulacion\_\allowbreak{}historial & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_modelo_preseleccion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla modelo\_\allowbreak{}preseleccion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla modelo\_\allowbreak{}preseleccion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+version & varchar(20) & Versión del modelo & 20 & No & UQ \\
+descripcion & varchar(255) & Descripción de la versión del modelo & 255 & Sí & No \\
+activo & boolean & Indica si es la versión vigente (solo una activa) & — & No & No \\
+creado\_\allowbreak{}por & bigint & Identificador del administrador que registró la versión & — & Sí & FK \\
+codigo\_\allowbreak{}modelo\_\allowbreak{}preseleccion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_parametro_modelo}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla parametro\_\allowbreak{}modelo}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla parametro\_\allowbreak{}modelo}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+modelo\_\allowbreak{}id & bigint & Identificador del modelo de preselección & — & No & FK \\
+clave & varchar(100) & Nombre del criterio o variable & 100 & No & No \\
+ponderacion & numeric & Ponderación del criterio (por definir con la DUBSS) & — & Sí & No \\
+valor & jsonb & Valores o rangos adicionales del parámetro & — & Sí & No \\
+codigo\_\allowbreak{}parametro\_\allowbreak{}modelo & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_puntaje_postulacion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla puntaje\_\allowbreak{}postulacion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla puntaje\_\allowbreak{}postulacion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
+modelo\_\allowbreak{}id & bigint & Identificador de la versión del modelo que calculó el puntaje & — & No & FK \\
+puntaje\_\allowbreak{}total & numeric(5,2) & Puntaje de vulnerabilidad obtenido & 5,2 & No & No \\
+detalle & jsonb & Desglose del puntaje por variable & — & Sí & No \\
+fecha\_\allowbreak{}calculo & timestamptz & Fecha y hora del cálculo & — & No & No \\
+vigente & boolean & Indica si es el puntaje vigente de la postulación & — & No & No \\
+codigo\_\allowbreak{}puntaje\_\allowbreak{}postulacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_lote_reprocesamiento}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla lote\_\allowbreak{}reprocesamiento}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla lote\_\allowbreak{}reprocesamiento}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria reprocesada & — & No & FK \\
+modelo\_\allowbreak{}id & bigint & Identificador de la versión del modelo aplicada & — & No & FK \\
+solicitado\_\allowbreak{}por & bigint & Identificador del administrador que solicitó el reprocesamiento & — & No & FK \\
+estado & varchar(20) & Estado del lote (PENDIENTE, EN\_\allowbreak{}PROCESO, COMPLETADO o FALLIDO) & 20 & No & No \\
+total\_\allowbreak{}postulaciones & integer & Cantidad de postulaciones del lote & — & No & No \\
+iniciado\_\allowbreak{}en & timestamptz & Fecha y hora de inicio del procesamiento & — & Sí & No \\
+terminado\_\allowbreak{}en & timestamptz & Fecha y hora de finalización del procesamiento & — & Sí & No \\
+codigo\_\allowbreak{}lote\_\allowbreak{}reprocesamiento & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_finalista}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla finalista}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla finalista}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK, UQ \\
+posicion & integer & Posición en la lista priorizada al ser seleccionada & — & No & No \\
+notificado\_\allowbreak{}en & timestamptz & Fecha y hora de la notificación al finalista & — & Sí & No \\
+plazo\_\allowbreak{}entrega & date & Plazo de entrega de la documentación física (por definir con la DUBSS) & — & Sí & No \\
+documentacion\_\allowbreak{}recibida\_\allowbreak{}en & timestamptz & Fecha y hora de recepción de la documentación física & — & Sí & No \\
+codigo\_\allowbreak{}finalista & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_auditoria_expediente}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla auditoria\_\allowbreak{}expediente}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla auditoria\_\allowbreak{}expediente}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+finalista\_\allowbreak{}id & bigint & Identificador del finalista auditado & — & No & FK \\
+auditor\_\allowbreak{}id & bigint & Identificador del administrador que auditó & — & No & FK \\
+resultado & varchar(20) & Resultado de la auditoría (VALIDADO, OBSERVADO o NO\_\allowbreak{}VALIDO) & 20 & No & No \\
+observaciones & text & Observaciones de la auditoría & — & Sí & No \\
+fecha\_\allowbreak{}auditoria & timestamptz & Fecha y hora de la auditoría & — & No & No \\
+codigo\_\allowbreak{}auditoria\_\allowbreak{}expediente & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_adjudicacion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla adjudicacion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla adjudicacion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK, UQ \\
+resultado & resultado\_\allowbreak{}adjudicacion & Resultado (ADJUDICADA o NO\_\allowbreak{}ADJUDICADA) & — & No & No \\
+puntaje\_\allowbreak{}final & numeric(5,2) & Puntaje vigente al momento de la decisión & 5,2 & Sí & No \\
+decidido\_\allowbreak{}por & bigint & Identificador del administrador que decidió & — & No & FK \\
+fecha\_\allowbreak{}adjudicacion & timestamptz & Fecha y hora de la adjudicación & — & No & No \\
+codigo\_\allowbreak{}adjudicacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_acta_adjudicacion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla acta\_\allowbreak{}adjudicacion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla acta\_\allowbreak{}adjudicacion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
+numero & varchar(30) & Número único del acta & 30 & No & UQ \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del PDF del acta en Firebase Storage & 500 & No & No \\
+generada\_\allowbreak{}por & bigint & Identificador del administrador que generó el acta & — & No & FK \\
+generada\_\allowbreak{}en & timestamptz & Fecha y hora de generación del acta & — & No & No \\
+codigo\_\allowbreak{}acta\_\allowbreak{}adjudicacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_publicacion_resultado}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla publicacion\_\allowbreak{}resultado}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla publicacion\_\allowbreak{}resultado}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK, UQ \\
+publicado\_\allowbreak{}por & bigint & Identificador del administrador que publicó & — & No & FK \\
+publicado\_\allowbreak{}en & timestamptz & Fecha y hora de la publicación & — & No & No \\
+codigo\_\allowbreak{}publicacion\_\allowbreak{}resultado & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_comunicado}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla comunicado}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla comunicado}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria relacionada (opcional) & — & Sí & FK \\
+titulo & varchar(150) & Título del comunicado & 150 & No & No \\
+contenido & text & Contenido del comunicado & — & No & No \\
+destinatarios & destinatarios\_\allowbreak{}comunicado & Destinatarios (TODOS, FINALISTAS o ADJUDICADOS) & — & No & No \\
+publicado\_\allowbreak{}por & bigint & Identificador del administrador que publicó & — & No & FK \\
+publicado\_\allowbreak{}en & timestamptz & Fecha y hora de publicación & — & No & No \\
+codigo\_\allowbreak{}comunicado & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_notificacion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla notificacion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla notificacion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+usuario\_\allowbreak{}id & bigint & Identificador del usuario destinatario & — & No & FK \\
+tipo & tipo\_\allowbreak{}notificacion & Tipo de notificación & — & No & No \\
+titulo & varchar(150) & Título de la notificación & 150 & No & No \\
+mensaje & text & Mensaje de la notificación & — & No & No \\
+postulacion\_\allowbreak{}id & bigint & Identificador de la postulación relacionada (opcional) & — & Sí & FK \\
+comunicado\_\allowbreak{}id & bigint & Identificador del comunicado relacionado (opcional) & — & Sí & FK \\
+leida & boolean & Indica si el usuario leyó la notificación & — & No & No \\
+enviada\_\allowbreak{}en & timestamptz & Fecha y hora de envío del push (nula si falló) & — & Sí & No \\
+codigo\_\allowbreak{}notificacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_dispositivo_fcm}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla dispositivo\_\allowbreak{}fcm}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla dispositivo\_\allowbreak{}fcm}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+usuario\_\allowbreak{}id & bigint & Identificador del usuario propietario del dispositivo & — & No & FK \\
+token & varchar(255) & Token de Firebase Cloud Messaging del dispositivo & 255 & No & UQ \\
+plataforma & varchar(10) & Plataforma del dispositivo (ANDROID, IOS o WEB) & 10 & No & No \\
+codigo\_\allowbreak{}dispositivo\_\allowbreak{}fcm & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_beca}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla beca}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla beca}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+adjudicacion\_\allowbreak{}id & bigint & Identificador de la adjudicación que origina la beca & — & No & FK, UQ \\
+postulante\_\allowbreak{}id & bigint & Identificador del postulante becado & — & No & FK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
+estado & estado\_\allowbreak{}beca & Estado de la beca (VIGENTE, SUSPENDIDA o BAJA) & — & No & No \\
+fecha\_\allowbreak{}inicio & date & Fecha de inicio del beneficio & — & No & No \\
+fecha\_\allowbreak{}fin & date & Fecha de finalización del beneficio & — & Sí & No \\
+codigo\_\allowbreak{}beca & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_movimiento_beca}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla movimiento\_\allowbreak{}beca}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla movimiento\_\allowbreak{}beca}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+beca\_\allowbreak{}id & bigint & Identificador de la beca afectada & — & No & FK \\
+tipo & tipo\_\allowbreak{}movimiento\_\allowbreak{}beca & Tipo de movimiento & — & No & No \\
+motivo & text & Motivo del movimiento & — & No & No \\
+beca\_\allowbreak{}reemplazante\_\allowbreak{}id & bigint & Identificador de la beca que ocupa el cupo liberado (solo en reemplazos) & — & Sí & FK \\
+registrado\_\allowbreak{}por & bigint & Identificador del administrador que registró el movimiento & — & No & FK \\
+fecha & date & Fecha del movimiento & — & No & No \\
+codigo\_\allowbreak{}movimiento\_\allowbreak{}beca & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_planilla_asistencia}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla planilla\_\allowbreak{}asistencia}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla planilla\_\allowbreak{}asistencia}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
+fecha\_\allowbreak{}desde & date & Fecha inicial del periodo de la planilla & — & No & No \\
+fecha\_\allowbreak{}hasta & date & Fecha final del periodo de la planilla & — & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del PDF de la planilla en Firebase Storage & 500 & No & No \\
+generada\_\allowbreak{}por & bigint & Identificador del administrador que generó la planilla & — & No & FK \\
+generada\_\allowbreak{}en & timestamptz & Fecha y hora de generación & — & No & No \\
+codigo\_\allowbreak{}planilla\_\allowbreak{}asistencia & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_asistencia}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla asistencia}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla asistencia}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+beca\_\allowbreak{}id & bigint & Identificador de la beca & — & No & FK \\
+fecha & date & Fecha de la asistencia & — & No & No \\
+hora\_\allowbreak{}registro & timestamptz & Fecha y hora del registro & — & No & No \\
+registrado\_\allowbreak{}por & bigint & Identificador del personal del comedor que registró & — & No & FK \\
+codigo\_\allowbreak{}asistencia & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_cotejo_asistencia}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla cotejo\_\allowbreak{}asistencia}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla cotejo\_\allowbreak{}asistencia}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+planilla\_\allowbreak{}id & bigint & Identificador de la planilla cotejada & — & No & FK \\
+realizado\_\allowbreak{}por & bigint & Identificador del administrador que realizó el cotejo & — & No & FK \\
+fecha\_\allowbreak{}cotejo & date & Fecha del cotejo & — & No & No \\
+total\_\allowbreak{}registros & integer & Cantidad de registros cotejados & — & No & No \\
+coincidencias & integer & Cantidad de registros coincidentes & — & No & No \\
+discrepancias & integer & Cantidad de registros con discrepancias & — & No & No \\
+observaciones & text & Observaciones del cotejo & — & Sí & No \\
+resultado & varchar(20) & Resultado del cotejo (CONFORME o CON\_\allowbreak{}DISCREPANCIAS) & 20 & No & No \\
+codigo\_\allowbreak{}cotejo\_\allowbreak{}asistencia & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
+\refstepcounter{table}\label{tab:volumen_bitacora}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla bitacora}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla bitacora}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+usuario\_\allowbreak{}id & bigint & Identificador del usuario que ejecutó la acción (nulo si fue el sistema) & — & Sí & FK \\
+accion & varchar(60) & Acción realizada (p. ej. AUDITAR, DEVOLVER, ADJUDICAR) & 60 & No & No \\
+entidad & varchar(60) & Tabla o entidad afectada & 60 & No & No \\
+entidad\_\allowbreak{}id & bigint & Identificador del registro afectado & — & Sí & No \\
+detalle & jsonb & Valores anteriores y posteriores a la acción & — & Sí & No \\
+ip & inet & Dirección IP desde la que se realizó la acción & — & Sí & No \\
+codigo\_\allowbreak{}bitacora & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+

@@ -23,7 +23,7 @@ Postulación 100 % en línea → **puntaje de vulnerabilidad calculado con IA** 
 
 ## 2. Actores
 
-Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24, §5.5 del documento; también en §4.2.2 como Fig. 22).
+Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24, §5.5 del documento; también en §4.2.2 como Fig. 22).
 
 | Actor | Rol en el sistema | Notas |
 |---|---|---|
@@ -77,7 +77,7 @@ Fuente de verdad: diagrama vigente `images/18_Diagrama_General_CU.jpg` (Fig. 24,
 | Contenido | Archivo |
 |---|---|
 | Requisitos funcionales / no funcionales (RF-01…07 redactados, RNF-01…05) | [`secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex`](secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex) |
-| Diagrama general de CU (Fig. 22 en §4.2.2 y Fig. 24 en §5.5) | `images/18_Diagrama_General_CU.jpg` (referenciado en [`02_descripcion_general.tex`](secciones/05_capitulo4_ieee830/02_descripcion_general.tex) y [`05_diagrama_general_casos_uso.tex`](secciones/07_capitulo5_requisitos/05_diagrama_general_casos_uso.tex)) |
+| Diagrama general de CU (Fig. 22 en §4.2.2 y Fig. 24 en §5.5) | `images/019_Diagrama_General_CU.jpg` (referenciado en [`02_descripcion_general.tex`](secciones/05_capitulo4_ieee830/02_descripcion_general.tex) y [`05_diagrama_general_casos_uso.tex`](secciones/07_capitulo5_requisitos/05_diagrama_general_casos_uso.tex)) |
 | Modelo de dominio / actores / restricciones | [`02_descripcion_general.tex`](secciones/05_capitulo4_ieee830/02_descripcion_general.tex) |
 | Funciones principales y alcance | [`secciones/02_capitulo1_perfil/06_alcances_limitaciones.tex`](secciones/02_capitulo1_perfil/06_alcances_limitaciones.tex) |
 | Flujo operativo actual (actividades) | [`secciones/04_capitulo3_empresa/05_flujo_operativo.tex`](secciones/04_capitulo3_empresa/05_flujo_operativo.tex) |

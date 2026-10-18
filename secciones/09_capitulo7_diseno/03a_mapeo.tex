@@ -1,0 +1,958 @@
+% ------------------------------------------------------------------------------
+% 7.3.1.2. MAPEO (generado a partir del diagrama lógico de la base de datos)
+% ------------------------------------------------------------------------------
+
+\begin{table}[H]
+\caption{Mapeo de la tabla rol}
+\label{tab:mapeo_rol}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{nombre (UQ)} & \textbf{codigo\_\allowbreak{}rol (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+bigint & varchar(50) & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla usuario}
+\label{tab:mapeo_usuario}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{firebase\_\allowbreak{}uid (UQ)} & \textbf{ci (UQ)} & \textbf{correo (UQ)} & \textbf{nombres} \\
+\midrule
+bigint & varchar(128) & varchar(20) & varchar(150) & varchar(100) \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{apellidos} & \textbf{activo} & \textbf{rol\_\allowbreak{}id (FK)} & \textbf{codigo\_\allowbreak{}usuario (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+varchar(100) & boolean & bigint & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla carrera}
+\label{tab:mapeo_carrera}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{nombre (UQ)} & \textbf{facultad} & \textbf{codigo\_\allowbreak{}carrera (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+bigint & varchar(150) & varchar(150) & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla postulante}
+\label{tab:mapeo_postulante}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{usuario\_\allowbreak{}id (PK, FK)} & \textbf{carrera\_\allowbreak{}id (FK)} & \textbf{registro\_\allowbreak{}universitario (UQ)} & \textbf{telefono} & \textbf{codigo\_\allowbreak{}postulante (UQ)} \\
+\midrule
+bigint & bigint & varchar(20) & varchar(20) & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla gestion\_\allowbreak{}academica}
+\label{tab:mapeo_gestion_academica}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{etiqueta (UQ)} & \textbf{fecha\_\allowbreak{}inicio} & \textbf{fecha\_\allowbreak{}fin} & \textbf{codigo\_\allowbreak{}gestion\_\allowbreak{}academica (UQ)} \\
+\midrule
+bigint & varchar(20) & date & date & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla convocatoria}
+\label{tab:mapeo_convocatoria}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{gestion\_\allowbreak{}id (FK)} & \textbf{nombre} & \textbf{fecha\_\allowbreak{}apertura} & \textbf{fecha\_\allowbreak{}cierre} \\
+\midrule
+bigint & bigint & varchar(150) & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{cupos} & \textbf{puntaje\_\allowbreak{}minimo} & \textbf{estado} & \textbf{creado\_\allowbreak{}por (FK)} & \textbf{codigo\_\allowbreak{}convocatoria (UQ)} \\
+\midrule
+integer & numeric(5,2) & estado\_\allowbreak{}convocatoria & bigint & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla tipo\_\allowbreak{}documento}
+\label{tab:mapeo_tipo_documento}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{nombre} & \textbf{descripcion} & \textbf{codigo\_\allowbreak{}tipo\_\allowbreak{}documento (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+bigint & varchar(100) & varchar(255) & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla convocatoria\_\allowbreak{}documento}
+\label{tab:mapeo_convocatoria_documento}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{convocatoria\_\allowbreak{}id (PK, FK)} & \textbf{tipo\_\allowbreak{}documento\_\allowbreak{}id (PK, FK)} & \textbf{obligatorio} & \textbf{codigo\_\allowbreak{}convocatoria\_\allowbreak{}documento (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+bigint & bigint & boolean & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla postulacion}
+\label{tab:mapeo_postulacion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulante\_\allowbreak{}id (FK)} & \textbf{convocatoria\_\allowbreak{}id (FK)} & \textbf{estado} & \textbf{fecha\_\allowbreak{}envio} \\
+\midrule
+bigint & bigint & bigint & estado\_\allowbreak{}postulacion & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{numero\_\allowbreak{}envios} & \textbf{codigo\_\allowbreak{}postulacion (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\midrule
+smallint & uuid & timestamptz & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla respuesta\_\allowbreak{}socioeconomica}
+\label{tab:mapeo_respuesta_socioeconomica}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{postulacion\_\allowbreak{}id (PK, FK)} & \textbf{ingresos\_\allowbreak{}familiares} & \textbf{dependientes} & \textbf{procedencia} & \textbf{patrimonio} \\
+\midrule
+bigint & numeric(12,2) & smallint & varchar(150) & varchar(255) \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{estado\_\allowbreak{}vulnerabilidad} & \textbf{promedio\_\allowbreak{}academico} & \textbf{datos\_\allowbreak{}extra} & \textbf{codigo\_\allowbreak{}respuesta\_\allowbreak{}socioeconomica (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+varchar(50) & numeric(5,2) & jsonb & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla nota\_\allowbreak{}academica}
+\label{tab:mapeo_nota_academica}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulacion\_\allowbreak{}id (FK)} & \textbf{periodo} & \textbf{promedio} & \textbf{codigo\_\allowbreak{}nota\_\allowbreak{}academica (UQ)} \\
+\midrule
+bigint & bigint & varchar(20) & numeric & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla documento\_\allowbreak{}adjunto}
+\label{tab:mapeo_documento_adjunto}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulacion\_\allowbreak{}id (FK)} & \textbf{tipo\_\allowbreak{}documento\_\allowbreak{}id (FK)} & \textbf{nombre\_\allowbreak{}archivo} & \textbf{storage\_\allowbreak{}path} \\
+\midrule
+bigint & bigint & bigint & varchar(255) & varchar(500) \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{mime\_\allowbreak{}type} & \textbf{tamano\_\allowbreak{}bytes} & \textbf{subido\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}documento\_\allowbreak{}adjunto (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+varchar(100) & bigint & timestamptz & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla postulacion\_\allowbreak{}historial}
+\label{tab:mapeo_postulacion_historial}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulacion\_\allowbreak{}id (FK)} & \textbf{estado\_\allowbreak{}anterior} & \textbf{estado\_\allowbreak{}nuevo} & \textbf{usuario\_\allowbreak{}id (FK)} \\
+\midrule
+bigint & bigint & estado\_\allowbreak{}postulacion & estado\_\allowbreak{}postulacion & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{motivo} & \textbf{codigo\_\allowbreak{}postulacion\_\allowbreak{}historial (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\midrule
+text & uuid & timestamptz & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla modelo\_\allowbreak{}preseleccion}
+\label{tab:mapeo_modelo_preseleccion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{version (UQ)} & \textbf{descripcion} & \textbf{activo} & \textbf{creado\_\allowbreak{}por (FK)} \\
+\midrule
+bigint & varchar(20) & varchar(255) & boolean & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{codigo\_\allowbreak{}modelo\_\allowbreak{}preseleccion (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  \\
+\midrule
+uuid & timestamptz & timestamptz & timestamptz &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla parametro\_\allowbreak{}modelo}
+\label{tab:mapeo_parametro_modelo}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{modelo\_\allowbreak{}id (FK)} & \textbf{clave} & \textbf{ponderacion} & \textbf{valor} \\
+\midrule
+bigint & bigint & varchar(100) & numeric & jsonb \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{codigo\_\allowbreak{}parametro\_\allowbreak{}modelo (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  \\
+\midrule
+uuid & timestamptz & timestamptz & timestamptz &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla puntaje\_\allowbreak{}postulacion}
+\label{tab:mapeo_puntaje_postulacion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulacion\_\allowbreak{}id (FK)} & \textbf{modelo\_\allowbreak{}id (FK)} & \textbf{puntaje\_\allowbreak{}total} & \textbf{detalle} \\
+\midrule
+bigint & bigint & bigint & numeric(5,2) & jsonb \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{fecha\_\allowbreak{}calculo} & \textbf{vigente} & \textbf{codigo\_\allowbreak{}puntaje\_\allowbreak{}postulacion (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+timestamptz & boolean & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla lote\_\allowbreak{}reprocesamiento}
+\label{tab:mapeo_lote_reprocesamiento}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{convocatoria\_\allowbreak{}id (FK)} & \textbf{modelo\_\allowbreak{}id (FK)} & \textbf{solicitado\_\allowbreak{}por (FK)} & \textbf{estado} \\
+\midrule
+bigint & bigint & bigint & bigint & varchar(20) \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{total\_\allowbreak{}postulaciones} & \textbf{iniciado\_\allowbreak{}en} & \textbf{terminado\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}lote\_\allowbreak{}reprocesamiento (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+integer & timestamptz & timestamptz & uuid & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla finalista}
+\label{tab:mapeo_finalista}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulacion\_\allowbreak{}id (FK, UQ)} & \textbf{posicion} & \textbf{notificado\_\allowbreak{}en} & \textbf{plazo\_\allowbreak{}entrega} \\
+\midrule
+bigint & bigint & integer & timestamptz & date \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{documentacion\_\allowbreak{}recibida\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}finalista (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\midrule
+timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla auditoria\_\allowbreak{}expediente}
+\label{tab:mapeo_auditoria_expediente}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{finalista\_\allowbreak{}id (FK)} & \textbf{auditor\_\allowbreak{}id (FK)} & \textbf{resultado} & \textbf{observaciones} \\
+\midrule
+bigint & bigint & bigint & varchar(20) & text \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{fecha\_\allowbreak{}auditoria} & \textbf{codigo\_\allowbreak{}auditoria\_\allowbreak{}expediente (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\midrule
+timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla adjudicacion}
+\label{tab:mapeo_adjudicacion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{postulacion\_\allowbreak{}id (FK, UQ)} & \textbf{resultado} & \textbf{puntaje\_\allowbreak{}final} & \textbf{decidido\_\allowbreak{}por (FK)} \\
+\midrule
+bigint & bigint & resultado\_\allowbreak{}adjudicacion & numeric(5,2) & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{fecha\_\allowbreak{}adjudicacion} & \textbf{codigo\_\allowbreak{}adjudicacion (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\midrule
+timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla acta\_\allowbreak{}adjudicacion}
+\label{tab:mapeo_acta_adjudicacion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{convocatoria\_\allowbreak{}id (FK)} & \textbf{numero (UQ)} & \textbf{storage\_\allowbreak{}path} & \textbf{generada\_\allowbreak{}por (FK)} \\
+\midrule
+bigint & bigint & varchar(30) & varchar(500) & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{generada\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}acta\_\allowbreak{}adjudicacion (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\midrule
+timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla publicacion\_\allowbreak{}resultado}
+\label{tab:mapeo_publicacion_resultado}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{convocatoria\_\allowbreak{}id (FK, UQ)} & \textbf{publicado\_\allowbreak{}por (FK)} & \textbf{publicado\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}publicacion\_\allowbreak{}resultado (UQ)} \\
+\midrule
+bigint & bigint & bigint & timestamptz & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla comunicado}
+\label{tab:mapeo_comunicado}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{convocatoria\_\allowbreak{}id (FK)} & \textbf{titulo} & \textbf{contenido} & \textbf{destinatarios} \\
+\midrule
+bigint & bigint & varchar(150) & text & destinatarios\_\allowbreak{}comunicado \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{publicado\_\allowbreak{}por (FK)} & \textbf{publicado\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}comunicado (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+bigint & timestamptz & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla notificacion}
+\label{tab:mapeo_notificacion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{usuario\_\allowbreak{}id (FK)} & \textbf{tipo} & \textbf{titulo} & \textbf{mensaje} \\
+\midrule
+bigint & bigint & tipo\_\allowbreak{}notificacion & varchar(150) & text \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{postulacion\_\allowbreak{}id (FK)} & \textbf{comunicado\_\allowbreak{}id (FK)} & \textbf{leida} & \textbf{enviada\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}notificacion (UQ)} \\
+\midrule
+bigint & bigint & boolean & timestamptz & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla dispositivo\_\allowbreak{}fcm}
+\label{tab:mapeo_dispositivo_fcm}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{usuario\_\allowbreak{}id (FK)} & \textbf{token (UQ)} & \textbf{plataforma} & \textbf{codigo\_\allowbreak{}dispositivo\_\allowbreak{}fcm (UQ)} \\
+\midrule
+bigint & bigint & varchar(255) & varchar(10) & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla beca}
+\label{tab:mapeo_beca}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{adjudicacion\_\allowbreak{}id (FK, UQ)} & \textbf{postulante\_\allowbreak{}id (FK)} & \textbf{convocatoria\_\allowbreak{}id (FK)} & \textbf{estado} \\
+\midrule
+bigint & bigint & bigint & bigint & estado\_\allowbreak{}beca \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{fecha\_\allowbreak{}inicio} & \textbf{fecha\_\allowbreak{}fin} & \textbf{codigo\_\allowbreak{}beca (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+date & date & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla movimiento\_\allowbreak{}beca}
+\label{tab:mapeo_movimiento_beca}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{beca\_\allowbreak{}id (FK)} & \textbf{tipo} & \textbf{motivo} & \textbf{beca\_\allowbreak{}reemplazante\_\allowbreak{}id (FK)} \\
+\midrule
+bigint & bigint & tipo\_\allowbreak{}movimiento\_\allowbreak{}beca & text & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{registrado\_\allowbreak{}por (FK)} & \textbf{fecha} & \textbf{codigo\_\allowbreak{}movimiento\_\allowbreak{}beca (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+bigint & date & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla planilla\_\allowbreak{}asistencia}
+\label{tab:mapeo_planilla_asistencia}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{convocatoria\_\allowbreak{}id (FK)} & \textbf{fecha\_\allowbreak{}desde} & \textbf{fecha\_\allowbreak{}hasta} & \textbf{storage\_\allowbreak{}path} \\
+\midrule
+bigint & bigint & date & date & varchar(500) \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{generada\_\allowbreak{}por (FK)} & \textbf{generada\_\allowbreak{}en} & \textbf{codigo\_\allowbreak{}planilla\_\allowbreak{}asistencia (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+bigint & timestamptz & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla asistencia}
+\label{tab:mapeo_asistencia}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{beca\_\allowbreak{}id (FK)} & \textbf{fecha} & \textbf{hora\_\allowbreak{}registro} & \textbf{registrado\_\allowbreak{}por (FK)} \\
+\midrule
+bigint & bigint & date & timestamptz & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{codigo\_\allowbreak{}asistencia (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  \\
+\midrule
+uuid & timestamptz & timestamptz & timestamptz &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla cotejo\_\allowbreak{}asistencia}
+\label{tab:mapeo_cotejo_asistencia}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{planilla\_\allowbreak{}id (FK)} & \textbf{realizado\_\allowbreak{}por (FK)} & \textbf{fecha\_\allowbreak{}cotejo} & \textbf{total\_\allowbreak{}registros} \\
+\midrule
+bigint & bigint & bigint & date & integer \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{coincidencias} & \textbf{discrepancias} & \textbf{observaciones} & \textbf{resultado} & \textbf{codigo\_\allowbreak{}cotejo\_\allowbreak{}asistencia (UQ)} \\
+\midrule
+integer & integer & text & varchar(20) & uuid \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  \\
+\midrule
+timestamptz & timestamptz & timestamptz &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla bitacora}
+\label{tab:mapeo_bitacora}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{usuario\_\allowbreak{}id (FK)} & \textbf{accion} & \textbf{entidad} & \textbf{entidad\_\allowbreak{}id} \\
+\midrule
+bigint & bigint & varchar(60) & varchar(60) & bigint \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{detalle} & \textbf{ip} & \textbf{codigo\_\allowbreak{}bitacora (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} \\
+\midrule
+jsonb & inet & uuid & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{eliminado\_\allowbreak{}en} &  &  &  &  \\
+\midrule
+timestamptz &  &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+

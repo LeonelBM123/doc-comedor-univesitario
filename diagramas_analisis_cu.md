@@ -246,4 +246,4 @@ Igual que el ejemplo «sd CU02 Autenticación»: dibujar el actor **Usuario del 
 - [ ] Mensajes numerados `N`, `N.1`, `N.2`… con los colores de la convención.
 - [ ] Entidades con los nombres de `diseno_base_de_datos.md` (en `PascalCase`).
 - [ ] Autollamadas del controlador (no objetos externos) para el módulo de IA, el envío push y las validaciones.
-- [ ] Exportar como imagen y nombrar `images/NN_Analisis_CUxx_<Nombre>.png`.
+- [ ] Exportar como imagen y nombrar `images/NNN_Analisis_CUxx_<Nombre>.png`.

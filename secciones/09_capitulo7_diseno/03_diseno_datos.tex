@@ -3,20 +3,38 @@
 % ------------------------------------------------------------------------------
 \subsection{7.3. Diseño de Datos}\label{sec:cap7_diseno_datos}
 
-% [PENDIENTE]: Redactar la introducción del diseño de datos (ver diseno_base_de_datos.md).
+El diseño de datos traduce las clases persistentes del diagrama de clases (sección~\ref{sec:cap7_diagrama_clase}) a un modelo relacional implementado en PostgreSQL. El modelo consta de 31 tablas agrupadas según los seis paquetes del análisis: Cuentas y acceso (4), Convocatoria y postulación (9), Preselección con IA (4), Auditoría y adjudicación (8), Becados y asistencia (5) y Reportes y trazabilidad (1). Los nombres de tablas y columnas se escriben en minúsculas, en singular y separados por guion bajo; cada tabla tiene una clave primaria interna \textit{id} y las claves foráneas se nombran \textit{\textless{}tabla\textgreater{}\_id}.
+
+Todas las tablas incorporan cuatro columnas comunes: \textit{codigo\_\textless{}tabla\textgreater{}}, un identificador público UUID versión 7, único y no nulo, que es el único identificador que se expone a la API y a los clientes web y móvil; \textit{creado\_en} y \textit{actualizado\_en}, que registran la fecha y hora de creación y de la última modificación; y \textit{eliminado\_en}, que implementa el borrado lógico, de modo que ningún registro se elimina físicamente. Las contraseñas no se almacenan en la base de datos, pues las gestiona Firebase Authentication, y los archivos se guardan en Firebase Storage, del que la base de datos solo conserva la ruta.
 
 \subsubsection{7.3.1. Diseño de Datos Lógico}\label{sec:cap7_datos_logico}
 
 \paragraph{7.3.1.1. Diseño lógico de la Base de Datos.}\label{sec:cap7_logico_bd}
-% [PENDIENTE]: Modelo lógico (entidades, atributos, claves y relaciones).
+El diseño lógico de la base de datos representa cada tabla con sus columnas, tipos de datos, claves primarias (PK), claves foráneas (FK) y restricciones de unicidad (UQ), así como las relaciones y cardinalidades entre las tablas. La Figura~\ref{fig:diseno_logico_bd} presenta el diagrama del diseño lógico.
+
+\begin{figure}[H]
+\caption{Diseño lógico de la base de datos}
+\label{fig:diseno_logico_bd}
+\centering
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{images/091_Diseno_Logico_Base_de_Datos.jpg}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
 
 \paragraph{7.3.1.2. Mapeo.}\label{sec:cap7_mapeo}
-% [PENDIENTE]: Mapeo del diagrama de clases al modelo relacional.
+El mapeo presenta, para cada una de las 31 tablas del diseño lógico, sus atributos y el tipo de dato asignado a cada uno, indicando entre paréntesis las claves primarias (PK), foráneas (FK) y únicas (UQ). Las tablas se presentan agrupadas por paquete, en el mismo orden del diseño lógico.
+
+\input{secciones/09_capitulo7_diseno/03a_mapeo.tex}
 
 \subsubsection{7.3.2. Diseño de Datos Físico}\label{sec:cap7_datos_fisico}
 
 \paragraph{7.3.2.1. Volumen.}\label{sec:cap7_volumen}
-% [PENDIENTE]: Estimación del volumen de datos (por ejemplo, 20,000 postulaciones por gestión).
+El volumen detalla cada atributo de las tablas con su tipo de dato, descripción, tamaño (longitud máxima en los tipos \textit{varchar} y precisión y escala en los tipos \textit{numeric}), si admite valores nulos y el tipo de llave. El diseño se dimensiona para un volumen de hasta 20,000 postulaciones por gestión académica.
+
+\input{secciones/09_capitulo7_diseno/03b_volumen.tex}
 
 \paragraph{7.3.2.2. Script.}\label{sec:cap7_script}
-% [PENDIENTE]: Script de creación de la base de datos (PostgreSQL).
+El script de creación de la base de datos, escrito para PostgreSQL 18, crea en orden de dependencias los tipos enumerados, las 31 tablas con sus claves y restricciones de verificación, los índices únicos parciales que respetan el borrado lógico (por ejemplo, una sola postulación por postulante y convocatoria, y un solo registro de asistencia por becado y día), los índices de consulta, el disparador que actualiza la columna \textit{actualizado\_en}, la protección de las tablas de solo inserción y la vista materializada que alimenta el dashboard de indicadores.
+
+\lstinputlisting{scripts/beca_comedor_postgresql.sql}
