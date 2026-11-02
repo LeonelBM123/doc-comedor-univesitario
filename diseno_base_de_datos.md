@@ -125,6 +125,8 @@ erDiagram
 | rol_id | bigint | FK→rol, NN | CU-14: asignación de rol |
 | activo | boolean | NN, default true | CU-14: desactivar sin borrar |
 
+> La contraseña **no se guarda** en la base de datos: `usuario` no tiene `password_hash`; la credencial vive en Firebase Auth y el enlace es `firebase_uid`. El backend solo verifica el token de Firebase y consulta `rol` y `activo`. El bloqueo por intentos fallidos lo aplica Firebase (hasta donde lo permita).
+
 **`postulante`** (extensión 1:1 de `usuario` solo para rol POSTULANTE)
 
 | Columna | Tipo | Restricciones | Nota |

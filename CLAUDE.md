@@ -66,7 +66,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 
 ## 4. Stack y restricciones técnicas
 
-- **Backend:** Java + Spring Boot (REST, JWT, HTTPS). **Web:** React + TypeScript. **Móvil:** Flutter/Dart (prioridad Android; cámara para digitalizar documentos).
+- **Backend:** Java + Spring Boot (REST, HTTPS; verifica el token de Firebase Auth y consulta rol/estado en BD). **Web:** React + TypeScript. **Móvil:** Flutter/Dart (prioridad Android; cámara para digitalizar documentos).
 - **IA:** módulo independiente en Python, consumido vía API. **BD:** PostgreSQL. **Firebase:** Auth, FCM (push), Storage. **Infra:** AWS, Docker, GitHub.
 - Rendimiento: carga ≤ 3 s; puntaje individual ≤ 5 s; 20,000 postulaciones/gestión; ≥ 50 administrativos concurrentes; uptime ≥ 99 % en periodos de postulación/evaluación; BI en lote.
 
@@ -95,7 +95,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 
 | ID | ID previo | Caso de uso | Actor | Relaciones (según lista filtrada) | RF | Estado |
 |---|---|---|---|---|---|---|
-| CU-01 | CU-01 | Registrarse y autenticarse | Usuario del Sistema | — | RF-01 | OK |
+| CU-01 | CU-01 | Registrarse y autenticarse (incluye registro del Postulante, inicio y **cierre de sesión**; la autenticación la resuelve **Firebase Auth**, no un JWT propio del backend) | Usuario del Sistema | — | RF-01 | OK |
 | CU-02 | CU-02 | Enviar postulación a Beca Comedor | Postulante | «include» CU-03, CU-16, CU-18 | RF-02 | OK |
 | CU-03 | CU-03 | Precalificar postulación con Inteligencia Artificial | Sistema | — | RF-03 | OK |
 | CU-04 | CU-04 | Consultar estado de postulación | Postulante | — | RF-06 | OK |

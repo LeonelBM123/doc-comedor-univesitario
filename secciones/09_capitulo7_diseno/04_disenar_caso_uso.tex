@@ -16,11 +16,13 @@ La Figura~\ref{fig:secuencia_cu01} presenta el diagrama de secuencia del CU-01.
 \caption{Diagrama de secuencia del CU-01 Registrarse y autenticarse}
 \label{fig:secuencia_cu01}
 \centering
-\includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{images/121_Secuencia_CU01_Registrarse_Autenticarse.png}
+\includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{images/121_Secuencia_CU01_Registrarse_Autenticarse.jpg}
 
 \smallskip
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
+
+En el registro, el cliente crea la cuenta en Firebase Authentication y obtiene el token de identidad, con el que invoca al backend; \textit{AuthController} verifica el token, comprueba que el CI, el registro universitario y el correo electrónico no existan, crea el \textit{Usuario} con el rol Postulante, enlazado por su identificador de Firebase, y su perfil de \textit{Postulante} (con registro universitario y teléfono), y devuelve el usuario. En el inicio de sesión, el cliente inicia sesión en Firebase y llama al backend con el token; este lo verifica, busca al \textit{Usuario} por su identificador de Firebase, comprueba que la cuenta esté activa, registra el acceso en la bitácora y devuelve el usuario con su rol, según el cual se redirige al módulo correspondiente. Para cerrar sesión, el cliente ejecuta el cierre en Firebase; el backend no guarda sesión. La contraseña (mínimo de 6 caracteres) y el bloqueo por intentos fallidos los gestiona Firebase Authentication, por lo que el backend no cifra ni valida contraseñas ni genera tokens.
 
 
 \Needspace{0.9\textheight}

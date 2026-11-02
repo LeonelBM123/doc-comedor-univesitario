@@ -38,57 +38,70 @@
 \bottomrule
 \multicolumn{2}{l}{\textit{Nota.} Elaboración propia.} \\
 \endlastfoot
-\textbf{Propósito} & Permitir que los usuarios del sistema se registren (en el caso del Postulante) y se autentiquen para acceder, de forma segura, a las funcionalidades correspondientes a su rol, desde el portal web o la aplicación móvil. \\
+\textbf{Propósito} & Permitir que el Postulante cree su cuenta y que cualquier usuario del sistema inicie y cierre sesión para acceder, de forma segura, solo a las funcionalidades correspondientes a su rol, desde el portal web o la aplicación móvil. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo un Postulante crea su cuenta y cómo cualquier usuario del sistema (Postulante, Administrador DUBSS, Directivo o Personal del Comedor Universitario) inicia sesión con su correo electrónico y contraseña mediante autenticación basada en JWT (JSON Web Token) gestionada por el backend. Una vez autenticado, el sistema identifica el rol del usuario y lo redirige al módulo que le corresponde. Las cuentas del personal (Administrador, Directivo y Personal del Comedor) no se autorregistran: son creadas por el Administrador DUBSS en el CU-14. El CU-15 extiende este caso de uso para la recuperación de contraseña. Respalda el RF-01. \\
+\textbf{Descripción} & Este caso de uso describe tres flujos: el registro de un Postulante, el inicio de sesión de cualquier usuario del sistema (Postulante, Administrador DUBSS, Directivo o Personal del Comedor Universitario) con su correo electrónico y contraseña, y el cierre de sesión. La autenticación es resuelta por Firebase Authentication (RF-01): la contraseña no se almacena en la base de datos del sistema, y el backend solo verifica el token emitido por Firebase y consulta en la base de datos el rol y el estado de la cuenta. Una vez autenticado, el sistema identifica el rol del usuario y lo redirige al módulo que le corresponde. Las cuentas del personal (Administrador DUBSS, Directivo y Personal del Comedor) no se autorregistran: son creadas por el Administrador DUBSS en el CU-14. El cierre de sesión se documenta dentro de este caso de uso y no constituye un caso de uso independiente. El CU-15 extiende este caso de uso para la recuperación de contraseña. Respalda el RF-01. \\
 \midrule
-\textbf{Actores} & Usuario del Sistema (Postulante, Administrador DUBSS, Directivo, Personal del Comedor Universitario). \\
+\textbf{Actores} & Usuario del Sistema (actor abstracto generalizado por Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario). \\
 \midrule
 \textbf{Actor Iniciador} & Usuario del Sistema. \\
 \midrule
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item El usuario dispone de acceso al portal web o a la aplicación móvil y de conexión a Internet.
-    \item Para el registro: el postulante no cuenta con una cuenta asociada a su CI ni a su correo electrónico.
-    \item Para la autenticación: el usuario cuenta con una cuenta registrada y activa en el sistema.
+    \item Para el registro: no existe una cuenta asociada al CI, al registro universitario ni al correo electrónico del postulante.
+    \item Para el inicio de sesión: el usuario cuenta con una cuenta registrada y activa (creada por autorregistro si es Postulante, o por el Administrador DUBSS en el CU-14 si es personal).
+    \item Para el cierre de sesión: el usuario tiene una sesión abierta.
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal A: registro de un Postulante.}
 \begin{cupasos}
     \item El usuario selecciona la opción «Crear cuenta» en la pantalla de acceso.
-    \item El sistema muestra el formulario de registro (nombres, apellidos, CI, carrera, correo electrónico, contraseña y confirmación de contraseña).
+    \item El sistema muestra el formulario de registro (nombres, apellidos, CI, registro universitario, carrera, teléfono, correo electrónico, contraseña y confirmación de contraseña).
     \item El usuario completa los datos y confirma el registro.
-    \item El sistema valida que los campos obligatorios estén completos, que su formato sea correcto, que la contraseña cumpla la política de seguridad (por definir con la DUBSS) y que el CI y el correo electrónico no existan en el sistema.
-    \item El sistema registra al usuario con el rol Postulante en la base de datos, almacenando la contraseña de forma cifrada (hash).
+    \item El sistema valida que los campos obligatorios estén completos, que su formato sea correcto, que la contraseña cumpla la política (al menos 6 caracteres, sin obligación de mayúsculas, números ni símbolos) y coincida con su confirmación, y que el CI, el registro universitario y el correo electrónico no existan en el sistema.
+    \item El sistema crea la cuenta en Firebase Authentication, que resguarda la contraseña, y registra en la base de datos al usuario con el rol Postulante, activo y vinculado a la cuenta de Firebase, junto con su perfil de postulante.
     \item El sistema informa que el registro fue exitoso, inicia la sesión del usuario y lo redirige al módulo del Postulante.
 \end{cupasos} \\
  & \textbf{Flujo principal B: inicio de sesión.}
 \begin{cupasos}
     \item El usuario accede a la pantalla de inicio de sesión del portal web o de la aplicación móvil.
     \item El usuario ingresa su correo electrónico y su contraseña.
-    \item El sistema envía las credenciales al backend, que las valida comparando la contraseña ingresada con el hash almacenado.
-    \item El sistema verifica que la cuenta esté activa y obtiene el rol del usuario.
-    \item El sistema genera un token JWT firmado, con el identificador y el rol del usuario y una fecha de expiración, lo entrega al cliente para autenticar las siguientes peticiones y redirige al usuario según su rol: el Postulante a su módulo de postulación, el Administrador DUBSS al panel de gestión, el Directivo al dashboard de indicadores y el Personal del Comedor al registro de asistencia.
+    \item El sistema envía las credenciales a Firebase Authentication, que las verifica y devuelve un token de identidad.
+    \item El sistema verifica el token, comprueba en la base de datos que la cuenta esté activa y no bloqueada, y obtiene el rol del usuario.
+    \item El sistema abre la sesión y registra el acceso en la bitácora.
+    \item El sistema redirige al usuario según su rol: el Postulante a su módulo de postulación, el Administrador DUBSS al panel de gestión, el Directivo al dashboard de indicadores y el Personal del Comedor al registro de asistencia.
+\end{cupasos} \\
+ & \textbf{Flujo principal C: cierre de sesión.}
+\begin{cupasos}
+    \item El usuario selecciona la opción «Cerrar sesión» en el menú de su cuenta.
+    \item El sistema cierra la sesión del usuario en ese dispositivo y deja de reconocerla.
+    \item El sistema redirige al usuario a la pantalla de acceso.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (flujo A, paso 4): si el CI o el correo electrónico ya están registrados, el sistema rechaza el registro e indica el campo en conflicto, sin crear la cuenta.
-    \item A2 (flujo A, paso 4): si faltan campos obligatorios, el formato es inválido o la contraseña no cumple la política, el sistema marca los campos con error y permite corregirlos.
-    \item A3 (flujo B, paso 3): si las credenciales son incorrectas, el sistema muestra un mensaje de error genérico (sin revelar cuál dato falló) y permite reintentar.
-    \item A4 (flujo B, paso 4): si la cuenta está desactivada, el sistema niega el acceso e indica que debe comunicarse con la DUBSS.
+    \item A1 (flujo A, paso 4): si el CI, el registro universitario o el correo electrónico ya están registrados, el sistema rechaza el registro, indica el campo en conflicto y no crea la cuenta.
+    \item A2 (flujo A, paso 4): si faltan campos obligatorios, el formato es inválido, la contraseña no cumple la política o no coincide con su confirmación, el sistema marca los campos con error y permite corregirlos, sin crear la cuenta.
+    \item A3 (flujo B, paso 3): si el correo no existe o la contraseña es incorrecta, el sistema muestra el mismo mensaje de error en ambos casos (sin revelar cuál dato falló) y permite reintentar.
+    \item A4 (flujo B, paso 4): si la cuenta está desactivada, el sistema niega el acceso, indica que debe comunicarse con la DUBSS y no abre sesión.
     \item A5 (flujo B, paso 2): si el usuario selecciona «¿Olvidó su contraseña?», se ejecuta el CU-15.
-    \item A6 (flujo B, paso 3): tras un número de intentos fallidos consecutivos (límite por definir con la DUBSS), el sistema bloquea temporalmente el acceso de esa cuenta.
+    \item A6 (flujo B, paso 3): tras varios intentos fallidos consecutivos, el sistema bloquea temporalmente el acceso de esa cuenta y lo niega aunque la contraseña sea correcta. El objetivo es bloquear a los 5 intentos, por 5 minutos la primera vez y por un lapso mayor si el usuario continúa fallando; la escala exacta del bloqueo incremental está por definir con la DUBSS, y su alcance depende de lo que permita Firebase Authentication, por lo que la regla se ajustará si no puede cumplirse tal cual.
+    \item A7 (flujo A, paso 4): si la petición de registro llega repetida (doble envío o reintento), el sistema la procesa de forma idempotente y no crea dos cuentas.
+    \item A8 (flujo B, pasos 5 y 6): si la sesión ya no es válida (expiró o fue invalidada), el sistema redirige al usuario a la pantalla de inicio de sesión.
+    \item A9 (cualquier paso): si falla la conexión con el servidor o con un servicio del que depende, el sistema informa el error con un mensaje claro, no crea ni modifica datos y permite reintentar.
+    \item A10 (flujo C, paso 2): si la sesión ya había expirado o se había cerrado antes de solicitar el cierre, el sistema igualmente redirige al usuario a la pantalla de acceso, sin mostrar error.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item Registro: la cuenta del Postulante queda creada en la base de datos con el rol Postulante.
-    \item Autenticación: el usuario tiene una sesión activa con los permisos de su rol y el acceso queda registrado en el log del sistema.
+    \item Registro: la cuenta del Postulante queda creada, activa y con el rol Postulante, y el usuario tiene una sesión abierta.
+    \item Inicio de sesión: el usuario tiene una sesión activa con los permisos de su rol, se encuentra en el módulo que le corresponde y su acceso queda registrado en la bitácora (consultable en el CU-25).
+    \item Cierre de sesión: el dispositivo ya no tiene sesión abierta y cualquier pantalla privada lleva a la pantalla de acceso; las sesiones en otros dispositivos no se ven afectadas.
 \end{cuvin} \\
 \midrule
 \textbf{Excepciones} & \vspace{-\baselineskip}\begin{cuvin}
     \item Credenciales inválidas o cuenta inexistente.
     \item Cuenta desactivada o bloqueada temporalmente.
-    \item Token de sesión inválido o sesión expirada.
-    \item Error de conexión con el servidor o la base de datos.
+    \item Sesión inválida o expirada.
+    \item Error de conexión con el servidor, con Firebase Authentication o con la base de datos.
     \item Petición de registro duplicada (se procesa de forma idempotente, sin crear dos cuentas).
 \end{cuvin} \\
 \end{longtable}

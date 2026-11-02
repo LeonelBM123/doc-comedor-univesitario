@@ -11,19 +11,19 @@ A continuación se presenta el análisis de los veintiséis casos de uso del sis
 
 \subsubsection{6.2.1. Analizar CU-01 Registrarse y autenticarse}\label{sec:cap6_analisis_cu01}
 
-En el análisis del CU-01 participa el actor Usuario del Sistema, generalizado por los cuatro roles del sistema (Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario), de modo que cualquiera de ellos puede registrarse o iniciar sesión. El actor interactúa con la interfaz \textit{AuthView}, que delega las solicitudes en el controlador \textit{AuthController}, y este accede a las entidades \textit{Usuario} y \textit{Postulante}. La Figura~\ref{fig:analisis_cu01} presenta el diagrama de análisis.
+En el análisis del CU-01 participa el actor Usuario del Sistema, generalizado por los cuatro roles del sistema (Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario), de modo que cualquiera de ellos puede iniciar y cerrar sesión (el registro corresponde únicamente al Postulante). El actor interactúa con la interfaz \textit{AuthView}, que delega las solicitudes en el controlador \textit{AuthController}, y este accede a las entidades \textit{Usuario} y \textit{Postulante} y a la clase de interfaz 	extit{FirebaseAuthClient}, que representa la interfaz del sistema con el servicio externo Firebase Authentication, encargado de verificar las credenciales. La Figura~\ref{fig:analisis_cu01} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-01 Registrarse y autenticarse}
 \label{fig:analisis_cu01}
 \centering
-\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/051_Analisis_CU01_Registrarse_Autenticarse.png}
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/051_Analisis_CU01_Registrarse_Autenticarse.jpg}
 
 \smallskip
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-El registro (mensaje 1) verifica que el CI y el correo electrónico no existan (1.2), crea el usuario (1.3) y, para el rol Postulante, crea su perfil (1.4). El inicio de sesión (mensaje 2) valida las credenciales consultando al usuario por su correo electrónico (2.2); si son válidas, el controlador emite el token JWT con el que se autentican las siguientes peticiones \parencite{rouse2018jwt}.
+El registro (mensaje 1) verifica que el CI, el registro universitario y el correo electrónico no existan, solicita a Firebase Authentication, mediante 	extit{FirebaseAuthClient}, la creación de la cuenta, de modo que este servicio resguarda la contraseña, y registra el usuario y, para el rol Postulante, su perfil. El inicio de sesión (mensaje 2) envía las credenciales a Firebase Authentication mediante 	extit{FirebaseAuthClient}, y este servicio las verifica y devuelve un token de identidad; el controlador verifica dicho token y consulta al usuario por su identificador de Firebase para comprobar que la cuenta esté activa y obtener su rol. El cierre de sesión (mensaje 3) finaliza, mediante 	extit{FirebaseAuthClient}, la sesión del dispositivo desde el que se solicita. De este modo, la contraseña no se almacena en la base de datos del sistema.
 
 
 \subsubsection{6.2.2. Analizar CU-02 Enviar postulación a Beca Comedor}\label{sec:cap6_analisis_cu02}

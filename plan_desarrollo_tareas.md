@@ -31,7 +31,7 @@ No es implementación; es lo que evita los cuellos de botella. Se hace una vez y
 | F0-2 | Enum `EstadoPostulacion` único | Ver recomendación en §6 |
 | F0-3 | Contratos OpenAPI de los puntos de integración (§3) | Cada lado mockea el contrato del otro |
 | F0-4 | Estructura del repo, ramas y commits | Un módulo/paquete por dueño para no pisarse archivos |
-| F0-5 | Usuarios de desarrollo con JWT firmado de prueba (uno por rol) | B prueba con roles sin esperar a A2 |
+| F0-5 | Usuarios de desarrollo con token de Firebase Auth (emulador o cuentas de prueba, uno por rol) | B prueba con roles sin esperar a A2 |
 | F0-6 | Contrato de la interfaz de IA: entrada (variables del formulario) y salida (puntaje + fecha de cálculo) | Fija lo que B produce y A solo lee |
 
 > Pendiente de la DUBSS (no inventar): umbral mínimo de puntaje, número de cupos, pesos del modelo. Se parametrizan por configuración.
@@ -47,7 +47,7 @@ Cada tarea de CU lleva su **definición de terminado**: BD + API + pantallas + p
 | # | Tarea | CU / tipo | RF | Pts | Alcance | Depende de |
 |---|---|---|---|---|---|---|
 | A1 | Entorno local de desarrollo | extra | RNF | 3 | `docker-compose` (PostgreSQL, API, módulo IA), proyecto Firebase (solo FCM y Storage; la autenticación es propia del backend), README de arranque, migraciones aplicadas | F0 |
-| A2 | Registrarse y autenticarse | CU-01 | RF-01 | 5 | Autenticación en el backend Spring Boot: contraseña con hash, emisión de JWT firmado con el rol y expiración, validación en cada petición, CI/correo únicos, token FCM del dispositivo; web y móvil; redirección por rol (según Cap. 5.4) | A1 |
+| A2 | Registrarse y autenticarse | CU-01 | RF-01 | 5 | Autenticación con Firebase Auth (sin contraseña en BD): verificación del token de Firebase en el backend Spring Boot, consulta de rol y estado en BD, registro/inicio/cierre de sesión, CI/registro universitario/correo únicos, token FCM del dispositivo; web y móvil; redirección por rol (según Cap. 5.4) | A1 |
 | A3 | Gestionar usuarios y roles | CU-14 | RF-09 | 3 | CRUD de usuarios, asignación de rol, control de acceso | A2 |
 | A4 | Recuperar contraseña / gestionar perfil | CU-15 | RF-10 | 2 | Recuperación de contraseña por el backend (token temporal por correo), edición de perfil; «extend» CU-01 | A2 |
 | A5 | Interceptor de bitácora | extra | RF-20 | 2 | Aspecto que registra la acción, usuario y fecha en todos los controladores; escribe la tabla `bitacora` | A2 |
@@ -97,7 +97,7 @@ Son **todas** las dependencias entre personas. Son contratos de datos, nunca con
 | C2 | Devolución / rechazo / archivo | A (A10, A11 cambian estado y escriben `observaciones`) | B (B8 reenvío) | Transición `devuelta → pendiente` fijada en F0-2; B prueba con un registro semilla ya devuelto |
 | C3 | Documentos adjuntos (Storage) | B (B7 sube) | A (A9 visualiza) | Contrato: ruta y metadatos en `documento_adjunto`; A usa archivos de ejemplo |
 | C4 | Adjudicados → padrón de becados | A (A12 marca `adjudicada`) | B (B10 crea becados) | B10 consume adjudicados semilla; el contrato es el estado `adjudicada` + fecha de adjudicación |
-| C5 | Autenticación y roles | A (A2, A3) | B (todas sus pantallas) | B usa los JWT de F0-5 hasta integrar A2 |
+| C5 | Autenticación y roles | A (A2, A3) | B (todas sus pantallas) | B usa los tokens de prueba de F0-5 hasta integrar A2 |
 | C6 | Asistencia y becados (lectura para BI) | B (B10, B12) | A (A16) | A16 lee tablas con semilla |
 | C7 | Tabla `bitacora` | A (A5) | B (B15) | B15 lee registros semilla de `bitacora`; solo lectura con filtros |
 
@@ -133,7 +133,7 @@ CU-04 y CU-25 no tienen relaciones UML, por eso se pudieron colocar donde equili
 
 | Hito | Contenido | Quién integra |
 |---|---|---|
-| H1 | A2 y A3 listos → B cambia del JWT de prueba al login real del backend | B |
+| H1 | A2 y A3 listos → B cambia del token de prueba al login real con Firebase Auth | B |
 | H2 | B8 y B3 listos → A reemplaza datos semilla por postulaciones reales en A6, A9, A15, A16 | A |
 | H3 | A12 listo → B10 consume adjudicados reales | B |
 | H4 | B12 listo → A16 usa asistencia real | A |
@@ -152,6 +152,6 @@ CU-04 y CU-25 no tienen relaciones UML, por eso se pudieron colocar donde equili
 2. **Notificaciones push.** Son una tarea propia (A7), usada por A8 (CU-21) y A13 (CU-22).
 3. **Alcance de CU-08, CU-10, CU-11 y CU-17.** Se implementa lo que dice su especificación en Cap. 5.4; si la DUBSS pide más, esa parte se suma después y se compensa moviendo un CU pequeño completo de una lista a la otra.
 4. **Asistencia (B12):** según la documentación (Cap. 5.4 CU-10 y Cap. 6.2), el Personal del Comedor la registra en la **aplicación móvil**, ingresando el CI del becado. Por eso B12 es Flutter, y A2 debe permitir iniciar sesión con ese rol en el móvil.
-5. **Autenticación (decidido):** propia del backend con JWT por rol; Firebase se usa solo para FCM y Storage. Esto contradice el Cap. 7.3 ([03_diseno_datos.tex:8](secciones/09_capitulo7_diseno/03_diseno_datos.tex#L8) dice que Firebase Authentication gestiona las contraseñas, y `usuario` tiene la columna `firebase_uid` en [03b_volumen.tex:52](secciones/09_capitulo7_diseno/03b_volumen.tex#L52)), y también Cap. 4 ([02_descripcion_general.tex:66](secciones/05_capitulo4_ieee830/02_descripcion_general.tex#L66), [03_requisitos_especificos.tex:705](secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex#L705)). Al implementar, `usuario` necesitará una columna de hash de contraseña en lugar de `firebase_uid`. Falta alinear esos textos del documento.
+5. **Autenticación (decidido, revisado):** la resuelve Firebase Auth (RF-01); `usuario` conserva `firebase_uid` y no tiene hash de contraseña. El backend solo verifica el token y consulta rol y estado. Coincide con el Cap. 7.3 y los Cap. 4 y 5 ya alineados.
 6. **Despliegue y pruebas de rendimiento:** no se contemplan. A1 es solo entorno local.
 7. Las estimaciones en puntos son mías y ajustables; si se reajustan, mantener la regla de que ninguna relación UML cruce entre personas.
