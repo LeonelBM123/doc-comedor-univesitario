@@ -33,7 +33,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 | **Directivo** | Consume el dashboard de indicadores BI (CU-12). | Antes «Directivo DUBSS (Gerente)». |
 | **Personal del Comedor Universitario** | Registra la asistencia digital diaria (CU-10). | Se autentica vía Usuario del Sistema. |
 | **Sistema / Módulo IA (Python)** | Actor secundario: precalifica (CU-03) y valida elegibilidad (CU-18). | No dibujado como actor en el diagrama; CU-03 y CU-18 son incluidos por CU-02. |
-| **Firebase** (Auth, FCM, Storage) | Actor secundario externo. | Cap. 4.2.4. |
+| **Firebase** (FCM, Storage) | Actor secundario externo. | Cap. 4.2.4. |
 | *Auditor institucional* | Fiscalizador; coteja registro digital vs. respaldo físico. | La consulta de auditoría para este actor (ex CU-33) fue **descartada**; no es actor del diagrama. |
 
 > ⚠️ Pendiente: confirmar si «Administrador DUBSS» se divide en subroles (Trabajo Social / Encargada de Sistemas) y qué actor ejecuta CU-11 (en el diagrama no tiene asociación directa; solo extiende CU-10).
@@ -66,8 +66,8 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 
 ## 4. Stack y restricciones técnicas
 
-- **Backend:** Java + Spring Boot (REST, HTTPS; verifica el token de Firebase Auth y consulta rol/estado en BD). **Web:** React + TypeScript. **Móvil:** Flutter/Dart (prioridad Android; cámara para digitalizar documentos).
-- **IA:** módulo independiente en Python, consumido vía API. **BD:** PostgreSQL. **Firebase:** Auth, FCM (push), Storage. **Infra:** AWS, Docker, GitHub.
+- **Backend:** Java + Spring Boot (REST, HTTPS; JWT propio: emite y verifica los tokens y guarda la contraseña como hash). **Web:** React + TypeScript. **Móvil:** Flutter/Dart (prioridad Android; cámara para digitalizar documentos).
+- **IA:** módulo independiente en Python, consumido vía API. **BD:** PostgreSQL. **Firebase:** FCM (push), Storage. **Infra:** AWS, Docker, GitHub.
 - Rendimiento: carga ≤ 3 s; puntaje individual ≤ 5 s; 20,000 postulaciones/gestión; ≥ 50 administrativos concurrentes; uptime ≥ 99 % en periodos de postulación/evaluación; BI en lote.
 
 ---
@@ -95,7 +95,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 
 | ID | ID previo | Caso de uso | Actor | Relaciones (según lista filtrada) | RF | Estado |
 |---|---|---|---|---|---|---|
-| CU-01 | CU-01 | Registrarse y autenticarse (incluye registro del Postulante, inicio y **cierre de sesión**; la autenticación la resuelve **Firebase Auth**, no un JWT propio del backend) | Usuario del Sistema | — | RF-01 | OK |
+| CU-01 | CU-01 | Registrarse y autenticarse (incluye registro del Postulante, inicio y **cierre de sesión**; la autenticación la resuelve el **propio backend con JWT** —token de acceso + refresh token por dispositivo—, no Firebase Auth) | Usuario del Sistema | — | RF-01 | OK |
 | CU-02 | CU-02 | Enviar postulación a Beca Comedor | Postulante | «include» CU-03, CU-16, CU-18 | RF-02 | OK |
 | CU-03 | CU-03 | Precalificar postulación con Inteligencia Artificial | Sistema | — | RF-03 | OK |
 | CU-04 | CU-04 | Consultar estado de postulación | Postulante | — | RF-06 | OK |

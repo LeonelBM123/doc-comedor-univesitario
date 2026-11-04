@@ -16,18 +16,19 @@ A continuación se detallan los requisitos funcionales identificados para el sis
 \toprule
 ¿Quién? & Postulante, Administrador DUBSS, Directivo DUBSS y Personal del Comedor Universitario. \\
 ¿Qué? & Quiere registrarse (el Postulante), autenticarse y cerrar su sesión en el sistema desde el portal web o la aplicación móvil. \\
-¿Por qué? & Para acceder de forma segura a las funcionalidades correspondientes a su rol, validado mediante el servicio de autenticación de Firebase. \\
+¿Por qué? & Para acceder de forma segura a las funcionalidades correspondientes a su rol, verificado por el propio sistema mediante un token de acceso firmado. \\
 \midrule
 \multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
 \multicolumn{2}{p{12.5cm}}{
 \begin{itemize}
     \item El sistema permite al Postulante crear una cuenta, y a todo usuario autenticarse y cerrar sesión, desde la web y desde la aplicación móvil. La cuenta creada por autorregistro siempre tiene el rol Postulante; las cuentas del personal las crea el Administrador DUBSS.
-    \item El sistema exige que el CI, el registro universitario y el correo electrónico sean únicos, y que la contraseña tenga al menos 6 caracteres y coincida con su confirmación.
+    \item El sistema exige que el CI, el registro universitario (9 dígitos numéricos, sin comenzar por 0) y el correo electrónico sean únicos, y que la contraseña tenga al menos 6 caracteres y coincida con su confirmación.
     \item El sistema identifica el rol del usuario autenticado (Postulante, Administrador DUBSS, Directivo o Personal del Comedor) y lo redirige al módulo correspondiente.
     \item El sistema rechaza credenciales inválidas con un mismo mensaje de error, sin revelar si el correo existe, y niega el acceso a las cuentas desactivadas.
-    \item El sistema bloquea temporalmente el acceso tras varios intentos fallidos consecutivos (objetivo: 5 intentos y un primer bloqueo de 5 minutos, mayor si se continúa fallando), hasta donde lo permita el servicio de autenticación; la escala exacta está por definir con la DUBSS.
+    \item El sistema bloquea temporalmente el acceso tras varios intentos fallidos consecutivos (5 intentos y un primer bloqueo de 5 minutos, mayor si se continúa fallando); el bloqueo lo aplica el propio sistema y su escala exacta está por definir con la DUBSS.
     \item El sistema cierra la sesión únicamente en el dispositivo desde el que se solicita, sin afectar las sesiones abiertas en otros dispositivos, y no permite ver pantallas privadas hasta un nuevo inicio de sesión.
-    \item El sistema no almacena contraseñas en su base de datos ni las escribe, junto con los tokens de sesión, en sus registros, y anota en la bitácora cada inicio de sesión exitoso.
+    \item El sistema almacena las contraseñas únicamente como hash (nunca en texto plano), no las escribe, junto con los tokens de sesión, en sus registros, y anota en la bitácora cada inicio de sesión exitoso.
+    \item El sistema mantiene la sesión mediante un token de acceso de vida corta y un token de renovación por dispositivo, que se guarda solo como hash y se revoca al cerrar sesión.
 \end{itemize}
 } \\
 \bottomrule
@@ -262,7 +263,7 @@ A continuación se detallan los requisitos funcionales identificados para el sis
 \multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
 \multicolumn{2}{p{12.5cm}}{
 \begin{itemize}
-    \item El usuario puede solicitar el restablecimiento de contraseña mediante su correo registrado, a través del servicio de autenticación de Firebase.
+    \item El usuario puede solicitar el restablecimiento de contraseña mediante un enlace enviado a su correo registrado, gestionado por el propio sistema.
     \item El usuario puede modificar sus datos de contacto y su contraseña desde el perfil.
     \item El sistema no permite modificar el CI desde el perfil.
 \end{itemize}
@@ -680,13 +681,13 @@ A continuación se detallan los requisitos no funcionales identificados para el 
 \begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
 \toprule
 \multicolumn{2}{l}{\textbf{Descripción}} \\
-\multicolumn{2}{p{12.5cm}}{El sistema debe cumplir con las restricciones tecnológicas ya definidas para el proyecto: despliegue en un servidor en la nube de AWS, motor de base de datos PostgreSQL, servicios de autenticación, notificaciones push y almacenamiento de archivos a través de Firebase, y aplicación móvil desarrollada en Flutter con prioridad de compatibilidad para dispositivos Android.} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe cumplir con las restricciones tecnológicas ya definidas para el proyecto: despliegue en un servidor en la nube de AWS, motor de base de datos PostgreSQL, autenticación propia mediante tokens JWT, notificaciones push y almacenamiento de archivos a través de Firebase, y aplicación móvil desarrollada en Flutter con prioridad de compatibilidad para dispositivos Android.} \\
 \midrule
 \multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
 \multicolumn{2}{p{12.5cm}}{
 \begin{itemize}
     \item El backend del sistema se despliega correctamente sobre AWS utilizando PostgreSQL.
-    \item La autenticación, las notificaciones push y el almacenamiento de archivos operan a través de Firebase.
+    \item La autenticación la resuelve el propio backend mediante tokens JWT, y las notificaciones push y el almacenamiento de archivos operan a través de Firebase.
     \item La aplicación móvil funciona correctamente en dispositivos Android.
 \end{itemize}
 } \\
@@ -706,8 +707,8 @@ Los requisitos de interfaz definen cómo el sistema interactúa con sus usuarios
 \begin{itemize}
     \item \textbf{Interfaz de usuario:} el portal web debe desarrollarse con React y TypeScript, y la aplicación móvil con Flutter, ambos bajo un diseño responsivo que se adapte a distintos tamaños de pantalla. La interfaz gráfica de la aplicación móvil debe seguir las directrices de \textit{Material Design}, propias del framework Flutter, garantizando coherencia visual y accesibilidad básica (contraste adecuado, tamaños de fuente legibles) para usuarios sin experiencia técnica previa.
     \item \textbf{Interfaz de hardware:} la aplicación móvil debe ser compatible con dispositivos Android de gama media, como los equipos utilizados para las pruebas del proyecto (Redmi Note 14 Pro y Honor X8), y debe permitir el uso de la cámara del dispositivo para la digitalización de documentos de respaldo.
-    \item \textbf{Interfaz de software:} el sistema debe exponer e integrar servicios mediante una API REST desarrollada en Spring Boot, que comunique al frontend web y a la aplicación móvil con la base de datos PostgreSQL y con el módulo de preselección desarrollado en Python. Asimismo, debe integrarse con los servicios de Firebase para la autenticación, el almacenamiento de archivos y el envío de notificaciones push.
-    \item \textbf{Interfaz de comunicación:} toda transmisión de datos entre los clientes (web y móvil) y el servidor debe realizarse mediante el protocolo HTTPS, y la autenticación de las peticiones debe validarse mediante el token de identidad emitido por Firebase Authentication, que el servidor verifica en cada petición, a fin de proteger la información socioeconómica sensible de los postulantes durante su transmisión.
+    \item \textbf{Interfaz de software:} el sistema debe exponer e integrar servicios mediante una API REST desarrollada en Spring Boot, que comunique al frontend web y a la aplicación móvil con la base de datos PostgreSQL y con el módulo de preselección desarrollado en Python. Asimismo, debe integrarse con los servicios de Firebase para el almacenamiento de archivos y el envío de notificaciones push.
+    \item \textbf{Interfaz de comunicación:} toda transmisión de datos entre los clientes (web y móvil) y el servidor debe realizarse mediante el protocolo HTTPS, y la autenticación de las peticiones debe validarse mediante el token de acceso (JWT) que emite el propio servidor y que este verifica en cada petición, a fin de proteger la información socioeconómica sensible de los postulantes durante su transmisión.
 \end{itemize}
 
 \subsubsection{4.3.4. Requisitos de Base de Datos}\label{sec:ieee_requisitos_bd}

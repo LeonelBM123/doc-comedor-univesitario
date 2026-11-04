@@ -13,7 +13,7 @@ Propuesta de modelo relacional (**PostgreSQL**) derivada de los 26 CU vigentes (
 | Organización | Un esquema lógico por paquete de análisis (P1…P6), mismo agrupamiento de 6.1.1. Se pueden implementar como esquemas PostgreSQL (`cuentas`, `postulacion`, `ia`, `adjudicacion`, `becados`, `reportes`) o como prefijos. |
 | Nombres | `snake_case`, singular, en español. PK `id` (`bigint generated always as identity`, uso **interno**). FK `<tabla>_id`. |
 | Identificador público | **Toda tabla** tiene `codigo_<tabla>` (**UUID v7**, `uuid`, UQ, NN, default generado). Es el único identificador que viaja a la API y al frontend (web y móvil); la PK `id` y las FK `<tabla>_id` nunca se exponen. Ver §1.1. |
-| Autenticación | La contraseña **no** se guarda en PostgreSQL: la gestiona **Firebase Auth**. Se guarda `firebase_uid` para enlazar. |
+| Autenticación | JWT propio del backend: la contraseña se guarda solo como hash BCrypt (`usuario.password_hash`) y cada sesión (refresh token por dispositivo) se guarda solo como hash SHA-256 en `sesion`. Firebase se usa solo para FCM y Storage. |
 | Archivos | Los binarios van en **Firebase Storage**; la BD guarda solo la ruta (`storage_path`), tipo y tamaño. |
 | Unicidad | `usuario.ci` y `usuario.correo` únicos. Una sola postulación por (postulante, convocatoria). Las unicidades son índices parciales `WHERE eliminado_en IS NULL` (§1.1). |
 | Trazabilidad | Todo cambio de estado de postulación y toda acción relevante deja fila en `postulacion_historial` y `bitacora` (append-only). El puntaje se guarda con fecha de cálculo y los puntajes antiguos se conservan. |
@@ -91,17 +91,26 @@ Convenciones: **PK** clave primaria · **FK** clave foránea · **UQ** único ·
 erDiagram
     ROL ||--o{ USUARIO : "tiene"
     USUARIO ||--o| POSTULANTE : "es"
+    USUARIO ||--o{ SESION : "abre"
     CARRERA ||--o{ POSTULANTE : "cursa"
     ROL { bigint id PK
           varchar nombre UQ }
     USUARIO { bigint id PK
-              varchar firebase_uid UQ
               varchar ci UQ
               varchar correo UQ
+              varchar password_hash
               varchar nombres
               varchar apellidos
               bigint rol_id FK
-              boolean activo }
+              boolean activo
+              int intentos_fallidos
+              int bloqueos_consecutivos
+              timestamptz bloqueado_hasta }
+    SESION { bigint id PK
+             bigint usuario_id FK
+             varchar token_hash UQ
+             timestamptz expira_en
+             timestamptz revocada_en }
     POSTULANTE { bigint usuario_id PK
                  bigint carrera_id FK
                  varchar registro_universitario
@@ -118,14 +127,29 @@ erDiagram
 | Columna | Tipo | Restricciones | Nota |
 |---|---|---|---|
 | id | bigint | PK | |
-| firebase_uid | varchar(128) | UQ, NN | enlace con Firebase Auth (CU-01) |
 | ci | varchar(20) | UQ, NN | RN: CI único |
 | correo | varchar(150) | UQ, NN | RN: correo único |
+| password_hash | varchar(100) | NN | hash BCrypt (CU-01); nunca el texto plano |
 | nombres, apellidos | varchar(100) | NN | |
 | rol_id | bigint | FK→rol, NN | CU-14: asignación de rol |
 | activo | boolean | NN, default true | CU-14: desactivar sin borrar |
+| intentos_fallidos | int | NN, default 0 | CU-01: intentos fallidos consecutivos |
+| bloqueos_consecutivos | int | NN, default 0 | CU-01: define la duración del siguiente bloqueo |
+| bloqueado_hasta | timestamptz | NULL | CU-01: fin del bloqueo temporal |
 
-> La contraseña **no se guarda** en la base de datos: `usuario` no tiene `password_hash`; la credencial vive en Firebase Auth y el enlace es `firebase_uid`. El backend solo verifica el token de Firebase y consulta `rol` y `activo`. El bloqueo por intentos fallidos lo aplica Firebase (hasta donde lo permita).
+> La contraseña se guarda **solo como hash BCrypt** (`password_hash`); el bloqueo por intentos fallidos (5 intentos → 5 min, 15 min, 1 h, 24 h; escala por definir con la DUBSS) lo aplica el propio backend con `intentos_fallidos`, `bloqueos_consecutivos` y `bloqueado_hasta`.
+
+**`sesion`** (CU-01: una fila por dispositivo / refresh token)
+
+| Columna | Tipo | Restricciones | Nota |
+|---|---|---|---|
+| id | bigint | PK | |
+| usuario_id | bigint | FK→usuario, NN | dueño de la sesión |
+| token_hash | varchar(64) | UQ, NN | SHA-256 del refresh token (nunca el token) |
+| expira_en | timestamptz | NN | vencimiento del refresh token |
+| revocada_en | timestamptz | NULL | se llena al cerrar sesión o al rotar el token |
+
+Índices: único parcial sobre `token_hash` y de consulta sobre `usuario_id`, con filtro `WHERE eliminado_en IS NULL`.
 
 **`postulante`** (extensión 1:1 de `usuario` solo para rol POSTULANTE)
 
@@ -138,7 +162,7 @@ erDiagram
 
 **`carrera`**: `id`, `nombre` (UQ), `facultad`. Catálogo poblado desde el padrón/perfil UAGRM **[fuente por definir con la DUBSS]**.
 
-> CU-15 (recuperar contraseña) lo resuelve Firebase; en BD solo se actualizan `telefono`/`correo`. El CI no es modificable (RF-10): se controla en la capa de servicio (opcional: trigger que rechace `UPDATE` de `ci`).
+> CU-15 (recuperar contraseña) lo resuelve el propio backend (token temporal por correo); en BD se actualizan `password_hash`, `telefono`/`correo`. El CI no es modificable (RF-10): se controla en la capa de servicio (opcional: trigger que rechace `UPDATE` de `ci`).
 
 ---
 
@@ -525,7 +549,7 @@ stateDiagram-v2
 | CU-12 | Dashboard BI | vistas materializadas sobre `postulacion`, `adjudicacion`, `asistencia`, `beca` |
 | CU-13 | Convocatoria y gestión | `gestion_academica`, `convocatoria`, `convocatoria_documento`, `tipo_documento` |
 | CU-14 | Usuarios y roles | `usuario`, `rol`, `bitacora` |
-| CU-15 | Recuperar contraseña / perfil | `usuario`, `postulante` (contraseña en Firebase) |
+| CU-15 | Recuperar contraseña / perfil | `usuario`, `postulante` (contraseña como hash en `usuario`) |
 | CU-16 | Digitalizar y adjuntar documentos | `documento_adjunto`, `tipo_documento` |
 | CU-17 | Guardar borrador | `postulacion` (estado `borrador`), `respuesta_socioeconomica`, `documento_adjunto` |
 | CU-18 | Validar elegibilidad y duplicados | `UNIQUE` en `postulacion`, `postulante`, `convocatoria` |
@@ -544,11 +568,11 @@ Cobertura: los 26 CU tienen al menos una tabla; los CU del P4 de cierre de exped
 
 ## 7. Resumen
 
-**31 tablas** (4 son catálogos: `rol`, `carrera`, `tipo_documento`, `gestion_academica`), más 1 opcional (`cotejo_detalle`) y las vistas materializadas de BI:
+**32 tablas** (4 son catálogos: `rol`, `carrera`, `tipo_documento`, `gestion_academica`), más 1 opcional (`cotejo_detalle`) y las vistas materializadas de BI:
 
 | Paquete | Tablas |
 |---|---|
-| P1 Cuentas y acceso (4) | `rol`, `usuario`, `postulante`, `carrera` |
+| P1 Cuentas y acceso (5) | `rol`, `usuario`, `sesion`, `postulante`, `carrera` |
 | P2 Convocatoria y postulación (9) | `gestion_academica`, `convocatoria`, `tipo_documento`, `convocatoria_documento`, `postulacion`, `respuesta_socioeconomica`, `nota_academica`, `documento_adjunto`, `postulacion_historial` |
 | P3 Preselección con IA (4) | `modelo_preseleccion`, `parametro_modelo`, `puntaje_postulacion`, `lote_reprocesamiento` |
 | P4 Auditoría y adjudicación (8) | `finalista`, `auditoria_expediente`, `adjudicacion`, `acta_adjudicacion`, `publicacion_resultado`, `comunicado`, `notificacion`, `dispositivo_fcm` |

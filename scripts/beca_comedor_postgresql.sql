@@ -1,7 +1,7 @@
 -- =============================================================================
 -- Sistema de Postulacion y Preseleccion de la Beca Comedor (DUBSS - UAGRM)
 -- Script de creacion de la base de datos - PostgreSQL 18
--- Generado a partir del diseno logico de la base de datos (31 tablas).
+-- Generado a partir del diseno logico de la base de datos (32 tablas).
 -- =============================================================================
 
 -- Requiere PostgreSQL 18 o superior (funcion uuidv7()).
@@ -48,18 +48,34 @@ CREATE TABLE rol (
 
 CREATE TABLE usuario (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    firebase_uid              varchar(128) NOT NULL,
     ci                        varchar(20) NOT NULL,
     correo                    varchar(150) NOT NULL,
+    password_hash             varchar(100) NOT NULL,
     nombres                   varchar(100) NOT NULL,
     apellidos                 varchar(100) NOT NULL,
     activo                    boolean NOT NULL DEFAULT true,
+    intentos_fallidos         integer NOT NULL DEFAULT 0,
+    bloqueos_consecutivos     integer NOT NULL DEFAULT 0,
+    bloqueado_hasta           timestamptz,
     rol_id                    bigint NOT NULL REFERENCES rol(id) ON DELETE RESTRICT,
     codigo_usuario            uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
     CONSTRAINT pk_usuario PRIMARY KEY (id)
+);
+
+CREATE TABLE sesion (
+    id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    usuario_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
+    token_hash                varchar(64) NOT NULL,
+    expira_en                 timestamptz NOT NULL,
+    revocada_en               timestamptz,
+    codigo_sesion             uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    creado_en                 timestamptz NOT NULL DEFAULT now(),
+    actualizado_en            timestamptz NOT NULL DEFAULT now(),
+    eliminado_en              timestamptz,
+    CONSTRAINT pk_sesion PRIMARY KEY (id)
 );
 
 CREATE TABLE carrera (
@@ -510,14 +526,14 @@ CREATE TABLE bitacora (
 CREATE UNIQUE INDEX uq_rol_nombre
     ON rol (nombre)
     WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_usuario_firebase_uid
-    ON usuario (firebase_uid)
-    WHERE eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_usuario_ci
     ON usuario (ci)
     WHERE eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_usuario_correo
     ON usuario (correo)
+    WHERE eliminado_en IS NULL;
+CREATE UNIQUE INDEX uq_sesion_token_hash
+    ON sesion (token_hash)
     WHERE eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_carrera_nombre
     ON carrera (nombre)
@@ -613,6 +629,8 @@ $$;
 CREATE TRIGGER trg_rol_actualizado_en BEFORE UPDATE ON rol
     FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
 CREATE TRIGGER trg_usuario_actualizado_en BEFORE UPDATE ON usuario
+    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
+CREATE TRIGGER trg_sesion_actualizado_en BEFORE UPDATE ON sesion
     FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
 CREATE TRIGGER trg_carrera_actualizado_en BEFORE UPDATE ON carrera
     FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();

@@ -16,7 +16,7 @@ Insumo para dibujar el **diagrama de contexto** de cada uno de los 13 casos de u
 
 | CU | Caso de uso | Actores |
 |---|---|---|
-| CU-01 | Registrarse y autenticarse (incluye cierre de sesión; autenticación por Firebase Auth, que no se dibuja como actor) | Usuario del Sistema (todos los roles: Postulante, Administrador DUBSS, Directivo, Personal del Comedor Universitario) |
+| CU-01 | Registrarse y autenticarse (incluye cierre de sesión; la autenticación la resuelve el propio backend con JWT) | Usuario del Sistema (todos los roles: Postulante, Administrador DUBSS, Directivo, Personal del Comedor Universitario) |
 | CU-02 | Enviar postulación a Beca Comedor | Postulante |
 | CU-03 | Precalificar postulación con Inteligencia Artificial | Postulante |
 | CU-04 | Consultar estado de postulación | Postulante |

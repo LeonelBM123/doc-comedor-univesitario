@@ -54,7 +54,7 @@ El desarrollo y funcionamiento del sistema está sujeto a las siguientes restric
 
 \begin{itemize}
     \item El sistema debe desplegarse sobre un servidor en la nube de Amazon Web Services (AWS), empleando PostgreSQL como motor de base de datos relacional.
-    \item Los servicios de autenticación, notificaciones push y almacenamiento de archivos deben integrarse a través de Firebase.
+    \item Los servicios de notificaciones push y almacenamiento de archivos deben integrarse a través de Firebase; la autenticación la resuelve el propio backend mediante tokens JWT.
     \item La aplicación móvil debe desarrollarse bajo el framework Flutter, priorizando su compatibilidad con dispositivos Android.
     \item El desarrollo del proyecto debe ejecutarse dentro del periodo comprendido entre el 24 de agosto y el 30 de noviembre de 2026, conforme al cronograma y al presupuesto estimado del proyecto (véase la Tabla~\ref{tab:presupuesto}).
     \item El sistema debe garantizar la confidencialidad y el resguardo de los datos socioeconómicos de los postulantes, en cumplimiento de las políticas institucionales de protección de datos personales de la UAGRM.
@@ -63,7 +63,7 @@ El desarrollo y funcionamiento del sistema está sujeto a las siguientes restric
 \subsubsection{4.2.5. Suposiciones y Dependencias}\label{sec:ieee_suposiciones}
 % [INSTRUCCIÓN]: Factores asumidos cuya variación podría alterar los requisitos del sistema.
 
-Se asume que los postulantes y el personal de la DUBSS contarán con acceso a un dispositivo (computadora o teléfono móvil) y con una conexión a internet estable durante el periodo de postulación y evaluación. El sistema depende de los servicios de Firebase para la autenticación de usuarios, el envío de notificaciones push y el almacenamiento de archivos, así como de la disponibilidad del servidor AWS para su despliegue y funcionamiento continuo. Asimismo, se asume que la DUBSS proporcionará de manera oportuna los criterios institucionales de vulnerabilidad socioeconómica requeridos para entrenar y calibrar el modelo de preselección con inteligencia artificial. El flujo de actividades y las dependencias entre los actores que intervienen en el proceso de postulación se describen en la Figura~\ref{fig:postulacion_beca} de la Sección 3.5.
+Se asume que los postulantes y el personal de la DUBSS contarán con acceso a un dispositivo (computadora o teléfono móvil) y con una conexión a internet estable durante el periodo de postulación y evaluación. El sistema depende de los servicios de Firebase para el envío de notificaciones push y el almacenamiento de archivos, así como de la disponibilidad del servidor AWS para su despliegue y funcionamiento continuo. Asimismo, se asume que la DUBSS proporcionará de manera oportuna los criterios institucionales de vulnerabilidad socioeconómica requeridos para entrenar y calibrar el modelo de preselección con inteligencia artificial. El flujo de actividades y las dependencias entre los actores que intervienen en el proceso de postulación se describen en la Figura~\ref{fig:postulacion_beca} de la Sección 3.5.
 
 \subsubsection{4.2.6. Modelo de Dominio}\label{sec:ieee_modelo_dominio}
 

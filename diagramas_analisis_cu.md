@@ -60,10 +60,17 @@ Igual que el ejemplo «sd CU02 Autenticación»: dibujar el actor **Usuario del 
 ### 6.2.1 — CU-01 Registrarse y autenticarse
 - **Actor:** Usuario del Sistema (generalizado por Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario).
 - **Vista:** `AuthView` · **Controlador:** `AuthController`
-- **Entidades:** `Usuario`, `Postulante`
+- **Entidades:** `Usuario`, `Postulante`, `Sesion`, `Bitacora` (la autenticación es propia del backend: no se dibuja Firebase)
 
 | # | Actor → Vista | Vista → Controlador | Controlador → Entidad |
 |---|---|---|---|
+| 1 (negro) | `1: registrar()` | `1.1: registrarUsuario(usuario)` | `1.2: find(ci, correo)` → Usuario · `1.3: find(registroUniversitario)` → Postulante · `1.4: create(usuario)` → Usuario · `1.5: create(postulante)` → Postulante · `1.6: create(sesion)` → Sesion · `1.7: create(bitacora)` → Bitacora |
+| 2 (rojo) | `2: iniciarSesion()` | `2.1: login(correo, contrasena)` | `2.2: find(correo)` → Usuario · `2.3: update(intentosFallidos, bloqueadoHasta)` → Usuario · `2.4: create(sesion)` → Sesion · `2.5: create(bitacora)` → Bitacora |
+| 3 (verde) | `3: renovarSesion()` | `3.1: refresh(refreshToken)` | `3.2: find(tokenHash)` → Sesion · `3.3: update(revocadaEn)` → Sesion · `3.4: create(sesion)` → Sesion |
+| 4 (azul) | `4: cerrarSesion()` | `4.1: logout(refreshToken)` | `4.2: update(revocadaEn)` → Sesion |
+| 5 (rojo claro) | `5: consultarUsuarioActual()` | `5.1: usuarioActual()` | `5.2: find(codigoUsuario)` → Usuario |
+
+---|---|---|---|
 | 1 (negro) | `1: registrar()` | `1.1: registrarUsuario(usuario)` | `1.2: find(ci, correo)` → Usuario · `1.3: create(usuario)` → Usuario · `1.4: create(postulante)` → Postulante |
 | 2 (rojo) | `2: iniciarSesion()` | `2.1: login(correo, contrasena)` | `2.2: find(correo)` → Usuario |
 
