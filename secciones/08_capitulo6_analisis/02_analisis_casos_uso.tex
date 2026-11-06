@@ -249,7 +249,7 @@ Para registrar una cuenta (mensaje 1), el controlador verifica que el CI y el co
 
 \subsubsection{6.2.15. Analizar CU-15 Recuperar contraseña / gestionar perfil}\label{sec:cap6_analisis_cu15}
 
-En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro roles, quien interactúa con \textit{PerfilView}. El controlador \textit{PerfilController} colabora con las entidades \textit{Usuario}, \textit{Postulante} y \textit{TokenRestablecimiento}. La Figura~\ref{fig:analisis_cu15} presenta el diagrama de análisis.
+En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro roles, quien interactúa con las vistas \textit{RecuperarContrasenaView} y \textit{PerfilView}. El controlador \textit{AuthController} atiende la recuperación, el restablecimiento y el cambio de contraseña, y \textit{PerfilController} la consulta y actualización del perfil; ambos colaboran con las entidades \textit{Usuario}, \textit{Postulante}, \textit{Sesion} y \textit{Bitacora}, y el envío del enlace pasa por la interfaz \textit{ServicioCorreo}. El enlace de restablecimiento no es una entidad aparte: su hash y su vencimiento se guardan en \textit{Usuario}, con un solo enlace vigente por cuenta. La Figura~\ref{fig:analisis_cu15} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-15 Recuperar contraseña / gestionar perfil}
@@ -261,7 +261,7 @@ En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro 
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-La solicitud de recuperación (mensaje 1) consulta al usuario por su correo (1.2) y genera un token de restablecimiento de un solo uso (1.3). El restablecimiento (mensaje 2) verifica el token (2.2) y actualiza la contraseña del usuario (2.3). La consulta del perfil (mensaje 3) obtiene los datos del usuario (3.2) y su actualización (mensaje 4) modifica los datos del usuario (4.2) y los datos de contacto del postulante (4.3).
+La solicitud de recuperación (mensaje 1) consulta al usuario por su correo (1.2), guarda en él el hash del token de un solo uso y su vencimiento (1.3) y envía el enlace por correo (1.4); la respuesta es siempre el mismo mensaje neutro. El restablecimiento (mensaje 2) busca la cuenta por el hash del token (2.2), guarda la nueva contraseña y desbloquea la cuenta (2.3), revoca todas sus sesiones (2.4) y lo registra en la bitácora (2.5). La consulta del perfil (mensaje 3) obtiene los datos del usuario (3.2) y, si es Postulante, los suyos (3.3). La actualización (mensaje 4) verifica que el correo nuevo no pertenezca a otra cuenta (4.2), actualiza el correo (4.3) y el teléfono del postulante (4.4) y lo registra en la bitácora (4.5). El cambio de contraseña (mensaje 5) actualiza la contraseña (5.2), revoca las sesiones de los demás dispositivos (5.3) y lo registra en la bitácora (5.4).
 
 
 \subsubsection{6.2.16. Analizar CU-16 Digitalizar y adjuntar documentos}\label{sec:cap6_analisis_cu16}

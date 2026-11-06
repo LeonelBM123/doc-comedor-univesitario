@@ -8,36 +8,67 @@
 
 A continuación se detallan los requisitos funcionales identificados para el sistema, formulados bajo el esquema de historia de usuario (¿quién?, ¿qué? y ¿por qué?) y acompañados de sus respectivos criterios de aceptación. Las Tablas~\ref{tab:rf01} a~\ref{tab:rf21} presentan cada uno de estos requisitos.
 
-\begin{table}[H]
-\caption{Requerimiento funcional RF-01: Registro y autenticación de usuarios}
-\label{tab:rf01}
-\begin{threeparttable}
-\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
+% RF-01 no cabe en una página: se usa longtable (mismo encabezado manual que
+% las tablas largas del Cap. 5) para que los criterios continúen en la siguiente.
+\refstepcounter{table}\label{tab:rf01}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Requerimiento funcional RF-01: Registro y autenticación de usuarios}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Requerimiento funcional RF-01: Registro y autenticación de usuarios}\par\nopagebreak
+\begingroup
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
 \toprule
 ¿Quién? & Postulante, Administrador DUBSS, Directivo DUBSS y Personal del Comedor Universitario. \\
 ¿Qué? & Quiere registrarse (el Postulante), autenticarse y cerrar su sesión en el sistema desde el portal web o la aplicación móvil. \\
 ¿Por qué? & Para acceder de forma segura a las funcionalidades correspondientes a su rol, verificado por el propio sistema mediante un token de acceso firmado. \\
 \midrule
 \multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
-\multicolumn{2}{p{12.5cm}}{
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
 \begin{itemize}
     \item El sistema permite al Postulante crear una cuenta, y a todo usuario autenticarse y cerrar sesión, desde la web y desde la aplicación móvil. La cuenta creada por autorregistro siempre tiene el rol Postulante; las cuentas del personal las crea el Administrador DUBSS.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema exige que el CI, el registro universitario (9 dígitos numéricos, sin comenzar por 0) y el correo electrónico sean únicos, y que la contraseña tenga al menos 6 caracteres y coincida con su confirmación.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema identifica el rol del usuario autenticado (Postulante, Administrador DUBSS, Directivo o Personal del Comedor) y lo redirige al módulo correspondiente.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema rechaza credenciales inválidas con un mismo mensaje de error, sin revelar si el correo existe, y niega el acceso a las cuentas desactivadas.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema bloquea temporalmente el acceso tras varios intentos fallidos consecutivos (5 intentos y un primer bloqueo de 5 minutos, mayor si se continúa fallando); el bloqueo lo aplica el propio sistema y su escala exacta está por definir con la DUBSS.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema cierra la sesión únicamente en el dispositivo desde el que se solicita, sin afectar las sesiones abiertas en otros dispositivos, y no permite ver pantallas privadas hasta un nuevo inicio de sesión.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema almacena las contraseñas únicamente como hash (nunca en texto plano), no las escribe, junto con los tokens de sesión, en sus registros, y anota en la bitácora cada inicio de sesión exitoso.
+\end{itemize}
+} \\
+\multicolumn{2}{p{\dimexpr12.5cm+2\tabcolsep\relax}}{
+\begin{itemize}
     \item El sistema mantiene la sesión mediante un token de acceso de vida corta y un token de renovación por dispositivo, que se guarda solo como hash y se revoca al cerrar sesión.
 \end{itemize}
 } \\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}
-\item \textit{Nota.} Elaboración propia.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+\noindent\textit{Nota.} Elaboración propia.\par\medskip
 
 \begin{table}[H]
 \caption{Requerimiento funcional RF-02: Envío de postulación a la Beca Comedor}
@@ -256,7 +287,7 @@ A continuación se detallan los requisitos funcionales identificados para el sis
 \begin{threeparttable}
 \begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
 \toprule
-¿Quién? & Postulante, Administrador DUBSS y Directivo DUBSS. \\
+¿Quién? & Postulante, Administrador DUBSS, Directivo DUBSS y Personal del Comedor Universitario. \\
 ¿Qué? & Quiere recuperar su contraseña en caso de olvido y actualizar sus datos de contacto desde su perfil. \\
 ¿Por qué? & Para recuperar el acceso a su cuenta sin intervención del personal y mantener actualizados los datos con que se le notifica. \\
 \midrule

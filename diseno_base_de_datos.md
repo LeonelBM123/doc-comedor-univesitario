@@ -105,7 +105,9 @@ erDiagram
               boolean activo
               int intentos_fallidos
               int bloqueos_consecutivos
-              timestamptz bloqueado_hasta }
+              timestamptz bloqueado_hasta
+              varchar restablecimiento_token_hash UQ
+              timestamptz restablecimiento_expira_en }
     SESION { bigint id PK
              bigint usuario_id FK
              varchar token_hash UQ
@@ -136,6 +138,8 @@ erDiagram
 | intentos_fallidos | int | NN, default 0 | CU-01: intentos fallidos consecutivos |
 | bloqueos_consecutivos | int | NN, default 0 | CU-01: define la duración del siguiente bloqueo |
 | bloqueado_hasta | timestamptz | NULL | CU-01: fin del bloqueo temporal |
+| restablecimiento_token_hash | varchar(64) | UQ (parcial), NULL | CU-15: SHA-256 del token del enlace de restablecimiento vigente (nunca el token); NULL si no hay enlace |
+| restablecimiento_expira_en | timestamptz | NULL | CU-15: vencimiento del enlace (60 minutos desde que se pide) |
 
 > La contraseña se guarda **solo como hash BCrypt** (`password_hash`); el bloqueo por intentos fallidos (5 intentos → 5 min, 15 min, 1 h, 24 h; escala por definir con la DUBSS) lo aplica el propio backend con `intentos_fallidos`, `bloqueos_consecutivos` y `bloqueado_hasta`.
 
@@ -157,12 +161,12 @@ erDiagram
 |---|---|---|---|
 | usuario_id | bigint | PK, FK→usuario | |
 | carrera_id | bigint | FK→carrera, NN | perfil UAGRM |
-| registro_universitario | varchar(20) | UQ | **[formato por definir]** |
-| telefono | varchar(20) | | datos de contacto (CU-15) |
+| registro_universitario | varchar(20) | NN, UQ | **[formato por definir]** |
+| telefono | varchar(20) | NN | datos de contacto (CU-15) |
 
 **`carrera`**: `id`, `nombre` (UQ), `facultad`. Catálogo poblado desde el padrón/perfil UAGRM **[fuente por definir con la DUBSS]**.
 
-> CU-15 (recuperar contraseña) lo resuelve el propio backend (token temporal por correo); en BD se actualizan `password_hash`, `telefono`/`correo`. El CI no es modificable (RF-10): se controla en la capa de servicio (opcional: trigger que rechace `UPDATE` de `ci`).
+> CU-15 (recuperar contraseña) lo resuelve el propio backend (token temporal por correo). El enlace vigente vive en `usuario` (`restablecimiento_token_hash` + `restablecimiento_expira_en`, índice único parcial `WHERE restablecimiento_token_hash IS NOT NULL AND eliminado_en IS NULL`): hay **un solo enlace vigente por cuenta**, pedir otro lo sobrescribe y usarlo lo deja en NULL. Se descartó una tabla aparte `restablecimiento_contrasena` porque no hace falta historial de enlaces (se reabre si la DUBSS pide auditarlos). Al restablecer se actualizan `password_hash`, `intentos_fallidos`, `bloqueos_consecutivos` y `bloqueado_hasta`, y se revocan las sesiones; desde el perfil se actualizan `correo` (todos) y `telefono` (solo `postulante`). El CI no es modificable (RF-10): se controla en la capa de servicio (opcional: trigger que rechace `UPDATE` de `ci`).
 
 ---
 
@@ -472,7 +476,7 @@ Opcional `cotejo_detalle` (`cotejo_id`, `asistencia_id`, `firmado_en_planilla` b
 | id | bigint PK | |
 | usuario_id | bigint FK→usuario | NULL si la acción es del sistema/IA |
 | accion | varchar(60) NN | `AUDITAR`, `DEVOLVER`, `ADJUDICAR`, `CAMBIAR_ROL`, `BAJA_BECA`, `PUBLICAR`… |
-| entidad | varchar(60) NN | tabla afectada |
+| entidad | varchar(60) | tabla afectada (nula si la acción no afecta a un registro concreto) |
 | entidad_id | bigint | |
 | detalle | jsonb | valores antes/después |
 | ip | inet | |

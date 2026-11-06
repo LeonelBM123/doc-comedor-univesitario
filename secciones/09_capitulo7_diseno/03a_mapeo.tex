@@ -55,9 +55,18 @@ varchar(100) & boolean & bigint & uuid & integer \\
 \vspace{14pt}
 \begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
 \toprule
-\textbf{bloqueos\_\allowbreak{}consecutivos} & \textbf{bloqueado\_\allowbreak{}hasta} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\textbf{bloqueos\_\allowbreak{}consecutivos} & \textbf{bloqueado\_\allowbreak{}hasta} & \textbf{restableci-\allowbreak{}miento\_\allowbreak{}token\_\allowbreak{}hash (UQ)} & \textbf{restableci-\allowbreak{}miento\_\allowbreak{}expira\_\allowbreak{}en} & \textbf{creado\_\allowbreak{}en} \\
 \midrule
-integer & timestamptz & timestamptz & timestamptz & timestamptz \\
+integer & timestamptz & varchar(64) & timestamptz & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
+\midrule
+timestamptz & timestamptz &  &  &  \\
 \bottomrule
 \end{tabular}
 

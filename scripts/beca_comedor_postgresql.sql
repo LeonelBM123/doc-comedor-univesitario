@@ -57,6 +57,8 @@ CREATE TABLE usuario (
     intentos_fallidos         integer NOT NULL DEFAULT 0,
     bloqueos_consecutivos     integer NOT NULL DEFAULT 0,
     bloqueado_hasta           timestamptz,
+    restablecimiento_token_hash varchar(64),
+    restablecimiento_expira_en  timestamptz,
     rol_id                    bigint NOT NULL REFERENCES rol(id) ON DELETE RESTRICT,
     codigo_usuario            uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
@@ -92,8 +94,8 @@ CREATE TABLE carrera (
 CREATE TABLE postulante (
     usuario_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
     carrera_id                bigint NOT NULL REFERENCES carrera(id) ON DELETE RESTRICT,
-    registro_universitario    varchar(20),
-    telefono                  varchar(20),
+    registro_universitario    varchar(20) NOT NULL,
+    telefono                  varchar(20) NOT NULL,
     codigo_postulante         uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
@@ -509,7 +511,7 @@ CREATE TABLE bitacora (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
     usuario_id                bigint REFERENCES usuario(id) ON DELETE RESTRICT,
     accion                    varchar(60) NOT NULL,
-    entidad                   varchar(60) NOT NULL,
+    entidad                   varchar(60),
     entidad_id                bigint,
     detalle                   jsonb,
     ip                        inet,
@@ -532,13 +534,16 @@ CREATE UNIQUE INDEX uq_usuario_ci
 CREATE UNIQUE INDEX uq_usuario_correo
     ON usuario (correo)
     WHERE eliminado_en IS NULL;
+CREATE UNIQUE INDEX uq_usuario_restablecimiento_token_hash
+    ON usuario (restablecimiento_token_hash)
+    WHERE restablecimiento_token_hash IS NOT NULL AND eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_sesion_token_hash
     ON sesion (token_hash)
     WHERE eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_carrera_nombre
     ON carrera (nombre)
     WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_postulante_registro
+CREATE UNIQUE INDEX uq_postulante_registro_universitario
     ON postulante (registro_universitario)
     WHERE eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_gestion_etiqueta
@@ -590,6 +595,15 @@ CREATE UNIQUE INDEX uq_asistencia_beca_fecha
 -- -----------------------------------------------------------------------------
 -- 4. Indices de consulta
 -- -----------------------------------------------------------------------------
+CREATE INDEX ix_usuario_rol_id
+    ON usuario (rol_id)
+    WHERE eliminado_en IS NULL;
+CREATE INDEX ix_sesion_usuario_id
+    ON sesion (usuario_id)
+    WHERE eliminado_en IS NULL;
+CREATE INDEX ix_postulante_carrera_id
+    ON postulante (carrera_id)
+    WHERE eliminado_en IS NULL;
 CREATE INDEX ix_postulacion_convocatoria_estado
     ON postulacion (convocatoria_id, estado)
     WHERE eliminado_en IS NULL;

@@ -60,6 +60,8 @@ codigo\_\allowbreak{}usuario & uuid & Identificador público (UUID v7) usado por
 intentos\_\allowbreak{}fallidos & integer & Intentos de inicio de sesión fallidos consecutivos & — & No & No \\
 bloqueos\_\allowbreak{}consecutivos & integer & Cantidad de bloqueos seguidos, que define la duración del siguiente & — & No & No \\
 bloqueado\_\allowbreak{}hasta & timestamptz & Fecha y hora hasta la que la cuenta está bloqueada (nula si no lo está) & — & Sí & No \\
+restablecimiento\_\allowbreak{}token\_\allowbreak{}hash & varchar(64) & Hash SHA-256 del token del enlace vigente de recuperación de contraseña (nunca el token; nulo si no hay enlace vigente) & 64 & Sí & UQ \\
+restablecimiento\_\allowbreak{}expira\_\allowbreak{}en & timestamptz & Fecha y hora de vencimiento del enlace de recuperación (nula si no hay enlace vigente) & — & Sí & No \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
 actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
 eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
@@ -147,8 +149,8 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 \endlastfoot
 usuario\_\allowbreak{}id & bigint & Identificador del usuario (clave primaria y foránea) & — & No & PK, FK \\
 carrera\_\allowbreak{}id & bigint & Identificador de la carrera que cursa & — & No & FK \\
-registro\_\allowbreak{}universitario & varchar(20) & Registro universitario del estudiante (formato por definir con la DUBSS) & 20 & Sí & UQ \\
-telefono & varchar(20) & Teléfono de contacto & 20 & Sí & No \\
+registro\_\allowbreak{}universitario & varchar(20) & Registro universitario del estudiante (formato por definir con la DUBSS) & 20 & No & UQ \\
+telefono & varchar(20) & Teléfono de contacto & 20 & No & No \\
 codigo\_\allowbreak{}postulante & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
 actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
@@ -1012,8 +1014,8 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 \endlastfoot
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
 usuario\_\allowbreak{}id & bigint & Identificador del usuario que ejecutó la acción (nulo si fue el sistema) & — & Sí & FK \\
-accion & varchar(60) & Acción realizada (p. ej. AUDITAR, DEVOLVER, ADJUDICAR) & 60 & No & No \\
-entidad & varchar(60) & Tabla o entidad afectada & 60 & No & No \\
+accion & varchar(60) & Acción realizada (p. ej. INICIO\_\allowbreak{}SESION, CAMBIO\_\allowbreak{}ROL, RESTABLECIMIENTO\_\allowbreak{}CONTRASENA) & 60 & No & No \\
+entidad & varchar(60) & Tabla o entidad afectada (nula si la acción no afecta a un registro concreto) & 60 & Sí & No \\
 entidad\_\allowbreak{}id & bigint & Identificador del registro afectado & — & Sí & No \\
 detalle & jsonb & Valores anteriores y posteriores a la acción & — & Sí & No \\
 ip & inet & Dirección IP desde la que se realizó la acción & — & Sí & No \\

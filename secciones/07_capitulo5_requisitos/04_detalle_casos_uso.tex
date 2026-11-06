@@ -1108,7 +1108,7 @@
     \item Para crear una cuenta, el Administrador ingresa los datos del funcionario (nombres, apellidos, CI, correo electrónico y rol).
     \item El sistema valida que los datos sean correctos y que el CI y el correo electrónico no estén registrados.
     \item El Administrador confirma la operación.
-    \item El sistema crea o actualiza la cuenta en la base de datos y genera una contraseña temporal (o un enlace de activación) para que el usuario establezca su contraseña de acceso.
+    \item El sistema crea o actualiza la cuenta en la base de datos y genera una contraseña temporal, que se muestra una sola vez al Administrador para que la entregue al funcionario; este la cambia desde su perfil (CU-15).
     \item El sistema registra la acción (usuario, cambio realizado, fecha y hora) en la bitácora y muestra la lista actualizada.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
@@ -1170,7 +1170,7 @@
 \midrule
 \textbf{Descripción} & Este caso de uso describe dos funciones: la recuperación de contraseña mediante un enlace enviado al correo registrado (generado por el backend) y la gestión del perfil, donde el usuario autenticado actualiza sus datos de contacto y su contraseña. El CI no puede modificarse desde el perfil. Extiende al CU-01. Respalda el RF-10. \\
 \midrule
-\textbf{Actores} & Usuario del Sistema (Postulante, Administrador DUBSS, Directivo, Personal del Comedor Universitario). \\
+\textbf{Actores} & Usuario del Sistema (Postulante, Administrador DUBSS, Directivo, Personal del Comedor Universitario); Servicio de Correo Electrónico (actor secundario, entrega el enlace). \\
 \midrule
 \textbf{Actor Iniciador} & Usuario del Sistema. \\
 \midrule
@@ -1186,15 +1186,15 @@
     \item El usuario ingresa su correo y confirma la solicitud.
     \item El sistema genera un token de restablecimiento de un solo uso con tiempo de validez limitado, lo envía en un enlace al correo registrado y muestra un mensaje informando que, si el correo está registrado, recibirá las instrucciones.
     \item El usuario abre el enlace recibido y define una nueva contraseña que cumpla la política de seguridad.
-    \item El sistema confirma el cambio y permite al usuario iniciar sesión con la nueva contraseña.
+    \item El sistema guarda la nueva contraseña, invalida el enlace, desbloquea la cuenta si estaba bloqueada, cierra todas las sesiones abiertas de la cuenta y permite al usuario iniciar sesión con la nueva contraseña.
 \end{cupasos} \\
  & \textbf{Flujo principal B: gestionar perfil.}
 \begin{cupasos}
     \item El usuario autenticado accede a la opción «Mi perfil».
     \item El sistema muestra sus datos personales y de contacto; el CI se muestra solo de lectura.
-    \item El usuario modifica sus datos de contacto (por ejemplo, correo electrónico y teléfono; campos exactos por definir) y/o solicita cambiar su contraseña ingresando la contraseña actual y la nueva.
+    \item El usuario modifica sus datos de contacto (el correo electrónico y, si es Postulante, el teléfono) y/o solicita cambiar su contraseña ingresando la contraseña actual y la nueva.
     \item El sistema valida los datos, comprueba la unicidad del correo y la política de contraseña.
-    \item El sistema guarda los cambios y confirma la actualización.
+    \item El sistema guarda los cambios, registra la acción en la bitácora y confirma la actualización; si cambió la contraseña, cierra las sesiones de los demás dispositivos y mantiene la actual.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
@@ -1204,7 +1204,7 @@
     \item A4 (flujo B, paso 3): si el usuario intenta modificar su CI, el sistema no lo permite (campo bloqueado).
     \item A5 (flujo B, paso 4): si el nuevo correo electrónico ya pertenece a otra cuenta, el sistema rechaza el cambio.
     \item A6 (flujo B, paso 4): si la contraseña actual ingresada es incorrecta, el sistema rechaza el cambio de contraseña.
-    \item A7 (flujo B, paso 5): si se cambia el correo electrónico, el sistema puede requerir una reautenticación previa (criterio por definir).
+    \item A7 (flujo B, paso 5): si se cambia el correo electrónico, el sistema exige la contraseña actual (reautenticación) antes de guardarlo.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
