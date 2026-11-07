@@ -100,7 +100,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 | CU-03 | CU-03 | Precalificar postulación con Inteligencia Artificial | Sistema | — | RF-03 | OK |
 | CU-04 | CU-04 | Consultar estado de postulación | Postulante | — | RF-06 | OK |
 | CU-05 | CU-06 | Auditar y adjudicar becas | Admin | «include» CU-06, CU-07; «extend» CU-08, CU-22 | RF-04 | OK |
-| CU-06 | CU-07 | Visualizar lista priorizada de postulantes | Admin | — | RF-04 | OK |
+| CU-06 | CU-07 | Visualizar lista priorizada de postulantes (incluye exportar a PDF, registrado en bitácora) | Admin | — | RF-04 | OK |
 | CU-07 | CU-08 | Auditar expediente finalista | Admin | «include» CU-21; «extend» CU-19, CU-20 | RF-04 | OK |
 | CU-08 | CU-09 | Generar acta de adjudicación | Admin | — | RF-04 | ❓ Preguntar |
 | CU-09 | CU-10 | Generar planilla de asistencia | Admin | — | RF-05 | OK |

@@ -492,10 +492,12 @@
     \item A2 (paso 6): si el Administrador DUBSS aplica un filtro o criterio de ordenamiento (por ejemplo, por carrera), el sistema vuelve a consultar las postulaciones y los puntajes y muestra la lista resultante.
     \item A3 (paso 5): si dos o más postulaciones tienen el mismo puntaje, el sistema aplica el criterio de desempate vigente (por definir con la DUBSS).
     \item A4 (paso 4): las postulaciones en estado «pendiente», «devuelta», «archivada», «adjudicada» o «no adjudicada» no forman parte de la lista priorizada activa; el sistema informa cuántas postulaciones siguen pendientes de precalificación.
+    \item A5 (paso 6): si el Administrador DUBSS solicita exportar la lista, el sistema genera un documento PDF con la lista priorizada de la convocatoria (respetando el filtro u orden aplicado), registra la exportación en la bitácora (CU-25) y ofrece la descarga del archivo.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El Administrador DUBSS visualiza la lista priorizada de la convocatoria; la consulta no modifica ningún dato del sistema.
+    \item El Administrador DUBSS visualiza la lista priorizada de la convocatoria; la consulta no modifica ningún dato de las postulaciones ni de los puntajes.
+    \item Si exportó la lista a PDF (A5), queda un registro de la exportación en la bitácora.
 \end{cuvin} \\
 \midrule
 \textbf{Excepciones} & \vspace{-\baselineskip}\begin{cuvin}

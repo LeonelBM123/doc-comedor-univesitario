@@ -96,7 +96,7 @@ El Administrador puede listar los finalistas de la convocatoria (mensaje 1), con
 
 \subsubsection{6.2.6. Analizar CU-06 Visualizar lista priorizada de postulantes}\label{sec:cap6_analisis_cu06}
 
-En el CU-06, el Administrador DUBSS consulta la lista priorizada mediante \textit{ListaPriorizadaView}, que se comunica con \textit{PriorizacionController}. Las entidades involucradas son \textit{Postulacion} y \textit{PuntajePostulacion}; la lista no se almacena, sino que se obtiene a partir de ambas. La Figura~\ref{fig:analisis_cu06} presenta el diagrama de análisis.
+En el CU-06, el Administrador DUBSS consulta la lista priorizada mediante \textit{ListaPriorizadaView}, que se comunica con \textit{PriorizacionController}. Las entidades involucradas son \textit{Postulacion} y \textit{PuntajePostulacion}; la lista no se almacena, sino que se obtiene a partir de ambas. Para la exportación a PDF interviene además \textit{Bitacora}, donde se registra la acción. La Figura~\ref{fig:analisis_cu06} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-06 Visualizar lista priorizada de postulantes}
@@ -108,7 +108,7 @@ En el CU-06, el Administrador DUBSS consulta la lista priorizada mediante \texti
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-Al ver la lista priorizada (mensaje 1), el controlador solicita la página correspondiente de la convocatoria (1.1), obtiene las postulaciones calificadas (1.2) y sus puntajes vigentes (1.3), y las ordena de mayor a menor puntaje. Al filtrar u ordenar la lista (mensaje 2), se repite la consulta con el criterio indicado (2.1 a 2.3). Ambas operaciones son de solo lectura.
+Al ver la lista priorizada (mensaje 1), el controlador solicita la página correspondiente de la convocatoria (1.1), obtiene las postulaciones calificadas (1.2) y sus puntajes vigentes (1.3), y las ordena de mayor a menor puntaje. Al filtrar u ordenar la lista (mensaje 2), se repite la consulta con el criterio indicado (2.1 a 2.3). Ambas operaciones son de solo lectura. Al exportar la lista (mensaje 3), el controlador recibe la solicitud con la convocatoria y los criterios de búsqueda y carrera vigentes (3.1), genera el documento PDF y registra la exportación en la bitácora con la acción EXPORTACION\_LISTA\_PRIORIZADA (3.2).
 
 
 \subsubsection{6.2.7. Analizar CU-07 Auditar expediente finalista}\label{sec:cap6_analisis_cu07}
