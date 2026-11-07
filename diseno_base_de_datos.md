@@ -394,7 +394,7 @@ erDiagram
 |---|---|---|
 | id | bigint PK | |
 | usuario_id | bigint FK, NN | destinatario |
-| tipo | enum | `CAMBIO_ESTADO`, `FINALISTA`, `COMUNICADO`, `RESULTADO` |
+| tipo | enum | `SUCCESS`, `INFO`, `WARNING`, `ERROR` (severidad del aviso; el motivo se deduce de `postulacion_id` / `comunicado_id`) |
 | titulo, mensaje | varchar / text | |
 | postulacion_id / comunicado_id | bigint FK, nullable | referencia de contexto |
 | leida | boolean NN default false | consultable desde la app |

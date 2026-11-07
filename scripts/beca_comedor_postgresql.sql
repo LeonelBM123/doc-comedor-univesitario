@@ -26,7 +26,7 @@ CREATE TYPE tipo_movimiento_beca AS ENUM (
 CREATE TYPE destinatarios_comunicado AS ENUM (
     'TODOS', 'FINALISTAS', 'ADJUDICADOS');
 CREATE TYPE tipo_notificacion AS ENUM (
-    'CAMBIO_ESTADO', 'FINALISTA', 'COMUNICADO', 'RESULTADO');
+    'SUCCESS', 'INFO', 'WARNING', 'ERROR');
 
 -- -----------------------------------------------------------------------------
 -- 2. Tablas (en orden de dependencias)
