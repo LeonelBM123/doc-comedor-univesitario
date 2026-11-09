@@ -179,7 +179,7 @@ Resumen: **Alta** 16 CU · **Media** 7 CU · **Baja** 3 CU.
 | CU-13 | Gestionar convocatoria y gestión académica            | 3      | CRUD con reglas de fechas                          |
 | CU-14 | Gestionar usuarios y roles                            | 3      | CRUD con control de acceso                         |
 | CU-15 | Recuperar contraseña / gestionar perfil               | 2      | Token temporal por correo, a cargo del backend     |
-| CU-16 | Digitalizar y adjuntar documentos                     | 5      | Cámara, validación, Firebase Storage               |
+| CU-16 | Digitalizar y adjuntar documentos                     | 5      | Cámara, validación, MinIO                         |
 | CU-17 | Guardar borrador de postulación                       | 3      | Persistencia parcial de datos                      |
 | CU-18 | Validar elegibilidad y duplicados                     | 2      | Reglas de validación                               |
 | CU-21 | Notificar finalistas, registrar entrega y comunicados | 5      | Push (FCM), registro de entrega, comunicados       |

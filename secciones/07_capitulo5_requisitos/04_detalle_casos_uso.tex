@@ -180,7 +180,7 @@
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item La postulación queda almacenada con estado «pendiente» (o «calificada» una vez ejecutado el CU-03), asociada al Postulante, a la convocatoria y a la gestión académica.
-    \item Los documentos adjuntos quedan almacenados en Firebase Storage y vinculados a la postulación.
+    \item Los documentos adjuntos quedan almacenados en MinIO y vinculados a la postulación.
     \item El Postulante puede consultar el estado de su postulación (CU-04).
 \end{cuvin} \\
 \midrule
@@ -190,7 +190,7 @@
     \item Datos ingresados no válidos o campos obligatorios incompletos.
     \item Convocatoria cerrada o inexistente.
     \item Postulación duplicada o Postulante no elegible.
-    \item Error al almacenar los archivos en Firebase Storage.
+    \item Error al almacenar los archivos en MinIO.
     \item Error de conexión con el servidor o la base de datos durante el envío.
 \end{cuvin} \\
 \end{longtable}
@@ -330,7 +330,7 @@
 \begin{cuvin}
     \item A1 (paso 2): si el Postulante no tiene postulaciones, el sistema muestra un mensaje informativo e invita a postular si existe una convocatoria abierta.
     \item A2 (paso 2): si el Postulante tiene postulaciones de varias gestiones, el sistema permite filtrarlas por gestión académica.
-    \item A3 (paso 4): si la postulación está «devuelta», el sistema muestra las observaciones registradas por el Administrador (CU-19) y ofrece la opción de corregir y reenviar (CU-02).
+    \item A3 (paso 4): si la postulación está «devuelta», el sistema muestra las observaciones registradas por el Administrador (el motivo del historial de la devolución, CU-19) y ofrece la opción de corregir y reenviar (CU-02).
     \item A4 (paso 4): si la postulación está «archivada» o «no adjudicada», el sistema muestra el motivo registrado (CU-20).
     \item A5 (paso 4): si el Postulante fue seleccionado como finalista, el sistema muestra la notificación con el plazo y los documentos físicos que debe presentar (CU-21); si los resultados fueron publicados, muestra su resultado (CU-22).
     \item A6 (paso 1): si el Postulante accede desde una notificación push, el sistema abre directamente el detalle de la postulación afectada.
@@ -381,7 +381,7 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Administrador DUBSS conducir el proceso de selección de los beneficiarios: identificar a los finalistas mejor puntuados, auditar sus expedientes y registrar la decisión de adjudicar o no adjudicar la Beca Comedor a cada uno de ellos. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe el proceso completo de auditoría y adjudicación de una convocatoria. A partir de la lista priorizada por el puntaje de vulnerabilidad (se incluye el CU-06), el Administrador DUBSS selecciona a los finalistas, audita el expediente de cada uno (se incluye el CU-07) y registra la decisión de adjudicación, que queda asociada a la postulación junto con el puntaje vigente, el usuario que decide y la fecha de adjudicación. El CU-08 lo extiende para generar el acta de adjudicación y el CU-22 para publicar los resultados. Respalda el RF-04. \\
+\textbf{Descripción} & Este caso de uso describe el proceso completo de auditoría y adjudicación de una convocatoria. A partir de la lista priorizada por el puntaje de vulnerabilidad (se incluye el CU-06), el Administrador DUBSS selecciona a los finalistas, audita el expediente de cada uno (se incluye el CU-07) y registra la decisión de adjudicación, que queda asociada a la postulación junto con el puntaje total (puntaje de la IA más el puntaje académico de la última auditoría), el usuario que decide y la fecha de adjudicación. El CU-08 lo extiende para generar el acta de adjudicación y el CU-22 para publicar los resultados. Respalda el RF-04. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -403,7 +403,7 @@
     \item El Administrador DUBSS audita el expediente de cada finalista (se incluye el CU-07).
     \item El sistema muestra la lista de finalistas con el resultado de su auditoría y el número de cupos disponibles.
     \item El Administrador DUBSS selecciona un finalista auditado y registra su decisión: adjudicar o no adjudicar la beca.
-    \item El sistema registra la adjudicación con su resultado, el puntaje vigente de la postulación, el usuario que decide y la fecha de adjudicación.
+    \item El sistema registra la adjudicación con su resultado, el puntaje total de la postulación (puntaje de la IA más el puntaje académico de la última auditoría), el usuario que decide y la fecha de adjudicación.
     \item El sistema actualiza el estado de la postulación a «adjudicada» o «no adjudicada», registra el cambio en el historial de la postulación y en la bitácora, y actualiza el número de cupos disponibles.
     \item Los pasos 7 a 9 se repiten hasta decidir sobre todos los finalistas.
 \end{cupasos} \\
@@ -411,7 +411,7 @@
 \begin{cuvin}
     \item A1 (paso 2): si la convocatoria no tiene postulaciones calificadas, el sistema informa que no existen postulaciones para auditar.
     \item A2 (paso 7): si el expediente del finalista no tiene una auditoría con resultado «validado», el sistema no permite adjudicarle la beca.
-    \item A3 (paso 7): si el puntaje de la postulación no alcanza el puntaje mínimo requerido, el sistema no permite adjudicarle la beca.
+    \item A3 (paso 7): si el puntaje total de la postulación (IA más académico de la última auditoría) no alcanza el puntaje mínimo requerido, el sistema no permite adjudicarle la beca.
     \item A4 (paso 7): si los cupos de la convocatoria están agotados, el sistema no permite registrar nuevas adjudicaciones y solo admite la decisión de no adjudicar.
     \item A5 (paso 10): una vez decididas todas las adjudicaciones, el Administrador DUBSS puede generar el acta de adjudicación (CU-08) y publicar los resultados (CU-22).
     \item A6 (paso 7): si los resultados de la convocatoria ya fueron publicados (CU-22), el sistema no permite modificar las adjudicaciones.
@@ -540,9 +540,9 @@
 \bottomrule
 \multicolumn{2}{l}{\textit{Nota.} Elaboración propia.} \\
 \endlastfoot
-\textbf{Propósito} & Permitir al Administrador DUBSS revisar el expediente de un finalista, cotejar su documentación física con la digital y registrar el resultado de la auditoría. \\
+\textbf{Propósito} & Permitir al Administrador DUBSS revisar el expediente de un finalista, cotejar su documentación física con la digital y registrar el resultado de la auditoría junto con su puntaje de rendimiento académico. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS audita el expediente de un postulante seleccionado como finalista. El sistema presenta los datos de la postulación, las respuestas socioeconómicas, los documentos digitales adjuntos y el puntaje obtenido; el Administrador coteja esa información con la documentación física entregada por el finalista y registra el resultado de la auditoría (validado, observado o no válido) con sus observaciones. Incluye la notificación al finalista y el registro de la entrega de su documentación física (CU-21). El CU-19 lo extiende para devolver la postulación y el CU-20 para archivarla o rechazarla. Es incluido por el CU-05. Respalda el RF-04. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS audita el expediente de un postulante seleccionado como finalista. El sistema presenta los datos de la postulación, las respuestas socioeconómicas, los documentos digitales adjuntos y el puntaje de la inteligencia artificial (hasta 70 puntos); el Administrador coteja esa información con la documentación física entregada por el finalista y registra el resultado de la auditoría (validado, observado o no válido) con sus observaciones (hasta 500 caracteres) y, si es validado, el puntaje de rendimiento académico (0 a 30), con lo que el sistema muestra el total (hasta 100). El finalista se elige desde la lista de finalistas del CU-21 (columna «Auditoría») y solo se audita si su entrega física está registrada y su postulación sigue «calificada». Al registrar la auditoría se avisa al postulante. Incluye la notificación al finalista y el registro de la entrega de su documentación física (CU-21). El CU-19 lo extiende para devolver la postulación y el CU-20 para archivarla o rechazarla. Es incluido por el CU-05. Respalda el RF-04. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -551,37 +551,44 @@
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item El Administrador DUBSS está autenticado en el sistema (CU-01) con el rol Administrador DUBSS.
     \item La postulación fue seleccionada como finalista en el CU-05 y se encuentra en estado «calificada».
-    \item Los documentos digitales de la postulación están almacenados en Firebase Storage (CU-16).
+    \item Los documentos digitales de la postulación están almacenados en MinIO (CU-16).
+    \item La entrega de la documentación física del finalista está registrada (CU-21).
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
     \item El Administrador DUBSS selecciona un finalista de la lista de finalistas de la convocatoria.
-    \item El sistema muestra el expediente del finalista: datos del postulante, respuestas socioeconómicas, documentos digitales adjuntos, puntaje de vulnerabilidad con su desglose y estado de la entrega de la documentación física.
+    \item El sistema muestra el expediente del finalista: datos del postulante, respuestas socioeconómicas, documentos digitales adjuntos, puntaje de vulnerabilidad de la IA con su desglose y estado de la entrega de la documentación física.
     \item El sistema notifica al finalista el plazo y los documentos físicos que debe presentar y registra la recepción de dicha documentación (se incluye el CU-21).
     \item El Administrador DUBSS coteja la documentación física entregada con los documentos digitales y los datos declarados.
-    \item El Administrador DUBSS registra el resultado de la auditoría (validado, observado o no válido) y sus observaciones.
-    \item El sistema registra la auditoría con su resultado, observaciones, auditor y fecha, y deja constancia en la bitácora.
-    \item El sistema muestra el expediente como auditado; si el resultado es «validado», el finalista queda habilitado para la decisión de adjudicación (CU-05).
+    \item El Administrador DUBSS registra el resultado de la auditoría (validado, observado o no válido), sus observaciones (hasta 500 caracteres) y, si el resultado es «validado», el puntaje de rendimiento académico (0 a 30).
+    \item El sistema valida los datos, registra la auditoría con su resultado, observaciones, puntaje académico, auditor y fecha, y deja constancia en la bitácora.
+    \item El sistema avisa al postulante el resultado de la auditoría y muestra el expediente como auditado con el puntaje de la IA, el puntaje académico y el total; si el resultado es «validado», el finalista queda habilitado para la decisión de adjudicación (CU-05).
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
     \item A1 (paso 3): si el finalista no entrega la documentación física dentro del plazo (por definir con la DUBSS), el Administrador DUBSS puede archivar la postulación (CU-20).
     \item A2 (paso 5): si el expediente presenta defectos subsanables, el Administrador DUBSS puede devolver la postulación para su corrección (CU-19).
     \item A3 (paso 5): si la documentación no es válida o la postulación no procede, el Administrador DUBSS puede archivarla o rechazarla (CU-20).
-    \item A4 (paso 2): si un documento digital no puede recuperarse de Firebase Storage, el sistema informa el error y permite reintentar la descarga.
-    \item A5 (paso 6): si el expediente ya tenía una auditoría (por ejemplo, después de una devolución), el sistema registra la nueva auditoría y conserva las anteriores.
+    \item A4 (paso 2): si un documento digital no puede recuperarse del almacenamiento de archivos, el sistema informa el error y permite reintentar la descarga.
+    \item A5 (paso 6): si el expediente ya tenía una auditoría (por ejemplo, después de una devolución), el sistema registra la nueva auditoría y conserva las anteriores; una postulación devuelta y reenviada recorre de nuevo el flujo finalista, entrega física y auditoría.
+    \item A6 (paso 1): si la entrega física del finalista no está registrada, el sistema rechaza la auditoría (conflicto) e indica registrar primero la entrega (CU-21).
+    \item A7 (paso 6): si la postulación ya no está en estado «calificada» (por ejemplo, otro administrador la devolvió o archivó), el sistema rechaza la auditoría (conflicto).
+    \item A8 (paso 6): si los datos son inválidos (observaciones de más de 500 caracteres, falta el puntaje académico en un resultado «validado» o puntaje fuera del rango de 0 a 30), el sistema informa el error y no registra la auditoría.
+    \item A9 (paso 6): si la misma petición se repite (doble clic o reintento), el sistema la trata de forma idempotente y no duplica la auditoría.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El expediente del finalista tiene registrada una auditoría con su resultado, observaciones, auditor y fecha.
+    \item El expediente del finalista tiene registrada una auditoría con su resultado, observaciones, puntaje académico (si es validado), auditor y fecha.
+    \item El postulante recibe el aviso del resultado de la auditoría.
     \item La acción queda registrada en la bitácora.
 \end{cuvin} \\
 \midrule
 \textbf{Excepciones} & \vspace{-\baselineskip}\begin{cuvin}
     \item Autenticación inválida o sesión expirada.
     \item Falta de permisos suficientes (el usuario no tiene el rol Administrador DUBSS).
-    \item Error al recuperar los documentos desde Firebase Storage.
+    \item Error al recuperar los documentos desde MinIO.
+    \item Entrega física no registrada o postulación que ya no está calificada (conflicto de estado).
     \item Error de conexión con el servidor o la base de datos al registrar la auditoría.
 \end{cuvin} \\
 \end{longtable}
@@ -620,7 +627,7 @@
 \endlastfoot
 \textbf{Propósito} & Generar el acta oficial que deja constancia de los resultados de la adjudicación de la Beca Comedor de una convocatoria. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS genera, una vez decididas todas las adjudicaciones de una convocatoria, el acta de adjudicación en formato PDF con la lista de beneficiarios aprobados. El acta se almacena en Firebase Storage, se registra con un número único y puede consultarse posteriormente. El formato y el contenido oficial del acta están por definir con la DUBSS. Extiende el CU-05. Respalda el RF-04. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS genera, una vez decididas todas las adjudicaciones de una convocatoria, el acta de adjudicación en formato PDF con la lista de beneficiarios aprobados. El acta se almacena en MinIO, se registra con un número único y puede consultarse posteriormente. El formato y el contenido oficial del acta están por definir con la DUBSS. Extiende el CU-05. Respalda el RF-04. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -637,7 +644,7 @@
     \item El sistema verifica que no existan finalistas con la adjudicación pendiente de decisión.
     \item El sistema obtiene las adjudicaciones de la convocatoria con el nombre, CI, carrera y puntaje final de cada postulante adjudicado.
     \item El sistema genera el acta en formato PDF con un número único, la fecha, los datos de la convocatoria y de la gestión académica y la lista de adjudicados.
-    \item El sistema almacena el PDF en Firebase Storage y registra el acta con su número, la ruta del archivo, el usuario que la genera y la fecha de generación, y deja constancia en la bitácora.
+    \item El sistema almacena el PDF en MinIO y registra el acta con su número, la ruta del archivo, el usuario que la genera y la fecha de generación, y deja constancia en la bitácora.
     \item El sistema muestra el acta generada y permite descargarla e imprimirla.
 \end{cupasos} \\
  & \textbf{Flujo principal B: consultar el acta.}
@@ -654,7 +661,7 @@
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El acta de adjudicación de la convocatoria queda almacenada en Firebase Storage y registrada con su número, responsable y fecha de generación.
+    \item El acta de adjudicación de la convocatoria queda almacenada en MinIO y registrada con su número, responsable y fecha de generación.
     \item La generación del acta queda registrada en la bitácora.
 \end{cuvin} \\
 \midrule
@@ -662,7 +669,7 @@
     \item Autenticación inválida o sesión expirada.
     \item Falta de permisos suficientes (el usuario no tiene el rol Administrador DUBSS).
     \item Error al generar el documento PDF.
-    \item Error al almacenar el archivo en Firebase Storage.
+    \item Error al almacenar el archivo en MinIO.
     \item Error de conexión con el servidor o la base de datos.
 \end{cuvin} \\
 \end{longtable}
@@ -701,7 +708,7 @@
 \endlastfoot
 \textbf{Propósito} & Generar planillas de asistencia imprimibles, a partir del padrón de becados vigente, que sirvan como respaldo físico del uso del beneficio ante las auditorías. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS genera, para un periodo determinado, la planilla de asistencia de los becados vigentes de la convocatoria. La planilla se genera en formato PDF, lista para su impresión, con los espacios para la firma de cada becado y la fotocopia de su carnet, tal como lo exigen las auditorías; se almacena en Firebase Storage y queda disponible para su consulta y para el cotejo con el registro digital (CU-11). Respalda el RF-05. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS genera, para un periodo determinado, la planilla de asistencia de los becados vigentes de la convocatoria. La planilla se genera en formato PDF, lista para su impresión, con los espacios para la firma de cada becado y la fotocopia de su carnet, tal como lo exigen las auditorías; se almacena en MinIO y queda disponible para su consulta y para el cotejo con el registro digital (CU-11). Respalda el RF-05. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -720,7 +727,7 @@
     \item El sistema valida que la fecha final no sea anterior a la inicial y que el periodo esté comprendido en la gestión académica.
     \item El sistema obtiene las becas en estado vigente de la convocatoria.
     \item El sistema genera la planilla en formato PDF con la lista de becados (nombre, CI y carrera) y los espacios para la firma y la fotocopia del carnet de cada uno (formato por definir con la DUBSS).
-    \item El sistema almacena el PDF en Firebase Storage y registra la planilla con su periodo, la ruta del archivo, el usuario que la genera y la fecha de generación.
+    \item El sistema almacena el PDF en MinIO y registra la planilla con su periodo, la ruta del archivo, el usuario que la genera y la fecha de generación.
     \item El sistema muestra la planilla generada para su descarga e impresión.
 \end{cupasos} \\
  & \textbf{Flujo principal B: consultar planillas.}
@@ -737,7 +744,7 @@
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item La planilla de asistencia queda almacenada en Firebase Storage y registrada con su periodo, responsable y fecha de generación.
+    \item La planilla de asistencia queda almacenada en MinIO y registrada con su periodo, responsable y fecha de generación.
     \item La planilla queda disponible para su impresión y para el cotejo con el registro digital (CU-11).
 \end{cuvin} \\
 \midrule
@@ -745,7 +752,7 @@
     \item Autenticación inválida o sesión expirada.
     \item Falta de permisos suficientes (el usuario no tiene el rol Administrador DUBSS).
     \item Error al generar el documento PDF.
-    \item Error al almacenar el archivo en Firebase Storage.
+    \item Error al almacenar el archivo en MinIO.
     \item Error de conexión con el servidor o la base de datos.
 \end{cuvin} \\
 \end{longtable}
@@ -1257,7 +1264,7 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Postulante digitalizar sus documentos con la cámara del teléfono, o cargarlos desde un archivo en la web, y asociarlos a su postulación como respaldo de los datos declarados. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Postulante captura o adjunta cada documento requerido por la convocatoria, valida su formato y tamaño, revisa una vista previa y lo asocia a su postulación, almacenándolo en Firebase Storage. Es incluido por el CU-02 y también se utiliza al completar un borrador (CU-17). Permite evitar la presentación de carpetas físicas en la etapa inicial. Respalda el RF-11. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Postulante captura o adjunta cada documento requerido por la convocatoria, valida su formato y tamaño, revisa una vista previa y lo asocia a su postulación, almacenándolo en MinIO. Es incluido por el CU-02 y también se utiliza al completar un borrador (CU-17). Permite evitar la presentación de carpetas físicas en la etapa inicial. Respalda el RF-11. \\
 \midrule
 \textbf{Actores} & Postulante. \\
 \midrule
@@ -1278,7 +1285,7 @@
     \item El sistema valida el formato y el tamaño del archivo (formatos y tamaño máximo por definir con la DUBSS).
     \item El sistema muestra una vista previa del documento.
     \item El Postulante confirma el documento, o bien lo reemplaza, lo vuelve a capturar o lo elimina.
-    \item El sistema almacena el archivo en Firebase Storage y registra el documento adjunto (tipo y archivo) asociado a la postulación.
+    \item El sistema almacena el archivo en MinIO y registra el documento adjunto (tipo y archivo) asociado a la postulación.
     \item El sistema actualiza la lista de documentos con el estado «adjuntado».
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
@@ -1292,7 +1299,7 @@
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item Los documentos adjuntados quedan almacenados en Firebase Storage y vinculados a la postulación (o al borrador).
+    \item Los documentos adjuntados quedan almacenados en MinIO y vinculados a la postulación (o al borrador).
     \item La lista de documentos requeridos refleja cuáles fueron cargados y cuáles faltan.
 \end{cuvin} \\
 \midrule
@@ -1300,7 +1307,7 @@
     \item Autenticación inválida o sesión expirada.
     \item Permiso de cámara denegado.
     \item Formato o tamaño de archivo no permitido.
-    \item Error al almacenar el archivo en Firebase Storage.
+    \item Error al almacenar el archivo en MinIO.
     \item Convocatoria cerrada durante la carga de documentos.
     \item Error de conexión con el servidor.
 \end{cuvin} \\
@@ -1500,7 +1507,7 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Administrador DUBSS devolver una postulación con observaciones para que el Postulante corrija o complete su documentación y la reenvíe, evitando descartarla por defectos subsanables. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS, durante la auditoría de un expediente finalista, devuelve la postulación al Postulante registrando las observaciones que debe subsanar. La postulación cambia al estado «devuelta», el cambio queda en el historial de la postulación y el Postulante es notificado. El Postulante puede corregir y reenviar la postulación dentro del plazo establecido (por definir con la DUBSS) mediante el CU-02. Extiende el CU-07. Respalda el RF-14. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS, durante la auditoría de un expediente finalista, devuelve la postulación al Postulante desde el expediente del finalista, registrando un motivo de hasta 500 caracteres con las observaciones que debe subsanar. La postulación cambia al estado «devuelta», el cambio queda en el historial de la postulación y en la bitácora, y el Postulante recibe siempre el aviso por bandeja, push y correo. No hay plazo de reenvío ni límite de devoluciones: el Postulante puede corregir y reenviar la postulación cuando quiera mediante el CU-02. Extiende el CU-07. Respalda el RF-14. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -1510,25 +1517,30 @@
     \item El Administrador DUBSS está autenticado en el sistema (CU-01) con el rol Administrador DUBSS.
     \item El Administrador DUBSS se encuentra auditando el expediente de un finalista (CU-07).
     \item La postulación se encuentra en estado «calificada».
+    \item El finalista tiene al menos una auditoría registrada después de su última devolución; no se exige entrega física.
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
     \item El Administrador DUBSS selecciona la opción «Devolver para corrección» en el expediente.
-    \item El sistema solicita las observaciones de la devolución.
-    \item El Administrador DUBSS registra las observaciones y confirma la devolución.
-    \item El sistema valida que las observaciones no estén vacías.
+    \item El sistema solicita el motivo de la devolución (máximo 500 caracteres).
+    \item El Administrador DUBSS registra el motivo y confirma la devolución.
+    \item El sistema valida que el motivo no esté vacío ni supere los 500 caracteres, que la postulación siga en estado «calificada» y que exista una auditoría posterior a la última devolución.
     \item El sistema actualiza el estado de la postulación a «devuelta».
-    \item El sistema registra el cambio en el historial de la postulación (estado anterior, estado nuevo, usuario y motivo) y en la bitácora.
-    \item El sistema crea la notificación para el Postulante y le envía una notificación push con las observaciones.
+    \item El sistema registra, en una sola operación, el cambio en el historial de la postulación (estado anterior, estado nuevo, usuario y motivo) y en la bitácora.
+    \item El sistema crea la notificación para el Postulante y se la envía siempre por bandeja, push y correo, con las observaciones.
     \item El sistema confirma la devolución al Administrador DUBSS.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (paso 4): si no se registran observaciones, el sistema no permite devolver la postulación.
+    \item A1 (paso 4): si el motivo está vacío o supera los 500 caracteres, el sistema no permite devolver la postulación.
+    \item A5 (paso 4): si el finalista no existe, el sistema informa que no se encontró.
+    \item A6 (paso 4): si la postulación ya no está «calificada» (incluye a dos administradores actuando a la vez), el sistema rechaza la devolución por conflicto de estado.
+    \item A7 (paso 4): si no hay una auditoría registrada después de la última devolución, el sistema rechaza la devolución por conflicto.
+    \item A8 (paso 5): si la petición se repite por doble clic, la segunda se rechaza por estado inválido; el botón se deshabilita al enviar.
     \item A2 (paso 3): si el Administrador DUBSS cancela la operación, la postulación conserva su estado.
-    \item A3 (paso 7): si falla el envío de la notificación push, la notificación queda registrada y el Postulante puede verla al consultar su postulación (CU-04).
-    \item A4 (posterior al paso 8): cuando el Postulante corrige y reenvía la postulación (CU-02), esta vuelve al estado «pendiente», se incrementa su número de envíos y se conserva el historial de devoluciones y reenvíos.
+    \item A3 (paso 7): si falla el envío del push, la notificación queda en la bandeja del Postulante y el servicio de notificaciones la reintenta; el Postulante también puede verla al consultar su postulación (CU-04).
+    \item A4 (posterior al paso 8): el reenvío es del CU-02; cuando el Postulante corrige y reenvía la postulación, esta vuelve al estado «pendiente», se incrementa su número de envíos, se conserva el historial de devoluciones y reenvíos, y sigue el mismo flujo del CU-07 (nueva entrega física si hace falta y nueva auditoría; las anteriores se conservan).
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
@@ -1539,7 +1551,8 @@
 \textbf{Excepciones} & \vspace{-\baselineskip}\begin{cuvin}
     \item Autenticación inválida o sesión expirada.
     \item Falta de permisos suficientes (el usuario no tiene el rol Administrador DUBSS).
-    \item La postulación no se encuentra en un estado que permita su devolución.
+    \item La postulación no se encuentra en un estado que permita su devolución (conflicto de estado).
+    \item El finalista indicado no existe.
     \item Error al enviar la notificación push mediante Firebase Cloud Messaging.
     \item Error de conexión con el servidor o la base de datos.
 \end{cuvin} \\
@@ -1663,7 +1676,7 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Administrador DUBSS notificar a los finalistas para que presenten su documentación física, registrar su recepción y publicar comunicados y avisos dirigidos a los postulantes. \\
 \midrule
-\textbf{Descripción} & Este caso de uso agrupa tres funciones que coordinan la auditoría física: notificar a los finalistas el plazo y los documentos que deben presentar, registrar la fecha en que se recibe la documentación física de cada uno y publicar comunicados o avisos generales. Las notificaciones se envían mediante notificación push (Firebase Cloud Messaging) y quedan consultables en la aplicación. Es incluido por el CU-07 (Auditar expediente finalista). Respalda el RF-16. \\
+\textbf{Descripción} & Este caso de uso agrupa tres funciones que coordinan la auditoría física: notificar a los finalistas el plazo y los documentos que deben presentar, registrar la fecha en que se recibe la documentación física de cada uno y publicar comunicados o avisos generales. Las notificaciones se envían mediante notificación push (Firebase Cloud Messaging) y quedan consultables en la aplicación. La pantalla de finalistas muestra además la última auditoría de cada uno, la insignia «Devuelta» cuando la postulación fue devuelta y la acción «Auditar» (CU-07); todo aviso se envía por el servicio de notificaciones. Es incluido por el CU-07 (Auditar expediente finalista). Respalda el RF-16. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS; Postulante (receptor de las notificaciones). \\
 \midrule

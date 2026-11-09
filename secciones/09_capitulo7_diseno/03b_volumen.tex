@@ -400,7 +400,7 @@ id & bigint & Identificador interno de la tabla (no se expone en la API) & — &
 postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
 tipo\_\allowbreak{}documento\_\allowbreak{}id & bigint & Identificador del tipo de documento & — & No & FK \\
 nombre\_\allowbreak{}archivo & varchar(255) & Nombre original del archivo & 255 & No & No \\
-storage\_\allowbreak{}path & varchar(500) & Ruta del archivo en Firebase Storage & 500 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del archivo en MinIO & 500 & No & No \\
 mime\_\allowbreak{}type & varchar(100) & Tipo de contenido del archivo & 100 & No & No \\
 tamano\_\allowbreak{}bytes & bigint & Tamaño del archivo en bytes & — & No & No \\
 subido\_\allowbreak{}en & timestamptz & Fecha y hora de carga del archivo & — & No & No \\
@@ -435,7 +435,7 @@ postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — &
 estado\_\allowbreak{}anterior & estado\_\allowbreak{}postulacion & Estado previo al cambio (nulo en el primer registro) & — & Sí & No \\
 estado\_\allowbreak{}nuevo & estado\_\allowbreak{}postulacion & Estado resultante del cambio & — & No & No \\
 usuario\_\allowbreak{}id & bigint & Identificador del usuario que realizó el cambio (nulo si fue el sistema) & — & Sí & FK \\
-motivo & text & Motivo u observaciones del cambio (obligatorio al devolver, archivar o rechazar) & — & Sí & No \\
+motivo & text & Motivo u observaciones del cambio (obligatorio al devolver, archivar o rechazar; el servicio valida un máximo de 500 caracteres) & — & Sí & No \\
 codigo\_\allowbreak{}postulacion\_\allowbreak{}historial & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
 actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
@@ -527,7 +527,7 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
 postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
 modelo\_\allowbreak{}id & bigint & Identificador de la versión del modelo que calculó el puntaje & — & No & FK \\
-puntaje\_\allowbreak{}total & numeric(5,2) & Puntaje de vulnerabilidad obtenido & 5,2 & No & No \\
+puntaje\_\allowbreak{}total & numeric(5,2) & Puntaje de vulnerabilidad obtenido de la IA (0 a 70) & 5,2 & No & No \\
 detalle & jsonb & Desglose del puntaje por variable & — & Sí & No \\
 fecha\_\allowbreak{}calculo & timestamptz & Fecha y hora del cálculo & — & No & No \\
 vigente & boolean & Indica si es el puntaje vigente de la postulación & — & No & No \\
@@ -627,7 +627,8 @@ id & bigint & Identificador interno de la tabla (no se expone en la API) & — &
 finalista\_\allowbreak{}id & bigint & Identificador del finalista auditado & — & No & FK \\
 auditor\_\allowbreak{}id & bigint & Identificador del administrador que auditó & — & No & FK \\
 resultado & varchar(20) & Resultado de la auditoría (VALIDADO, OBSERVADO o NO\_\allowbreak{}VALIDO) & 20 & No & No \\
-observaciones & text & Observaciones de la auditoría & — & Sí & No \\
+puntaje\_\allowbreak{}academico & numeric(5,2) & Puntaje de rendimiento académico registrado por el auditor (0 a 30); solo con resultado VALIDADO & 5,2 & Sí & No \\
+observaciones & varchar(500) & Observaciones de la auditoría & 500 & Sí & No \\
 fecha\_\allowbreak{}auditoria & timestamptz & Fecha y hora de la auditoría & — & No & No \\
 codigo\_\allowbreak{}auditoria\_\allowbreak{}expediente & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
@@ -690,7 +691,7 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
 convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
 numero & varchar(30) & Número único del acta & 30 & No & UQ \\
-storage\_\allowbreak{}path & varchar(500) & Ruta del PDF del acta en Firebase Storage & 500 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del PDF del acta en MinIO & 500 & No & No \\
 generada\_\allowbreak{}por & bigint & Identificador del administrador que generó el acta & — & No & FK \\
 generada\_\allowbreak{}en & timestamptz & Fecha y hora de generación del acta & — & No & No \\
 codigo\_\allowbreak{}acta\_\allowbreak{}adjudicacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
@@ -917,7 +918,7 @@ id & bigint & Identificador interno de la tabla (no se expone en la API) & — &
 convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
 fecha\_\allowbreak{}desde & date & Fecha inicial del periodo de la planilla & — & No & No \\
 fecha\_\allowbreak{}hasta & date & Fecha final del periodo de la planilla & — & No & No \\
-storage\_\allowbreak{}path & varchar(500) & Ruta del PDF de la planilla en Firebase Storage & 500 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del PDF de la planilla en MinIO & 500 & No & No \\
 generada\_\allowbreak{}por & bigint & Identificador del administrador que generó la planilla & — & No & FK \\
 generada\_\allowbreak{}en & timestamptz & Fecha y hora de generación & — & No & No \\
 codigo\_\allowbreak{}planilla\_\allowbreak{}asistencia & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\

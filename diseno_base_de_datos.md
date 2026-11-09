@@ -13,8 +13,8 @@ Propuesta de modelo relacional (**PostgreSQL**) derivada de los 26 CU vigentes (
 | Organización | Un esquema lógico por paquete de análisis (P1…P6), mismo agrupamiento de 6.1.1. Se pueden implementar como esquemas PostgreSQL (`cuentas`, `postulacion`, `ia`, `adjudicacion`, `becados`, `reportes`) o como prefijos. |
 | Nombres | `snake_case`, singular, en español. PK `id` (`bigint generated always as identity`, uso **interno**). FK `<tabla>_id`. |
 | Identificador público | **Toda tabla** tiene `codigo_<tabla>` (**UUID v7**, `uuid`, UQ, NN, default generado). Es el único identificador que viaja a la API y al frontend (web y móvil); la PK `id` y las FK `<tabla>_id` nunca se exponen. Ver §1.1. |
-| Autenticación | JWT propio del backend: la contraseña se guarda solo como hash BCrypt (`usuario.password_hash`) y cada sesión (refresh token por dispositivo) se guarda solo como hash SHA-256 en `sesion`. Firebase se usa solo para FCM y Storage. |
-| Archivos | Los binarios van en **Firebase Storage**; la BD guarda solo la ruta (`storage_path`), tipo y tamaño. |
+| Autenticación | JWT propio del backend: la contraseña se guarda solo como hash BCrypt (`usuario.password_hash`) y cada sesión (refresh token por dispositivo) se guarda solo como hash SHA-256 en `sesion`. Firebase se usa solo para FCM (notificaciones push). |
+| Archivos | Los binarios van en **MinIO** (almacenamiento de objetos compatible con S3); la BD guarda solo la ruta (`storage_path`), tipo y tamaño. |
 | Unicidad | `usuario.ci` y `usuario.correo` únicos. Una sola postulación por (postulante, convocatoria). Las unicidades son índices parciales `WHERE eliminado_en IS NULL` (§1.1). |
 | Trazabilidad | Todo cambio de estado de postulación y toda acción relevante deja fila en `postulacion_historial` y `bitacora` (append-only). El puntaje se guarda con fecha de cálculo y los puntajes antiguos se conservan. |
 | Idempotencia (RNF-03) | `UNIQUE (beca_id, fecha)` en `asistencia`; `UNIQUE (postulante_id, convocatoria_id)` en `postulacion`. Reintentos de la misma petición no duplican filas. |
@@ -264,7 +264,7 @@ Regla: **una sola convocatoria vigente por gestión** → índice único parcial
 | postulacion_id | bigint | FK, NN | |
 | tipo_documento_id | bigint | FK, NN | |
 | nombre_archivo | varchar(255) | NN | |
-| storage_path | varchar(500) | NN | ruta en Firebase Storage |
+| storage_path | varchar(500) | NN | ruta del objeto en MinIO |
 | mime_type | varchar(100) | NN | formatos permitidos **[por definir]** |
 | tamano_bytes | bigint | CHECK (> 0) | tamaño máximo **[por definir]** |
 | subido_en | timestamptz | NN | |
@@ -277,7 +277,7 @@ Regla: **una sola convocatoria vigente por gestión** → índice único parcial
 | postulacion_id | bigint FK, NN | |
 | estado_anterior / estado_nuevo | `estado_postulacion` | |
 | usuario_id | bigint FK→usuario | quién cambió el estado (NULL si fue el sistema) |
-| motivo | text | obligatorio al devolver, archivar o rechazar (CHECK en servicio) |
+| motivo | text | obligatorio al devolver, archivar o rechazar; el límite de 500 caracteres lo valida el servicio (CU-19, CU-20 y CU-05 usan el mismo campo) |
 
 ---
 
@@ -319,12 +319,12 @@ erDiagram
 | id | bigint | PK | |
 | postulacion_id | bigint | FK, NN | |
 | modelo_id | bigint | FK, NN | versión que lo calculó |
-| puntaje_total | numeric(5,2) | CHECK (0–100) | |
+| puntaje_total | numeric(5,2) | CHECK (0–70) | puntaje de la IA (máx. 70); el total de 100 se completa con `auditoria_expediente.puntaje_academico` (0–30) |
 | detalle | jsonb | | desglose por variable (explicabilidad ante auditoría) |
 | fecha_calculo | timestamptz | NN | trazabilidad |
 | vigente | boolean | NN | solo un `true` por postulación → `UNIQUE (postulacion_id) WHERE vigente` |
 
-> El modelo de dominio menciona *revisión documental 1–70 + rendimiento 30*; al descartarse esos CU, el puntaje lo calcula la IA. Si se recuperara la calificación manual, añadir `puntaje_documental` y `puntaje_academico` (ver Q3).
+> **Decisión (cierra Q3):** la IA aporta hasta **70 puntos** (`puntaje_total` 0–70) y el auditor registra a mano hasta **30 puntos** de rendimiento académico en `auditoria_expediente.puntaje_academico` (CU-07). El total (máx. 100) **no se guarda**: se calcula como IA + académico de la última auditoría.
 
 **`lote_reprocesamiento`** (CU-26): `id`, `convocatoria_id` FK, `modelo_id` FK, `solicitado_por` FK→usuario, `estado` (`PENDIENTE`, `EN_PROCESO`, `COMPLETADO`, `FALLIDO`), `total_postulaciones`, `iniciado_en`, `terminado_en`. El procesamiento masivo es **en lote** (no bloquea el envío; el puntaje individual debe estar en ≤ 5 s, RNF-03).
 
@@ -369,7 +369,7 @@ erDiagram
 | plazo_entrega | date | | **[plazo por definir con la DUBSS]** |
 | documentacion_recibida_en | timestamptz | | CU-21: registro de entrega física |
 
-**`auditoria_expediente`** (CU-07): `id`, `finalista_id` FK, `auditor_id` FK→usuario, `resultado` (`VALIDADO`, `OBSERVADO`, `NO_VALIDO`), `observaciones` text, `fecha_auditoria`. Una finalista puede tener varias auditorías (p. ej. tras una devolución).
+**`auditoria_expediente`** (CU-07): `id`, `finalista_id` FK, `auditor_id` FK→usuario, `resultado` (`VALIDADO`, `OBSERVADO`, `NO_VALIDO`), `puntaje_academico` numeric(5,2) `CHECK` entre 0 y 30 (nulo salvo resultado `VALIDADO`), `observaciones` varchar(500), `fecha_auditoria`. El puntaje total (IA + académico) no se guarda: se calcula. Una finalista puede tener varias auditorías (p. ej. tras una devolución).
 > Devolver (CU-19) y archivar/rechazar (CU-20) **no tienen tabla propia**: son transiciones de estado registradas en `postulacion_historial` con su `motivo`.
 
 **`adjudicacion`** (CU-05; resultado por postulación)
@@ -383,12 +383,12 @@ erDiagram
 | decidido_por | bigint | FK→usuario, NN | |
 | fecha_adjudicacion | timestamptz | NN | entidad `BecaComedor.fecha de adjudicación` del dominio |
 
-**`acta_adjudicacion`** (CU-08, **pendiente de consulta**): `id`, `convocatoria_id` FK, `numero` (UQ), `storage_path` (PDF), `generada_por`, `generada_en`.
+**`acta_adjudicacion`** (CU-08, **pendiente de consulta**): `id`, `convocatoria_id` FK, `numero` (UQ), `storage_path` (PDF en MinIO), `generada_por`, `generada_en`.
 **`publicacion_resultado`** (CU-22): `id`, `convocatoria_id` FK (UQ), `publicado_por`, `publicado_en`. Una vez insertada, `adjudicacion` de esa convocatoria deja de ser editable (control en servicio + bitácora).
 
 **`comunicado`** (CU-21, fusionado con avisos): `id`, `convocatoria_id` FK (nullable), `titulo`, `contenido` text, `destinatarios` (`TODOS`, `FINALISTAS`, `ADJUDICADOS`), `publicado_por`, `publicado_en`.
 
-**`notificacion`** (CU-04, CU-19, CU-21, CU-22; Firebase FCM)
+**`notificacion`** (CU-04, CU-07, CU-19, CU-21, CU-22; push por Firebase FCM). Eventos de aviso: cambio de estado de la postulación, `POSTULACION_DEVUELTA` (CU-19), resultado de la auditoría (CU-07), comunicados y resultados
 
 | Columna | Tipo | Nota |
 |---|---|---|
@@ -447,7 +447,7 @@ erDiagram
 
 **`movimiento_beca`** (CU-23: baja, suspensión, reemplazo): `id`, `beca_id` FK, `tipo` (`BAJA`, `SUSPENSION`, `REACTIVACION`, `REEMPLAZO`), `motivo` text NN, `beca_reemplazante_id` FK→beca (solo en `REEMPLAZO`: la beca que ocupa el cupo liberado), `registrado_por` FK→usuario, `fecha`. El **padrón vigente** es `beca WHERE estado = 'VIGENTE'`.
 
-**`planilla_asistencia`** (CU-09): `id`, `convocatoria_id` FK, `fecha_desde`, `fecha_hasta`, `storage_path` (PDF imprimible con espacio de firma y fotocopia de carnet), `generada_por`, `generada_en`. Se genera a partir del padrón vigente en ese momento.
+**`planilla_asistencia`** (CU-09): `id`, `convocatoria_id` FK, `fecha_desde`, `fecha_hasta`, `storage_path` (PDF imprimible en MinIO con espacio de firma y fotocopia de carnet), `generada_por`, `generada_en`. Se genera a partir del padrón vigente en ese momento.
 
 **`asistencia`** (CU-10, CU-24)
 
@@ -591,7 +591,7 @@ Cobertura: los 26 CU tienen al menos una tabla; los CU del P4 de cierre de exped
 |---|---|---|
 | Q1 | ¿El borrador (CU-17, *observado*) se modela como estado `borrador` o como tabla aparte? | Si se descarta CU-17: quitar `borrador`, el borrado lógico en cascada de borradores y `fecha_envio` nullable. |
 | Q2 | Unificar estados de `Postulacion` (dominio vs. RF-06: recibida, en evaluación, finalista…). ¿«Finalista» es un estado o solo la fila en `finalista`? | Cambia el enum y las transiciones; hoy «finalista» es una tabla, no un estado. |
-| Q3 | ¿Se recupera el puntaje 1–70 documental + 30 académico del dominio, o todo lo calcula la IA? | Añadir `puntaje_documental`, `puntaje_academico` y una tabla de calificación por documento. |
+| Q3 | ~~¿Se recupera el puntaje 1–70 documental + 30 académico del dominio, o todo lo calcula la IA?~~ **Cerrada:** IA hasta 70 + rendimiento académico manual hasta 30 en la auditoría. | Implementado: `auditoria_expediente.puntaje_academico` (0–30), `puntaje_postulacion.puntaje_total` (0–70). |
 | Q4 | Umbral mínimo de puntaje y número exacto de cupos. | `convocatoria.puntaje_minimo`, `cupos` quedan sin valor por defecto. |
 | Q5 | ¿Se mantiene CU-08 (acta) y CU-11 (cotejo), pendientes de consulta? | Eliminar `acta_adjudicacion` y/o `cotejo_asistencia` / `cotejo_detalle`. |
 | Q6 | Apelación/reclamo del postulante (no figura en ningún capítulo). | Tabla `apelacion` (postulacion_id, motivo, estado, resolución) si se acepta. |

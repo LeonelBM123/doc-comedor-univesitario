@@ -138,7 +138,8 @@ A continuación se detallan los requisitos funcionales identificados para el sis
 \begin{itemize}
     \item El Administrador visualiza la lista de postulantes ordenada de mayor a menor puntaje de vulnerabilidad.
     \item El Administrador puede exportar la lista priorizada a un documento PDF, y la exportación queda registrada en la bitácora.
-    \item El Administrador puede marcar un expediente como auditado o validado tras revisar el respaldo físico.
+    \item El Administrador puede registrar la auditoría de un expediente finalista (resultado, observaciones de hasta 500 caracteres y, cuando el resultado es validado, el puntaje académico de 0 a 30) tras revisar el respaldo físico, y el sistema muestra el puntaje de la IA (hasta 70) y el total (hasta 100).
+    \item El sistema solo permite auditar a un finalista con la entrega física registrada y con la postulación en estado calificada, y avisa al postulante el resultado de la auditoría.
     \item El Administrador puede aprobar o rechazar la adjudicación de la beca para cada postulante auditado.
     \item El sistema genera un acta o comprobante digital de adjudicación para cada beneficiario aprobado.
 \end{itemize}
@@ -324,7 +325,7 @@ A continuación se detallan los requisitos funcionales identificados para el sis
     \item El Postulante puede capturar un documento con la cámara del dispositivo móvil o adjuntar un archivo desde la web.
     \item El sistema valida el formato y el tamaño del archivo (formatos y tamaño máximo por definir con la DUBSS) y rechaza los no permitidos con un mensaje de error.
     \item El sistema muestra una vista previa y permite reemplazar o eliminar un documento antes de enviar la postulación.
-    \item El sistema almacena los archivos en Firebase Storage asociados a la postulación.
+    \item El sistema almacena los archivos en MinIO asociados a la postulación.
 \end{itemize}
 } \\
 \bottomrule
@@ -402,10 +403,11 @@ A continuación se detallan los requisitos funcionales identificados para el sis
 \multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
 \multicolumn{2}{p{12.5cm}}{
 \begin{itemize}
-    \item El Administrador puede devolver una postulación registrando las observaciones.
-    \item La postulación cambia al estado devuelta y el Postulante es notificado.
-    \item El Postulante puede corregir y reenviar dentro de un plazo (por definir con la DUBSS).
-    \item El sistema conserva el historial de devoluciones y reenvíos de la postulación.
+    \item El Administrador devuelve la postulación desde el expediente del finalista, registrando un motivo obligatorio de hasta 500 caracteres.
+    \item Solo se devuelve una postulación en estado calificada y con al menos una auditoría registrada después de su última devolución.
+    \item La postulación cambia al estado devuelta y el Postulante recibe siempre el aviso, con las observaciones, por bandeja, push y correo.
+    \item El Postulante puede corregir y reenviar cuando quiera: no hay plazo de reenvío ni límite de devoluciones.
+    \item La devolución queda en el historial de la postulación y en la bitácora, y no altera los documentos, el puntaje ni las auditorías anteriores.
 \end{itemize}
 } \\
 \bottomrule
@@ -713,13 +715,13 @@ A continuación se detallan los requisitos no funcionales identificados para el 
 \begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.3cm}}
 \toprule
 \multicolumn{2}{l}{\textbf{Descripción}} \\
-\multicolumn{2}{p{12.5cm}}{El sistema debe cumplir con las restricciones tecnológicas ya definidas para el proyecto: despliegue en un servidor en la nube de AWS, motor de base de datos PostgreSQL, autenticación propia mediante tokens JWT, notificaciones push y almacenamiento de archivos a través de Firebase, y aplicación móvil desarrollada en Flutter con prioridad de compatibilidad para dispositivos Android.} \\
+\multicolumn{2}{p{12.5cm}}{El sistema debe cumplir con las restricciones tecnológicas ya definidas para el proyecto: despliegue en un servidor en la nube de AWS, motor de base de datos PostgreSQL, autenticación propia mediante tokens JWT, notificaciones push a través de Firebase Cloud Messaging, almacenamiento de archivos en MinIO, y aplicación móvil desarrollada en Flutter con prioridad de compatibilidad para dispositivos Android.} \\
 \midrule
 \multicolumn{2}{l}{\textbf{Criterios de aceptación}} \\
 \multicolumn{2}{p{12.5cm}}{
 \begin{itemize}
     \item El backend del sistema se despliega correctamente sobre AWS utilizando PostgreSQL.
-    \item La autenticación la resuelve el propio backend mediante tokens JWT, y las notificaciones push y el almacenamiento de archivos operan a través de Firebase.
+    \item La autenticación la resuelve el propio backend mediante tokens JWT, las notificaciones push operan a través de Firebase Cloud Messaging y el almacenamiento de archivos en MinIO.
     \item La aplicación móvil funciona correctamente en dispositivos Android.
 \end{itemize}
 } \\
@@ -739,7 +741,7 @@ Los requisitos de interfaz definen cómo el sistema interactúa con sus usuarios
 \begin{itemize}
     \item \textbf{Interfaz de usuario:} el portal web debe desarrollarse con React y TypeScript, y la aplicación móvil con Flutter, ambos bajo un diseño responsivo que se adapte a distintos tamaños de pantalla. La interfaz gráfica de la aplicación móvil debe seguir las directrices de \textit{Material Design}, propias del framework Flutter, garantizando coherencia visual y accesibilidad básica (contraste adecuado, tamaños de fuente legibles) para usuarios sin experiencia técnica previa.
     \item \textbf{Interfaz de hardware:} la aplicación móvil debe ser compatible con dispositivos Android de gama media, como los equipos utilizados para las pruebas del proyecto (Redmi Note 14 Pro y Honor X8), y debe permitir el uso de la cámara del dispositivo para la digitalización de documentos de respaldo.
-    \item \textbf{Interfaz de software:} el sistema debe exponer e integrar servicios mediante una API REST desarrollada en Spring Boot, que comunique al frontend web y a la aplicación móvil con la base de datos PostgreSQL y con el módulo de preselección desarrollado en Python. Asimismo, debe integrarse con los servicios de Firebase para el almacenamiento de archivos y el envío de notificaciones push.
+    \item \textbf{Interfaz de software:} el sistema debe exponer e integrar servicios mediante una API REST desarrollada en Spring Boot, que comunique al frontend web y a la aplicación móvil con la base de datos PostgreSQL y con el módulo de preselección desarrollado en Python. Asimismo, debe integrarse con MinIO para el almacenamiento de archivos y con Firebase Cloud Messaging para el envío de notificaciones push.
     \item \textbf{Interfaz de comunicación:} toda transmisión de datos entre los clientes (web y móvil) y el servidor debe realizarse mediante el protocolo HTTPS, y la autenticación de las peticiones debe validarse mediante el token de acceso (JWT) que emite el propio servidor y que este verifica en cada petición, a fin de proteger la información socioeconómica sensible de los postulantes durante su transmisión.
 \end{itemize}
 
