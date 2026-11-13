@@ -1,0 +1,113 @@
+\documentclass[stu, 12pt, spanish, donotrepeattitle, floatsintext]{apa7}
+
+% ==============================================================================
+% VERSIÓN 2 DEL DOCUMENTO (PAPS + SQAP + PUDS + Mercado/Marketing/Puesta en marcha)
+% Comparte con main.tex: config/, images/, figuras/, tablas/ y referencias.bib.
+% Reutiliza el perfil (cap. 1), la DUBSS y los caps. 4 a 7 de secciones/ (ahora dentro del
+% capítulo 3, con las macros \wfa, \wn...) y las tecnologías (cap. 6) con \input.
+% Los capítulos propios de esta versión están en secciones_v2/.
+%
+% Compilar (dos documentos independientes, no se pisan):
+%   pdflatex -interaction=nonstopmode main_v2.tex
+%   biber --winunicode main_v2
+%   pdflatex -interaction=nonstopmode main_v2.tex  (dos veces)
+% ==============================================================================
+
+% ==============================================================================
+% 1. PAQUETES Y CONFIGURACIÓN (compartidos con main.tex)
+% ==============================================================================
+\input{config/paquetes.tex}
+\input{config/preportada.tex}
+
+% Renumeración de capítulos reutilizados: el marco tecnológico (capítulo 2 en
+% main.tex) pasa a ser el capítulo 6 en esta versión.
+\renewcommand{\capnum}[1]{\ifnum#1=2 6\else#1\fi}
+% Flujos de trabajo PUDS reutilizados (ERS, requisitos, análisis y diseño: caps. 4 a 7 de
+% main.tex; DUBSS: cap. 3 de main.tex). Aquí son secciones del capítulo 3, un nivel más abajo.
+\renewcommand{\wfa}{\subsubsection}
+% \paragraph y \subparagraph son títulos en línea; se fuerza un salto para que el título quede
+% solo en su renglón (los casos de uso y las tablas que siguen no deben pegarse al título).
+\renewcommand{\wfb}[1]{\paragraph{#1}\mbox{}\par}
+\renewcommand{\wfc}[1]{\subparagraph{#1}\mbox{}\par}
+\renewcommand{\dbsa}[1]{\subparagraph{#1.}}
+\renewcommand{\dbsb}[1]{\par\medskip\noindent\textbf{#1}\par\smallskip}
+\newcommand{\wnset}[2]{\expandafter\def\csname wn@#1\endcsname{#2}}
+% ERS (IEEE 830): 4.1, 4.2, 4.3 -> 3.2.1, 3.2.2, 3.2.3
+\wnset{4.1}{3.2.1}\wnset{4.2}{3.2.2}\wnset{4.3}{3.2.3}
+% Captura de requisitos: 5.1 a 5.5 -> 3.2.4 a 3.2.8
+\wnset{5.1}{3.2.4}\wnset{5.2}{3.2.5}\wnset{5.3}{3.2.6}\wnset{5.4}{3.2.7}\wnset{5.5}{3.2.8}
+% Análisis y diseño: 6 -> 3.3, 7 -> 3.4
+\wnset{6}{3.3}\wnset{7}{3.4}
+% DUBSS (3.1 a 3.5) -> 3.1.7.1.1 a 3.1.7.1.5 (Modelos iniciales > Contexto)
+\wnset{3.1}{3.1.7.1.1}\wnset{3.2}{3.1.7.1.2}\wnset{3.3}{3.1.7.1.3}\wnset{3.4}{3.1.7.1.4}\wnset{3.5}{3.1.7.1.5}
+% Referencias en prosa al capítulo 4 de main.tex (ERS)
+\expandafter\def\csname wfref@4\endcsname{la sección~3.2.3}
+% Las secciones del perfil (planas en main.tex: "3. Objetivos") se numeran aquí
+% como 1.3, 1.3.1, etc., para evitar choques con los capítulos 9 a 17.
+\renewcommand{\pfxperfil}{1.}
+
+% ==============================================================================
+% 2. METADATOS DEL DOCUMENTO
+% ==============================================================================
+\input{config/metadatos.tex}
+
+% ==============================================================================
+% 3. CUERPO DEL DOCUMENTO
+% ==============================================================================
+\begin{document}
+
+\input{config/caratula.tex}
+\justifying
+\setlength{\parindent}{0.5in}
+
+% 3.1 PÁGINAS PRELIMINARES (Índice General, de Tablas y de Figuras)
+\input{secciones/00_frontmatter/frontmatter.tex}
+
+% 3.2 RESUMEN, ABSTRACT E INTRODUCCIÓN (reutilizados)
+\newpage
+\input{secciones/01_introduccion/01_resumen.tex}
+
+\newpage
+\input{secciones/01_introduccion/02_abstract.tex}
+
+\input{secciones/01_introduccion/03_introduccion.tex}
+
+% ==============================================================================
+% 3.3 CAPÍTULOS
+% ==============================================================================
+% Cap. 1: PAPS (reutiliza el perfil: secciones 1.1, 1.2, 1.7 y 1.8)
+\input{secciones_v2/cap01_paps/capitulo1.tex}
+% Cap. 2: SQAP (nuevo)
+\input{secciones_v2/cap02_sqap/capitulo2.tex}
+% Cap. 3: Procesos de Desarrollo de Software (PUDS): definiciones iniciales (con el contexto
+% de la DUBSS), flujos de trabajo (requisitos, análisis, diseño e implementación) e iteraciones. Reutiliza los caps. 3 a 7 de secciones/.
+\input{secciones_v2/cap03_procesos_puds/capitulo3.tex}
+% Caps. 4 a 12 (nuevos)
+\input{secciones_v2/cap04_herramientas_case/capitulo4.tex}
+\input{secciones_v2/cap05_legal/capitulo5.tex}
+% Cap. 6: reutiliza el marco tecnológico (secciones 6.1 a 6.7)
+\input{secciones_v2/cap06_infraestructura/capitulo6.tex}
+\input{secciones_v2/cap07_sitio_web/capitulo7.tex}
+\input{secciones_v2/cap08_mercado/capitulo8.tex}
+\input{secciones_v2/cap09_pruebas/capitulo9.tex}
+\input{secciones_v2/cap10_marketing/capitulo10.tex}
+\input{secciones_v2/cap11_puesta_marcha/capitulo11.tex}
+\input{secciones_v2/cap12_producto/capitulo12.tex}
+
+% ==============================================================================
+% 4. CONCLUSIONES Y RECOMENDACIONES (reutilizadas)
+% ==============================================================================
+\input{secciones/06_conclusiones/conclusiones_recomendaciones.tex}
+
+% ==============================================================================
+% 5. BIBLIOGRAFÍA (APA 7)
+% ==============================================================================
+\input{secciones/99_anexos/00_bibliografia.tex}
+
+% ==============================================================================
+% 6. ANEXOS (los del documento principal + los propios de esta versión)
+% ==============================================================================
+\input{secciones/99_anexos/anexos.tex}
+\input{secciones_v2/anexos_v2.tex}
+
+\end{document}

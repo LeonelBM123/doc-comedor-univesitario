@@ -83,6 +83,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 | Flujo operativo actual (actividades) | [`secciones/04_capitulo3_empresa/05_flujo_operativo.tex`](secciones/04_capitulo3_empresa/05_flujo_operativo.tex) |
 | **Cap. 5 Captura de Requisitos** (5.1 Actores · 5.2 Identificación CU · 5.3 Priorización · 5.4 Detalle CU · 5.5 Diagrama general). Solo títulos y `[PENDIENTE]`; 5.5 ya tiene la figura | `secciones/07_capitulo5_requisitos/` |
 | **Cap. 6 Análisis** (6.1 Arquitectura: 6.1.1 Identificación, 6.1.2 Relación, 6.1.3 Encapsulamiento de CU por paquetes · 6.2 Análisis de CU · 6.3 Análisis de paquetes). Solo títulos y `[PENDIENTE]` | `secciones/08_capitulo6_analisis/` |
+| **Versión 2 del documento** (`main_v2.tex`, 12 capítulos: 1 PAPS, 2 SQAP, 3 Procesos de Desarrollo PUDS —con definiciones iniciales, ERS y requisitos, análisis, diseño, implementación, pruebas e iteraciones como secciones 3.1–3.9—, 4 CASE, 5 legal, 6 infraestructura, 7 sitio web, 8 mercado, 9 pruebas, 10 marketing, 11 puesta en marcha, 12 producto). El ERS, los requisitos, el análisis, el diseño y la DUBSS son los mismos archivos de `secciones/` (caps. 3–7 de `main.tex`) reubicados dentro del cap. 3; los demás en `secciones_v2/` (esqueleto con `[PENDIENTE]`). Ver `AGENTS.md` | `main_v2.tex`, `secciones_v2/` |
 | **Lista vigente de 26 CU, paquetes, priorización y reparto del trabajo** (fuente de verdad de la numeración) | [`casos_de_uso_filtrados.md`](casos_de_uso_filtrados.md) |
 | Borrador original de RF (⚠️ numeración **antigua**, ya superado: los RF-08…RF-21 vigentes están redactados en `03_requisitos_especificos.tex`; ver §7) | [`requisitos_funcionales_propuestos.md`](requisitos_funcionales_propuestos.md) |
 | Borrador de RF/RNF en texto plano (buzón, solo lectura) | `texto_formatter/rf_y_rnf.txt` |
@@ -181,7 +182,21 @@ Estados de Postulacion afectados:
 RNF relacionados:
 ```
 
-## 10. Instrucciones para agentes sobre este contexto
+## 10. Dos documentos LaTeX (leer antes de editar)
+
+Este repositorio genera **dos PDF** desde la misma fuente: `main.tex` (7 capítulos, Taller de Grado I) y `main_v2.tex` (12 capítulos: PAPS, SQAP, PUDS —con sus flujos de trabajo—, CASE, legal, infraestructura, sitio web, mercado, pruebas, marketing, puesta en marcha, producto). Ambos usan **PUDS** (no Scrum).
+
+- `secciones/` es **compartido** (un cambio sale en ambos PDF); `secciones_v2/` es solo de la v2.
+- El perfil (cap. 1), las tecnologías (cap. 2 → 6 en v2), la DUBSS (cap. 3 → 3.1.7.1 en v2) y los caps. 4–7 (ERS, requisitos, análisis y diseño → 3.2, 3.3 y 3.4 en v2) se reubican con las macros `\capnum`, `\pfxperfil`, `\wfa/\wfb/\wfc`, `\dbsa/\dbsb`, `\wn` y `\wfref` (**no borrarlas**; ver `config/paquetes.tex` y la cabecera de `main_v2.tex`).
+- Reglas detalladas (cargadas automáticamente desde `.claude/rules/`):
+  - [`01-dos-documentos.md`](.claude/rules/01-dos-documentos.md): qué archivo pertenece a qué documento, numeración reubicable y verificación.
+  - [`02-puds-y-dominio.md`](.claude/rules/02-puds-y-dominio.md): equivalencias Scrum → PUDS, fuentes de verdad y qué no inventar.
+  - [`03-secciones-v2-pendientes.md`](.claude/rules/03-secciones-v2-pendientes.md): estado de cada capítulo de la v2 y de dónde sacar su contenido.
+  - [`04-latex-apa7.md`](.claude/rules/04-latex-apa7.md): resumen operativo LaTeX/APA 7.
+- Compilar ambos: `powershell -File scripts/compilar.ps1 -Doc ambos`.
+- **Al avanzar el proyecto:** actualizar la tabla de estado de `03-secciones-v2-pendientes.md` cuando se redacte un capítulo, y los datos de §6–§8 de este archivo si cambian los CU.
+
+## 11. Instrucciones para agentes sobre este contexto
 
 1. **No inventar** datos institucionales (umbral mínimo de puntaje, número exacto de cupos, formatos de documento). Marcarlos como "por definir con la DUBSS".
 2. Mantener consistencia **RF ↔ CU ↔ actor ↔ estado** con las tablas de §6–§8; todo CU nuevo debe trazarse a ≥ 1 RF.

@@ -1,14 +1,14 @@
 % ------------------------------------------------------------------------------
 % 4.2. DESCRIPCIÓN GENERAL
 % ------------------------------------------------------------------------------
-\subsection{4.2. Descripción General}\label{sec:ieee_descripcion_general}
+\wfa{\wn{4.2}. Descripción General}\label{sec:ieee_descripcion_general}
 
-\subsubsection{4.2.1. Perspectiva del Producto}\label{sec:ieee_perspectiva}
+\wfb{\wn{4.2}.1. Perspectiva del Producto}\label{sec:ieee_perspectiva}
 % [INSTRUCCIÓN]: Contexto del producto: sistema autónomo o módulo integrado en un entorno universitario mayor.
 
 El Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor es un producto de software independiente y de nuevo desarrollo; no constituye un módulo dentro de una plataforma empresarial mayor ni reemplaza algún sistema institucional preexistente, dado que la DUBSS gestiona actualmente este proceso de forma manual. No obstante, el sistema sí se relaciona con dos actores externos a su núcleo funcional: por un lado, el punto de control de asistencia del Comedor Universitario, donde los postulantes seleccionados validan físicamente su condición de becados; y por otro, el personal directivo de la DUBSS, que consume los reportes y proyecciones de Business Intelligence generados por el sistema para la toma de decisiones institucionales.
 
-\subsubsection{4.2.2. Funciones del Producto}\label{sec:ieee_funciones}
+\wfb{\wn{4.2}.2. Funciones del Producto}\label{sec:ieee_funciones}
 % [INSTRUCCIÓN]: Resumen ejecutivo de las capacidades y operaciones principales del software.
 
 De manera general, el sistema permitirá a los postulantes registrarse y enviar su postulación a la Beca Comedor completando un formulario socioeconómico digital desde la web o la aplicación móvil. Asimismo, el sistema precalificará automáticamente cada solicitud mediante un modelo de inteligencia artificial que estima el nivel de vulnerabilidad socioeconómica del postulante, y notificará a los finalistas para que presenten su documentación física de respaldo. Por su parte, el personal de la DUBSS podrá auditar y validar dichos expedientes, administrar el registro de los estudiantes efectivamente becados y controlar su asistencia al Comedor Universitario. Finalmente, el sistema generará reportes y dashboards de Business Intelligence que resuman el comportamiento histórico de las postulaciones y proyecten tendencias futuras para apoyar la planificación institucional. La Figura~\ref{fig:diagrama_cu} representa gráficamente los actores del sistema y los casos de uso principales asociados a cada uno.
@@ -23,7 +23,7 @@ De manera general, el sistema permitirá a los postulantes registrarse y enviar 
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-\subsubsection{4.2.3. Características de los Usuarios}\label{sec:ieee_caracteristicas_usuarios}
+\wfb{\wn{4.2}.3. Características de los Usuarios}\label{sec:ieee_caracteristicas_usuarios}
 % [INSTRUCCIÓN]: Perfiles de usuario (estudiantes postulantes, administradores, personal de comedor, etc.).
 
 La Tabla~\ref{tab:caracteristicas_usuarios} describe los tipos de usuario del sistema, sus responsabilidades y el nivel de conocimiento técnico requerido para su uso.
@@ -47,7 +47,7 @@ Directivo DUBSS (Gerente) & Personal directivo que visualiza el dashboard de rep
 \end{threeparttable}
 \end{table}
 
-\subsubsection{4.2.4. Restricciones Generales}\label{sec:ieee_restricciones}
+\wfb{\wn{4.2}.4. Restricciones Generales}\label{sec:ieee_restricciones}
 % [INSTRUCCIÓN]: Políticas regulatorias, limitaciones de hardware, interfaces y protocolos de seguridad.
 
 El desarrollo y funcionamiento del sistema está sujeto a las siguientes restricciones:
@@ -60,12 +60,12 @@ El desarrollo y funcionamiento del sistema está sujeto a las siguientes restric
     \item El sistema debe garantizar la confidencialidad y el resguardo de los datos socioeconómicos de los postulantes, en cumplimiento de las políticas institucionales de protección de datos personales de la UAGRM.
 \end{itemize}
 
-\subsubsection{4.2.5. Suposiciones y Dependencias}\label{sec:ieee_suposiciones}
+\wfb{\wn{4.2}.5. Suposiciones y Dependencias}\label{sec:ieee_suposiciones}
 % [INSTRUCCIÓN]: Factores asumidos cuya variación podría alterar los requisitos del sistema.
 
-Se asume que los postulantes y el personal de la DUBSS contarán con acceso a un dispositivo (computadora o teléfono móvil) y con una conexión a internet estable durante el periodo de postulación y evaluación. El sistema depende de los servicios de Firebase para la autenticación de usuarios, el envío de notificaciones push y el almacenamiento de archivos, así como de la disponibilidad del servidor AWS para su despliegue y funcionamiento continuo. Asimismo, se asume que la DUBSS proporcionará de manera oportuna los criterios institucionales de vulnerabilidad socioeconómica requeridos para entrenar y calibrar el modelo de preselección con inteligencia artificial. El flujo de actividades y las dependencias entre los actores que intervienen en el proceso de postulación se describen en la Figura~\ref{fig:postulacion_beca} de la Sección 3.5.
+Se asume que los postulantes y el personal de la DUBSS contarán con acceso a un dispositivo (computadora o teléfono móvil) y con una conexión a internet estable durante el periodo de postulación y evaluación. El sistema depende de los servicios de Firebase para la autenticación de usuarios, el envío de notificaciones push y el almacenamiento de archivos, así como de la disponibilidad del servidor AWS para su despliegue y funcionamiento continuo. Asimismo, se asume que la DUBSS proporcionará de manera oportuna los criterios institucionales de vulnerabilidad socioeconómica requeridos para entrenar y calibrar el modelo de preselección con inteligencia artificial. El flujo de actividades y las dependencias entre los actores que intervienen en el proceso de postulación se describen en la Figura~\ref{fig:postulacion_beca} de la Sección~\wn{3.5}.
 
-\subsubsection{4.2.6. Modelo de Dominio}\label{sec:ieee_modelo_dominio}
+\wfb{\wn{4.2}.6. Modelo de Dominio}\label{sec:ieee_modelo_dominio}
 
 El modelo de dominio representa las entidades conceptuales involucradas en el proceso de postulación y adjudicación de la Beca Comedor, así como las relaciones estructurales que existen entre ellas, sin considerar aún su implementación técnica. La Figura~\ref{fig:modelo_dominio} presenta el diagrama conceptual correspondiente.
 

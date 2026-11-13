@@ -76,6 +76,39 @@
 }
 
 % ==============================================================================
+% NUMERACIÓN DE CAPÍTULOS REUTILIZADOS ENTRE DOCUMENTOS
+% \capnum{N} devuelve el número con el que el capítulo N (según main.tex) debe
+% mostrarse en el documento actual. En main.tex es la identidad; main_v2.tex lo
+% redefine (\renewcommand) para reubicar capítulos sin duplicar archivos.
+% ==============================================================================
+\providecommand{\capnum}[1]{#1}
+% \pfxperfil antepone el número de capítulo a la numeración plana de las secciones
+% del perfil (secciones/02_capitulo1_perfil/). Vacío en main.tex ("3. Objetivos");
+% main_v2.tex lo redefine como "1." ("1.3. Objetivos").
+\providecommand{\pfxperfil}{}
+
+% ------------------------------------------------------------------------------
+% FLUJOS DE TRABAJO PUDS REUTILIZABLES (ERS, requisitos, análisis, diseño y DUBSS)
+% En main.tex son los capítulos 3 a 7. En main_v2.tex pasan a ser secciones del
+% capítulo 3, un nivel más abajo y con otra numeración. Los archivos compartidos
+% escriben sus encabezados así:   \wfa{\wn{6}.1. Título}   (equivale a 6.1. Título)
+%   \wfa, \wfb, \wfc  = antiguo \subsection, \subsubsection, \paragraph.
+%   \wn{clave}        = prefijo numérico; identidad en main.tex (clave "6" -> "6",
+%                       clave "5.4" -> "5.4"). main_v2.tex define \wn@<clave>.
+%   \dbsa, \dbsb      = encabezados de la DUBSS (secciones 3.1 a 3.5 en main.tex).
+% No quitar ni "limpiar" estas macros.
+% ------------------------------------------------------------------------------
+\providecommand{\wfa}{\subsection}
+\providecommand{\wfb}{\subsubsection}
+\providecommand{\wfc}{\paragraph}
+\providecommand{\dbsa}{\subsection}
+\providecommand{\dbsb}{\subsubsection}
+\providecommand{\wn}[1]{\ifcsname wn@#1\endcsname\csname wn@#1\endcsname\else#1\fi}
+% \wfref{N}: referencia en prosa al capítulo N de main.tex ("el Capítulo~N"); main_v2.tex
+% define \wfref@N para apuntar a la sección equivalente.
+\providecommand{\wfref}[1]{\ifcsname wfref@#1\endcsname\csname wfref@#1\endcsname\else el Capítulo~#1\fi}
+
+% ==============================================================================
 % ENCABEZADOS ADA 7 (sin running head del título del proyecto)
 % La carátula (titlepage) no muestra número de página; las páginas interiores
 % muestran únicamente el número en la esquina superior derecha.

@@ -57,6 +57,12 @@ Los agentes deben respetar la modularidad del documento:
 - **`agents/rules/`**: Reglas del sistema de agentes (p. ej., buzón de entrada `texto_formatter/`).
 - **`texto_formatter/`**: Buzón de entrada donde el usuario deposita texto en bruto (sin formato LaTeX) para que los agentes lo conviertan a APA 7 en LaTeX. Es de SOLO LECTURA para los agentes; el texto convertido se escribe en `secciones/` (en la sección que indique el usuario). Regla obligatoria: [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
 - **`.agents/`**: Reglas y skills nativas para el entorno Antigravity IDE.
+- **`main_v2.tex`** y **`secciones_v2/`**: segunda versión del documento (PAPS, SQAP, procesos PUDS, implementación, pruebas, CASE, legal, infraestructura, sitio web, mercado, marketing, puesta en marcha y software como producto; 17 capítulos). Comparte con `main.tex` `config/`, `images/`, `figuras/`, `tablas/` y `referencias.bib`. Reutiliza con `\input` los capítulos 4–7 (sin cambios), el perfil (cap. 1), la DUBSS (3.1–3.5) y el marco tecnológico (cap. 12). **Los capítulos nuevos solo se escriben en `secciones_v2/`; lo reutilizado se edita en `secciones/` (el cambio aparece en ambos PDF).**
+
+### Dos documentos, una sola fuente
+- Compilar cada uno por separado: `pdflatex main_v2.tex` → `biber --winunicode main_v2` → `pdflatex main_v2.tex` (×2). No se pisan (cada maestro genera sus propios `.aux`, `.toc` y `.pdf`).
+- **Numeración reubicable:** los títulos llevan la numeración escrita a mano. Para reutilizar archivos en otra posición se usan dos macros definidas en `config/paquetes.tex`: `\capnum{N}` (número con que se muestra el capítulo N de `main.tex`; en `main_v2.tex` el cap. 2 se muestra como 12) y `\pfxperfil` (vacío en `main.tex`; `1.` en `main_v2.tex`, de modo que "3. Objetivos" se muestra "1.3. Objetivos"). **No eliminar estas macros de los encabezados** de `secciones/02_capitulo1_perfil/` y `secciones/03_capitulo2_tecnologias/`. Tras tocarlas, verificar que el `main.toc` de `main.tex` no cambie.
+- Si se añade un capítulo reutilizado a `main_v2.tex` con otro número, aplicar el mismo mecanismo en vez de duplicar archivos.
 
 ---
 

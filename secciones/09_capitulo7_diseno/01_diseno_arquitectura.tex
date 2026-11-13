@@ -1,11 +1,11 @@
 % ------------------------------------------------------------------------------
 % 7.1. DISEÑO DE LA ARQUITECTURA
 % ------------------------------------------------------------------------------
-\subsection{7.1. Diseño de la Arquitectura}\label{sec:cap7_arquitectura}
+\wfa{\wn{7}.1. Diseño de la Arquitectura}\label{sec:cap7_arquitectura}
 
 % [PENDIENTE]: Redactar la introducción del diseño de la arquitectura.
 
-\subsubsection{7.1.1. Diseño Físico}\label{sec:cap7_diseno_fisico}
+\wfb{\wn{7}.1.1. Diseño Físico}\label{sec:cap7_diseno_fisico}
 
 El diseño físico describe la arquitectura física del sistema, es decir, su topología: los nodos de hardware y los entornos de ejecución, junto con los artefactos de software que se ejecutan en cada uno y los protocolos de comunicación entre ellos. Se representa mediante un diagrama de despliegue del Lenguaje Unificado de Modelado \parencite{booch2005uml, rumbaugh2004uml}.
 
@@ -25,7 +25,7 @@ Las aplicaciones cliente se comunican con la API REST mediante HTTPS en formato 
 \end{figure}
 \end{landscape}
 
-\subsubsection{7.1.2. Diseño Lógico}\label{sec:cap7_diseno_logico}
+\wfb{\wn{7}.1.2. Diseño Lógico}\label{sec:cap7_diseno_logico}
 
 El diseño lógico describe la organización interna del sistema en capas y paquetes, independientemente de los nodos físicos en los que se ejecuta (sección~\ref{sec:cap7_diseno_fisico}). Se representa mediante diagramas de paquetes del Lenguaje Unificado de Modelado, en los que cada capa agrupa los paquetes con responsabilidades afines y las dependencias de uso (\textit{use}) se dirigen de las capas superiores hacia las inferiores \parencite{booch2005uml, rumbaugh2004uml}. Este criterio es coherente con el encapsulamiento de los casos de uso en paquetes realizado en el análisis (sección~\ref{sec:cap6_encapsulamiento_cu}), de modo que los seis paquetes funcionales identificados se conservan como módulos de la capa de negocio \parencite{jacobson1999unified}.
 
