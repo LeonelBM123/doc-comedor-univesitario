@@ -42,7 +42,7 @@ Como segunda medida de tamaño, se aplicó el método de puntos de función desc
 
 \paragraph{1.5.1.2. Complejidad.}
 
-La complejidad del proyecto proviene de cinco fuentes. La primera es la integración de componentes heterogéneos: un servicio backend en Java, una aplicación web en React, una aplicación móvil en Flutter y un módulo de inteligencia artificial en Python que se consume mediante una interfaz de servicio. La segunda es el volumen de datos, de hasta 20,000 postulaciones por gestión con documentos adjuntos. La tercera es el flujo de estados de la postulación (pendiente, devuelta, archivada, calificada, adjudicada y no adjudicada), que atraviesa varios casos de uso y ambos bloques de trabajo. La cuarta es la seguridad: autenticación propia con tokens JWT y datos personales y socioeconómicos sensibles. La quinta es la necesidad de idempotencia en el registro de asistencia y en el envío de postulaciones. Los casos de mayor complejidad, con 8 puntos, son el envío de la postulación (CU-02), la precalificación con inteligencia artificial (CU-03) y el tablero de indicadores (CU-12).
+La complejidad del proyecto proviene de cinco fuentes. La primera es la integración de componentes heterogéneos: un servicio backend en Java, una aplicación web en React, una aplicación móvil en Flutter y un módulo de inteligencia artificial en Python que se consume mediante una interfaz de servicio. La segunda es el volumen de datos, de hasta 20,000 postulaciones por gestión con documentos adjuntos. La tercera es el flujo de estados de la postulación (borrador, pendiente, devuelta, archivada, calificada, adjudicada y no adjudicada), que atraviesa varios casos de uso y ambos bloques de trabajo. La cuarta es la seguridad: autenticación propia con tokens JWT y datos personales y socioeconómicos sensibles. La quinta es la necesidad de idempotencia en el registro de asistencia y en el envío de postulaciones. Los casos de mayor complejidad, con 8 puntos, son el envío de la postulación (CU-02), la precalificación con inteligencia artificial (CU-03) y el tablero de indicadores (CU-12).
 
 \paragraph{1.5.1.3. Estructuración del cliente.}
 
@@ -79,12 +79,15 @@ El sistema debe estar disponible al menos el 99 \% del tiempo durante los period
 El sistema se apoya en los siguientes elementos de infraestructura, ninguno de los cuales forma parte del código que se desarrolla:
 
 \begin{itemize}
-    \item \textbf{Autenticación propia.} El backend emite y verifica sus propios tokens JWT (de acceso y de renovación por dispositivo) y almacena las contraseñas como \textit{hash}; no se usa un proveedor externo de identidad.
-    \item \textbf{Firebase Cloud Messaging (FCM).} Servicio externo utilizado únicamente para las notificaciones push a los dispositivos móviles.
-    \item \textbf{MinIO.} Almacenamiento de objetos para los documentos digitalizados de las postulaciones.
-    \item \textbf{PostgreSQL.} Base de datos relacional del sistema.
-    \item \textbf{Módulo de inteligencia artificial en Python.} Servicio independiente consumido por el backend mediante una interfaz de servicio.
-    \item \textbf{AWS y Docker.} Infraestructura de despliegue en la nube y contenedores para estandarizar los entornos.
+    \item \textbf{Autenticación propia.} El backend emite y verifica sus propios tokens JWT (de acceso y de renovación por dispositivo) y almacena las contraseñas como \textit{hash} BCrypt; no se usa un proveedor externo de identidad.
+    \item \textbf{Firebase Cloud Messaging (FCM).} Servicio externo utilizado únicamente para las notificaciones push a los dispositivos móviles; sin sus credenciales el sistema funciona con el envío en modo registro.
+    \item \textbf{MinIO.} Almacenamiento de objetos para los documentos digitalizados de las postulaciones y para las actas en PDF; la base de datos guarda solo la ruta, el tipo y el tamaño del archivo.
+    \item \textbf{PostgreSQL.} Base de datos relacional del sistema (versión 18), con las migraciones versionadas mediante Flyway.
+    \item \textbf{Redis.} Almacén en memoria previsto para la caché del backend.
+    \item \textbf{Servidor de correo (SMTP).} Envío de los correos de recuperación de contraseña y de notificación; en desarrollo los correos llegan a Mailpit, una bandeja de pruebas.
+    \item \textbf{Módulo de inteligencia artificial en Python.} Servicio independiente (FastAPI) consumido por el backend mediante una interfaz de servicio; a la fecha de redacción existe como esqueleto con su verificación de estado, y el cálculo del puntaje corresponde al caso de uso CU-03.
+    \item \textbf{Prometheus y Grafana.} Recolección y visualización de las métricas de funcionamiento del backend.
+    \item \textbf{Docker y AWS.} Docker Compose levanta todo el sistema en desarrollo y estandariza los entornos; el despliegue en la nube (AWS) está previsto pero su destino aún no está decidido, por lo que no existe todavía un flujo de entrega continua.
 \end{itemize}
 
 \subsubsection{1.5.3. Estimaciones para el proyecto}
@@ -163,7 +166,7 @@ Experiencia con la plataforma (PLEX) & Bajo & 1.09 & Tecnologías nuevas para el
 \end{threeparttable}
 \end{table}
 
-Con estos valores, $PM = 2.94 \times 43.0^{1.1167} \times 1.557 \approx 305$ persona-mes y $TDEV = 3.67 \times 305^{0.3213} \approx 23.1$ meses, lo que implica un equipo promedio de $305 / 23.1 \approx 13$ personas. Con los tamaños optimista (39.0 KLDC) y pesimista (47.0 KLDC) el esfuerzo varía entre 274 y 337 persona-mes. La capacidad real del proyecto es de dos personas durante 3.3 meses, es decir, unos 6.6 persona-mes. Esta diferencia de más de un orden de magnitud tiene una explicación: COCOMO II está calibrado con proyectos industriales y las líneas de código de los sistemas de referencia incluyen años de evolución, pruebas y funcionalidades que no están en el alcance de este proyecto. Aun así, la brecha debe asumirse como un riesgo de alcance, que se gestiona con la priorización de casos de uso (16 de prioridad alta, 7 media y 3 baja) y con la reutilización de marcos de trabajo y de componentes de infraestructura. % [PENDIENTE]: validar con el docente si debe calibrarse el tamaño (KLDC) con el código real del sistema una vez implementado.
+Con estos valores, $PM = 2.94 \times 43.0^{1.1167} \times 1.557 \approx 305$ persona-mes y $TDEV = 3.67 \times 305^{0.3213} \approx 23.1$ meses, lo que implica un equipo promedio de $305 / 23.1 \approx 13$ personas. Con los tamaños optimista (39.0 KLDC) y pesimista (47.0 KLDC) el esfuerzo varía entre 274 y 337 persona-mes. La capacidad real del proyecto es de dos personas durante 3.3 meses, es decir, unos 6.6 persona-mes. Esta diferencia de más de un orden de magnitud tiene una explicación: COCOMO II está calibrado con proyectos industriales y las líneas de código de los sistemas de referencia incluyen años de evolución, pruebas y funcionalidades que no están en el alcance de este proyecto. Aun así, la brecha debe asumirse como un riesgo de alcance, que se gestiona con la priorización de casos de uso (16 de prioridad alta, 7 media y 3 baja) y con la reutilización de marcos de trabajo y de componentes de infraestructura. La sección 1.5.3.5 contrasta esta estimación con el tamaño real medido en el código implementado.
 
 \paragraph{1.5.3.3. La ecuación del software.}
 
@@ -220,3 +223,60 @@ Bloque B (Leonel) & 56 puntos de casos de uso y 2 de tareas adicionales: 58 \\
 \end{table}
 
 Los 116 puntos del proyecto se reparten en 58 por integrante a lo largo de aproximadamente 14 semanas, lo que equivale a unos 4 puntos por semana y por integrante. La velocidad real se calibrará con el avance de las primeras tareas.
+
+\paragraph{1.5.3.5. Contraste con el avance real del código.}
+
+A la fecha de revisión de este capítulo (14 de noviembre de 2026) el repositorio del sistema contiene implementado y probado el bloque A del plan, es decir, los 13 casos de uso asignados a ese bloque (48 puntos), las tareas técnicas adicionales (10 puntos, entre ellas el servicio de notificaciones, la bitácora y los datos semilla) y una landing institucional que no estaba en el plan. Esto permite comparar la estimación con una medición real. Las líneas se contaron con el mismo criterio de la sección 1.4 (solo líneas de código, sin líneas en blanco ni comentarios) mediante un contador propio equivalente a \textit{cloc}, que separa el código de producción del de pruebas. La Tabla~\ref{tab:tamano_real} muestra el resultado.
+
+\begin{table}[H]
+\caption{Tamaño real del código implementado al 14 de noviembre de 2026}
+\label{tab:tamano_real}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.6cm} r r r}
+\toprule
+Componente & Archivos de producción & LDC de producción & LDC de pruebas \\
+\midrule
+Backend principal (Java 21, Spring Boot) & 268 & 11,240 & 23,672 \\
+Migraciones de base de datos (SQL) & 16 & 521 & --- \\
+Panel web (TypeScript, React) & 384 & 16,409 & 9,603 \\
+Aplicación móvil (Dart, Flutter) & 80 & 4,060 & 2,322 \\
+Módulo de inteligencia artificial (Python) & 2 & 14 & 7 \\
+\midrule
+\textbf{Total del sistema (sin la landing)} & \textbf{750} & \textbf{32,244} & \textbf{35,604} \\
+Landing institucional (Astro, fuera del plan) & 57 & 2,333 & 176 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con el código del repositorio ComedorUAGRM. No se cuentan los archivos generados (árbol de rutas del panel web), de configuración ni de documentación.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Con esa medición se obtienen los indicadores de la Tabla~\ref{tab:indicadores_reales}. El tamaño de producción medido (32.2 KLDC) corresponde a 58 de los 116 puntos del plan, es decir, a la mitad del trabajo, de modo que la proyección lineal del sistema completo es de unos 64.5 KLDC, mayor que los 43.0 KLDC estimados por puntos de función. Aplicado a los 600 puntos de función, esto equivale a unas 107 LDC por punto de función, por encima del rango de 65.0 a 78.3 observado en los sistemas de referencia (sección 1.5.3.1), lo que indica que la estimación del tamaño fue conservadora. La proyección es solo indicativa: parte de ese código es infraestructura que no se repite en el bloque B (autenticación, almacenamiento, servicio de notificaciones y configuración de integración continua), y el bloque B incluye el módulo de inteligencia artificial, cuyo tamaño aún no se conoce.
+
+\begin{table}[H]
+\caption{Indicadores medidos en el código implementado}
+\label{tab:indicadores_reales}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{7.2cm} >{\raggedright\arraybackslash}p{5.8cm}}
+\toprule
+Indicador & Valor \\
+\midrule
+Casos de uso implementados (con estado Hecho) & 13 de 26, más las notificaciones push \\
+Tablas de negocio creadas por las migraciones & 23 de las 32 del diseño \\
+API REST & 22 controladores y 61 operaciones \\
+Pruebas automatizadas & 2,304 (1,362 backend, 764 web y 178 móvil) \\
+Relación entre código de pruebas y de producción & 1.1 líneas de prueba por línea de producción \\
+LDC de producción por punto de dificultad & 556 (32,244 entre 58 puntos) \\
+Proyección del sistema completo (116 puntos) & 64.5 KLDC \\
+Productividad observada del bloque A & unas 11,900 LDC por persona-mes (32,244 LDC en 2.7 meses de una persona) \\
+Historial de cambios (\textit{commits}) & 219 entre el 27 de agosto y el 14 de noviembre de 2026 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con datos del repositorio. La productividad se calcula sobre el periodo del 24 de agosto al 14 de noviembre (2.7 meses) y la dedicación de una persona.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+La productividad observada es unas 36 veces la de los sistemas de referencia (330 LDC por persona-mes en TastyIgniter, sección 1.4). Esta diferencia no invalida los modelos de la sección 1.5.3, pero muestra que COCOMO II y la ecuación del software, calibrados con proyectos industriales de varios años, sobrestiman el esfuerzo de un equipo pequeño que reutiliza marcos de trabajo consolidados, parte de una estructura de repositorio y de reglas de construcción definidas desde el inicio y se apoya en herramientas de asistencia al desarrollo. Por ello, la estimación que se mantiene como referencia de planificación es la de dificultad relativa de los casos de uso (sección 1.5.3.4), y las mediciones de esta sección servirán para calibrar la velocidad del bloque B y el cierre del proyecto.

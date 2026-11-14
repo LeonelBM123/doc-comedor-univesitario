@@ -1,67 +1,78 @@
 \subsubsection{\pfxperfil 7.1. Software y herramientas}\label{sec:recursos_software}
 % [INSTRUCCIÓN]: Lenguajes, frameworks, bases de datos, servidores, IDEs.
 
-\begin{table}[H]
-\caption{Software y herramientas utilizados para el desarrollo del proyecto}
-\label{tab:software_herramientas}
-\begin{threeparttable}
-\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}p{8.5cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}p{8.5cm}}
+\caption{Software y herramientas utilizados para el desarrollo del proyecto}\label{tab:software_herramientas}\\
 \toprule
 Software y herramienta & Descripción \\
 \midrule
+\endfirsthead
+\toprule
+Software y herramienta & Descripción \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
 Windows 11 & Sistema operativo utilizado como plataforma base en los equipos de desarrollo. \\
 Visual Studio Code & Editor de código fuente donde se escribe y depura el código del sistema. \\
-Bruno / Postman & Herramientas para diseñar, documentar y probar las API del sistema. \\
-GitHub & Plataforma para el control de versiones y el trabajo colaborativo del código fuente. \\
+Git y GitHub & Repositorio único (monorepo) con ramas por integrante y \textit{pull requests}; GitHub Actions ejecuta la integración continua (análisis de estilo, pruebas y compilación de cada proyecto). \\
+JDK 21 y Maven & Compilación, pruebas y empaquetado del backend (Java 21, Spring Boot 4.1). \\
+Node.js 22 y pnpm & Entorno del panel web (React 19, Vite) y de la landing institucional (Astro). \\
+Flutter 3.44 y Android SDK & Compilación y ejecución de la aplicación móvil (Dart 3.12). \\
+Python 3.12 & Entorno del módulo de inteligencia artificial (FastAPI). \\
+Docker y Docker Compose & Contenedores que levantan todo el sistema en desarrollo: proxy nginx, PostgreSQL 18, Redis, MinIO, Mailpit (bandeja de correos de prueba), Prometheus y Grafana. \\
+Swagger UI (springdoc-openapi) & Documentación interactiva y prueba manual de la API REST del backend. \\
+Husky, commitlint, ESLint, Checkstyle y Ruff & Verificación automática del formato de los \textit{commits} y del estilo del código en cada lenguaje. \\
 Enterprise Architect & Herramienta de modelado UML para elaborar los diagramas del sistema. \\
-Jira & Plataforma de gestión de proyectos para organizar y dar seguimiento a las tareas de desarrollo. \\
-Docker & Plataforma de contenedores para estandarizar los entornos de desarrollo y despliegue. \\
+LaTeX (MiKTeX) y Biber & Elaboración del presente documento. \\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}
-\item \textit{Nota.} Elaboración propia.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia.
+
 
 \subsubsection{\pfxperfil 7.2. Equipos y hardware}\label{sec:recursos_hardware}
 % [INSTRUCCIÓN]: Computadoras, servidores, dispositivos IoT, dispositivos móviles, entre otros.
 
-\begin{table}[H]
-\caption{Equipos y hardware requeridos para el desarrollo del proyecto}
-\label{tab:equipos_hardware}
-\begin{threeparttable}
-\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}p{8.5cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.5cm} >{\raggedright\arraybackslash}p{8.5cm}}
+\caption{Equipos y hardware requeridos para el desarrollo del proyecto}\label{tab:equipos_hardware}\\
 \toprule
 Recurso / equipo & Especificación y uso \\
 \midrule
+\endfirsthead
+\toprule
+Recurso / equipo & Especificación y uso \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
 PC de desarrollo 1 & Computadora con procesador AMD Ryzen 7 8700G y 16 GB de RAM, utilizada para el desarrollo del sistema. \\
 PC de desarrollo 2 & Computadora con procesador AMD Ryzen 7 5600G y 16 GB de RAM, utilizada para el desarrollo del sistema. \\
 Redmi Note 14 Pro & Dispositivo móvil Android utilizado para probar la aplicación móvil. \\
 Honor X8 & Dispositivo móvil Android utilizado para probar la aplicación móvil. \\
-Servidor AWS & Servidor en la nube de Amazon Web Services utilizado para el despliegue de la aplicación y la base de datos. \\
+Servidor en la nube (AWS, previsto) & Servidor previsto para el despliegue de la aplicación y la base de datos; mientras no se defina el destino de producción, el sistema completo se ejecuta con Docker Compose en los equipos de desarrollo. \\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}
-\item \textit{Nota.} Elaboración propia.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia.
+
 
 \subsubsection{\pfxperfil 7.3. Presupuesto estimado}\label{sec:presupuesto_estimado}
 % [INSTRUCCIÓN]: Costos de licencias, servidores en la nube, adquisición de equipos o contratación.
 
 El presupuesto estimado del proyecto contempla los costos de hardware, software, recursos humanos, infraestructura y logística durante el periodo comprendido entre el 24 de agosto de 2026 y el 30 de noviembre de 2026 (3 meses). Sobre los equipos de hardware se aplica una depreciación del 10\% por su uso durante el desarrollo. Las Tablas~\ref{tab:presupuesto} y~\ref{tab:presupuesto_costos} detallan cada partida y su costo.
 
-\begin{table}[H]
-\caption{Presupuesto estimado del proyecto: hardware y software}
-\label{tab:presupuesto}
-\begin{threeparttable}
 \small
-\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.3cm} >{\raggedright\arraybackslash}p{1.7cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.3cm} >{\raggedright\arraybackslash}p{1.7cm}}
+\caption{Presupuesto estimado del proyecto: hardware y software}\label{tab:presupuesto}\\
 \toprule
 Recurso & \textit{Tiempo} (meses) & \textit{Cant.} & \textit{Costo unit.} (\$) & \textit{Deprec.} (\%) & \textit{Costo total} (\$) \\
 \midrule
+\endfirsthead
+\toprule
+Recurso & \textit{Tiempo} (meses) & \textit{Cant.} & \textit{Costo unit.} (\$) & \textit{Deprec.} (\%) & \textit{Costo total} (\$) \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
 \multicolumn{6}{l}{\textbf{Hardware}} \\
 \midrule
 PC dev. 1 (Ryzen 7 8700G, 16 GB RAM) & --- & 1 & 850.00 & 10 & 765.00 \\
@@ -74,33 +85,32 @@ Honor X8 & --- & 1 & 200.00 & 10 & 180.00 \\
 \multicolumn{6}{l}{\textbf{Software}} \\
 \midrule
 Windows 11 & --- & 1 & 199.00 & 0 & 199.00 \\
-Visual Studio Code & --- & 1 & 0.00 & 0 & 0.00 \\
-Bruno / Postman & --- & 1 & 0.00 & 0 & 0.00 \\
-GitHub & --- & 1 & 0.00 & 0 & 0.00 \\
+Visual Studio Code, Git, GitHub y GitHub Actions & --- & 1 & 0.00 & 0 & 0.00 \\
+JDK 21, Maven, Node.js 22, pnpm, Flutter, Python 3.12 y Docker & --- & 1 & 0.00 & 0 & 0.00 \\
+Swagger UI, Husky, commitlint, ESLint, Checkstyle, Ruff y LaTeX & --- & 1 & 0.00 & 0 & 0.00 \\
 Enterprise Architect & --- & 1 & 229.00 & 0 & 229.00 \\
-Jira & --- & 1 & 0.00 & 0 & 0.00 \\
-Docker & --- & 1 & 0.00 & 0 & 0.00 \\
 \midrule
 \multicolumn{5}{r}{\textit{Subtotal Software}} & 428.00 \\
 \midrule
 \multicolumn{5}{l}{\textbf{Subtotal (hardware + software)}} & \textbf{2,183.00} \\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}
-\item \textit{Nota.} Elaboración propia. Los precios unitarios corresponden a estimaciones de mercado. Los costos de hardware consideran una depreciación del 10\%. Para el software gratuito se indica costo cero.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia. Los precios unitarios corresponden a estimaciones de mercado. Los costos de hardware consideran una depreciación del 10\%. Para el software gratuito se indica costo cero.
 
-\begin{table}[H]
-\caption{Presupuesto estimado del proyecto: recursos humanos, infraestructura y logística}
-\label{tab:presupuesto_costos}
-\begin{threeparttable}
+
 \small
-\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.3cm} >{\raggedright\arraybackslash}p{1.7cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.3cm} >{\raggedright\arraybackslash}p{1.7cm}}
+\caption{Presupuesto estimado del proyecto: recursos humanos, infraestructura y logística}\label{tab:presupuesto_costos}\\
 \toprule
 Recurso & \textit{Tiempo} (meses) & \textit{Cant.} & \textit{Costo unit.} (\$) & \textit{Deprec.} (\%) & \textit{Costo total} (\$) \\
 \midrule
+\endfirsthead
+\toprule
+Recurso & \textit{Tiempo} (meses) & \textit{Cant.} & \textit{Costo unit.} (\$) & \textit{Deprec.} (\%) & \textit{Costo total} (\$) \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
 \multicolumn{6}{l}{\textbf{Gente}} \\
 \midrule
 Desarrolladores fullstack & 3 & 2 & 450.00 & 0 & 2,700.00 \\
@@ -113,7 +123,7 @@ Espacio de oficina & 3 & 1 & 150.00 & 0 & 450.00 \\
 Servicio de luz & 3 & 1 & 40.00 & 0 & 120.00 \\
 Agua & 3 & 1 & 36.00 & 0 & 108.00 \\
 Internet & 3 & 1 & 40.00 & 0 & 120.00 \\
-Servidor AWS & 3 & 1 & 50.00 & 0 & 150.00 \\
+Servidor en la nube (AWS, previsto) & 3 & 1 & 50.00 & 0 & 150.00 \\
 \midrule
 \multicolumn{5}{r}{\textit{Subtotal Infraestructura}} & 948.00 \\
 \midrule
@@ -126,9 +136,6 @@ Alimentación & 3 & 1 & 100.00 & 0 & 300.00 \\
 \midrule
 \multicolumn{5}{l}{\textbf{Costo total estimado del proyecto}} & \textbf{6,206.00} \\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}
-\item \textit{Nota.} Elaboración propia. Los servicios de oficina, luz, agua, internet y logística consideran el uso conjunto de ambos desarrolladores. El servidor AWS se estima en \$50 mensuales según el plan de cómputo básico. La depreciación de los equipos de hardware se detalla en la Tabla~\ref{tab:presupuesto}.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia. Los servicios de oficina, luz, agua, internet y logística consideran el uso conjunto de ambos desarrolladores. El servidor en la nube se estima en \$50 mensuales según el plan de cómputo básico de AWS; el destino de despliegue aún no está decidido y, hasta entonces, el sistema corre con Docker Compose en los equipos de desarrollo. La depreciación de los equipos de hardware se detalla en la Tabla~\ref{tab:presupuesto}.
+

@@ -55,7 +55,9 @@ Las decisiones que afectan a ambos bloques (esquema de la base de datos, estados
 
 El seguimiento del proyecto se apoya en el plan de desarrollo, que descompone el sistema en 31 tareas (27 tareas implementan los 26 casos de uso, ya que la precalificación con inteligencia artificial se divide en dos, y cuatro son tareas técnicas adicionales: tres del bloque A y una del B) y en seis hitos de integración (H1 a H6), el último de los cuales es la prueba de extremo a extremo local del flujo completo: postular, puntuar, priorizar, auditar, adjudicar, registrar asistencia y consultar indicadores. Cada tarea tiene un responsable, una estimación en puntos y una definición de terminado (base de datos, servicio, pantallas y pruebas).
 
-El control se realiza mediante tres formularios de reporte que cada integrante completa por tarea y que se revisan en las reuniones de seguimiento del equipo. Las Tablas~\ref{tab:form_finalizadas}, \ref{tab:form_proceso} y \ref{tab:form_errores} describen sus campos. Los formularios se registran en GitHub Projects, junto al repositorio del código, y el equipo se reúne una vez por semana para revisar el avance, los impedimentos y los errores abiertos. Además, se realiza una breve coordinación diaria por mensajería cuando existen dependencias entre los dos bloques.
+El control se realiza mediante tres formularios de reporte que cada integrante completa por tarea y que se revisan en las reuniones de seguimiento del equipo. Las Tablas~\ref{tab:form_finalizadas}, \ref{tab:form_proceso} y \ref{tab:form_errores} describen sus campos. Los formularios se registran junto al repositorio del código: cada tarea tiene una ficha de unidad de trabajo (carpeta \texttt{docs/UnidadesTrabajo}) con su alcance, su dependencia y los pasos de validación; el estado de cada caso de uso (Pendiente, En progreso o Hecho) se mantiene en su propio archivo de caso de uso, y los cambios se integran mediante \textit{pull requests} de GitHub que revisa el equipo. El equipo se reúne una vez por semana para revisar el avance, los impedimentos y los errores abiertos. Además, se realiza una breve coordinación diaria por mensajería cuando existen dependencias entre los dos bloques.
+
+Además de los formularios, el repositorio aplica controles automáticos en cada cambio. Un \textit{hook} de Git valida que cada \textit{commit} siga el formato \texttt{tipo[ALCANCE]: descripción} (herramienta commitlint) y que el código modificado cumpla el estilo de su lenguaje (ESLint, Checkstyle y \textit{flutter analyze}). Luego, GitHub Actions ejecuta, solo para los proyectos que cambiaron, el análisis de estilo, las pruebas automatizadas y la compilación de cada uno de los cinco proyectos (backend principal, módulo de inteligencia artificial, panel web, landing y aplicación móvil). En el backend, las pruebas de integración usan una base PostgreSQL real, de modo que las migraciones de la base de datos también se verifican en cada cambio.
 
 \begin{table}[H]
 \caption{Formulario de reporte de tareas finalizadas}
@@ -123,7 +125,32 @@ Responsable y estado & Integrante asignado; estado abierto, en corrección o cer
 
 \subsection{1.11. Tecnologías para el desarrollo de proyecto}
 
-Las tecnologías seleccionadas para el desarrollo se describen en el Capítulo 6 (Infraestructura para la Producción de Software); las herramientas y el hardware del equipo figuran en la sección 1.7 de este capítulo.
+Las tecnologías del sistema son las que figuran en los archivos de dependencias del repositorio; la Tabla~\ref{tab:tecnologias_reales} las resume por componente. El sistema se organiza como un repositorio único (\textit{monorepo}) con cinco proyectos independientes: el backend principal, el módulo de inteligencia artificial, el panel web, la landing institucional y la aplicación móvil, más la configuración de infraestructura con la que se levanta todo mediante Docker Compose. La justificación de estas tecnologías y su descripción detallada se presentan en el Capítulo 6 (Infraestructura para la Producción de Software); las herramientas y el equipo físico del grupo figuran en la sección 1.7 de este capítulo.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.9cm} >{\raggedright\arraybackslash}p{5.6cm} >{\raggedright\arraybackslash}p{4.5cm}}
+\caption{Tecnologías utilizadas en el desarrollo del sistema}\label{tab:tecnologias_reales}\\
+\toprule
+Componente & Tecnologías y versiones & Uso en el sistema \\
+\midrule
+\endfirsthead
+\toprule
+Componente & Tecnologías y versiones & Uso en el sistema \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Backend principal & Java 21; Spring Boot 4.1.2 (Web MVC, Data JPA, Security con servidor de recursos JWT, Validation, Mail, Actuator y AspectJ); Maven & API REST (\texttt{/api/v1}) con arquitectura por módulos y capas, autenticación propia con tokens JWT, auditoría en bitácora y envío de correos \\
+Persistencia & PostgreSQL 18; Flyway; Hibernate (JPA); Redis; MinIO & Base de datos con migraciones versionadas, caché y almacenamiento de documentos y actas en PDF \\
+Servicios del backend & Bucket4j; springdoc-openapi (Swagger UI); Firebase Admin (FCM); Micrometer con Prometheus; Logback con salida JSON; Lombok & Limitación de peticiones por IP, documentación de la API, notificaciones push, métricas y registros estructurados \\
+Panel web & React 19; TypeScript 6; Vite 8; TanStack Query, Router, Form y Table; Tailwind CSS 4 con shadcn; Zod 4; Zustand 5; Axios; Recharts & Interfaz de los roles administrativos y de los postulantes, con tablas paginadas, formularios validados y gráficos del tablero de indicadores \\
+Aplicación móvil & Flutter 3.44 con Dart 3.12; Riverpod 2.6; go\_router 18; dio 5; flutter\_secure\_storage; Firebase Messaging & Aplicación Android del postulante: acceso, perfil, consulta de la postulación y notificaciones push \\
+Módulo de inteligencia artificial & Python 3.12; FastAPI; Uvicorn; pytest & Servicio independiente para el cálculo del puntaje de vulnerabilidad \\
+Landing institucional & Astro 7 con TypeScript; Vitest & Sitio estático bilingüe (español e inglés) de la empresa NEXWARE \\
+Infraestructura de desarrollo & Docker Compose; nginx; Mailpit; Prometheus; Grafana & Entorno completo reproducible en cada equipo y observabilidad del backend \\
+Calidad e integración continua & GitHub Actions; Husky, lint-staged y commitlint; ESLint y Prettier; Checkstyle; Ruff; JUnit con Testcontainers; Vitest; flutter test & Verificación automática del estilo, de las pruebas y de la compilación de cada proyecto \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir de los archivos de dependencias y de configuración del repositorio.
+
 
 \subsection{1.12. Anexos}
 
