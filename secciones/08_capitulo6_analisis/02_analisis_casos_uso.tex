@@ -130,7 +130,7 @@ Al ver el expediente (mensaje 1), el controlador obtiene el finalista (1.2) y la
 
 \subsubsection{6.2.8. Analizar CU-08 Generar acta de adjudicación}\label{sec:cap6_analisis_cu08}
 
-En el CU-08, el Administrador DUBSS genera el acta mediante \textit{ActaView} y \textit{ActaController}, que utiliza las entidades \textit{Adjudicacion} y \textit{ActaAdjudicacion}. La generación del documento PDF se modela como un mensaje del propio controlador (1.3). La Figura~\ref{fig:analisis_cu08} presenta el diagrama de análisis.
+En el CU-08, el Administrador DUBSS genera el acta mediante \textit{ActaView} y \textit{ActaController}, que utiliza las entidades \textit{Adjudicacion} y \textit{ActaAdjudicacion}. El controlador lista las actas generadas, arma la vista previa y el acta con los adjudicados y su puntaje final, y entrega la descarga; la generación del PDF y su almacenamiento en MinIO se resuelven dentro de la creación del acta (mensaje 3.3), y el acta solo se genera con los resultados ya publicados (CU-22). La Figura~\ref{fig:analisis_cu08} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-08 Generar acta de adjudicación}
@@ -368,7 +368,7 @@ El Administrador puede listar los finalistas (mensaje 1), notificarlos con el pl
 
 \subsubsection{6.2.22. Analizar CU-22 Publicar resultados de adjudicación}\label{sec:cap6_analisis_cu22}
 
-En el CU-22, el Administrador DUBSS publica los resultados mediante \textit{PublicarResultadosView} y \textit{ResultadosController}, que colaboran con las entidades \textit{Adjudicacion}, \textit{PublicacionResultado} y \textit{Notificacion}. El envío de las notificaciones push se modela como un mensaje del propio controlador (2.4). La Figura~\ref{fig:analisis_cu22} presenta el diagrama de análisis.
+En el CU-22, el Administrador DUBSS publica los resultados mediante \textit{PublicarResultadosView} y \textit{ResultadosController}, que colaboran con las entidades \textit{Adjudicacion}, \textit{PublicacionResultado} y \textit{Notificacion}. El controlador muestra el resumen de resultados y, al publicar, valida que no queden finalistas «calificada», registra la publicación (2.3) y crea un aviso por finalista con decisión (2.5); el envío del push y del correo sale después de guardar, a cargo del CU-EXTRA-01. La Figura~\ref{fig:analisis_cu22} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-22 Publicar resultados de adjudicación}

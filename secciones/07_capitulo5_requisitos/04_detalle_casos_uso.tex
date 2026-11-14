@@ -413,7 +413,7 @@
     \item A2 (paso 7): si el finalista no tiene ninguna auditoría, el sistema no permite ninguna decisión (409, ERR\_ADJ\_02); si la última auditoría no es «validado», no permite adjudicarle la beca (409, ERR\_ADJ\_02) pero sí no adjudicar.
     \item A3 (paso 7): si el puntaje total de la postulación (IA más académico de la última auditoría) no alcanza el puntaje mínimo requerido, el sistema no permite adjudicarle la beca (409, ERR\_ADJ\_03).
     \item A4 (paso 7): si los cupos de la convocatoria están agotados, el sistema no permite registrar nuevas adjudicaciones (409, ERR\_ADJ\_04) y solo admite la decisión de no adjudicar.
-    \item A5 (paso 10): una vez decididas todas las adjudicaciones, el Administrador DUBSS puede generar el acta de adjudicación (CU-08) y publicar los resultados (CU-22).
+    \item A5 (paso 10): una vez decididas todas las adjudicaciones, el Administrador DUBSS puede publicar los resultados (CU-22) y, una vez publicados, generar el acta de adjudicación (CU-08).
     \item A6 (paso 7): si los resultados de la convocatoria ya fueron publicados (CU-22) o la postulación ya no está «calificada», el sistema no registra ni modifica decisiones (409, ERR\_ADJ\_01).
     \item A7 (paso 8): si la petición llega duplicada (doble clic o reintento), solo se registra una decisión; la segunda recibe el 409 ERR\_ADJ\_01, sin clave de idempotencia.
     \item A8 (pasos 1 y 7): si la convocatoria no está cerrada o no tiene cupos o puntaje mínimo definidos, el sistema no permite seleccionar finalistas ni decidir (409, ERR\_ADJ\_05).
@@ -628,7 +628,7 @@
 \endlastfoot
 \textbf{Propósito} & Generar el acta oficial que deja constancia de los resultados de la adjudicación de la Beca Comedor de una convocatoria. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS genera, una vez decididas todas las adjudicaciones de una convocatoria, el acta de adjudicación en formato PDF con la lista de beneficiarios aprobados. El acta se almacena en MinIO, se registra con un número único y puede consultarse posteriormente. El formato y el contenido oficial del acta están por definir con la DUBSS. Extiende el CU-05. Respalda el RF-04. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS genera, una vez publicados los resultados de una convocatoria (CU-22), el acta de adjudicación en formato PDF con la lista de beneficiarios adjudicados y su puntaje final. Antes de generarla puede ver una vista previa con el número «borrador». El acta se almacena en MinIO, se registra con un número único automático, es definitiva (una sola por convocatoria, no se regenera ni se elimina) y puede consultarse y descargarse después mediante una dirección temporal firmada. El formato y el contenido oficial del acta están por definir con la DUBSS. Extiende el CU-05. Respalda el RF-04. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -636,33 +636,36 @@
 \midrule
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item El Administrador DUBSS está autenticado en el sistema (CU-01) con el rol Administrador DUBSS.
-    \item Todas las adjudicaciones de los finalistas de la convocatoria están decididas (CU-05).
+    \item Los resultados de la convocatoria ya fueron publicados (CU-22) y la convocatoria está «publicada».
+    \item Para generar, la convocatoria aún no tiene acta; para consultar o descargar, ya la tiene.
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal A: generar el acta.}
 \begin{cupasos}
-    \item El Administrador DUBSS selecciona la opción «Generar acta de adjudicación» de la convocatoria.
-    \item El sistema verifica que no existan finalistas con la adjudicación pendiente de decisión.
-    \item El sistema obtiene las adjudicaciones de la convocatoria con el nombre, CI, carrera y puntaje final de cada postulante adjudicado.
-    \item El sistema genera el acta en formato PDF con un número único, la fecha, los datos de la convocatoria y de la gestión académica y la lista de adjudicados.
-    \item El sistema almacena el PDF en MinIO y registra el acta con su número, la ruta del archivo, el usuario que la genera y la fecha de generación, y deja constancia en la bitácora.
+    \item El Administrador DUBSS entra a «Actas», elige una convocatoria con resultados publicados y sin acta y, si lo desea, pulsa «Vista previa».
+    \item El Administrador DUBSS pulsa «Generar PDF» y confirma en una ventana que avisa que el acta es definitiva.
+    \item El sistema verifica que la convocatoria exista, que sus resultados estén publicados y que no tenga acta.
+    \item El sistema obtiene los adjudicados de la convocatoria con nombre y apellido, CI, carrera y puntaje final, y asigna el número de acta.
+    \item El sistema genera el PDF con el número, la fecha, los datos de la convocatoria y de la gestión académica y la lista de adjudicados, y lo almacena en MinIO.
+    \item El sistema registra el acta con su número, la ruta del archivo, el usuario que la genera y la fecha de generación, y deja constancia en la bitácora, en una misma operación.
     \item El sistema muestra el acta generada y permite descargarla e imprimirla.
 \end{cupasos} \\
  & \textbf{Flujo principal B: consultar el acta.}
 \begin{cupasos}
-    \item El Administrador DUBSS selecciona la opción «Consultar acta» de la convocatoria.
-    \item El sistema obtiene el acta registrada y la muestra para su descarga e impresión.
+    \item El Administrador DUBSS entra a «Actas» y pulsa «Descargar» en el acta que desea (o elige una convocatoria que ya la tiene).
+    \item El sistema obtiene el acta registrada y comprueba que el archivo esté disponible.
+    \item El sistema anota la descarga en la bitácora y entrega una dirección temporal firmada (vigente 5 minutos) para abrir el PDF.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (flujo A, paso 2): si existen adjudicaciones pendientes de decisión, el sistema no genera el acta e indica cuántas faltan.
-    \item A2 (flujo A, paso 1): si la convocatoria ya tiene un acta generada, el sistema muestra el acta existente en lugar de generar una nueva.
-    \item A3 (flujo A, paso 5): si ocurre un error al almacenar el PDF, el sistema no registra el acta y permite reintentar.
-    \item A4 (flujo B, paso 2): si la convocatoria aún no tiene un acta generada, el sistema lo informa.
+    \item A1 (flujo A, paso 3): si los resultados de la convocatoria no están publicados, el sistema no genera el acta (409, ERR\_ACT\_01) e indica que primero hay que publicarlos (CU-22).
+    \item A2 (flujo A, paso 3): si la convocatoria ya tiene acta, el sistema no genera otra (409, ERR\_ACT\_02) y muestra la existente; un doble clic recibe el mismo 409.
+    \item A3 (flujo A, paso 5): si falla la generación del PDF o el guardado en MinIO, el sistema no registra el acta ni la bitácora y permite reintentar.
+    \item A4 (flujo B, paso 2): si la convocatoria aún no tiene acta, el sistema lo informa (404, ERR\_ACT\_03); si el acta está registrada pero su archivo no está en el almacenamiento, informa que hay que avisar a soporte (404, ERR\_ACT\_04).
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El acta de adjudicación de la convocatoria queda almacenada en MinIO y registrada con su número, responsable y fecha de generación.
+    \item El acta de adjudicación de la convocatoria queda almacenada en MinIO y registrada con su número, responsable y fecha de generación; es definitiva y no se regenera.
     \item La generación del acta queda registrada en la bitácora.
 \end{cuvin} \\
 \midrule
@@ -1773,7 +1776,7 @@
 \endlastfoot
 \textbf{Propósito} & Dar a conocer de forma oficial y transparente los resultados de la adjudicación de la Beca Comedor de una convocatoria y poner fin al proceso de selección. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS, una vez decididas todas las adjudicaciones, publica la lista oficial de adjudicados de la convocatoria. Al publicar, el sistema registra la publicación y notifica a cada postulante su resultado mediante notificación push. La lista publicada es consultable por los postulantes y, desde ese momento, las adjudicaciones no se modifican sin dejar registro en la bitácora. Extiende el CU-05. Respalda el RF-17. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS, una vez decididas todas las adjudicaciones, publica los resultados de la convocatoria. Al publicar, el sistema registra la publicación, pasa la convocatoria a «publicada», la anota en la bitácora y avisa a cada finalista con decisión su resultado por bandeja, notificación push y correo (CU-EXTRA-01). La publicación no se puede deshacer, no exige el acta (que se genera después, CU-08) y desde ese momento no se registran ni modifican decisiones. Los postulantes consultan la lista de adjudicados y su propio resultado. Extiende el CU-05. Respalda el RF-17. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -1781,39 +1784,40 @@
 \midrule
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item El Administrador DUBSS está autenticado en el sistema (CU-01) con el rol Administrador DUBSS.
-    \item Todas las adjudicaciones de los finalistas de la convocatoria están decididas (CU-05).
+    \item La convocatoria está cerrada y ningún finalista queda en estado «calificada»: cada uno está adjudicado, no adjudicado, archivado o devuelto (CU-05).
     \item Los resultados de la convocatoria no han sido publicados previamente.
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
-    \item El Administrador DUBSS selecciona la opción «Publicar resultados» de la convocatoria.
-    \item El sistema obtiene y muestra las adjudicaciones de la convocatoria (adjudicados y no adjudicados) con el puntaje final de cada postulante.
-    \item El Administrador DUBSS revisa los resultados y confirma la publicación.
-    \item El sistema verifica que no existan adjudicaciones pendientes de decisión.
-    \item El sistema registra la publicación con el usuario que la realiza y la fecha, y deja constancia en la bitácora.
-    \item El sistema crea una notificación para cada postulante finalista con su resultado y le envía una notificación push.
+    \item El Administrador DUBSS selecciona la opción «Publicar resultados» y elige la convocatoria.
+    \item El sistema muestra el resumen: adjudicados y no adjudicados con el puntaje final de cada finalista.
+    \item El Administrador DUBSS revisa los resultados, pulsa «Publicar» y confirma en una ventana que avisa que la publicación no se puede deshacer.
+    \item El sistema verifica que la convocatoria exista y esté cerrada, que no esté publicada y que no queden finalistas en estado «calificada».
+    \item El sistema registra la publicación con el usuario que la realiza y la fecha, la anota en la bitácora y pasa la convocatoria a «publicada», en una misma operación.
+    \item El sistema crea un aviso para cada finalista con decisión y se lo envía por bandeja, notificación push y correo.
     \item El sistema confirma la publicación; la lista de adjudicados queda consultable por los postulantes (CU-04).
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (paso 4): si existen adjudicaciones pendientes de decisión, el sistema no permite publicar e indica cuántas faltan.
-    \item A2 (paso 1): si los resultados de la convocatoria ya fueron publicados, el sistema no permite una nueva publicación y muestra la existente.
-    \item A3 (paso 6): si falla el envío de alguna notificación push, la notificación queda registrada y el postulante puede ver su resultado al consultar su postulación (CU-04).
-    \item A4 (paso 3): si el Administrador DUBSS cancela la operación, no se publica ningún resultado.
+    \item A1 (paso 4): si quedan finalistas en estado «calificada», el sistema no permite publicar e indica cuántos faltan (409, ERR\_PUB\_01).
+    \item A2 (pasos 1 y 4): si los resultados ya fueron publicados, el sistema no registra otra publicación y muestra la existente (409, ERR\_PUB\_02); un doble clic recibe el mismo 409.
+    \item A3 (paso 4): si la convocatoria no existe (404, ERR\_PRI\_01) o no está cerrada (409, ERR\_PUB\_03), el sistema vuelve a la lista de convocatorias.
+    \item A4 (paso 6): si falla el envío de un aviso, la publicación queda registrada, el aviso queda en la bandeja y se reintenta el push y el correo; un fallo de envío nunca deshace la publicación.
+    \item A5 (paso 3): si el Administrador DUBSS cancela la operación, no se publica ningún resultado.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item Los resultados de la convocatoria quedan publicados y registrados con su responsable y fecha.
-    \item Cada postulante finalista es notificado de su resultado y los adjudicados conforman el padrón de becados de la gestión (CU-23).
-    \item Las adjudicaciones de la convocatoria no se modifican sin dejar registro en la bitácora (CU-25).
+    \item Cada finalista con decisión recibe un aviso con su resultado; los adjudicados son el punto de partida del padrón de becados (CU-23).
+    \item No se registran ni modifican decisiones de la convocatoria, y la publicación queda anotada en la bitácora (CU-25).
 \end{cuvin} \\
 \midrule
 \textbf{Excepciones} & \vspace{-\baselineskip}\begin{cuvin}
     \item Autenticación inválida o sesión expirada.
     \item Falta de permisos suficientes (el usuario no tiene el rol Administrador DUBSS).
-    \item Adjudicaciones pendientes de decisión.
-    \item Error al enviar las notificaciones push mediante Firebase Cloud Messaging.
+    \item Finalistas pendientes de decisión.
+    \item Error al enviar el push o el correo (no deshace la publicación).
     \item Error de conexión con el servidor o la base de datos.
 \end{cuvin} \\
 \end{longtable}
