@@ -33,7 +33,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 | **Directivo** | Consume el dashboard de indicadores BI (CU-12). | Antes «Directivo DUBSS (Gerente)». |
 | **Personal del Comedor Universitario** | Registra la asistencia digital diaria (CU-10). | Se autentica vía Usuario del Sistema. |
 | **Sistema / Módulo IA (Python)** | Actor secundario: precalifica (CU-03) y valida elegibilidad (CU-18). | No dibujado como actor en el diagrama; CU-03 y CU-18 son incluidos por CU-02. |
-| **Firebase** (Auth, FCM, Storage) | Actor secundario externo. | Cap. 4.2.4. |
+| **Firebase** (solo FCM) | Actor secundario externo; los archivos viven en MinIO. | Cap. 4.2.4. |
 | *Auditor institucional* | Fiscalizador; coteja registro digital vs. respaldo físico. | La consulta de auditoría para este actor (ex CU-33) fue **descartada**; no es actor del diagrama. |
 
 > ⚠️ Pendiente: confirmar si «Administrador DUBSS» se divide en subroles (Trabajo Social / Encargada de Sistemas) y qué actor ejecuta CU-11 (en el diagrama no tiene asociación directa; solo extiende CU-10).
@@ -47,7 +47,7 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 **Estados de `Postulacion` (enum `EstadoPostulacion`):** `pendiente`, `devuelta`, `archivada`, `calificada`, `adjudicada`, `no adjudicada`.
 > ⚠️ RF-06 lista otros estados (recibida, en evaluación, finalista, adjudicada, rechazada). Unificar nomenclatura antes de redactar CU.
 
-**Puntaje:** revisión documental **1–70** + rendimiento académico **hasta 30** = **total (máx. 100)**. Se adjudica si el total alcanza el **mínimo requerido** (valor por definir con la DUBSS). El puntaje de vulnerabilidad por IA ordena los expedientes para auditoría.
+**Puntaje:** puntaje de la **IA hasta 70** + rendimiento académico **registrado manualmente por el auditor hasta 30** (en la auditoría del CU-07) = **total (máx. 100)**; el total no se guarda, se calcula. Se adjudica si el total alcanza el **mínimo requerido** (valor por definir con la DUBSS). El puntaje de vulnerabilidad por IA ordena los expedientes para auditoría.
 
 **Variables socioeconómicas del formulario:** ingresos familiares, dependientes, procedencia, carrera, patrimonio, estado de vulnerabilidad, promedio académico.
 
@@ -66,8 +66,8 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 
 ## 4. Stack y restricciones técnicas
 
-- **Backend:** Java + Spring Boot (REST, JWT, HTTPS). **Web:** React + TypeScript. **Móvil:** Flutter/Dart (prioridad Android; cámara para digitalizar documentos).
-- **IA:** módulo independiente en Python, consumido vía API. **BD:** PostgreSQL. **Firebase:** Auth, FCM (push), Storage. **Infra:** AWS, Docker, GitHub.
+- **Backend:** Java + Spring Boot (REST, HTTPS; JWT propio: emite y verifica los tokens y guarda la contraseña como hash). **Web:** React + TypeScript. **Móvil:** Flutter/Dart (prioridad Android; cámara para digitalizar documentos).
+- **IA:** módulo independiente en Python, consumido vía API. **BD:** PostgreSQL. **Firebase:** solo FCM (push). **MinIO:** almacenamiento de archivos. **Infra:** AWS, Docker, GitHub.
 - Rendimiento: carga ≤ 3 s; puntaje individual ≤ 5 s; 20,000 postulaciones/gestión; ≥ 50 administrativos concurrentes; uptime ≥ 99 % en periodos de postulación/evaluación; BI en lote.
 
 ---
@@ -95,12 +95,12 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 
 | ID | ID previo | Caso de uso | Actor | Relaciones (según lista filtrada) | RF | Estado |
 |---|---|---|---|---|---|---|
-| CU-01 | CU-01 | Registrarse y autenticarse | Usuario del Sistema | — | RF-01 | OK |
+| CU-01 | CU-01 | Registrarse y autenticarse (incluye registro del Postulante, inicio y **cierre de sesión**; la autenticación la resuelve el **propio backend con JWT** —token de acceso + refresh token por dispositivo—, no Firebase Auth) | Usuario del Sistema | — | RF-01 | OK |
 | CU-02 | CU-02 | Enviar postulación a Beca Comedor | Postulante | «include» CU-03, CU-16, CU-18 | RF-02 | OK |
 | CU-03 | CU-03 | Precalificar postulación con Inteligencia Artificial | Sistema | — | RF-03 | OK |
 | CU-04 | CU-04 | Consultar estado de postulación | Postulante | — | RF-06 | OK |
 | CU-05 | CU-06 | Auditar y adjudicar becas | Admin | «include» CU-06, CU-07; «extend» CU-08, CU-22 | RF-04 | OK |
-| CU-06 | CU-07 | Visualizar lista priorizada de postulantes | Admin | — | RF-04 | OK |
+| CU-06 | CU-07 | Visualizar lista priorizada de postulantes (incluye exportar a PDF, registrado en bitácora) | Admin | — | RF-04 | OK |
 | CU-07 | CU-08 | Auditar expediente finalista | Admin | «include» CU-21; «extend» CU-19, CU-20 | RF-04 | OK |
 | CU-08 | CU-09 | Generar acta de adjudicación | Admin | — | RF-04 | ❓ Preguntar |
 | CU-09 | CU-10 | Generar planilla de asistencia | Admin | — | RF-05 | OK |
@@ -127,13 +127,15 @@ Fuente de verdad: diagrama vigente `images/019_Diagrama_General_CU.jpg` (Fig. 24
 > ✅ **Corregido** en `casos_de_uso_filtrados.md` y en este archivo: CU-11 «extend» CU-10 (sentido del diagrama), CU-17 «extend» CU-02 y CU-19 «extend» CU-07 (no CU-03: devolver ocurre durante la auditoría del expediente).
 > ⚠️ **Pendiente entre el diagrama y la lista:**
 > - **Relaciones no dibujadas:** el diagrama no muestra «include» CU-07→CU-21, «extend» de CU-19/CU-20 hacia CU-07, ni «extend» de CU-08/CU-22 hacia CU-05 (solo asociaciones directas con el Administrador); tampoco «extend» CU-15→CU-01 ni CU-26→CU-03. Actualizar el diagrama o la lista.
-> - **Notificación push:** al descartarse el CU propio, queda por definir que viva dentro de CU-21 y CU-22 (y de CU-04, antes «extend» del push).
+> - **Notificación push (resuelto):** todo cambio de estado avisa al postulante por el servicio de notificaciones (bandeja, push y correo), dentro de los CU que cambian el estado (CU-07, CU-19, CU-20, CU-21, CU-22 y CU-05).
 
 ---
 
 ## 7. Requisitos funcionales: situación
 
-- **Redactados en LaTeX:** RF-01…RF-21 (`03_requisitos_especificos.tex`, Tablas `ef{tab:rf01}`–`ef{tab:rf21}`), 21 RF en total (≥ 20 requeridos). RF-07 ya quedó ajustado a solo dashboard BI.
+- **Redactados en LaTeX:** RF-01…RF-21 (`03_requisitos_especificos.tex`, Tablas `
+ef{tab:rf01}`–`
+ef{tab:rf21}`), 21 RF en total (≥ 20 requeridos). RF-07 ya quedó ajustado a solo dashboard BI.
 - **Mapeo vigente CU → RF** (columna RF de §6): RF-01 CU-01 · RF-02 CU-02 · RF-03 CU-03 · RF-04 CU-05…08 · RF-05 CU-09…11 · RF-06 CU-04 · RF-07 CU-12 · RF-08 CU-13 · RF-09 CU-14 · RF-10 CU-15 · RF-11 CU-16 · RF-12 CU-17 · RF-13 CU-18 · RF-14 CU-19 · RF-15 CU-20 · RF-16 CU-21 · RF-17 CU-22 · RF-18 CU-23 · RF-19 CU-24 · RF-20 CU-25 · RF-21 CU-26.
 - **Renumeración aplicada:** el RF-08 descartado («Proyecciones y tendencias») se eliminó y los antiguos RF-09…22 pasaron a RF-08…21, sin huecos. Las referencias cruzadas internas (RF-13→RF-14, RF-17→RF-20) ya están actualizadas.
 - **RF-06** perdió las notificaciones push como CU propio: revisar su redacción (¿notificar vive en CU-21/CU-22?).
@@ -185,7 +187,9 @@ RNF relacionados:
 
 1. **No inventar** datos institucionales (umbral mínimo de puntaje, número exacto de cupos, formatos de documento). Marcarlos como "por definir con la DUBSS".
 2. Mantener consistencia **RF ↔ CU ↔ actor ↔ estado** con las tablas de §6–§8; todo CU nuevo debe trazarse a ≥ 1 RF.
-3. Los RF-08…RF-21 ya están en `secciones/` (aprobados). Para modificarlos editar solo `03_requisitos_especificos.tex` (y el rango `ef{tab:rf01}`–`ef{tab:rfNN}` si cambia la cantidad), respetando `AGENTS.md`.
+3. Los RF-08…RF-21 ya están en `secciones/` (aprobados). Para modificarlos editar solo `03_requisitos_especificos.tex` (y el rango `
+ef{tab:rf01}`–`
+ef{tab:rfNN}` si cambia la cantidad), respetando `AGENTS.md`.
 3. bis. La numeración vigente de CU es la de §6 (26 CU). Si algún archivo (p. ej. `requisitos_funcionales_propuestos.md`) usa otra numeración, prevalece §6 y se avisa al usuario.
 4. `texto_formatter/` es de solo lectura.
 5. Idioma: español académico formal; tercera persona o primera del plural.

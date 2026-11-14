@@ -18,7 +18,7 @@ Filtrada a partir de las anotaciones hechas en [`CLAUDE.md`](CLAUDE.md) §6 y §
 
 | ID    | ID previo       | Caso de uso                                                                                   | Actor                        | Relaciones                                    | RF    | Estado                      |
 | ----- | --------------- | --------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- | ----- | --------------------------- |
-| CU-01 | CU-01           | Registrarse y autenticarse                                                                    | Postulante, Admin, Directivo | —                                             | RF-01 | OK                          |
+| CU-01 | CU-01           | Registrarse y autenticarse (incluye cierre de sesión; autenticación con JWT propio)            | Usuario del Sistema (Postulante, Admin, Directivo, Personal del Comedor) | —                                             | RF-01 | OK                          |
 | CU-02 | CU-02           | Enviar postulación a Beca Comedor                                                             | Postulante                   | «include» CU-03, CU-16, CU-18                 | RF-02 | OK                          |
 | CU-03 | CU-03           | Precalificar postulación con Inteligencia Artificial                                          | Sistema                      | —                                             | RF-03 | OK                          |
 | CU-04 | CU-04           | Consultar estado de postulación                                                               | Postulante                   | —                                             | RF-06 | OK                          |
@@ -172,14 +172,14 @@ Resumen: **Alta** 16 CU · **Media** 7 CU · **Baja** 3 CU.
 
 | CU    | Caso de uso                                           | Pts    | Por qué esa dificultad                             |
 | ----- | ----------------------------------------------------- | ------ | -------------------------------------------------- |
-| CU-01 | Registrarse y autenticarse                            | 5      | Firebase Auth, roles, web y móvil                  |
+| CU-01 | Registrarse y autenticarse                            | 5      | JWT propio (hash BCrypt, refresh token por dispositivo, bloqueo por intentos), registro, inicio y cierre de sesión, roles, web y móvil |
 | CU-02 | Enviar postulación a Beca Comedor                     | 8      | Formulario largo, web y móvil, integra CU-03/16/18 |
 | CU-03 | Precalificar postulación con IA                       | 8      | Módulo Python, API, 20,000 postulaciones           |
 | CU-04 | Consultar estado de postulación                       | 3      | Consulta de estados, web y móvil                   |
 | CU-13 | Gestionar convocatoria y gestión académica            | 3      | CRUD con reglas de fechas                          |
 | CU-14 | Gestionar usuarios y roles                            | 3      | CRUD con control de acceso                         |
-| CU-15 | Recuperar contraseña / gestionar perfil               | 2      | Flujo estándar de Firebase                         |
-| CU-16 | Digitalizar y adjuntar documentos                     | 5      | Cámara, validación, Firebase Storage               |
+| CU-15 | Recuperar contraseña / gestionar perfil               | 2      | Token temporal por correo, a cargo del backend     |
+| CU-16 | Digitalizar y adjuntar documentos                     | 5      | Cámara, validación, MinIO                         |
 | CU-17 | Guardar borrador de postulación                       | 3      | Persistencia parcial de datos                      |
 | CU-18 | Validar elegibilidad y duplicados                     | 2      | Reglas de validación                               |
 | CU-21 | Notificar finalistas, registrar entrega y comunicados | 5      | Push (FCM), registro de entrega, comunicados       |

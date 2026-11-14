@@ -99,7 +99,7 @@ Criterios de aceptación:
 | **¿Por qué?** | Para recuperar el acceso a su cuenta sin intervención del personal y mantener actualizados los datos con que se le notifica. |
 
 Criterios de aceptación:
-- El usuario puede solicitar el restablecimiento de contraseña mediante su correo registrado, a través del servicio de autenticación de Firebase.
+- El usuario puede solicitar el restablecimiento de contraseña mediante un enlace enviado a su correo registrado, gestionado por el propio sistema.
 - El usuario puede modificar sus datos de contacto y su contraseña desde el perfil.
 - El sistema no permite modificar el CI desde el perfil.
 
@@ -114,7 +114,7 @@ Criterios de aceptación:
 - El Postulante puede capturar un documento con la cámara del dispositivo móvil o adjuntar un archivo desde la web.
 - El sistema valida el formato y el tamaño del archivo **[formatos y tamaño máximo por definir]** y rechaza los no permitidos con un mensaje de error.
 - El sistema muestra una vista previa y permite reemplazar o eliminar un documento antes de enviar la postulación.
-- El sistema almacena los archivos en Firebase Storage asociados a la postulación.
+- El sistema almacena los archivos en MinIO asociados a la postulación.
 
 ### RF-13: Guardado de borrador de postulación
 | | |
