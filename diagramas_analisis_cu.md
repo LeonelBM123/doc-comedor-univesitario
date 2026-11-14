@@ -60,10 +60,17 @@ Igual que el ejemplo «sd CU02 Autenticación»: dibujar el actor **Usuario del 
 ### 6.2.1 — CU-01 Registrarse y autenticarse
 - **Actor:** Usuario del Sistema (generalizado por Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario).
 - **Vista:** `AuthView` · **Controlador:** `AuthController`
-- **Entidades:** `Usuario`, `Postulante`
+- **Entidades:** `Usuario`, `Postulante`, `Sesion`, `Bitacora` (la autenticación es propia del backend: no se dibuja Firebase)
 
 | # | Actor → Vista | Vista → Controlador | Controlador → Entidad |
 |---|---|---|---|
+| 1 (negro) | `1: registrar()` | `1.1: registrarUsuario(usuario)` | `1.2: find(ci, correo)` → Usuario · `1.3: find(registroUniversitario)` → Postulante · `1.4: create(usuario)` → Usuario · `1.5: create(postulante)` → Postulante · `1.6: create(sesion)` → Sesion · `1.7: create(bitacora)` → Bitacora |
+| 2 (rojo) | `2: iniciarSesion()` | `2.1: login(correo, contrasena)` | `2.2: find(correo)` → Usuario · `2.3: update(intentosFallidos, bloqueadoHasta)` → Usuario · `2.4: create(sesion)` → Sesion · `2.5: create(bitacora)` → Bitacora |
+| 3 (verde) | `3: renovarSesion()` | `3.1: refresh(refreshToken)` | `3.2: find(tokenHash)` → Sesion · `3.3: update(revocadaEn)` → Sesion · `3.4: create(sesion)` → Sesion |
+| 4 (azul) | `4: cerrarSesion()` | `4.1: logout(refreshToken)` | `4.2: update(revocadaEn)` → Sesion |
+| 5 (rojo claro) | `5: consultarUsuarioActual()` | `5.1: usuarioActual()` | `5.2: find(codigoUsuario)` → Usuario |
+
+---|---|---|---|
 | 1 (negro) | `1: registrar()` | `1.1: registrarUsuario(usuario)` | `1.2: find(ci, correo)` → Usuario · `1.3: create(usuario)` → Usuario · `1.4: create(postulante)` → Postulante |
 | 2 (rojo) | `2: iniciarSesion()` | `2.1: login(correo, contrasena)` | `2.2: find(correo)` → Usuario |
 
@@ -143,16 +150,18 @@ Igual que el ejemplo «sd CU02 Autenticación»: dibujar el actor **Usuario del 
 
 ### 6.2.15 — CU-15 Recuperar contraseña / gestionar perfil
 - **Actor:** Usuario del Sistema (generalizado por los 4 roles, como en CU-01).
-- **Vista:** `PerfilView` · **Controlador:** `PerfilController`
-- **Entidades:** `Usuario`, `Postulante`, `TokenRestablecimiento`
-- Nota: `TokenRestablecimiento` es una entidad **nueva** (sin Firebase, el backend genera el token de un solo uso con vigencia limitada); no está aún en `diseno_base_de_datos.md`.
+- **Vistas:** `RecuperarContrasenaView`, `PerfilView` · **Controladores:** `AuthController` (recuperar, restablecer y cambiar la contraseña), `PerfilController` (consultar y actualizar el perfil)
+- **Entidades:** `Usuario`, `Postulante`, `Sesion`, `Bitacora` · **Interfaz externa:** `ServicioCorreo` (actor secundario «Servicio de Correo Electrónico»)
+- Nota: el enlace de restablecimiento **no** es una entidad aparte: su hash y su vencimiento son atributos de `Usuario` (`restablecimientoTokenHash`, `restablecimientoExpiraEn`), un solo enlace vigente por cuenta. Así quedó implementado (se descartó la entidad `TokenRestablecimiento` del primer borrador).
+- Hecho en EA: paquete *Cuentas y Acceso*, diagramas «CU15 Recuperar contraseña y gestionar perfil» (contexto y análisis) y «Secuencia CU15 …» (imágenes 044, 057 y 127).
 
 | # | Actor → Vista | Vista → Controlador | Controlador → Entidad |
 |---|---|---|---|
-| 1 (negro) | `1: solicitarRecuperacion(correo)` | `1.1: recuperarContrasena(correo)` | `1.2: find(correo)` → Usuario · `1.3: create(token)` → TokenRestablecimiento |
-| 2 (azul) | `2: restablecerContrasena(token, nueva)` | `2.1: restablecer(token, nueva)` | `2.2: find(token)` → TokenRestablecimiento · `2.3: update(contrasena)` → Usuario |
-| 3 (rojo) | `3: verPerfil()` | `3.1: consultarPerfil(usuarioId)` | `3.2: find(usuario)` → Usuario |
-| 4 (azul) | `4: actualizarPerfil(datos)` | `4.1: actualizarPerfil(usuarioId, datos)` | `4.2: update(usuario)` → Usuario · `4.3: update(contacto)` → Postulante |
+| 1 (negro) | `1: solicitarRecuperacion(correo)` | `1.1: recuperarContrasena(correo)` (AuthController) | `1.2: find(correo)` → Usuario · `1.3: update(restablecimientoTokenHash, restablecimientoExpiraEn)` → Usuario · `1.4: enviarEnlace(correo, token)` → ServicioCorreo |
+| 2 (rojo oscuro) | `2: restablecerContrasena(token, nueva)` | `2.1: restablecer(token, nueva)` (AuthController) | `2.2: find(restablecimientoTokenHash)` → Usuario · `2.3: update(passwordHash, intentosFallidos, bloqueadoHasta)` → Usuario · `2.4: update(revocadaEn) [todas]` → Sesion · `2.5: create(bitacora: RESTABLECIMIENTO_CONTRASENA)` → Bitacora |
+| 3 (verde) | `3: verPerfil()` | `3.1: consultarPerfil()` (PerfilController) | `3.2: find(codigoUsuario)` → Usuario · `3.3: find(usuarioId)` → Postulante |
+| 4 (azul) | `4: actualizarPerfil(correo, telefono, contrasenaActual)` | `4.1: actualizarPerfil(datos)` (PerfilController) | `4.2: find(correo)` → Usuario · `4.3: update(correo)` → Usuario · `4.4: update(telefono)` → Postulante · `4.5: create(bitacora: ACTUALIZACION_PERFIL)` → Bitacora |
+| 5 (rojo) | `5: cambiarContrasena(actual, nueva)` | `5.1: cambiarContrasena(actual, nueva, refreshToken)` (AuthController) | `5.2: update(passwordHash)` → Usuario · `5.3: update(revocadaEn) [demás sesiones]` → Sesion · `5.4: create(bitacora: CAMBIO_CONTRASENA)` → Bitacora |
 
 ---
 

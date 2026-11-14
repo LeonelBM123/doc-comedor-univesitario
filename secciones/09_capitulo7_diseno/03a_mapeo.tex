@@ -37,18 +37,27 @@ timestamptz &  &  &  &  \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
 \toprule
-\textbf{id (PK)} & \textbf{firebase\_\allowbreak{}uid (UQ)} & \textbf{ci (UQ)} & \textbf{correo (UQ)} & \textbf{nombres} \\
+\textbf{id (PK)} & \textbf{ci (UQ)} & \textbf{correo (UQ)} & \textbf{nombres} & \textbf{apellidos} \\
 \midrule
-bigint & varchar(128) & varchar(20) & varchar(150) & varchar(100) \\
+bigint & varchar(20) & varchar(150) & varchar(100) & varchar(100) \\
 \bottomrule
 \end{tabular}
 
 \vspace{14pt}
 \begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
 \toprule
-\textbf{apellidos} & \textbf{activo} & \textbf{rol\_\allowbreak{}id (FK)} & \textbf{codigo\_\allowbreak{}usuario (UQ)} & \textbf{creado\_\allowbreak{}en} \\
+\textbf{password\_\allowbreak{}hash} & \textbf{activo} & \textbf{rol\_\allowbreak{}id (FK)} & \textbf{codigo\_\allowbreak{}usuario (UQ)} & \textbf{intentos\_\allowbreak{}fallidos} \\
 \midrule
-varchar(100) & boolean & bigint & uuid & timestamptz \\
+varchar(100) & boolean & bigint & uuid & integer \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{bloqueos\_\allowbreak{}consecutivos} & \textbf{bloqueado\_\allowbreak{}hasta} & \textbf{restableci-\allowbreak{}miento\_\allowbreak{}token\_\allowbreak{}hash (UQ)} & \textbf{restableci-\allowbreak{}miento\_\allowbreak{}expira\_\allowbreak{}en} & \textbf{creado\_\allowbreak{}en} \\
+\midrule
+integer & timestamptz & varchar(64) & timestamptz & timestamptz \\
 \bottomrule
 \end{tabular}
 
@@ -85,6 +94,33 @@ bigint & varchar(150) & varchar(150) & uuid & timestamptz \\
 \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  &  &  \\
 \midrule
 timestamptz & timestamptz &  &  &  \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Mapeo de la tabla sesion}
+\label{tab:mapeo_sesion}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{id (PK)} & \textbf{usuario\_\allowbreak{}id (FK)} & \textbf{codigo\_\allowbreak{}sesion (UQ)} & \textbf{token\_\allowbreak{}hash (UQ)} & \textbf{expira\_\allowbreak{}en} \\
+\midrule
+bigint & bigint & uuid & varchar(64) & timestamptz \\
+\bottomrule
+\end{tabular}
+
+\vspace{14pt}
+\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\toprule
+\textbf{revocada\_\allowbreak{}en} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} &  \\
+\midrule
+timestamptz & timestamptz & timestamptz & timestamptz &  \\
 \bottomrule
 \end{tabular}
 
@@ -550,18 +586,18 @@ timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
 \toprule
-\textbf{id (PK)} & \textbf{finalista\_\allowbreak{}id (FK)} & \textbf{auditor\_\allowbreak{}id (FK)} & \textbf{resultado} & \textbf{observaciones} \\
+\textbf{id (PK)} & \textbf{finalista\_\allowbreak{}id (FK)} & \textbf{auditor\_\allowbreak{}id (FK)} & \textbf{resultado} & \textbf{puntaje\_\allowbreak{}academico} \\
 \midrule
-bigint & bigint & bigint & varchar(20) & text \\
+bigint & bigint & bigint & varchar(20) & numeric(5,2) \\
 \bottomrule
 \end{tabular}
 
 \vspace{14pt}
-\begin{tabular}{*{5}{>{\centering\arraybackslash}p{2.85cm}}}
+\begin{tabular}{*{6}{>{\centering\arraybackslash}p{2.35cm}}}
 \toprule
-\textbf{fecha\_\allowbreak{}auditoria} & \textbf{codigo\_\allowbreak{}auditoria\_\allowbreak{}expediente (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
+\textbf{observaciones} & \textbf{fecha\_\allowbreak{}auditoria} & \textbf{codigo\_\allowbreak{}auditoria\_\allowbreak{}expediente (UQ)} & \textbf{creado\_\allowbreak{}en} & \textbf{actualizado\_\allowbreak{}en} & \textbf{eliminado\_\allowbreak{}en} \\
 \midrule
-timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
+varchar(500) & timestamptz & uuid & timestamptz & timestamptz & timestamptz \\
 \bottomrule
 \end{tabular}
 

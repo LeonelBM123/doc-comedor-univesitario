@@ -11,19 +11,19 @@ A continuación se presenta el análisis de los veintiséis casos de uso del sis
 
 \wfb{\wn{6}.2.1. Analizar CU-01 Registrarse y autenticarse}\label{sec:cap6_analisis_cu01}
 
-En el análisis del CU-01 participa el actor Usuario del Sistema, generalizado por los cuatro roles del sistema (Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario), de modo que cualquiera de ellos puede registrarse o iniciar sesión. El actor interactúa con la interfaz \textit{AuthView}, que delega las solicitudes en el controlador \textit{AuthController}, y este accede a las entidades \textit{Usuario} y \textit{Postulante}. La Figura~\ref{fig:analisis_cu01} presenta el diagrama de análisis.
+En el análisis del CU-01 participa el actor Usuario del Sistema, generalizado por los cuatro roles del sistema (Postulante, Administrador DUBSS, Directivo y Personal del Comedor Universitario), de modo que cualquiera de ellos puede iniciar y cerrar sesión (el registro corresponde únicamente al Postulante). El actor interactúa con la interfaz \textit{AuthView}, que delega las solicitudes en el controlador \textit{AuthController}, y este accede a las entidades \textit{Usuario}, \textit{Postulante}, \textit{Sesion} y \textit{Bitacora}. La verificación de las credenciales, la emisión de los tokens y el bloqueo por intentos fallidos los resuelve el propio sistema. La Figura~\ref{fig:analisis_cu01} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-01 Registrarse y autenticarse}
 \label{fig:analisis_cu01}
 \centering
-\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/051_Analisis_CU01_Registrarse_Autenticarse.png}
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{images/051_Analisis_CU01_Registrarse_Autenticarse.jpg}
 
 \smallskip
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-El registro (mensaje 1) verifica que el CI y el correo electrónico no existan (1.2), crea el usuario (1.3) y, para el rol Postulante, crea su perfil (1.4). El inicio de sesión (mensaje 2) valida las credenciales consultando al usuario por su correo electrónico (2.2); si son válidas, el controlador emite el token JWT con el que se autentican las siguientes peticiones \parencite{rouse2018jwt}.
+El registro (mensaje 1) verifica que el CI, el registro universitario y el correo electrónico no existan (1.2 y 1.3), crea el usuario con la contraseña almacenada como hash (1.4) y, para el rol Postulante, su perfil (1.5), abre la sesión (1.6) y anota el registro en la bitácora (1.7). El inicio de sesión (mensaje 2) consulta al usuario por su correo electrónico (2.2) y verifica la contraseña; si es incorrecta, actualiza el contador de intentos fallidos y, de ser necesario, el bloqueo (2.3); si es correcta, crea la sesión (2.4) y anota el acceso en la bitácora (2.5). La renovación de la sesión (mensaje 3) busca la sesión por el hash de su token (3.2), la revoca (3.3) y crea una nueva (3.4), de modo que el token de renovación se reemplaza en cada uso. El cierre de sesión (mensaje 4) revoca la sesión del dispositivo desde el que se solicita (4.2). La consulta del usuario actual (mensaje 5) busca al usuario por su código público (5.2). De este modo, la contraseña y el token de renovación se almacenan solo como hash, nunca en texto plano.
 
 
 \wfb{\wn{6}.2.2. Analizar CU-02 Enviar postulación a Beca Comedor}\label{sec:cap6_analisis_cu02}
@@ -79,7 +79,7 @@ El actor puede listar sus postulaciones (mensaje 1), ver el detalle de una de el
 
 \wfb{\wn{6}.2.5. Analizar CU-05 Auditar y adjudicar becas}\label{sec:cap6_analisis_cu05}
 
-En el CU-05, el Administrador DUBSS conduce la adjudicación mediante \textit{AdjudicacionView}, que delega en \textit{AdjudicacionController}. Este controlador trabaja con las entidades \textit{Finalista}, \textit{Postulacion} y \textit{Adjudicacion}. La visualización de la lista priorizada y la auditoría de cada expediente se resuelven en los casos de uso incluidos (CU-06 y CU-07), por lo que no se repiten en este diagrama. La Figura~\ref{fig:analisis_cu05} presenta el diagrama de análisis.
+En el CU-05, el Administrador DUBSS conduce la adjudicación mediante \textit{AdjudicacionView}, que delega en \textit{AdjudicacionController}. Este controlador trabaja con las entidades \textit{Finalista}, \textit{Postulacion}, \textit{Adjudicacion} y \textit{PostulacionHistorial}: consulta los totales para el panel, selecciona finalistas según el orden de la lista priorizada y, al decidir, cambia el estado de la postulación, crea la adjudicación y deja la fila en el historial. La visualización de la lista priorizada y la auditoría de cada expediente se resuelven en los casos de uso incluidos (CU-06 y CU-07), por lo que no se repiten en este diagrama. La Figura~\ref{fig:analisis_cu05} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-05 Auditar y adjudicar becas}
@@ -96,7 +96,7 @@ El Administrador puede listar los finalistas de la convocatoria (mensaje 1), con
 
 \wfb{\wn{6}.2.6. Analizar CU-06 Visualizar lista priorizada de postulantes}\label{sec:cap6_analisis_cu06}
 
-En el CU-06, el Administrador DUBSS consulta la lista priorizada mediante \textit{ListaPriorizadaView}, que se comunica con \textit{PriorizacionController}. Las entidades involucradas son \textit{Postulacion} y \textit{PuntajePostulacion}; la lista no se almacena, sino que se obtiene a partir de ambas. La Figura~\ref{fig:analisis_cu06} presenta el diagrama de análisis.
+En el CU-06, el Administrador DUBSS consulta la lista priorizada mediante \textit{ListaPriorizadaView}, que se comunica con \textit{PriorizacionController}. Las entidades involucradas son \textit{Postulacion} y \textit{PuntajePostulacion}; la lista no se almacena, sino que se obtiene a partir de ambas. Para la exportación a PDF interviene además \textit{Bitacora}, donde se registra la acción. La Figura~\ref{fig:analisis_cu06} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-06 Visualizar lista priorizada de postulantes}
@@ -108,12 +108,12 @@ En el CU-06, el Administrador DUBSS consulta la lista priorizada mediante \texti
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-Al ver la lista priorizada (mensaje 1), el controlador solicita la página correspondiente de la convocatoria (1.1), obtiene las postulaciones calificadas (1.2) y sus puntajes vigentes (1.3), y las ordena de mayor a menor puntaje. Al filtrar u ordenar la lista (mensaje 2), se repite la consulta con el criterio indicado (2.1 a 2.3). Ambas operaciones son de solo lectura.
+Al ver la lista priorizada (mensaje 1), el controlador solicita la página correspondiente de la convocatoria (1.1), obtiene las postulaciones calificadas (1.2) y sus puntajes vigentes (1.3), y las ordena de mayor a menor puntaje. Al filtrar u ordenar la lista (mensaje 2), se repite la consulta con el criterio indicado (2.1 a 2.3). Ambas operaciones son de solo lectura. Al exportar la lista (mensaje 3), el controlador recibe la solicitud con la convocatoria y los criterios de búsqueda y carrera vigentes (3.1), genera el documento PDF y registra la exportación en la bitácora con la acción EXPORTACION\_LISTA\_PRIORIZADA (3.2).
 
 
 \wfb{\wn{6}.2.7. Analizar CU-07 Auditar expediente finalista}\label{sec:cap6_analisis_cu07}
 
-En el CU-07, el Administrador DUBSS revisa el expediente de un finalista mediante \textit{ExpedienteView} y \textit{ExpedienteController}, que colaboran con las entidades \textit{Finalista}, \textit{DocumentoAdjunto} y \textit{AuditoriaExpediente}. La notificación al finalista y el registro de la entrega física se resuelven en el CU-21, incluido por este caso de uso. La Figura~\ref{fig:analisis_cu07} presenta el diagrama de análisis.
+En el CU-07, el Administrador DUBSS revisa el expediente de un finalista mediante \textit{ExpedienteView} y \textit{ExpedienteController}, que colaboran con las entidades \textit{Finalista}, \textit{DocumentoAdjunto}, \textit{PuntajePostulacion}, \textit{AuditoriaExpediente}, \textit{Bitacora} y \textit{Notificacion}. La notificación al finalista y el registro de la entrega física se resuelven en el CU-21, incluido por este caso de uso. La Figura~\ref{fig:analisis_cu07} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-07 Auditar expediente finalista}
@@ -125,12 +125,12 @@ En el CU-07, el Administrador DUBSS revisa el expediente de un finalista mediant
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-Al ver el expediente (mensaje 1), el controlador obtiene el finalista (1.2) y la lista de sus documentos adjuntos (1.3). Al registrar la auditoría (mensaje 2), el controlador recibe el resultado (2.1) y crea el registro de auditoría con su resultado y observaciones (2.2), conservando las auditorías anteriores del expediente.
+Al ver el expediente (mensaje 1), el controlador obtiene el finalista (1.2) y la lista de sus documentos adjuntos (1.3) y el puntaje vigente de la inteligencia artificial para mostrar el total. Al registrar la auditoría (mensaje 2), el controlador recibe el resultado, las observaciones (hasta 500 caracteres) y el puntaje académico (0 a 30), y crea el registro de auditoría conservando las auditorías anteriores del expediente; luego deja constancia en la bitácora y crea la notificación que avisa el resultado al postulante.
 
 
 \wfb{\wn{6}.2.8. Analizar CU-08 Generar acta de adjudicación}\label{sec:cap6_analisis_cu08}
 
-En el CU-08, el Administrador DUBSS genera el acta mediante \textit{ActaView} y \textit{ActaController}, que utiliza las entidades \textit{Adjudicacion} y \textit{ActaAdjudicacion}. La generación del documento PDF se modela como un mensaje del propio controlador (1.3). La Figura~\ref{fig:analisis_cu08} presenta el diagrama de análisis.
+En el CU-08, el Administrador DUBSS genera el acta mediante \textit{ActaView} y \textit{ActaController}, que utiliza las entidades \textit{Adjudicacion} y \textit{ActaAdjudicacion}. El controlador lista las actas generadas, arma la vista previa y el acta con los adjudicados y su puntaje final, y entrega la descarga; la generación del PDF y su almacenamiento en MinIO se resuelven dentro de la creación del acta (mensaje 3.3), y el acta solo se genera con los resultados ya publicados (CU-22). La Figura~\ref{fig:analisis_cu08} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-08 Generar acta de adjudicación}
@@ -198,7 +198,7 @@ Al consultar una planilla (mensaje 1), el controlador obtiene la planilla (1.2) 
 
 \wfb{\wn{6}.2.12. Analizar CU-12 Visualizar dashboard de indicadores BI}\label{sec:cap6_analisis_cu12}
 
-En el CU-12, el Directivo consulta el dashboard mediante \textit{DashboardView} y \textit{DashboardController}. La única entidad involucrada es \textit{IndicadoresConvocatoria}, que representa los indicadores precalculados por lotes a partir de las postulaciones, adjudicaciones, becas y asistencias. La Figura~\ref{fig:analisis_cu12} presenta el diagrama de análisis.
+En el CU-12, el Directivo consulta el dashboard mediante \textit{DashboardView} y \textit{DashboardController}. La única entidad involucrada es \textit{IndicadoresConvocatoria}, que representa los indicadores precalculados por lotes a partir de las postulaciones, adjudicaciones, becas y asistencias. El controlador consulta esos indicadores para la selección de gestión y convocatoria (mensajes 1.2 y 2.2) y los reutiliza para generar el PDF descargable (3.2). La Figura~\ref{fig:analisis_cu12} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-12 Visualizar dashboard de indicadores BI}
@@ -249,7 +249,7 @@ Para registrar una cuenta (mensaje 1), el controlador verifica que el CI y el co
 
 \wfb{\wn{6}.2.15. Analizar CU-15 Recuperar contraseña / gestionar perfil}\label{sec:cap6_analisis_cu15}
 
-En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro roles, quien interactúa con \textit{PerfilView}. El controlador \textit{PerfilController} colabora con las entidades \textit{Usuario}, \textit{Postulante} y \textit{TokenRestablecimiento}. La Figura~\ref{fig:analisis_cu15} presenta el diagrama de análisis.
+En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro roles, quien interactúa con las vistas \textit{RecuperarContrasenaView} y \textit{PerfilView}. El controlador \textit{AuthController} atiende la recuperación, el restablecimiento y el cambio de contraseña, y \textit{PerfilController} la consulta y actualización del perfil; ambos colaboran con las entidades \textit{Usuario}, \textit{Postulante}, \textit{Sesion} y \textit{Bitacora}, y el envío del enlace pasa por la interfaz \textit{ServicioCorreo}. El enlace de restablecimiento no es una entidad aparte: su hash y su vencimiento se guardan en \textit{Usuario}, con un solo enlace vigente por cuenta. La Figura~\ref{fig:analisis_cu15} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-15 Recuperar contraseña / gestionar perfil}
@@ -261,7 +261,7 @@ En el CU-15 participa el actor Usuario del Sistema, generalizado por los cuatro 
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-La solicitud de recuperación (mensaje 1) consulta al usuario por su correo (1.2) y genera un token de restablecimiento de un solo uso (1.3). El restablecimiento (mensaje 2) verifica el token (2.2) y actualiza la contraseña del usuario (2.3). La consulta del perfil (mensaje 3) obtiene los datos del usuario (3.2) y su actualización (mensaje 4) modifica los datos del usuario (4.2) y los datos de contacto del postulante (4.3).
+La solicitud de recuperación (mensaje 1) consulta al usuario por su correo (1.2), guarda en él el hash del token de un solo uso y su vencimiento (1.3) y envía el enlace por correo (1.4); la respuesta es siempre el mismo mensaje neutro. El restablecimiento (mensaje 2) busca la cuenta por el hash del token (2.2), guarda la nueva contraseña y desbloquea la cuenta (2.3), revoca todas sus sesiones (2.4) y lo registra en la bitácora (2.5). La consulta del perfil (mensaje 3) obtiene los datos del usuario (3.2) y, si es Postulante, los suyos (3.3). La actualización (mensaje 4) verifica que el correo nuevo no pertenezca a otra cuenta (4.2), actualiza el correo (4.3) y el teléfono del postulante (4.4) y lo registra en la bitácora (4.5). El cambio de contraseña (mensaje 5) actualiza la contraseña (5.2), revoca las sesiones de los demás dispositivos (5.3) y lo registra en la bitácora (5.4).
 
 
 \wfb{\wn{6}.2.16. Analizar CU-16 Digitalizar y adjuntar documentos}\label{sec:cap6_analisis_cu16}
@@ -317,7 +317,7 @@ Con la solicitud de validación (mensaje 1.1), el controlador consulta al postul
 
 \wfb{\wn{6}.2.19. Analizar CU-19 Devolver postulación para corrección}\label{sec:cap6_analisis_cu19}
 
-En el CU-19, el Administrador DUBSS devuelve una postulación mediante \textit{DevolverPostulacionView} y \textit{DevolucionController}, que utiliza las entidades \textit{Postulacion}, \textit{PostulacionHistorial} y \textit{Notificacion}. La Figura~\ref{fig:analisis_cu19} presenta el diagrama de análisis.
+En el CU-19, el Administrador DUBSS devuelve una postulación mediante \textit{DevolverPostulacionView} y \textit{DevolucionController}, que utiliza las entidades \textit{Finalista}, \textit{Postulacion}, \textit{PostulacionHistorial}, \textit{Bitacora} y \textit{Notificacion}. La Figura~\ref{fig:analisis_cu19} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-19 Devolver postulación para corrección}
@@ -329,7 +329,7 @@ En el CU-19, el Administrador DUBSS devuelve una postulación mediante \textit{D
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
 
-Al devolver la postulación con su motivo (mensaje 1), el controlador actualiza su estado a «devuelta» (1.2), crea el registro del cambio en el historial de la postulación con el motivo (1.3) y crea la notificación dirigida al Postulante (1.4).
+Al devolver la postulación con su motivo (mensaje 1), el controlador entra por el código del finalista, lee el finalista y su postulación y valida que siga «calificada»; a continuación actualiza su estado a «devuelta», crea el registro del cambio en el historial de la postulación con el motivo (hasta 500 caracteres), registra la acción en la bitácora y crea la notificación dirigida al Postulante, que se envía por bandeja, push y correo.
 
 
 \wfb{\wn{6}.2.20. Analizar CU-20 Archivar o rechazar postulación}\label{sec:cap6_analisis_cu20}
@@ -368,7 +368,7 @@ El Administrador puede listar los finalistas (mensaje 1), notificarlos con el pl
 
 \wfb{\wn{6}.2.22. Analizar CU-22 Publicar resultados de adjudicación}\label{sec:cap6_analisis_cu22}
 
-En el CU-22, el Administrador DUBSS publica los resultados mediante \textit{PublicarResultadosView} y \textit{ResultadosController}, que colaboran con las entidades \textit{Adjudicacion}, \textit{PublicacionResultado} y \textit{Notificacion}. El envío de las notificaciones push se modela como un mensaje del propio controlador (2.4). La Figura~\ref{fig:analisis_cu22} presenta el diagrama de análisis.
+En el CU-22, el Administrador DUBSS publica los resultados mediante \textit{PublicarResultadosView} y \textit{ResultadosController}, que colaboran con las entidades \textit{Adjudicacion}, \textit{PublicacionResultado} y \textit{Notificacion}. El controlador muestra el resumen de resultados y, al publicar, valida que no queden finalistas «calificada», registra la publicación (2.3) y crea un aviso por finalista con decisión (2.5); el envío del push y del correo sale después de guardar, a cargo del CU-EXTRA-01. La Figura~\ref{fig:analisis_cu22} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-22 Publicar resultados de adjudicación}

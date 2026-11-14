@@ -49,14 +49,19 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 \multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
 \endlastfoot
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
-firebase\_\allowbreak{}uid & varchar(128) & Identificador del usuario en Firebase Authentication & 128 & No & UQ \\
 ci & varchar(20) & Cédula de identidad del usuario & 20 & No & UQ \\
 correo & varchar(150) & Correo electrónico del usuario & 150 & No & UQ \\
 nombres & varchar(100) & Nombres del usuario & 100 & No & No \\
 apellidos & varchar(100) & Apellidos del usuario & 100 & No & No \\
+password\_\allowbreak{}hash & varchar(100) & Hash BCrypt de la contraseña (nunca el texto plano) & 100 & No & No \\
 activo & boolean & Indica si la cuenta está habilitada & — & No & No \\
 rol\_\allowbreak{}id & bigint & Identificador del rol asignado & — & No & FK \\
 codigo\_\allowbreak{}usuario & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
+intentos\_\allowbreak{}fallidos & integer & Intentos de inicio de sesión fallidos consecutivos & — & No & No \\
+bloqueos\_\allowbreak{}consecutivos & integer & Cantidad de bloqueos seguidos, que define la duración del siguiente & — & No & No \\
+bloqueado\_\allowbreak{}hasta & timestamptz & Fecha y hora hasta la que la cuenta está bloqueada (nula si no lo está) & — & Sí & No \\
+restablecimiento\_\allowbreak{}token\_\allowbreak{}hash & varchar(64) & Hash SHA-256 del token del enlace vigente de recuperación de contraseña (nunca el token; nulo si no hay enlace vigente) & 64 & Sí & UQ \\
+restablecimiento\_\allowbreak{}expira\_\allowbreak{}en & timestamptz & Fecha y hora de vencimiento del enlace de recuperación (nula si no hay enlace vigente) & — & Sí & No \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
 actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
 eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
@@ -93,6 +98,37 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 \endgroup
 \addtocounter{table}{-1}
 
+\refstepcounter{table}\label{tab:volumen_sesion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla sesion}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Volumen de la tabla sesion}\par\nopagebreak
+\begingroup\small\linespread{1}\selectfont\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{4.8cm} >{\centering\arraybackslash}p{1.6cm}>{\centering\arraybackslash}p{1.1cm} >{\centering\arraybackslash}p{1.3cm}}
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Atributo} & \textbf{Tipo de dato} & \textbf{Descripción} & \textbf{Tamaño} & \textbf{Nulos} & \textbf{Llave} \\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\multicolumn{6}{l}{\textit{Nota.} Elaboración propia.} \\
+\endlastfoot
+id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
+usuario\_\allowbreak{}id & bigint & Identificador del usuario dueño de la sesión & — & No & FK \\
+codigo\_\allowbreak{}sesion & uuid & Identificador público (UUID v7) de la sesión & — & No & UQ \\
+token\_\allowbreak{}hash & varchar(64) & Hash SHA-256 del token de renovación (nunca el token) & 64 & No & UQ \\
+expira\_\allowbreak{}en & timestamptz & Fecha y hora de vencimiento del token de renovación & — & No & No \\
+revocada\_\allowbreak{}en & timestamptz & Fecha y hora en que se revocó la sesión (nula si sigue vigente) & — & Sí & No \\
+creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
+actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
+eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica (nula si el registro está activo) & — & Sí & No \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+
 \refstepcounter{table}\label{tab:volumen_postulante}
 \addcontentsline{lot}{table}{\protect\numberline{\thetable}Volumen de la tabla postulante}
 \noindent\textbf{Tabla~\thetable}\par\nopagebreak
@@ -113,8 +149,8 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 \endlastfoot
 usuario\_\allowbreak{}id & bigint & Identificador del usuario (clave primaria y foránea) & — & No & PK, FK \\
 carrera\_\allowbreak{}id & bigint & Identificador de la carrera que cursa & — & No & FK \\
-registro\_\allowbreak{}universitario & varchar(20) & Registro universitario del estudiante (formato por definir con la DUBSS) & 20 & Sí & UQ \\
-telefono & varchar(20) & Teléfono de contacto & 20 & Sí & No \\
+registro\_\allowbreak{}universitario & varchar(20) & Registro universitario del estudiante (formato por definir con la DUBSS) & 20 & No & UQ \\
+telefono & varchar(20) & Teléfono de contacto & 20 & No & No \\
 codigo\_\allowbreak{}postulante & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
 actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
@@ -364,7 +400,7 @@ id & bigint & Identificador interno de la tabla (no se expone en la API) & — &
 postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
 tipo\_\allowbreak{}documento\_\allowbreak{}id & bigint & Identificador del tipo de documento & — & No & FK \\
 nombre\_\allowbreak{}archivo & varchar(255) & Nombre original del archivo & 255 & No & No \\
-storage\_\allowbreak{}path & varchar(500) & Ruta del archivo en Firebase Storage & 500 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del archivo en MinIO & 500 & No & No \\
 mime\_\allowbreak{}type & varchar(100) & Tipo de contenido del archivo & 100 & No & No \\
 tamano\_\allowbreak{}bytes & bigint & Tamaño del archivo en bytes & — & No & No \\
 subido\_\allowbreak{}en & timestamptz & Fecha y hora de carga del archivo & — & No & No \\
@@ -399,7 +435,7 @@ postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — &
 estado\_\allowbreak{}anterior & estado\_\allowbreak{}postulacion & Estado previo al cambio (nulo en el primer registro) & — & Sí & No \\
 estado\_\allowbreak{}nuevo & estado\_\allowbreak{}postulacion & Estado resultante del cambio & — & No & No \\
 usuario\_\allowbreak{}id & bigint & Identificador del usuario que realizó el cambio (nulo si fue el sistema) & — & Sí & FK \\
-motivo & text & Motivo u observaciones del cambio (obligatorio al devolver, archivar o rechazar) & — & Sí & No \\
+motivo & text & Motivo u observaciones del cambio (obligatorio al devolver, archivar o rechazar; el servicio valida un máximo de 500 caracteres) & — & Sí & No \\
 codigo\_\allowbreak{}postulacion\_\allowbreak{}historial & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
 actualizado\_\allowbreak{}en & timestamptz & Fecha y hora de la última actualización & — & No & No \\
@@ -491,7 +527,7 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
 postulacion\_\allowbreak{}id & bigint & Identificador de la postulación & — & No & FK \\
 modelo\_\allowbreak{}id & bigint & Identificador de la versión del modelo que calculó el puntaje & — & No & FK \\
-puntaje\_\allowbreak{}total & numeric(5,2) & Puntaje de vulnerabilidad obtenido & 5,2 & No & No \\
+puntaje\_\allowbreak{}total & numeric(5,2) & Puntaje de vulnerabilidad obtenido de la IA (0 a 70) & 5,2 & No & No \\
 detalle & jsonb & Desglose del puntaje por variable & — & Sí & No \\
 fecha\_\allowbreak{}calculo & timestamptz & Fecha y hora del cálculo & — & No & No \\
 vigente & boolean & Indica si es el puntaje vigente de la postulación & — & No & No \\
@@ -591,7 +627,8 @@ id & bigint & Identificador interno de la tabla (no se expone en la API) & — &
 finalista\_\allowbreak{}id & bigint & Identificador del finalista auditado & — & No & FK \\
 auditor\_\allowbreak{}id & bigint & Identificador del administrador que auditó & — & No & FK \\
 resultado & varchar(20) & Resultado de la auditoría (VALIDADO, OBSERVADO o NO\_\allowbreak{}VALIDO) & 20 & No & No \\
-observaciones & text & Observaciones de la auditoría & — & Sí & No \\
+puntaje\_\allowbreak{}academico & numeric(5,2) & Puntaje de rendimiento académico registrado por el auditor (0 a 30); solo con resultado VALIDADO & 5,2 & Sí & No \\
+observaciones & varchar(500) & Observaciones de la auditoría & 500 & Sí & No \\
 fecha\_\allowbreak{}auditoria & timestamptz & Fecha y hora de la auditoría & — & No & No \\
 codigo\_\allowbreak{}auditoria\_\allowbreak{}expediente & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
 creado\_\allowbreak{}en & timestamptz & Fecha y hora de creación del registro & — & No & No \\
@@ -654,7 +691,7 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
 convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
 numero & varchar(30) & Número único del acta & 30 & No & UQ \\
-storage\_\allowbreak{}path & varchar(500) & Ruta del PDF del acta en Firebase Storage & 500 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del PDF del acta en MinIO & 500 & No & No \\
 generada\_\allowbreak{}por & bigint & Identificador del administrador que generó el acta & — & No & FK \\
 generada\_\allowbreak{}en & timestamptz & Fecha y hora de generación del acta & — & No & No \\
 codigo\_\allowbreak{}acta\_\allowbreak{}adjudicacion & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
@@ -881,7 +918,7 @@ id & bigint & Identificador interno de la tabla (no se expone en la API) & — &
 convocatoria\_\allowbreak{}id & bigint & Identificador de la convocatoria & — & No & FK \\
 fecha\_\allowbreak{}desde & date & Fecha inicial del periodo de la planilla & — & No & No \\
 fecha\_\allowbreak{}hasta & date & Fecha final del periodo de la planilla & — & No & No \\
-storage\_\allowbreak{}path & varchar(500) & Ruta del PDF de la planilla en Firebase Storage & 500 & No & No \\
+storage\_\allowbreak{}path & varchar(500) & Ruta del PDF de la planilla en MinIO & 500 & No & No \\
 generada\_\allowbreak{}por & bigint & Identificador del administrador que generó la planilla & — & No & FK \\
 generada\_\allowbreak{}en & timestamptz & Fecha y hora de generación & — & No & No \\
 codigo\_\allowbreak{}planilla\_\allowbreak{}asistencia & uuid & Identificador público (UUID v7) usado por la API y los clientes & — & No & UQ \\
@@ -978,8 +1015,8 @@ eliminado\_\allowbreak{}en & timestamptz & Fecha y hora de eliminación lógica 
 \endlastfoot
 id & bigint & Identificador interno de la tabla (no se expone en la API) & — & No & PK \\
 usuario\_\allowbreak{}id & bigint & Identificador del usuario que ejecutó la acción (nulo si fue el sistema) & — & Sí & FK \\
-accion & varchar(60) & Acción realizada (p. ej. AUDITAR, DEVOLVER, ADJUDICAR) & 60 & No & No \\
-entidad & varchar(60) & Tabla o entidad afectada & 60 & No & No \\
+accion & varchar(60) & Acción realizada (p. ej. INICIO\_\allowbreak{}SESION, CAMBIO\_\allowbreak{}ROL, RESTABLECIMIENTO\_\allowbreak{}CONTRASENA) & 60 & No & No \\
+entidad & varchar(60) & Tabla o entidad afectada (nula si la acción no afecta a un registro concreto) & 60 & Sí & No \\
 entidad\_\allowbreak{}id & bigint & Identificador del registro afectado & — & Sí & No \\
 detalle & jsonb & Valores anteriores y posteriores a la acción & — & Sí & No \\
 ip & inet & Dirección IP desde la que se realizó la acción & — & Sí & No \\

@@ -16,11 +16,13 @@ La Figura~\ref{fig:secuencia_cu01} presenta el diagrama de secuencia del CU-01.
 \caption{Diagrama de secuencia del CU-01 Registrarse y autenticarse}
 \label{fig:secuencia_cu01}
 \centering
-\includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{images/121_Secuencia_CU01_Registrarse_Autenticarse.png}
+\includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{images/121_Secuencia_CU01_Registrarse_Autenticarse.jpg}
 
 \smallskip
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{figure}
+
+En el registro, el cliente envía los datos al backend; \textit{AuthController} comprueba que el CI, el registro universitario y el correo electrónico no existan, crea el \textit{Usuario} con el rol Postulante y la contraseña almacenada como hash, crea su perfil de \textit{Postulante} (con registro universitario y teléfono), abre la \textit{Sesion}, anota en la bitácora el registro y el inicio de sesión, y devuelve el token de acceso, el token de renovación y el usuario; si alguno de esos datos ya existe, informa el campo en conflicto y no crea la cuenta. En el inicio de sesión, el controlador busca al \textit{Usuario} por su correo electrónico; si las credenciales no son válidas o la cuenta está bloqueada, actualiza el contador de intentos fallidos y el bloqueo y responde con un mismo mensaje de error. Si son válidas y la cuenta está activa, abre la \textit{Sesion}, anota el acceso en la bitácora y devuelve los tokens y el usuario con su rol, según el cual se redirige al módulo correspondiente; si la cuenta está desactivada, niega el acceso e indica que debe comunicarse con la DUBSS. Cuando el token de acceso vence, el cliente solicita su renovación con el token de renovación: el controlador busca la \textit{Sesion} por el hash del token, la revoca y crea una nueva con un token de renovación nuevo; si la sesión no es válida, el usuario vuelve a la pantalla de acceso. Para cerrar sesión, el controlador revoca la \textit{Sesion} del dispositivo, sin afectar las de otros dispositivos. La contraseña (mínimo de 6 caracteres) se almacena solo como hash y el bloqueo tras 5 intentos fallidos consecutivos lo aplica el propio sistema.
 
 
 \Needspace{0.9\textheight}
@@ -234,7 +236,7 @@ La Figura~\ref{fig:secuencia_cu14} presenta el diagrama de secuencia del CU-14.
 \Needspace{0.9\textheight}
 \wfb{\wn{7}.4.15. Diseñar CU-15 Recuperar contraseña / gestionar perfil}\label{sec:cap7_disenar_cu15}
 
-La Figura~\ref{fig:secuencia_cu15} presenta el diagrama de secuencia del CU-15.
+La Figura~\ref{fig:secuencia_cu15} presenta el diagrama de secuencia del CU-15. El enlace de restablecimiento se guarda en la propia cuenta (hash del token y vencimiento), restablecer la contraseña cierra todas las sesiones y cambiarla desde el perfil cierra solo las de los demás dispositivos.
 
 \begin{figure}[H]
 \caption{Diagrama de secuencia del CU-15 Recuperar contraseña / gestionar perfil}

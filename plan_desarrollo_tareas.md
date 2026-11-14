@@ -46,16 +46,16 @@ Cada tarea de CU lleva su **definición de terminado**: BD + API + pantallas + p
 
 | # | Tarea | CU / tipo | RF | Pts | Alcance | Depende de |
 |---|---|---|---|---|---|---|
-| A1 | Entorno local de desarrollo | extra | RNF | 3 | `docker-compose` (PostgreSQL, API, módulo IA), proyecto Firebase (solo FCM y Storage; la autenticación es propia del backend), README de arranque, migraciones aplicadas | F0 |
-| A2 | Registrarse y autenticarse | CU-01 | RF-01 | 5 | Autenticación en el backend Spring Boot: contraseña con hash, emisión de JWT firmado con el rol y expiración, validación en cada petición, CI/correo únicos, token FCM del dispositivo; web y móvil; redirección por rol (según Cap. 5.4) | A1 |
+| A1 | Entorno local de desarrollo | extra | RNF | 3 | `docker-compose` (PostgreSQL, API, módulo IA), proyecto Firebase (solo FCM) y MinIO para archivos; la autenticación es propia del backend, README de arranque, migraciones aplicadas | F0 |
+| A2 | Registrarse y autenticarse | CU-01 | RF-01 | 5 | Autenticación propia en el backend Spring Boot: contraseña con hash BCrypt, JWT de acceso de vida corta, refresh token por dispositivo (tabla `sesion`), bloqueo por intentos fallidos, registro/inicio/renovación/cierre de sesión, CI/registro universitario/correo únicos, token FCM del dispositivo; web y móvil; redirección por rol (según Cap. 5.4) | A1 |
 | A3 | Gestionar usuarios y roles | CU-14 | RF-09 | 3 | CRUD de usuarios, asignación de rol, control de acceso | A2 |
 | A4 | Recuperar contraseña / gestionar perfil | CU-15 | RF-10 | 2 | Recuperación de contraseña por el backend (token temporal por correo), edición de perfil; «extend» CU-01 | A2 |
 | A5 | Interceptor de bitácora | extra | RF-20 | 2 | Aspecto que registra la acción, usuario y fecha en todos los controladores; escribe la tabla `bitacora` | A2 |
 | A6 | Visualizar lista priorizada de postulantes | CU-06 | RF-04 | 3 | Orden por puntaje, filtros, paginación para 20,000 registros, selección de finalistas | datos semilla (B1) |
 | A7 | Servicio de notificaciones | extra | RF-16, RF-17 | 5 | Envío FCM (push) y correo, plantillas por evento, reintentos, lectura del token de `dispositivo` | A2 |
 | A8 | Registrar entrega física y publicar avisos | CU-21 | RF-16 | 3 | Registro de entrega de documentación, comunicados/avisos; dispara notificación vía A7 | A6, A7 |
-| A9 | Auditar expediente finalista | CU-07 | RF-04 | 5 | Visor de expediente y documentos, checklist, puntaje documental 1–70 y académico hasta 30; «include» CU-21 | A6, A8 |
-| A10 | Devolver postulación para corrección | CU-19 | RF-14 | 3 | Estado `devuelta` + observaciones; «extend» CU-07 | A9 |
+| A9 | Auditar expediente finalista | CU-07 | RF-04 | 5 | Visor de expediente y documentos (MinIO), checklist de documentos digitales, puntaje académico manual (hasta 30), puntaje de IA en solo lectura (hasta 70) y total; observaciones hasta 500 caracteres; aviso al postulante; «include» CU-21 | A6, A8 |
+| A10 | Devolver postulación para corrección | CU-19 | RF-14 | 3 | Estado `devuelta` + motivo (máx. 500 caracteres); se devuelve desde el expediente del finalista tras una auditoría; siempre se avisa al postulante por bandeja, push y correo; «extend» CU-07 | A9 |
 | A11 | Archivar o rechazar postulación | CU-20 | RF-15 | 2 | Cambio de estado con motivo; «extend» CU-07 | A9 |
 | A12 | Auditar y adjudicar becas | CU-05 | RF-04 | 5 | Flujo de adjudicación contra cupos y mínimo parametrizable; integra CU-06 y CU-07 | A6, A9 |
 | A13 | Publicar resultados de adjudicación | CU-22 | RF-17 | 3 | Publicación de lista y aviso masivo vía A7; «extend» CU-05 | A12, A7 |
@@ -74,7 +74,7 @@ Cada tarea de CU lleva su **definición de terminado**: BD + API + pantallas + p
 | B4 | Parametrizar modelo y reprocesar puntajes | CU-26 | RF-21 | 5 | Parámetros del modelo, recálculo masivo en segundo plano; «extend» CU-03 | B3 |
 | B5 | Gestionar convocatoria y gestión académica | CU-13 | RF-08 | 3 | CRUD de convocatorias, validación de fechas, abierta/cerrada | F0-5 |
 | B6 | Validar elegibilidad y duplicados | CU-18 | RF-13 | 2 | Reglas de elegibilidad, una postulación vigente por postulante y gestión | B5 |
-| B7 | Digitalizar y adjuntar documentos | CU-16 | RF-11 | 5 | Cámara (Flutter), carga web, validación de tipo/tamaño, Firebase Storage | F0-5 |
+| B7 | Digitalizar y adjuntar documentos | CU-16 | RF-11 | 5 | Cámara (Flutter), carga web, validación de tipo/tamaño, MinIO | F0-5 |
 | B8 | Enviar postulación a Beca Comedor | CU-02 | RF-02 | 8 | Formulario socioeconómico largo (web y móvil); «include» CU-03, CU-16, CU-18; bloqueo si faltan campos/documentos | B5, B6, B7; B3 por contrato |
 | B9 | Guardar borrador de postulación | CU-17 | RF-12 | 3 | Persistencia parcial, recuperar borrador; «extend» CU-02 | B8 |
 | B10 | Gestionar padrón de becados | CU-23 | RF-18 | 5 | Alta desde adjudicados, baja, suspensión, reemplazo | contrato C4 |
@@ -97,7 +97,7 @@ Son **todas** las dependencias entre personas. Son contratos de datos, nunca con
 | C2 | Devolución / rechazo / archivo | A (A10, A11 cambian estado y escriben `observaciones`) | B (B8 reenvío) | Transición `devuelta → pendiente` fijada en F0-2; B prueba con un registro semilla ya devuelto |
 | C3 | Documentos adjuntos (Storage) | B (B7 sube) | A (A9 visualiza) | Contrato: ruta y metadatos en `documento_adjunto`; A usa archivos de ejemplo |
 | C4 | Adjudicados → padrón de becados | A (A12 marca `adjudicada`) | B (B10 crea becados) | B10 consume adjudicados semilla; el contrato es el estado `adjudicada` + fecha de adjudicación |
-| C5 | Autenticación y roles | A (A2, A3) | B (todas sus pantallas) | B usa los JWT de F0-5 hasta integrar A2 |
+| C5 | Autenticación y roles | A (A2, A3) | B (todas sus pantallas) | B usa los tokens de prueba de F0-5 hasta integrar A2 |
 | C6 | Asistencia y becados (lectura para BI) | B (B10, B12) | A (A16) | A16 lee tablas con semilla |
 | C7 | Tabla `bitacora` | A (A5) | B (B15) | B15 lee registros semilla de `bitacora`; solo lectura con filtros |
 
@@ -152,6 +152,6 @@ CU-04 y CU-25 no tienen relaciones UML, por eso se pudieron colocar donde equili
 2. **Notificaciones push.** Son una tarea propia (A7), usada por A8 (CU-21) y A13 (CU-22).
 3. **Alcance de CU-08, CU-10, CU-11 y CU-17.** Se implementa lo que dice su especificación en Cap. 5.4; si la DUBSS pide más, esa parte se suma después y se compensa moviendo un CU pequeño completo de una lista a la otra.
 4. **Asistencia (B12):** según la documentación (Cap. 5.4 CU-10 y Cap. 6.2), el Personal del Comedor la registra en la **aplicación móvil**, ingresando el CI del becado. Por eso B12 es Flutter, y A2 debe permitir iniciar sesión con ese rol en el móvil.
-5. **Autenticación (decidido):** propia del backend con JWT por rol; Firebase se usa solo para FCM y Storage. Esto contradice el Cap. 7.3 ([03_diseno_datos.tex:8](secciones/09_capitulo7_diseno/03_diseno_datos.tex#L8) dice que Firebase Authentication gestiona las contraseñas, y `usuario` tiene la columna `firebase_uid` en [03b_volumen.tex:52](secciones/09_capitulo7_diseno/03b_volumen.tex#L52)), y también Cap. 4 ([02_descripcion_general.tex:66](secciones/05_capitulo4_ieee830/02_descripcion_general.tex#L66), [03_requisitos_especificos.tex:705](secciones/05_capitulo4_ieee830/03_requisitos_especificos.tex#L705)). Al implementar, `usuario` necesitará una columna de hash de contraseña en lugar de `firebase_uid`. Falta alinear esos textos del documento.
+5. **Autenticación (decidido):** propia del backend con JWT (token de acceso + refresh token por dispositivo); Firebase se usa solo para FCM y los archivos viven en MinIO. `usuario` tiene `password_hash` y los campos de bloqueo, y existe la tabla `sesion`. Este criterio ya está reflejado en los Cap. 2, 4, 5, 6 y 7 de la documentación.
 6. **Despliegue y pruebas de rendimiento:** no se contemplan. A1 es solo entorno local.
 7. Las estimaciones en puntos son mías y ajustables; si se reajustan, mantener la regla de que ninguna relación UML cruce entre personas.
