@@ -79,7 +79,7 @@ El actor puede listar sus postulaciones (mensaje 1), ver el detalle de una de el
 
 \subsubsection{6.2.5. Analizar CU-05 Auditar y adjudicar becas}\label{sec:cap6_analisis_cu05}
 
-En el CU-05, el Administrador DUBSS conduce la adjudicación mediante \textit{AdjudicacionView}, que delega en \textit{AdjudicacionController}. Este controlador trabaja con las entidades \textit{Finalista}, \textit{Postulacion} y \textit{Adjudicacion}. La visualización de la lista priorizada y la auditoría de cada expediente se resuelven en los casos de uso incluidos (CU-06 y CU-07), por lo que no se repiten en este diagrama. La Figura~\ref{fig:analisis_cu05} presenta el diagrama de análisis.
+En el CU-05, el Administrador DUBSS conduce la adjudicación mediante \textit{AdjudicacionView}, que delega en \textit{AdjudicacionController}. Este controlador trabaja con las entidades \textit{Finalista}, \textit{Postulacion}, \textit{Adjudicacion} y \textit{PostulacionHistorial}: consulta los totales para el panel, selecciona finalistas según el orden de la lista priorizada y, al decidir, cambia el estado de la postulación, crea la adjudicación y deja la fila en el historial. La visualización de la lista priorizada y la auditoría de cada expediente se resuelven en los casos de uso incluidos (CU-06 y CU-07), por lo que no se repiten en este diagrama. La Figura~\ref{fig:analisis_cu05} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-05 Auditar y adjudicar becas}

@@ -391,31 +391,32 @@
     \item El Administrador DUBSS está autenticado en el sistema (CU-01) con el rol Administrador DUBSS.
     \item La convocatoria de la gestión académica vigente se encuentra cerrada a la recepción de postulaciones (CU-13).
     \item Existen postulaciones en estado «calificada», con puntaje de vulnerabilidad vigente (CU-03).
-    \item La convocatoria tiene registrados el número de cupos y el puntaje mínimo requerido (valores por definir con la DUBSS).
+    \item La convocatoria tiene registrados el número de cupos y el puntaje mínimo requerido (valores por definir con la DUBSS) y, opcionalmente, la cantidad de finalistas, que solo ve el Administrador DUBSS (CU-13).
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
     \item El Administrador DUBSS selecciona la opción «Auditoría y adjudicación» y la convocatoria a procesar.
-    \item El sistema muestra la lista priorizada de postulantes de la convocatoria (se incluye el CU-06).
-    \item El Administrador DUBSS selecciona como finalistas a los postulantes mejor puntuados (cantidad de finalistas por definir con la DUBSS en función de los cupos).
-    \item El sistema registra a cada finalista con la posición que ocupa en la lista priorizada.
+    \item El sistema muestra el panel de la convocatoria (cupos, adjudicados, no adjudicados, cupos disponibles y puntaje mínimo) y su lista priorizada de postulantes (se incluye el CU-06).
+    \item El Administrador DUBSS selecciona como finalistas a los postulantes mejor puntuados. El sistema propone la cantidad de finalistas configurada en la convocatoria y el Administrador puede ajustarla antes de confirmar.
+    \item El sistema registra a cada finalista con la posición que ocupa en la lista priorizada completa, sin repetir a los ya seleccionados.
     \item El Administrador DUBSS audita el expediente de cada finalista (se incluye el CU-07).
     \item El sistema muestra la lista de finalistas con el resultado de su auditoría y el número de cupos disponibles.
-    \item El Administrador DUBSS selecciona un finalista auditado y registra su decisión: adjudicar o no adjudicar la beca.
-    \item El sistema registra la adjudicación con su resultado, el puntaje total de la postulación (puntaje de la IA más el puntaje académico de la última auditoría), el usuario que decide y la fecha de adjudicación.
-    \item El sistema actualiza el estado de la postulación a «adjudicada» o «no adjudicada», registra el cambio en el historial de la postulación y en la bitácora, y actualiza el número de cupos disponibles.
+    \item El Administrador DUBSS abre el expediente de un finalista auditado y registra su decisión: adjudicar o no adjudicar la beca. Si no adjudica, debe escribir un motivo (hasta 500 caracteres) y confirmar en una ventana que muestra el nombre, el puntaje total y los cupos disponibles.
+    \item El sistema valida la decisión y registra la adjudicación con su resultado, el puntaje total de la postulación (puntaje de la IA más el puntaje académico de la última auditoría), el usuario que decide y la fecha de adjudicación.
+    \item El sistema actualiza el estado de la postulación a «adjudicada» o «no adjudicada», registra el cambio en el historial de la postulación (con el motivo, si no adjudica) y en la bitácora, y actualiza el número de cupos disponibles, todo en una misma operación. No avisa al postulante: este se entera al publicar los resultados (CU-22).
     \item Los pasos 7 a 9 se repiten hasta decidir sobre todos los finalistas.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
     \item A1 (paso 2): si la convocatoria no tiene postulaciones calificadas, el sistema informa que no existen postulaciones para auditar.
-    \item A2 (paso 7): si el expediente del finalista no tiene una auditoría con resultado «validado», el sistema no permite adjudicarle la beca.
-    \item A3 (paso 7): si el puntaje total de la postulación (IA más académico de la última auditoría) no alcanza el puntaje mínimo requerido, el sistema no permite adjudicarle la beca.
-    \item A4 (paso 7): si los cupos de la convocatoria están agotados, el sistema no permite registrar nuevas adjudicaciones y solo admite la decisión de no adjudicar.
+    \item A2 (paso 7): si el finalista no tiene ninguna auditoría, el sistema no permite ninguna decisión (409, ERR\_ADJ\_02); si la última auditoría no es «validado», no permite adjudicarle la beca (409, ERR\_ADJ\_02) pero sí no adjudicar.
+    \item A3 (paso 7): si el puntaje total de la postulación (IA más académico de la última auditoría) no alcanza el puntaje mínimo requerido, el sistema no permite adjudicarle la beca (409, ERR\_ADJ\_03).
+    \item A4 (paso 7): si los cupos de la convocatoria están agotados, el sistema no permite registrar nuevas adjudicaciones (409, ERR\_ADJ\_04) y solo admite la decisión de no adjudicar.
     \item A5 (paso 10): una vez decididas todas las adjudicaciones, el Administrador DUBSS puede generar el acta de adjudicación (CU-08) y publicar los resultados (CU-22).
-    \item A6 (paso 7): si los resultados de la convocatoria ya fueron publicados (CU-22), el sistema no permite modificar las adjudicaciones.
-    \item A7 (paso 8): si la petición de adjudicación llega duplicada, el sistema la procesa una sola vez (idempotencia).
+    \item A6 (paso 7): si los resultados de la convocatoria ya fueron publicados (CU-22) o la postulación ya no está «calificada», el sistema no registra ni modifica decisiones (409, ERR\_ADJ\_01).
+    \item A7 (paso 8): si la petición llega duplicada (doble clic o reintento), solo se registra una decisión; la segunda recibe el 409 ERR\_ADJ\_01, sin clave de idempotencia.
+    \item A8 (pasos 1 y 7): si la convocatoria no está cerrada o no tiene cupos o puntaje mínimo definidos, el sistema no permite seleccionar finalistas ni decidir (409, ERR\_ADJ\_05).
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
