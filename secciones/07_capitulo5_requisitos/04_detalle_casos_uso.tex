@@ -77,12 +77,17 @@
     \item El sistema revoca la sesión del usuario en ese dispositivo y deja de reconocerla.
     \item El sistema redirige al usuario a la pantalla de acceso.
 \end{cupasos} \\
+ & \textbf{Flujo principal D: continuidad de la sesión.}
+\begin{cupasos}
+    \item Cuando el token de acceso vence, el sistema lo renueva automáticamente con el token de renovación del dispositivo, sin pedir de nuevo las credenciales; el token de renovación usado queda revocado y se emite uno nuevo.
+    \item Cuando el usuario vuelve a abrir o recarga el portal web o la aplicación móvil con una sesión vigente, el sistema consulta quién es el usuario de esa sesión y lo lleva a su módulo sin pedirle iniciar sesión otra vez.
+\end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (flujo A, paso 4): si el CI, el registro universitario o el correo electrónico ya están registrados, el sistema rechaza el registro, indica el campo en conflicto y no crea la cuenta.
+    \item A1 (flujo A, paso 4): si el CI, el registro universitario o el correo electrónico ya están registrados, el sistema rechaza el registro (409), indica el campo en conflicto y no crea la cuenta.
     \item A2 (flujo A, paso 4): si faltan campos obligatorios, el formato es inválido, la contraseña no cumple la política o no coincide con su confirmación, el sistema marca los campos con error y permite corregirlos, sin crear la cuenta.
-    \item A3 (flujo B, paso 3): si el correo no existe o la contraseña es incorrecta, el sistema muestra el mismo mensaje de error en ambos casos (sin revelar cuál dato falló) y permite reintentar.
-    \item A4 (flujo B, paso 4): si la cuenta está desactivada, el sistema niega el acceso, indica que debe comunicarse con la DUBSS y no abre sesión.
+    \item A3 (flujo B, paso 3): si el correo no existe o la contraseña es incorrecta, el sistema responde 401 con el mismo mensaje de error en ambos casos (sin revelar cuál dato falló) y permite reintentar.
+    \item A4 (flujo B, paso 4): si la cuenta está desactivada, el sistema responde 403, niega el acceso, indica que debe comunicarse con la DUBSS y no abre sesión.
     \item A5 (flujo B, paso 2): si el usuario selecciona «¿Olvidó su contraseña?», se ejecuta el CU-15.
     \item A6 (flujo B, paso 3): tras varios intentos fallidos consecutivos, el sistema bloquea temporalmente el acceso de esa cuenta y lo niega aunque la contraseña sea correcta. El sistema bloquea a los 5 intentos, por 5 minutos la primera vez y por un lapso mayor si el usuario continúa fallando (hoy: 5 minutos, 15 minutos, 1 hora y 24 horas); la escala exacta está por definir con la DUBSS. Un inicio de sesión correcto reinicia el contador.
     \item A7 (flujo A, paso 4): si la petición de registro llega repetida (doble envío o reintento), el sistema la procesa de forma idempotente y no crea dos cuentas.
@@ -1206,7 +1211,7 @@
     \item En la pantalla de inicio de sesión, el usuario selecciona «¿Olvidó su contraseña?».
     \item El sistema solicita el correo electrónico de la cuenta.
     \item El usuario ingresa su correo y confirma la solicitud.
-    \item El sistema genera un token de restablecimiento de un solo uso con tiempo de validez limitado, lo envía en un enlace al correo registrado y muestra un mensaje informando que, si el correo está registrado, recibirá las instrucciones.
+    \item El sistema genera un token de restablecimiento de un solo uso, válido por 60 minutos (invalida cualquier enlace anterior de la cuenta), lo envía en un enlace al correo registrado y muestra siempre el mismo mensaje informando que, si el correo está registrado, recibirá las instrucciones.
     \item El usuario abre el enlace recibido y define una nueva contraseña que cumpla la política de seguridad.
     \item El sistema guarda la nueva contraseña, invalida el enlace, desbloquea la cuenta si estaba bloqueada, cierra todas las sesiones abiertas de la cuenta y permite al usuario iniciar sesión con la nueva contraseña.
 \end{cupasos} \\
@@ -1220,12 +1225,12 @@
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (flujo A, paso 4): si el correo no está registrado, el sistema muestra el mismo mensaje neutro, para no revelar qué correos existen en el sistema.
-    \item A2 (flujo A, paso 5): si el enlace expiró o ya fue utilizado, el sistema informa del hecho y permite solicitar uno nuevo.
-    \item A3 (flujo A, paso 5): si la nueva contraseña no cumple la política de seguridad, el sistema muestra los requisitos y permite reintentar.
+    \item A1 (flujo A, paso 4): si el correo no está registrado o la cuenta está desactivada, el sistema no envía ningún correo y muestra el mismo mensaje neutro, para no revelar qué correos existen en el sistema; si el servicio de correo falla, registra el fallo y muestra igual el mensaje neutro.
+    \item A2 (flujo A, paso 5): si el enlace expiró, ya fue utilizado o fue reemplazado por uno más reciente, el sistema responde 400, informa que ya no sirve y permite solicitar uno nuevo.
+    \item A3 (flujo A, paso 5): si la nueva contraseña no cumple la política de seguridad o no coincide con su confirmación, el sistema responde 400, muestra los requisitos y permite reintentar.
     \item A4 (flujo B, paso 3): si el usuario intenta modificar su CI, el sistema no lo permite (campo bloqueado).
-    \item A5 (flujo B, paso 4): si el nuevo correo electrónico ya pertenece a otra cuenta, el sistema rechaza el cambio.
-    \item A6 (flujo B, paso 4): si la contraseña actual ingresada es incorrecta, el sistema rechaza el cambio de contraseña.
+    \item A5 (flujo B, paso 4): si el nuevo correo electrónico ya pertenece a otra cuenta, el sistema responde 409, indica el correo como campo en conflicto y no guarda los cambios.
+    \item A6 (flujo B, paso 4): si la contraseña actual ingresada es incorrecta, el sistema rechaza el cambio de contraseña o de correo (400) sin modificar nada.
     \item A7 (flujo B, paso 5): si se cambia el correo electrónico, el sistema exige la contraseña actual (reautenticación) antes de guardarlo.
 \end{cuvin} \\
 \midrule
