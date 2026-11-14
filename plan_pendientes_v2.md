@@ -15,6 +15,21 @@ Inventario de lo que falta en `main_v2.tex` (numeración vigente de 12 capítulo
 
 ---
 
+## 0. División vigente del trabajo (sin el capítulo 3) — 14-nov-2026
+
+Esta división reemplaza el reparto de las §5 y §6 en lo que respecta a **quién es quién** y a **qué capítulos** toca cada persona. El **capítulo 3** (PUDS, DC-1, DC-2 y las secciones 3.1 a 3.9) queda **fuera** de este reparto y se tratará aparte.
+
+| | Persona A = **Mauro** | Persona B = **Leonel** |
+|---|---|---|
+| Capítulos | Cap. 1 (PAPS), cap. 2 (SQAP), cap. 4 (CASE), cap. 6.8 y 6.9 (gestión de infraestructura y anexos), cap. 12 (software como producto) | Cap. 5 (legal), cap. 7 (sitio web), cap. 8 (mercado), cap. 9 (pruebas), cap. 10 (marketing), cap. 11 (puesta en marcha) |
+| Tareas de §5/§6 | DA-1, DA-2, DA-5, DA-6 y DB-8 (cap. 12 y anexos) | DB-2, DB-3, DB-4, DB-5, DB-6 y DB-7 |
+
+Notas:
+- DA-3 y DA-4 (capítulo 3 y las introducciones de análisis/diseño) y DB-1 (capítulo 3) no están asignadas por ahora.
+- Los datos bloqueantes de §4 siguen igual: el dato 1 (3 software de referencia) bloquea 1.4 y 1.12; el dato 2 (herramientas reales) bloquea cap. 4 y 6.8; el dato 3 (empresa de software) bloquea cap. 2 (parte), 7, 8, 10 y 11.
+
+---
+
 ## 1. Tareas compartidas (nuevas)
 
 | ID | Tarea | Responsable | Detalle |
