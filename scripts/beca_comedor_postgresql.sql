@@ -2,6 +2,9 @@
 -- Sistema de Postulacion y Preseleccion de la Beca Comedor (DUBSS - UAGRM)
 -- Script de creacion de la base de datos - PostgreSQL 18
 -- Generado a partir del diseno logico de la base de datos (32 tablas).
+-- Las 24 tablas ya implementadas replican exactamente las migraciones Flyway del backend
+-- (projects/backend/comedor-uagrm-core/src/main/resources/db/migration); las 8 restantes
+-- (nota_academica, parametro_modelo, lote_reprocesamiento, beca, movimiento_beca, planilla_asistencia, asistencia, cotejo_asistencia) siguen el diseno y se crearan en sus casos de uso.
 -- =============================================================================
 
 -- Requiere PostgreSQL 18 o superior (funcion uuidv7()).
@@ -16,11 +19,13 @@ BEGIN;
 CREATE TYPE estado_postulacion AS ENUM (
     'borrador', 'pendiente', 'devuelta', 'archivada', 'calificada', 'adjudicada', 'no_adjudicada');
 CREATE TYPE estado_convocatoria AS ENUM (
-    'BORRADOR', 'ABIERTA', 'CERRADA');
+    'BORRADOR', 'ABIERTA', 'CERRADA', 'PUBLICADA');
 CREATE TYPE estado_beca AS ENUM (
     'VIGENTE', 'SUSPENDIDA', 'BAJA');
 CREATE TYPE resultado_adjudicacion AS ENUM (
     'ADJUDICADA', 'NO_ADJUDICADA');
+CREATE TYPE resultado_auditoria AS ENUM (
+    'VALIDADO', 'OBSERVADO', 'NO_VALIDO');
 CREATE TYPE tipo_movimiento_beca AS ENUM (
     'BAJA', 'SUSPENSION', 'REACTIVACION', 'REEMPLAZO');
 CREATE TYPE destinatarios_comunicado AS ENUM (
@@ -38,8 +43,8 @@ CREATE TYPE tipo_notificacion AS ENUM (
 
 CREATE TABLE rol (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    nombre                    varchar(50) NOT NULL,
     codigo_rol                uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    nombre                    varchar(50) NOT NULL,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -48,32 +53,32 @@ CREATE TABLE rol (
 
 CREATE TABLE usuario (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    codigo_usuario            uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    rol_id                    bigint NOT NULL REFERENCES rol(id),
     ci                        varchar(20) NOT NULL,
     correo                    varchar(150) NOT NULL,
-    password_hash             varchar(100) NOT NULL,
     nombres                   varchar(100) NOT NULL,
     apellidos                 varchar(100) NOT NULL,
     activo                    boolean NOT NULL DEFAULT true,
+    creado_en                 timestamptz NOT NULL DEFAULT now(),
+    actualizado_en            timestamptz NOT NULL DEFAULT now(),
+    eliminado_en              timestamptz,
+    password_hash             varchar(100) NOT NULL,
     intentos_fallidos         integer NOT NULL DEFAULT 0,
     bloqueos_consecutivos     integer NOT NULL DEFAULT 0,
     bloqueado_hasta           timestamptz,
     restablecimiento_token_hash varchar(64),
-    restablecimiento_expira_en  timestamptz,
-    rol_id                    bigint NOT NULL REFERENCES rol(id) ON DELETE RESTRICT,
-    codigo_usuario            uuid NOT NULL DEFAULT uuidv7() UNIQUE,
-    creado_en                 timestamptz NOT NULL DEFAULT now(),
-    actualizado_en            timestamptz NOT NULL DEFAULT now(),
-    eliminado_en              timestamptz,
+    restablecimiento_expira_en timestamptz,
     CONSTRAINT pk_usuario PRIMARY KEY (id)
 );
 
 CREATE TABLE sesion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    usuario_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
+    codigo_sesion             uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    usuario_id                bigint NOT NULL REFERENCES usuario(id),
     token_hash                varchar(64) NOT NULL,
     expira_en                 timestamptz NOT NULL,
     revocada_en               timestamptz,
-    codigo_sesion             uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -82,9 +87,9 @@ CREATE TABLE sesion (
 
 CREATE TABLE carrera (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    codigo_carrera            uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     nombre                    varchar(150) NOT NULL,
     facultad                  varchar(150) NOT NULL,
-    codigo_carrera            uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -92,11 +97,11 @@ CREATE TABLE carrera (
 );
 
 CREATE TABLE postulante (
-    usuario_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    carrera_id                bigint NOT NULL REFERENCES carrera(id) ON DELETE RESTRICT,
+    usuario_id                bigint NOT NULL REFERENCES usuario(id),
+    codigo_postulante         uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    carrera_id                bigint NOT NULL REFERENCES carrera(id),
     registro_universitario    varchar(20) NOT NULL,
     telefono                  varchar(20) NOT NULL,
-    codigo_postulante         uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -107,42 +112,44 @@ CREATE TABLE postulante (
 
 CREATE TABLE gestion_academica (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    etiqueta                  varchar(20) NOT NULL,
+    codigo_gestion_academica  uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    etiqueta                  varchar(50) NOT NULL,
     fecha_inicio              date NOT NULL,
     fecha_fin                 date NOT NULL,
-    codigo_gestion_academica  uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
     CONSTRAINT pk_gestion_academica PRIMARY KEY (id),
-    CONSTRAINT ck_gestion_academica_1 CHECK (fecha_fin >= fecha_inicio)
+    CONSTRAINT ck_gestion_academica_fechas CHECK ((fecha_fin > fecha_inicio))
 );
 
 CREATE TABLE convocatoria (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    gestion_id                bigint NOT NULL REFERENCES gestion_academica(id) ON DELETE RESTRICT,
+    codigo_convocatoria       uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    gestion_id                bigint NOT NULL REFERENCES gestion_academica(id),
+    creado_por                bigint REFERENCES usuario(id),
     nombre                    varchar(150) NOT NULL,
     fecha_apertura            timestamptz NOT NULL,
     fecha_cierre              timestamptz NOT NULL,
     cupos                     integer,
     puntaje_minimo            numeric(5,2),
-    estado                    estado_convocatoria NOT NULL DEFAULT 'BORRADOR',
-    creado_por                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    codigo_convocatoria       uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    estado                    estado_convocatoria NOT NULL,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
+    cantidad_finalistas       integer,
     CONSTRAINT pk_convocatoria PRIMARY KEY (id),
-    CONSTRAINT ck_convocatoria_1 CHECK (fecha_cierre > fecha_apertura),
-    CONSTRAINT ck_convocatoria_2 CHECK (cupos > 0),
-    CONSTRAINT ck_convocatoria_3 CHECK (puntaje_minimo BETWEEN 0 AND 100)
+    CONSTRAINT ck_convocatoria_cantidad_finalistas CHECK (((cantidad_finalistas IS NULL) OR (cantidad_finalistas > 0))),
+    CONSTRAINT ck_convocatoria_cupos CHECK (((cupos IS NULL) OR (cupos > 0))),
+    CONSTRAINT ck_convocatoria_fechas CHECK ((fecha_cierre > fecha_apertura)),
+    CONSTRAINT ck_convocatoria_puntaje_minimo CHECK (((puntaje_minimo IS NULL) OR ((puntaje_minimo >= (0)::numeric) AND (puntaje_minimo <= (100)::numeric))))
 );
 
 CREATE TABLE tipo_documento (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    codigo_tipo_documento     uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     nombre                    varchar(100) NOT NULL,
     descripcion               varchar(255),
-    codigo_tipo_documento     uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -150,10 +157,10 @@ CREATE TABLE tipo_documento (
 );
 
 CREATE TABLE convocatoria_documento (
-    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id) ON DELETE RESTRICT,
-    tipo_documento_id         bigint NOT NULL REFERENCES tipo_documento(id) ON DELETE RESTRICT,
-    obligatorio               boolean NOT NULL DEFAULT true,
+    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id),
+    tipo_documento_id         bigint NOT NULL REFERENCES tipo_documento(id),
     codigo_convocatoria_documento uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    obligatorio               boolean NOT NULL DEFAULT true,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -162,36 +169,32 @@ CREATE TABLE convocatoria_documento (
 
 CREATE TABLE postulacion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    postulante_id             bigint NOT NULL REFERENCES postulante(usuario_id) ON DELETE RESTRICT,
-    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id) ON DELETE RESTRICT,
-    estado                    estado_postulacion NOT NULL DEFAULT 'borrador',
+    codigo_postulacion        uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id),
+    postulante_id             bigint NOT NULL REFERENCES postulante(usuario_id),
+    estado                    estado_postulacion NOT NULL,
     fecha_envio               timestamptz,
     numero_envios             smallint NOT NULL DEFAULT 0,
-    codigo_postulacion        uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
-    CONSTRAINT pk_postulacion PRIMARY KEY (id),
-    CONSTRAINT ck_postulacion_1 CHECK (numero_envios >= 0)
+    CONSTRAINT pk_postulacion PRIMARY KEY (id)
 );
 
 CREATE TABLE respuesta_socioeconomica (
-    postulacion_id            bigint NOT NULL REFERENCES postulacion(id) ON DELETE RESTRICT,
+    postulacion_id            bigint NOT NULL REFERENCES postulacion(id),
+    codigo_respuesta_socioeconomica uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     ingresos_familiares       numeric(12,2),
     dependientes              smallint,
-    procedencia               varchar(150),
     patrimonio                varchar(255),
-    estado_vulnerabilidad     varchar(50),
+    procedencia               varchar(150),
     promedio_academico        numeric(5,2),
+    estado_vulnerabilidad     varchar(50),
     datos_extra               jsonb,
-    codigo_respuesta_socioeconomica uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
-    CONSTRAINT pk_respuesta_socioeconomica PRIMARY KEY (postulacion_id),
-    CONSTRAINT ck_respuesta_socioeconomica_1 CHECK (promedio_academico BETWEEN 0 AND 100),
-    CONSTRAINT ck_respuesta_socioeconomica_2 CHECK (ingresos_familiares >= 0),
-    CONSTRAINT ck_respuesta_socioeconomica_3 CHECK (dependientes >= 0)
+    CONSTRAINT pk_respuesta_socioeconomica PRIMARY KEY (postulacion_id)
 );
 
 CREATE TABLE nota_academica (
@@ -208,29 +211,29 @@ CREATE TABLE nota_academica (
 
 CREATE TABLE documento_adjunto (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    postulacion_id            bigint NOT NULL REFERENCES postulacion(id) ON DELETE RESTRICT,
-    tipo_documento_id         bigint NOT NULL REFERENCES tipo_documento(id) ON DELETE RESTRICT,
+    codigo_documento_adjunto  uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    postulacion_id            bigint NOT NULL REFERENCES postulacion(id),
+    tipo_documento_id         bigint NOT NULL REFERENCES tipo_documento(id),
     nombre_archivo            varchar(255) NOT NULL,
-    storage_path              varchar(500) NOT NULL,
     mime_type                 varchar(100) NOT NULL,
+    storage_path              varchar(500) NOT NULL,
     tamano_bytes              bigint NOT NULL,
     subido_en                 timestamptz NOT NULL DEFAULT now(),
-    codigo_documento_adjunto  uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
     CONSTRAINT pk_documento_adjunto PRIMARY KEY (id),
-    CONSTRAINT ck_documento_adjunto_1 CHECK (tamano_bytes > 0)
+    CONSTRAINT ck_documento_adjunto_tamano CHECK ((tamano_bytes >= 0))
 );
 
 CREATE TABLE postulacion_historial (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    postulacion_id            bigint NOT NULL REFERENCES postulacion(id) ON DELETE RESTRICT,
-    estado_anterior           estado_postulacion,
-    estado_nuevo              estado_postulacion NOT NULL,
-    usuario_id                bigint REFERENCES usuario(id) ON DELETE RESTRICT,
-    motivo                    text,
     codigo_postulacion_historial uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    postulacion_id            bigint NOT NULL REFERENCES postulacion(id),
+    usuario_id                bigint REFERENCES usuario(id),
+    estado_anterior           estado_postulacion NOT NULL,
+    estado_nuevo              estado_postulacion NOT NULL,
+    motivo                    text,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -241,11 +244,11 @@ CREATE TABLE postulacion_historial (
 
 CREATE TABLE modelo_preseleccion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    version                   varchar(20) NOT NULL,
+    codigo_modelo_preseleccion uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    creado_por                bigint REFERENCES usuario(id),
+    version                   varchar(50) NOT NULL,
     descripcion               varchar(255),
     activo                    boolean NOT NULL DEFAULT false,
-    creado_por                bigint REFERENCES usuario(id) ON DELETE RESTRICT,
-    codigo_modelo_preseleccion uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -267,18 +270,18 @@ CREATE TABLE parametro_modelo (
 
 CREATE TABLE puntaje_postulacion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    postulacion_id            bigint NOT NULL REFERENCES postulacion(id) ON DELETE RESTRICT,
-    modelo_id                 bigint NOT NULL REFERENCES modelo_preseleccion(id) ON DELETE RESTRICT,
+    codigo_puntaje_postulacion uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    modelo_id                 bigint NOT NULL REFERENCES modelo_preseleccion(id),
+    postulacion_id            bigint NOT NULL REFERENCES postulacion(id),
     puntaje_total             numeric(5,2) NOT NULL,
     detalle                   jsonb,
-    fecha_calculo             timestamptz NOT NULL DEFAULT now(),
+    fecha_calculo             timestamptz NOT NULL,
     vigente                   boolean NOT NULL DEFAULT true,
-    codigo_puntaje_postulacion uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
     CONSTRAINT pk_puntaje_postulacion PRIMARY KEY (id),
-    CONSTRAINT ck_puntaje_postulacion_1 CHECK (puntaje_total BETWEEN 0 AND 100)
+    CONSTRAINT ck_puntaje_postulacion_total CHECK (((puntaje_total >= (0)::numeric) AND (puntaje_total <= (70)::numeric)))
 );
 
 CREATE TABLE lote_reprocesamiento (
@@ -304,58 +307,59 @@ CREATE TABLE lote_reprocesamiento (
 
 CREATE TABLE finalista (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    postulacion_id            bigint NOT NULL REFERENCES postulacion(id) ON DELETE RESTRICT,
-    posicion                  integer NOT NULL,
-    notificado_en             timestamptz,
-    plazo_entrega             date,
-    documentacion_recibida_en timestamptz,
     codigo_finalista          uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    postulacion_id            bigint NOT NULL REFERENCES postulacion(id),
+    posicion                  integer NOT NULL,
+    plazo_entrega             date,
+    notificado_en             timestamptz,
+    documentacion_recibida_en timestamptz,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
     CONSTRAINT pk_finalista PRIMARY KEY (id),
-    CONSTRAINT ck_finalista_1 CHECK (posicion > 0)
+    CONSTRAINT ck_finalista_posicion CHECK ((posicion > 0))
 );
 
 CREATE TABLE auditoria_expediente (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    finalista_id              bigint NOT NULL REFERENCES finalista(id) ON DELETE RESTRICT,
-    auditor_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    resultado                 varchar(20) NOT NULL,
-    observaciones             text,
-    fecha_auditoria           timestamptz NOT NULL DEFAULT now(),
     codigo_auditoria_expediente uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    finalista_id              bigint NOT NULL REFERENCES finalista(id),
+    auditor_id                bigint NOT NULL REFERENCES usuario(id),
+    fecha_auditoria           timestamptz NOT NULL DEFAULT now(),
+    resultado                 resultado_auditoria NOT NULL,
+    observaciones             varchar(500),
+    puntaje_academico         numeric(5,2),
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
+    clave_idempotencia        uuid,
     CONSTRAINT pk_auditoria_expediente PRIMARY KEY (id),
-    CONSTRAINT ck_auditoria_expediente_1
-        CHECK (resultado IN ('VALIDADO', 'OBSERVADO', 'NO_VALIDO'))
+    CONSTRAINT ck_auditoria_expediente_puntaje_academico CHECK (((puntaje_academico >= (0)::numeric) AND (puntaje_academico <= (30)::numeric)))
 );
 
 CREATE TABLE adjudicacion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    postulacion_id            bigint NOT NULL REFERENCES postulacion(id) ON DELETE RESTRICT,
+    codigo_adjudicacion       uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    postulacion_id            bigint NOT NULL REFERENCES postulacion(id),
     resultado                 resultado_adjudicacion NOT NULL,
     puntaje_final             numeric(5,2),
-    decidido_por              bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
+    decidido_por              bigint NOT NULL REFERENCES usuario(id),
     fecha_adjudicacion        timestamptz NOT NULL DEFAULT now(),
-    codigo_adjudicacion       uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
     CONSTRAINT pk_adjudicacion PRIMARY KEY (id),
-    CONSTRAINT ck_adjudicacion_1 CHECK (puntaje_final BETWEEN 0 AND 100)
+    CONSTRAINT ck_adjudicacion_puntaje_final CHECK (((puntaje_final IS NULL) OR ((puntaje_final >= (0)::numeric) AND (puntaje_final <= (100)::numeric))))
 );
 
 CREATE TABLE acta_adjudicacion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id) ON DELETE RESTRICT,
-    numero                    varchar(30) NOT NULL,
-    storage_path              varchar(500) NOT NULL,
-    generada_por              bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    generada_en               timestamptz NOT NULL DEFAULT now(),
     codigo_acta_adjudicacion  uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id),
+    numero                    varchar(30) NOT NULL UNIQUE,
+    storage_path              varchar(500) NOT NULL,
+    generada_por              bigint NOT NULL REFERENCES usuario(id),
+    generada_en               timestamptz NOT NULL DEFAULT now(),
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -364,10 +368,10 @@ CREATE TABLE acta_adjudicacion (
 
 CREATE TABLE publicacion_resultado (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id) ON DELETE RESTRICT,
-    publicado_por             bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    publicado_en              timestamptz NOT NULL DEFAULT now(),
     codigo_publicacion_resultado uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    convocatoria_id           bigint NOT NULL REFERENCES convocatoria(id),
+    publicado_por             bigint NOT NULL REFERENCES usuario(id),
+    publicado_en              timestamptz NOT NULL DEFAULT now(),
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -376,13 +380,13 @@ CREATE TABLE publicacion_resultado (
 
 CREATE TABLE comunicado (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    convocatoria_id           bigint REFERENCES convocatoria(id) ON DELETE RESTRICT,
+    codigo_comunicado         uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    convocatoria_id           bigint REFERENCES convocatoria(id),
+    publicado_por             bigint NOT NULL REFERENCES usuario(id),
     titulo                    varchar(150) NOT NULL,
     contenido                 text NOT NULL,
     destinatarios             destinatarios_comunicado NOT NULL,
-    publicado_por             bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
     publicado_en              timestamptz NOT NULL DEFAULT now(),
-    codigo_comunicado         uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -391,32 +395,31 @@ CREATE TABLE comunicado (
 
 CREATE TABLE notificacion (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    usuario_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    tipo                      tipo_notificacion NOT NULL,
+    codigo_notificacion       uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    usuario_id                bigint NOT NULL REFERENCES usuario(id),
     titulo                    varchar(150) NOT NULL,
     mensaje                   text NOT NULL,
-    postulacion_id            bigint REFERENCES postulacion(id) ON DELETE RESTRICT,
-    comunicado_id             bigint REFERENCES comunicado(id) ON DELETE RESTRICT,
+    tipo                      tipo_notificacion NOT NULL,
     leida                     boolean NOT NULL DEFAULT false,
     enviada_en                timestamptz,
-    codigo_notificacion       uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
+    postulacion_id            bigint REFERENCES postulacion(id),
+    comunicado_id             bigint REFERENCES comunicado(id),
     CONSTRAINT pk_notificacion PRIMARY KEY (id)
 );
 
 CREATE TABLE dispositivo_fcm (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    usuario_id                bigint NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
-    token                     varchar(255) NOT NULL,
-    plataforma                varchar(10) NOT NULL,
     codigo_dispositivo_fcm    uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    usuario_id                bigint NOT NULL REFERENCES usuario(id),
+    token                     varchar(512) NOT NULL,
+    plataforma                varchar(20) NOT NULL,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
-    CONSTRAINT pk_dispositivo_fcm PRIMARY KEY (id),
-    CONSTRAINT ck_dispositivo_fcm_1 CHECK (plataforma IN ('ANDROID', 'IOS', 'WEB'))
+    CONSTRAINT pk_dispositivo_fcm PRIMARY KEY (id)
 );
 
 -- P5 - Becados y asistencia
@@ -509,13 +512,13 @@ CREATE TABLE cotejo_asistencia (
 
 CREATE TABLE bitacora (
     id                        bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    usuario_id                bigint REFERENCES usuario(id) ON DELETE RESTRICT,
+    codigo_bitacora           uuid NOT NULL DEFAULT uuidv7() UNIQUE,
+    usuario_id                bigint REFERENCES usuario(id),
     accion                    varchar(60) NOT NULL,
     entidad                   varchar(60),
     entidad_id                bigint,
     detalle                   jsonb,
     ip                        inet,
-    codigo_bitacora           uuid NOT NULL DEFAULT uuidv7() UNIQUE,
     creado_en                 timestamptz NOT NULL DEFAULT now(),
     actualizado_en            timestamptz NOT NULL DEFAULT now(),
     eliminado_en              timestamptz,
@@ -523,67 +526,149 @@ CREATE TABLE bitacora (
 );
 
 -- -----------------------------------------------------------------------------
--- 3. Restricciones de unicidad (indices parciales que respetan el borrado logico)
+-- 3. Indices (los de las tablas implementadas replican las migraciones: unicos parciales que
+--    respetan el borrado logico, y de rendimiento)
 -- -----------------------------------------------------------------------------
 CREATE UNIQUE INDEX uq_rol_nombre
     ON rol (nombre)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_usuario_rol_id
+    ON usuario (rol_id)
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_usuario_ci
     ON usuario (ci)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_usuario_correo
     ON usuario (correo)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_usuario_restablecimiento_token_hash
     ON usuario (restablecimiento_token_hash)
-    WHERE restablecimiento_token_hash IS NOT NULL AND eliminado_en IS NULL;
+    WHERE ((restablecimiento_token_hash IS NOT NULL) AND (eliminado_en IS NULL));
+CREATE INDEX ix_sesion_usuario_id
+    ON sesion (usuario_id)
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_sesion_token_hash
     ON sesion (token_hash)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_carrera_nombre
     ON carrera (nombre)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_postulante_carrera_id
+    ON postulante (carrera_id)
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_postulante_registro_universitario
     ON postulante (registro_universitario)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_gestion_etiqueta
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_gestion_academica_etiqueta
     ON gestion_academica (etiqueta)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_convocatoria_gestion_id
+    ON convocatoria (gestion_id)
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_convocatoria_abierta_por_gestion
     ON convocatoria (gestion_id)
-    WHERE estado = 'ABIERTA' AND eliminado_en IS NULL;
+    WHERE ((estado = 'ABIERTA') AND (eliminado_en IS NULL));
+CREATE UNIQUE INDEX uq_tipo_documento_nombre
+    ON tipo_documento (nombre)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_convocatoria_documento_tipo_documento_id
+    ON convocatoria_documento (tipo_documento_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_postulacion_convocatoria_estado
+    ON postulacion (convocatoria_id, estado)
+    WHERE (eliminado_en IS NULL);
 CREATE UNIQUE INDEX uq_postulacion_postulante_convocatoria
     ON postulacion (postulante_id, convocatoria_id)
-    WHERE eliminado_en IS NULL;
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_documento_adjunto_postulacion_id
+    ON documento_adjunto (postulacion_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_documento_adjunto_tipo_documento_id
+    ON documento_adjunto (tipo_documento_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_postulacion_historial_postulacion_creado
+    ON postulacion_historial (postulacion_id, creado_en)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_postulacion_historial_usuario_id
+    ON postulacion_historial (usuario_id)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_modelo_preseleccion_activo
+    ON modelo_preseleccion (activo)
+    WHERE (activo AND (eliminado_en IS NULL));
+CREATE UNIQUE INDEX uq_modelo_preseleccion_version
+    ON modelo_preseleccion (version)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_puntaje_postulacion_modelo_id
+    ON puntaje_postulacion (modelo_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_puntaje_postulacion_vigente_total
+    ON puntaje_postulacion (puntaje_total DESC)
+    WHERE (vigente AND (eliminado_en IS NULL));
+CREATE UNIQUE INDEX uq_puntaje_postulacion_vigente
+    ON puntaje_postulacion (postulacion_id)
+    WHERE (vigente AND (eliminado_en IS NULL));
+CREATE UNIQUE INDEX uq_finalista_postulacion
+    ON finalista (postulacion_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_auditoria_expediente_auditor_id
+    ON auditoria_expediente (auditor_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_auditoria_expediente_finalista_fecha
+    ON auditoria_expediente (finalista_id, fecha_auditoria DESC)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_auditoria_expediente_clave_idempotencia
+    ON auditoria_expediente (finalista_id, clave_idempotencia)
+    WHERE (clave_idempotencia IS NOT NULL);
+CREATE INDEX ix_adjudicacion_decidido_por
+    ON adjudicacion (decidido_por)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_adjudicacion_postulacion
+    ON adjudicacion (postulacion_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_acta_adjudicacion_generada_por
+    ON acta_adjudicacion (generada_por)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_acta_adjudicacion_convocatoria
+    ON acta_adjudicacion (convocatoria_id)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_acta_adjudicacion_numero
+    ON acta_adjudicacion (numero);
+CREATE INDEX ix_publicacion_resultado_publicado_por
+    ON publicacion_resultado (publicado_por)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_publicacion_resultado_convocatoria
+    ON publicacion_resultado (convocatoria_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_comunicado_convocatoria_id
+    ON comunicado (convocatoria_id)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_comunicado_publicado_en
+    ON comunicado (publicado_en DESC)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_notificacion_comunicado_id
+    ON notificacion (comunicado_id)
+    WHERE ((comunicado_id IS NOT NULL) AND (eliminado_en IS NULL));
+CREATE INDEX ix_notificacion_postulacion_id
+    ON notificacion (postulacion_id, creado_en DESC)
+    WHERE ((postulacion_id IS NOT NULL) AND (eliminado_en IS NULL));
+CREATE INDEX ix_notificacion_usuario_creado
+    ON notificacion (usuario_id, creado_en DESC)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_dispositivo_fcm_usuario_id
+    ON dispositivo_fcm (usuario_id)
+    WHERE (eliminado_en IS NULL);
+CREATE UNIQUE INDEX uq_dispositivo_fcm_token
+    ON dispositivo_fcm (token)
+    WHERE (eliminado_en IS NULL);
+CREATE INDEX ix_bitacora_usuario_id
+    ON bitacora (usuario_id);
+
+-- Indices de las tablas pendientes (segun el diseno)
 CREATE UNIQUE INDEX uq_nota_postulacion_periodo
     ON nota_academica (postulacion_id, periodo)
     WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_modelo_version
-    ON modelo_preseleccion (version)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_modelo_activo
-    ON modelo_preseleccion (activo)
-    WHERE activo AND eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_parametro_modelo_clave
     ON parametro_modelo (modelo_id, clave)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_puntaje_vigente
-    ON puntaje_postulacion (postulacion_id)
-    WHERE vigente AND eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_finalista_postulacion
-    ON finalista (postulacion_id)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_adjudicacion_postulacion
-    ON adjudicacion (postulacion_id)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_acta_numero
-    ON acta_adjudicacion (numero)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_publicacion_convocatoria
-    ON publicacion_resultado (convocatoria_id)
-    WHERE eliminado_en IS NULL;
-CREATE UNIQUE INDEX uq_dispositivo_token
-    ON dispositivo_fcm (token)
     WHERE eliminado_en IS NULL;
 CREATE UNIQUE INDEX uq_beca_adjudicacion
     ON beca (adjudicacion_id)
@@ -591,115 +676,18 @@ CREATE UNIQUE INDEX uq_beca_adjudicacion
 CREATE UNIQUE INDEX uq_asistencia_beca_fecha
     ON asistencia (beca_id, fecha)
     WHERE eliminado_en IS NULL;
-
--- -----------------------------------------------------------------------------
--- 4. Indices de consulta
--- -----------------------------------------------------------------------------
-CREATE INDEX ix_usuario_rol_id
-    ON usuario (rol_id)
-    WHERE eliminado_en IS NULL;
-CREATE INDEX ix_sesion_usuario_id
-    ON sesion (usuario_id)
-    WHERE eliminado_en IS NULL;
-CREATE INDEX ix_postulante_carrera_id
-    ON postulante (carrera_id)
-    WHERE eliminado_en IS NULL;
-CREATE INDEX ix_postulacion_convocatoria_estado
-    ON postulacion (convocatoria_id, estado)
-    WHERE eliminado_en IS NULL;
-CREATE INDEX ix_puntaje_lista_priorizada
-    ON puntaje_postulacion (puntaje_total DESC)
-    WHERE vigente AND eliminado_en IS NULL;
-CREATE INDEX ix_postulacion_historial_postulacion
-    ON postulacion_historial (postulacion_id, creado_en);
-CREATE INDEX ix_documento_adjunto_postulacion
-    ON documento_adjunto (postulacion_id)
-    WHERE eliminado_en IS NULL;
 CREATE INDEX ix_beca_convocatoria_estado
     ON beca (convocatoria_id, estado)
     WHERE eliminado_en IS NULL;
 CREATE INDEX ix_beca_postulante
     ON beca (postulante_id)
     WHERE eliminado_en IS NULL;
-CREATE INDEX ix_notificacion_no_leidas
-    ON notificacion (usuario_id, leida, creado_en DESC)
-    WHERE eliminado_en IS NULL;
-CREATE INDEX ix_bitacora_usuario_fecha
-    ON bitacora (usuario_id, creado_en);
-CREATE INDEX ix_bitacora_accion_fecha
-    ON bitacora (accion, creado_en);
 
 -- -----------------------------------------------------------------------------
--- 5. Actualizacion automatica de actualizado_en
+-- 5. Actualizacion de actualizado_en
+--    La mantiene la aplicacion (Hibernate, @UpdateTimestamp); las migraciones no crean
+--    triggers en la base.
 -- -----------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION fn_set_actualizado_en() RETURNS trigger
-LANGUAGE plpgsql AS $$
-BEGIN
-    NEW.actualizado_en := now();
-    RETURN NEW;
-END;
-$$;
-
-CREATE TRIGGER trg_rol_actualizado_en BEFORE UPDATE ON rol
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_usuario_actualizado_en BEFORE UPDATE ON usuario
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_sesion_actualizado_en BEFORE UPDATE ON sesion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_carrera_actualizado_en BEFORE UPDATE ON carrera
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_postulante_actualizado_en BEFORE UPDATE ON postulante
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_gestion_academica_actualizado_en BEFORE UPDATE ON gestion_academica
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_convocatoria_actualizado_en BEFORE UPDATE ON convocatoria
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_tipo_documento_actualizado_en BEFORE UPDATE ON tipo_documento
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_convocatoria_documento_actualizado_en BEFORE UPDATE ON convocatoria_documento
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_postulacion_actualizado_en BEFORE UPDATE ON postulacion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_respuesta_socioeconomica_actualizado_en BEFORE UPDATE ON respuesta_socioeconomica
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_nota_academica_actualizado_en BEFORE UPDATE ON nota_academica
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_documento_adjunto_actualizado_en BEFORE UPDATE ON documento_adjunto
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_modelo_preseleccion_actualizado_en BEFORE UPDATE ON modelo_preseleccion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_parametro_modelo_actualizado_en BEFORE UPDATE ON parametro_modelo
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_puntaje_postulacion_actualizado_en BEFORE UPDATE ON puntaje_postulacion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_lote_reprocesamiento_actualizado_en BEFORE UPDATE ON lote_reprocesamiento
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_finalista_actualizado_en BEFORE UPDATE ON finalista
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_auditoria_expediente_actualizado_en BEFORE UPDATE ON auditoria_expediente
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_adjudicacion_actualizado_en BEFORE UPDATE ON adjudicacion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_acta_adjudicacion_actualizado_en BEFORE UPDATE ON acta_adjudicacion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_publicacion_resultado_actualizado_en BEFORE UPDATE ON publicacion_resultado
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_comunicado_actualizado_en BEFORE UPDATE ON comunicado
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_notificacion_actualizado_en BEFORE UPDATE ON notificacion
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_dispositivo_fcm_actualizado_en BEFORE UPDATE ON dispositivo_fcm
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_beca_actualizado_en BEFORE UPDATE ON beca
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_movimiento_beca_actualizado_en BEFORE UPDATE ON movimiento_beca
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_planilla_asistencia_actualizado_en BEFORE UPDATE ON planilla_asistencia
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_asistencia_actualizado_en BEFORE UPDATE ON asistencia
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
-CREATE TRIGGER trg_cotejo_asistencia_actualizado_en BEFORE UPDATE ON cotejo_asistencia
-    FOR EACH ROW EXECUTE FUNCTION fn_set_actualizado_en();
 
 -- -----------------------------------------------------------------------------
 -- 6. Tablas de solo insercion (append-only): bitacora y postulacion_historial
@@ -714,34 +702,62 @@ END;
 $$;
 
 -- -----------------------------------------------------------------------------
--- 7. Vista materializada de indicadores BI (CU-12), refrescada por lotes:
---    REFRESH MATERIALIZED VIEW mv_indicadores_convocatoria;
+-- 7. Vista materializada de indicadores BI (CU-12), una fila por (convocatoria, mes).
+--    Se refresca por lote cada noche: REFRESH MATERIALIZED VIEW CONCURRENTLY mv_indicadores_convocatoria;
+--    (igual a la migracion V20261114100000; la asistencia se agrega con el CU-10)
 -- -----------------------------------------------------------------------------
 CREATE MATERIALIZED VIEW mv_indicadores_convocatoria AS
-SELECT
-    g.id                AS gestion_id,
-    g.etiqueta          AS gestion,
-    c.id                AS convocatoria_id,
-    c.nombre            AS convocatoria,
-    (SELECT count(*) FROM postulacion p
-      WHERE p.convocatoria_id = c.id AND p.estado <> 'borrador'
-        AND p.eliminado_en IS NULL)                       AS postulaciones_recibidas,
-    (SELECT count(*) FROM finalista f JOIN postulacion p ON p.id = f.postulacion_id
-      WHERE p.convocatoria_id = c.id AND f.eliminado_en IS NULL) AS finalistas,
-    (SELECT count(*) FROM adjudicacion a JOIN postulacion p ON p.id = a.postulacion_id
-      WHERE p.convocatoria_id = c.id AND a.resultado = 'ADJUDICADA'
-        AND a.eliminado_en IS NULL)                       AS becas_adjudicadas,
-    (SELECT count(*) FROM beca b
-      WHERE b.convocatoria_id = c.id AND b.estado = 'VIGENTE'
-        AND b.eliminado_en IS NULL)                       AS becas_vigentes,
-    (SELECT count(*) FROM asistencia s JOIN beca b ON b.id = s.beca_id
-      WHERE b.convocatoria_id = c.id AND s.eliminado_en IS NULL) AS asistencias_registradas,
-    now()               AS actualizado_en
-FROM convocatoria c
-JOIN gestion_academica g ON g.id = c.gestion_id
-WHERE c.eliminado_en IS NULL;
+SELECT d.convocatoria_id,
+       c.gestion_id,
+       d.mes,
+       CAST(sum(d.postulaciones_recibidas) AS integer) AS postulaciones_recibidas,
+       CAST(sum(d.finalistas) AS integer)              AS finalistas,
+       CAST(sum(d.adjudicadas) AS integer)             AS adjudicadas,
+       now()                                           AS calculado_en
+FROM (
+    SELECT po.convocatoria_id,
+           CAST(date_trunc('month', po.fecha_envio AT TIME ZONE 'America/La_Paz') AS date) AS mes,
+           count(*)           AS postulaciones_recibidas,
+           CAST(0 AS bigint)  AS finalistas,
+           CAST(0 AS bigint)  AS adjudicadas
+    FROM postulacion po
+    WHERE po.fecha_envio IS NOT NULL AND po.eliminado_en IS NULL
+    GROUP BY po.convocatoria_id, 2
 
-CREATE UNIQUE INDEX uq_mv_indicadores_convocatoria ON mv_indicadores_convocatoria (convocatoria_id);
+    UNION ALL
+
+    SELECT po.convocatoria_id,
+           CAST(date_trunc('month', f.creado_en AT TIME ZONE 'America/La_Paz') AS date) AS mes,
+           CAST(0 AS bigint),
+           count(*),
+           CAST(0 AS bigint)
+    FROM finalista f
+    JOIN postulacion po ON po.id = f.postulacion_id AND po.eliminado_en IS NULL
+    WHERE f.eliminado_en IS NULL
+    GROUP BY po.convocatoria_id, 2
+
+    UNION ALL
+
+    SELECT po.convocatoria_id,
+           CAST(date_trunc('month', a.fecha_adjudicacion AT TIME ZONE 'America/La_Paz') AS date) AS mes,
+           CAST(0 AS bigint),
+           CAST(0 AS bigint),
+           count(*)
+    FROM adjudicacion a
+    JOIN postulacion po ON po.id = a.postulacion_id AND po.eliminado_en IS NULL
+    WHERE a.resultado = 'ADJUDICADA' AND a.eliminado_en IS NULL
+      AND EXISTS (SELECT 1 FROM publicacion_resultado pr
+                  WHERE pr.convocatoria_id = po.convocatoria_id AND pr.eliminado_en IS NULL)
+    GROUP BY po.convocatoria_id, 2
+) d
+JOIN convocatoria c ON c.id = d.convocatoria_id AND c.eliminado_en IS NULL
+GROUP BY d.convocatoria_id, c.gestion_id, d.mes
+WITH DATA;
+
+-- Necesario para REFRESH MATERIALIZED VIEW CONCURRENTLY, y la consulta por convocatoria y mes.
+CREATE UNIQUE INDEX uq_mv_indicadores_convocatoria_mes ON mv_indicadores_convocatoria (convocatoria_id, mes);
+-- La consulta del dashboard filtra por gestion.
+CREATE INDEX ix_mv_indicadores_convocatoria_gestion ON mv_indicadores_convocatoria (gestion_id);
 
 -- -----------------------------------------------------------------------------
 -- 8. Datos iniciales del catalogo de roles
