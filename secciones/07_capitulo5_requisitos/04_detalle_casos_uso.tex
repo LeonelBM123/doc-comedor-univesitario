@@ -950,7 +950,7 @@
 \endlastfoot
 \textbf{Propósito} & Brindar al Directivo un dashboard interactivo de Business Intelligence con los indicadores clave del proceso de la Beca Comedor, como apoyo a la toma de decisiones. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Directivo consulta el dashboard de indicadores: postulaciones recibidas, finalistas, becas adjudicadas y asistencia, por convocatoria y por mes, con la posibilidad de filtrarlos por gestión académica. Los indicadores se obtienen de vistas precalculadas que se actualizan por lotes, de modo que la consulta no afecta el rendimiento de las operaciones transaccionales. Es una consulta de solo lectura. Respalda el RF-07. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Directivo consulta el dashboard de indicadores: postulaciones recibidas, finalistas, becas adjudicadas y asistencia promedio, con gráficos por mes de postulaciones y de asistencia, filtrados por gestión académica y, opcionalmente, por convocatoria. Los indicadores se obtienen de una vista materializada que se refresca por lotes de forma nocturna, de modo que la consulta no afecta el rendimiento de las operaciones transaccionales, y se muestra la fecha de la última actualización. El Directivo puede descargar lo que está viendo como un PDF. Es una consulta de solo lectura. Respalda el RF-07. \\
 \midrule
 \textbf{Actores} & Directivo. \\
 \midrule
@@ -964,15 +964,18 @@
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
     \item El Directivo selecciona la opción «Dashboard de indicadores».
-    \item El sistema consulta los indicadores precalculados de la gestión académica vigente.
-    \item El sistema muestra en gráficos interactivos los indicadores de postulaciones recibidas, finalistas, becas adjudicadas y asistencia, por convocatoria y por mes, junto con la fecha de su última actualización.
-    \item El Directivo selecciona una gestión académica para filtrar los indicadores.
-    \item El sistema consulta los indicadores de la gestión seleccionada y actualiza el dashboard.
+    \item El sistema consulta los indicadores precalculados de la gestión académica vigente, con todas sus convocatorias.
+    \item El sistema muestra los cuatro indicadores (postulaciones recibidas, finalistas, becas adjudicadas y asistencia promedio), los gráficos de postulaciones y de asistencia por mes, y la fecha de su última actualización.
+    \item El Directivo selecciona otra gestión académica o una convocatoria y pulsa «Aplicar».
+    \item El sistema consulta los indicadores de esa selección y actualiza el dashboard.
+    \item Si lo desea, el Directivo pulsa «Descargar PDF» y el sistema genera un documento con lo que está viendo y lo descarga.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (pasos 2 y 5): si no existen datos para la gestión académica consultada, el sistema muestra un mensaje informativo.
-    \item A2 (paso 3): si el proceso por lotes aún no se ha ejecutado, el sistema muestra los últimos indicadores disponibles con su fecha de actualización.
+    \item A1 (pasos 2 y 5): si no existen datos para la gestión o la convocatoria consultada, el sistema muestra un mensaje informativo con los indicadores en cero.
+    \item A2 (paso 3): si el proceso por lotes aún no se ha ejecutado, el sistema muestra los últimos indicadores disponibles con su fecha de actualización; si nunca se ejecutó, lo indica.
+    \item A3 (paso 4): si la gestión o la convocatoria no existe, o la convocatoria no pertenece a la gestión, el sistema responde 404 (ERR\_DAS\_01) y conserva la última selección válida.
+    \item A4 (paso 6): si no hay datos que exportar, el sistema responde 400 (ERR\_DAS\_02) y no genera el PDF.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}

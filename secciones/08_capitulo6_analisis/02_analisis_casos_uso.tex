@@ -198,7 +198,7 @@ Al consultar una planilla (mensaje 1), el controlador obtiene la planilla (1.2) 
 
 \subsubsection{6.2.12. Analizar CU-12 Visualizar dashboard de indicadores BI}\label{sec:cap6_analisis_cu12}
 
-En el CU-12, el Directivo consulta el dashboard mediante \textit{DashboardView} y \textit{DashboardController}. La única entidad involucrada es \textit{IndicadoresConvocatoria}, que representa los indicadores precalculados por lotes a partir de las postulaciones, adjudicaciones, becas y asistencias. La Figura~\ref{fig:analisis_cu12} presenta el diagrama de análisis.
+En el CU-12, el Directivo consulta el dashboard mediante \textit{DashboardView} y \textit{DashboardController}. La única entidad involucrada es \textit{IndicadoresConvocatoria}, que representa los indicadores precalculados por lotes a partir de las postulaciones, adjudicaciones, becas y asistencias. El controlador consulta esos indicadores para la selección de gestión y convocatoria (mensajes 1.2 y 2.2) y los reutiliza para generar el PDF descargable (3.2). La Figura~\ref{fig:analisis_cu12} presenta el diagrama de análisis.
 
 \begin{figure}[H]
 \caption{Análisis del CU-12 Visualizar dashboard de indicadores BI}
