@@ -307,33 +307,34 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Postulante realizar el seguimiento del estado de su postulación sin necesidad de acudir presencialmente a la DUBSS. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Postulante consulta, desde el portal web o la aplicación móvil, el estado actual de sus postulaciones, el historial de cambios y, según corresponda, las observaciones de devolución, el motivo de archivo o rechazo y el resultado de la adjudicación. Cuando el estado cambia, el sistema notifica al Postulante mediante notificación push y la notificación lo dirige a esta consulta. Es una consulta de solo lectura. Respalda el RF-06. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Postulante consulta, desde el portal web o la aplicación móvil, el estado visible de sus postulaciones enviadas, la línea de tiempo de cambios (con los pasos pendientes) y, según corresponda, las observaciones de devolución, el motivo de archivo o rechazo, la información de finalista y el resultado de la adjudicación. La decisión final de adjudicar o no adjudicar solo se muestra después de publicar los resultados (CU-22); antes se ve «calificada». Cuando el estado cambia, el sistema avisa al Postulante y el aviso abre directamente el detalle de su postulación. Es una consulta de solo lectura. Respalda el RF-06. \\
 \midrule
 \textbf{Actores} & Postulante. \\
 \midrule
 \textbf{Actor Iniciador} & Postulante. \\
 \midrule
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El Postulante está autenticado en el sistema (CU-01).
-    \item El Postulante ha enviado al menos una postulación.
+    \item El Postulante está autenticado en el sistema (CU-01) con el rol Postulante.
+    \item Para ver una postulación, el Postulante ya la envió (CU-02); sin postulaciones enviadas la opción igual se puede abrir.
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
     \item El Postulante accede a la opción «Mis postulaciones».
-    \item El sistema muestra la lista de sus postulaciones con la gestión académica, la fecha de envío y el estado actual.
+    \item El sistema muestra la lista de sus postulaciones enviadas, de la más reciente a la más antigua, con la gestión académica, la fecha de envío y el estado visible.
     \item El Postulante selecciona una postulación.
-    \item El sistema muestra el detalle: estado actual (pendiente, devuelta, archivada, calificada, adjudicada o no adjudicada), historial de cambios de estado con fecha y hora, y la información asociada al estado.
+    \item El sistema muestra el detalle: convocatoria, fecha de envío, estado visible (pendiente, devuelta, archivada, calificada, adjudicada o no adjudicada), línea de tiempo con la fecha y hora de cada cambio y los pasos que aún faltan como pendientes, y la información asociada al estado.
     \item El Postulante revisa la información y, si lo desea, regresa a la lista.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
     \item A1 (paso 2): si el Postulante no tiene postulaciones, el sistema muestra un mensaje informativo e invita a postular si existe una convocatoria abierta.
     \item A2 (paso 2): si el Postulante tiene postulaciones de varias gestiones, el sistema permite filtrarlas por gestión académica.
-    \item A3 (paso 4): si la postulación está «devuelta», el sistema muestra las observaciones registradas por el Administrador (el motivo del historial de la devolución, CU-19) y ofrece la opción de corregir y reenviar (CU-02).
-    \item A4 (paso 4): si la postulación está «archivada» o «no adjudicada», el sistema muestra el motivo registrado (CU-20).
-    \item A5 (paso 4): si el Postulante fue seleccionado como finalista, el sistema muestra la notificación con el plazo y los documentos físicos que debe presentar (CU-21); si los resultados fueron publicados, muestra su resultado (CU-22).
-    \item A6 (paso 1): si el Postulante accede desde una notificación push, el sistema abre directamente el detalle de la postulación afectada.
+    \item A3 (paso 4): si la postulación está «devuelta», el sistema muestra las observaciones registradas por el Administrador (el motivo del historial de la devolución, CU-19) y ofrece la opción de corregir y reenviar (CU-02); el plazo para corregir está por definir con la DUBSS.
+    \item A4 (paso 4): si la postulación está «archivada» o «no adjudicada» por rechazo, el sistema muestra el motivo registrado (CU-20); si fue «no adjudicada» por decisión final (CU-05), no se muestra motivo.
+    \item A5 (paso 4): si el Postulante es finalista, el sistema muestra el plazo de entrega, los documentos físicos que debe presentar y si la documentación ya fue recibida (CU-21); si los resultados fueron publicados y hay decisión, muestra su resultado y el acceso a los resultados de la convocatoria (CU-22).
+    \item A6 (paso 1): si el Postulante accede desde un aviso (push o bandeja), el sistema abre directamente el detalle de la postulación afectada.
+    \item A7 (paso 3): si la postulación no existe o es de otra persona, el sistema responde 404 sin revelar si existe.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
@@ -1105,36 +1106,37 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Administrador DUBSS gestionar las cuentas del personal y asignarles roles, de modo que cada persona acceda únicamente a las funciones que le corresponden. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS crea, edita, desactiva y reactiva las cuentas del personal y les asigna uno de los roles del sistema (Administrador, Directivo o Personal del Comedor). Los Postulantes no se gestionan aquí, pues se registran por sí mismos (CU-01). Las cuentas se crean en la base de datos y los cambios de rol se conservan en la bitácora (CU-25). Respalda el RF-09. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS crea, edita, desactiva y reactiva las cuentas del personal y les asigna uno de los roles del sistema (Administrador, Directivo o Personal del Comedor). Los Postulantes no se gestionan aquí, pues se registran por sí mismos (CU-01). Cada cuenta nueva recibe una contraseña temporal que se muestra una sola vez al Administrador, y cada operación (alta, edición, cambio de rol, baja y reactivación) queda en la bitácora (CU-25). Respalda el RF-09. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
 \textbf{Actor Iniciador} & Administrador DUBSS. \\
 \midrule
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El Administrador DUBSS está autenticado en el sistema (CU-01).
-    \item El Administrador cuenta con privilegios de administración.
+    \item El Administrador DUBSS está autenticado en el sistema (CU-01) y su cuenta está activa.
+    \item El usuario autenticado tiene el rol Administrador DUBSS.
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
-    \item El Administrador accede a la opción «Usuarios y roles».
-    \item El sistema muestra la lista de cuentas del personal con su nombre, CI, correo, rol y estado (activa o desactivada), con filtros por rol, estado y búsqueda por CI o nombre.
+    \item El Administrador accede a la opción «Usuarios y roles»; el menú ofrece una vista por rol (Administradores DUBSS, Directivos y Personal del Comedor), que es la misma lista filtrada por ese rol.
+    \item El sistema muestra la lista paginada de cuentas del personal con su nombre, CI, correo, rol y estado (activa o desactivada), con filtros por rol, estado y búsqueda por CI o nombre.
     \item El Administrador selecciona la acción deseada: crear, editar, cambiar rol, desactivar o reactivar una cuenta.
     \item Para crear una cuenta, el Administrador ingresa los datos del funcionario (nombres, apellidos, CI, correo electrónico y rol).
-    \item El sistema valida que los datos sean correctos y que el CI y el correo electrónico no estén registrados.
+    \item El sistema valida que los datos sean correctos, que el rol sea uno de los tres del personal y que el CI y el correo electrónico no estén registrados.
     \item El Administrador confirma la operación.
-    \item El sistema crea o actualiza la cuenta en la base de datos y genera una contraseña temporal, que se muestra una sola vez al Administrador para que la entregue al funcionario; este la cambia desde su perfil (CU-15).
+    \item El sistema crea la cuenta activa con el rol indicado y una contraseña temporal, que se muestra una sola vez al Administrador para que la entregue al funcionario (este la cambia desde su perfil, CU-15); para editar, cambiar el rol, desactivar o reactivar, actualiza la cuenta. Al cambiar el rol o desactivar, cierra las sesiones activas de esa cuenta.
     \item El sistema registra la acción (usuario, cambio realizado, fecha y hora) en la bitácora y muestra la lista actualizada.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (paso 5): si el CI o el correo electrónico ya están registrados, el sistema rechaza el alta e indica el campo en conflicto.
-    \item A2 (paso 5): si faltan datos obligatorios o su formato es inválido, el sistema marca los errores y permite corregirlos.
+    \item A1 (paso 5): si el CI o el correo electrónico ya están registrados, el sistema rechaza el alta (409), indica el campo en conflicto y no crea la cuenta.
+    \item A2 (paso 5): si faltan datos obligatorios o su formato es inválido (incluido un rol que no es del personal), el sistema responde 400, marca los errores y permite corregirlos.
     \item A3 (paso 3): si se cambia el rol de una cuenta, el sistema aplica los nuevos permisos desde su siguiente inicio de sesión y conserva el registro del cambio (rol anterior, rol nuevo, fecha y responsable).
     \item A4 (paso 3): al desactivar una cuenta, el sistema impide su acceso e invalida sus sesiones activas; la cuenta no se elimina, de modo que se preserve la trazabilidad de sus acciones.
-    \item A5 (paso 3): el sistema impide que el Administrador desactive su propia cuenta o la del último Administrador activo.
+    \item A5 (paso 3): el sistema impide que el Administrador desactive o cambie el rol de su propia cuenta o de la del último Administrador activo (403) y muestra un aviso.
     \item A6 (paso 3): el Administrador puede reactivar una cuenta desactivada, que recupera su rol anterior.
+    \item A7 (paso 3): si la cuenta no existe o es la de un Postulante, el sistema responde 404; si ya está en el estado pedido (desactivar una desactivada, reactivar una activa), responde 409 e informa el estado actual.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
@@ -1683,54 +1685,62 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Administrador DUBSS notificar a los finalistas para que presenten su documentación física, registrar su recepción y publicar comunicados y avisos dirigidos a los postulantes. \\
 \midrule
-\textbf{Descripción} & Este caso de uso agrupa tres funciones que coordinan la auditoría física: notificar a los finalistas el plazo y los documentos que deben presentar, registrar la fecha en que se recibe la documentación física de cada uno y publicar comunicados o avisos generales. Las notificaciones se envían mediante notificación push (Firebase Cloud Messaging) y quedan consultables en la aplicación. La pantalla de finalistas muestra además la última auditoría de cada uno, la insignia «Devuelta» cuando la postulación fue devuelta y la acción «Auditar» (CU-07); todo aviso se envía por el servicio de notificaciones. Es incluido por el CU-07 (Auditar expediente finalista). Respalda el RF-16. \\
+\textbf{Descripción} & Este caso de uso agrupa tres funciones que coordinan la auditoría física: notificar a los finalistas el plazo y los documentos que deben presentar, registrar la fecha en que se recibe la documentación física de cada uno y publicar comunicados o avisos generales. Cada aviso a un finalista se guarda en su bandeja y se envía por notificación push (Firebase Cloud Messaging) y por correo; los comunicados llegan a la bandeja y por push, y el postulante los consulta en la web o en la aplicación. La pantalla de finalistas muestra además la última auditoría de cada uno, la insignia «Devuelta» cuando la postulación fue devuelta y la acción «Auditar» (CU-07); todo aviso se envía por el servicio de notificaciones. Es incluido por el CU-07 (Auditar expediente finalista). Respalda el RF-16. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS; Postulante (receptor de las notificaciones). \\
 \midrule
 \textbf{Actor Iniciador} & Administrador DUBSS. \\
 \midrule
 \textbf{Precondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item El Administrador DUBSS está autenticado en el sistema (CU-01) y cuenta con privilegios de administración.
-    \item Para notificar finalistas y registrar entregas: existe una lista priorizada con finalistas definidos (CU-06), en el marco de la auditoría (CU-07).
+    \item El Administrador DUBSS está autenticado en el sistema (CU-01) con el rol Administrador DUBSS y su cuenta está activa.
+    \item Para notificar finalistas y registrar entregas: la convocatoria tiene finalistas seleccionados (CU-05), en el marco de la auditoría (CU-07).
     \item Para publicar comunicados: existe al menos un grupo de destinatarios (todos los postulantes o los finalistas).
 \end{cuvin} \\
 \midrule
 \textbf{Proceso} & \textbf{Flujo principal A: notificar a los finalistas.}
 \begin{cupasos}
-    \item El Administrador accede a la gestión de finalistas desde la auditoría de expedientes (CU-07).
-    \item El sistema muestra los finalistas de la lista priorizada (cantidad por definir con la DUBSS).
-    \item El Administrador selecciona los finalistas a notificar (todos o un subconjunto) y define el plazo, el lugar y horario de entrega (por definir con la DUBSS) y los documentos físicos que deben presentar.
+    \item El Administrador accede a «Finalistas» (o llega desde la auditoría de expedientes, CU-07) y elige la convocatoria; el sistema deja seleccionada la más reciente.
+    \item El sistema muestra los finalistas con su posición, nombre, puntaje, estado de la notificación («Sin enviar», «Enviada» o «Fallida») y estado de la documentación física («Pendiente» o «Recibida»), con búsqueda por nombre o CI.
+    \item El Administrador selecciona los finalistas a notificar (todos o un subconjunto) y define el plazo de entrega, el lugar y horario (por definir con la DUBSS) y los documentos físicos que deben presentar.
     \item El Administrador confirma el envío.
-    \item El sistema envía una notificación push a cada finalista con el plazo y los documentos requeridos, y guarda el aviso en su bandeja de la aplicación.
-    \item El sistema registra el envío (destinatarios, fecha y hora) en la bitácora (CU-25).
+    \item El sistema guarda el aviso en la bandeja de cada finalista seleccionado, le envía push y correo y lo marca como notificado.
+    \item El sistema registra el envío (destinatarios, fecha y hora) en la bitácora (CU-25) y muestra cuántos avisos se enviaron y cuántos fallaron.
 \end{cupasos} \\
  & \textbf{Flujo principal B: registrar la entrega de documentación física.}
 \begin{cupasos}
     \item El Administrador busca al finalista por CI o nombre.
     \item El sistema muestra el expediente del finalista y el estado de su entrega (pendiente o recibida).
-    \item El Administrador marca la documentación como recibida, indicando la fecha de recepción (por defecto, la fecha actual) y, opcionalmente, observaciones.
-    \item El sistema guarda el registro y habilita la continuación de la auditoría del expediente (CU-07).
+    \item El Administrador marca la documentación como recibida, indicando la fecha de recepción (por defecto, la fecha actual; no puede ser futura) y, opcionalmente, observaciones.
+    \item El sistema guarda el registro, lo anota en la bitácora y habilita la continuación de la auditoría del expediente (CU-07).
 \end{cupasos} \\
  & \textbf{Flujo principal C: publicar comunicados y avisos.}
 \begin{cupasos}
     \item El Administrador selecciona «Nuevo comunicado».
-    \item El Administrador ingresa el título y el contenido, y elige los destinatarios (todos los postulantes o un grupo, por ejemplo los finalistas).
+    \item El Administrador ingresa el título y el contenido, y elige los destinatarios (todos los postulantes o los finalistas).
     \item El sistema muestra una vista previa y solicita confirmación.
     \item El Administrador confirma la publicación.
-    \item El sistema publica el comunicado, envía una notificación push a los destinatarios, lo deja consultable en la aplicación y registra la acción en la bitácora.
+    \item El sistema publica el comunicado, lo envía como aviso a cada destinatario (bandeja y push), lo anota en la bitácora y muestra a cuántos llegó.
+\end{cupasos} \\
+ & \textbf{Flujo principal D: el postulante consulta sus avisos.}
+\begin{cupasos}
+    \item El Postulante abre su bandeja de notificaciones y ve el aviso de finalista o el comunicado, con su fecha, y lo marca como leído.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (flujo A, paso 5): si un finalista no tiene un dispositivo registrado para notificaciones push, el aviso queda disponible en su bandeja y se muestra al ingresar al sistema.
-    \item A2 (flujo A, paso 5): si el envío push falla para algún destinatario, el sistema lo marca como fallido y permite reintentar el envío solo a esos destinatarios.
+    \item A1 (flujo A, paso 5): si un finalista no tiene un dispositivo registrado para push, el aviso queda en su bandeja y se le envía por correo; no es un error.
+    \item A2 (flujo A, paso 5): si el envío falla para algún finalista, el sistema lo marca como «Fallida» y permite volver a notificar solo a esos finalistas; el resto no recibe el aviso dos veces.
     \item A3 (flujo B, paso 3): si el finalista entrega la documentación de forma incompleta, el Administrador registra la observación y puede devolver la postulación (CU-19).
     \item A4 (flujo B, paso 3): si vence el plazo sin que el finalista entregue la documentación, el Administrador puede archivar o rechazar la postulación (CU-20).
     \item A5 (flujo B, paso 3): si el Administrador corrige una fecha de recepción ya registrada, el sistema conserva el valor anterior en la bitácora.
-    \item A6 (flujo C, paso 2): si el título, el contenido o los destinatarios están vacíos, el sistema no permite la publicación e indica los campos faltantes.
+    \item A6 (flujos A y C): si faltan datos obligatorios (plazo, lugar y horario, documentos, título, contenido, destinatarios o ningún finalista seleccionado), el sistema no envía ni publica nada e indica los campos faltantes (400).
+    \item A7 (flujo B, paso 3): si la fecha de recepción es futura, el sistema responde 400 y no la guarda.
+    \item A8 (flujo C, paso 2): si el comunicado se dirige a un grupo sin destinatarios, el sistema lo informa y no publica.
+    \item A9 (flujo A, paso 2): si la convocatoria no tiene finalistas, el sistema informa «Todavía no hay finalistas en esta convocatoria» y no muestra la tabla; si la convocatoria elegida no existe, responde 404.
+    \item A10 (flujos A y C): si Firebase o el correo no están disponibles, los avisos quedan guardados en la bandeja y el servicio de notificaciones (CU-EXTRA-01) reintenta el envío.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
-    \item Los finalistas notificados reciben el aviso con el plazo y los documentos requeridos.
+    \item Los finalistas notificados reciben el aviso con el plazo y los documentos requeridos (bandeja, push y correo).
     \item La recepción de la documentación física queda registrada con su fecha.
     \item Los comunicados publicados quedan consultables por los destinatarios desde la aplicación.
     \item Las acciones quedan registradas en la bitácora; esta funcionalidad no modifica el estado de la postulación.
@@ -1740,7 +1750,7 @@
     \item Autenticación inválida o sesión expirada.
     \item Falta de permisos suficientes (el usuario no tiene el rol Administrador DUBSS).
     \item Datos ingresados no válidos o incompletos.
-    \item Servicio de Firebase Cloud Messaging no disponible.
+    \item Servicio de Firebase Cloud Messaging o de correo no disponible (el aviso queda en la bandeja).
     \item Error de conexión con el servidor o la base de datos.
 \end{cuvin} \\
 \end{longtable}
