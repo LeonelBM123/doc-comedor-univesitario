@@ -10,33 +10,49 @@
 
 \subsection{2.1. Introducción}
 
-% [PENDIENTE]: Redactar "Introducción".
+Este capítulo presenta el Plan de Aseguramiento de la Calidad del Software (SQAP) del Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor de la UAGRM. Su estructura sigue el estándar IEEE 730 para los procesos de aseguramiento de la calidad del software \parencite{ieee730_2014}, y la especificación de requisitos se apoya en la IEEE 830 \parencite{ieee830_1998}. Como referencia general de gestión de la calidad se menciona la norma ISO 9001 \parencite{iso9001_2015}; el equipo no declara ni gestiona certificación alguna bajo esa norma.
+
+El plan describe únicamente las prácticas que el equipo NEXWARE aplica hoy en el repositorio del sistema: reglas de commits, análisis de estilo, pruebas automatizadas, integración continua, registro de errores y bitácora de auditoría. Lo que aún no se ha definido o medido se señala como pendiente.
 
 \subsection{2.2. Antecedentes}
 
-% [PENDIENTE]: Redactar "Antecedentes".
+NEXWARE es un equipo de desarrollo de dos integrantes, Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga, que construye el sistema para la Dirección Universitaria de Bienestar Social y Salud (DUBSS). El código se mantiene en un repositorio único con cinco proyectos (backend principal, módulo de inteligencia artificial, panel web, landing institucional y aplicación móvil), que se integra mediante \textit{pull requests} en GitHub. Con un equipo tan pequeño, la calidad no puede depender de una unidad de control separada: el equipo prefirió incorporar las verificaciones a la propia cadena de trabajo, de modo que se ejecuten en cada cambio sin intervención manual. Este plan recoge esas prácticas y las ordena según el estándar IEEE 730.
 
 \subsection{2.3. Objetivos}
 
 \subsubsection{2.3.1. Objetivo general}
 
-% [PENDIENTE]: Redactar "Objetivo general".
+Asegurar que el sistema de postulación y preselección de la Beca Comedor se construya conforme a los requisitos especificados y a los criterios de calidad de la sección 2.6.1, mediante verificaciones sistemáticas durante todo el desarrollo.
 
 \subsubsection{2.3.2. Objetivos específicos}
 
-% [PENDIENTE]: Redactar "Objetivos específicos".
+\begin{itemize}
+    \item Verificar de forma automática el formato de los mensajes de \textit{commit} y el estilo del código en cada cambio.
+    \item Ejecutar pruebas automatizadas y la compilación de cada proyecto en la integración continua antes de incorporar cambios a la rama principal.
+    \item Mantener la trazabilidad entre casos de uso, requisitos funcionales y tareas de desarrollo.
+    \item Registrar y documentar los errores de la interfaz de servicio mediante códigos únicos.
+    \item Registrar en una bitácora las acciones de negocio que deban poder auditarse.
+\end{itemize}
 
 \subsection{2.4. Misión}
 
-% [PENDIENTE]: Redactar "Misión".
+% [PENDIENTE]: Redactar "Misión" (la definen los líderes de NEXWARE; no consta en el repositorio).
 
 \subsection{2.5. Visión}
 
-% [PENDIENTE]: Redactar "Visión".
+% [PENDIENTE]: Redactar "Visión" (la definen los líderes de NEXWARE; no consta en el repositorio).
 
 \subsection{2.6. Políticas de calidad}
 
-% [PENDIENTE]: Redactar las políticas de calidad del equipo (misión, visión y políticas son del equipo desarrollador).
+Las políticas de calidad de NEXWARE son las reglas que el equipo ya aplica en el repositorio:
+\begin{itemize}
+    \item Todo \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripción} y toca un solo alcance (backend, frontend, móvil, infraestructura, documentación o repositorio).
+    \item El código debe cumplir el estilo de su lenguaje antes de confirmarse.
+    \item Un cambio que altera un comportamiento existente actualiza sus pruebas en el mismo cambio; no se dejan pruebas en rojo ni desactualizadas.
+    \item Todo código de error nuevo se documenta en el mismo cambio que lo introduce.
+    \item Cada tarea se desarrolla a partir de un caso de uso con criterios de aceptación definidos.
+\end{itemize}
+La redacción formal de la política institucional del equipo queda pendiente de confirmación por los líderes.
 
 \subsubsection{2.6.1. Criterios de calidad}
 
@@ -67,7 +83,7 @@ Criterio & Definición & Verificación en el proyecto \\
 
 \subsection{2.7. Eslogan}
 
-% [PENDIENTE]: Redactar "Eslogan".
+% [PENDIENTE]: Redactar "Eslogan" (lo define NEXWARE; no consta en el repositorio).
 
 \subsection{2.8. Patrón y Metodología de Desarrollo}
 
@@ -77,31 +93,57 @@ La metodología de desarrollo adoptada es el Proceso Unificado de Desarrollo de 
 
 \subsubsection{2.8.2. Patrón de desarrollo, diseño y arquitectura}
 
-% [PENDIENTE]: Redactar "Patrón de desarrollo, diseño y arquitectura".
+El backend principal usa una arquitectura por módulos de negocio con capas internas (\textit{controller}, \textit{service}, \textit{repository}, \textit{dto}, \textit{model}). Cada módulo es una porción vertical completa y el código compartido entre dos o más módulos vive en un paquete común. Los módulos implementados son trece: \texttt{auth}, \texttt{usuarios}, \texttt{convocatorias}, \texttt{postulaciones}, \texttt{preseleccion}, \texttt{expedientes}, \texttt{finalistas}, \texttt{resultados}, \texttt{actas}, \texttt{comunicados}, \texttt{notificaciones}, \texttt{dashboard} y \texttt{bitacora}. El controlador valida la entrada y delega en un único método del servicio; el servicio concentra la lógica de negocio, las transacciones y el registro de eventos; el repositorio accede a PostgreSQL mediante Spring Data JPA, con el esquema versionado en 16 migraciones de Flyway. Las respuestas siguen un formato común (\texttt{ApiResponse}) bajo el prefijo \texttt{/api/v1}, y la autenticación usa tokens JWT propios. El panel web (React) y la aplicación móvil (Flutter) consumen esa interfaz. La descripción completa del diseño está en la sección 3.4.
 
 \subsection{2.9. Plan de Aseguramiento de la Calidad en el Software}
 
 \subsubsection{2.9.1. Propósito}
 
-% [PENDIENTE]: Redactar "Propósito".
+Este plan establece las actividades de aseguramiento de la calidad que se aplican al desarrollo del sistema, de modo que los productos de cada flujo de trabajo del PUDS puedan verificarse contra los requisitos y los estándares del equipo.
 
 \subsubsection{2.9.2. Objetivo}
 
-% [PENDIENTE]: Redactar "Objetivo".
+Detectar defectos y desviaciones lo antes posible y dejar evidencia verificable de que cada cambio cumplió las reglas de estilo, de pruebas y de compilación antes de integrarse.
 
 \subsubsection{2.9.3. Descripción}
 
-% [PENDIENTE]: Redactar "Descripción".
+El aseguramiento de la calidad se organiza en tres niveles de control. El primero se ejecuta en el equipo de cada integrante, al confirmar un cambio: un \textit{hook} de Git valida el formato del \textit{commit} (commitlint) y el estilo del código modificado (ESLint en TypeScript, Checkstyle en Java, \textit{flutter analyze} en Dart). El segundo corre en GitHub Actions al abrir un \textit{pull request} contra la rama principal o al integrar a ella: para cada proyecto modificado ejecuta el análisis de estilo, las pruebas y la compilación. El tercero es la revisión del \textit{pull request} por el otro integrante del equipo. Además, el sistema registra errores con códigos documentados y una bitácora de auditoría de las acciones de negocio.
 
 \subsubsection{2.9.4. Alcance}
 
 \paragraph{2.9.4.1. Cobertura del SQAP por fase y flujo de trabajo del PUDS.}
 
-% [PENDIENTE]: Redactar "Cobertura del SQAP por fase y flujo de trabajo del PUDS".
+La Tabla~\ref{tab:cobertura_sqap} indica qué actividades de calidad cubren cada flujo de trabajo del PUDS.
+
+\begin{table}[H]
+\caption{Cobertura del SQAP por flujo de trabajo del PUDS}
+\label{tab:cobertura_sqap}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{9.6cm}}
+\toprule
+Flujo de trabajo & Actividades de calidad \\
+\midrule
+Requisitos & Trazabilidad entre caso de uso, requisito funcional y actor; criterios de aceptación por caso de uso; revisión con la DUBSS. \\
+Análisis y diseño & Diagramas UML por caso de uso; modelo de dominio; diseño de la base de datos; revisión cruzada entre los dos líderes. \\
+Implementación & Estándares de codificación, \textit{hooks} de Git, \textit{pull requests} revisados, integración continua. \\
+Pruebas & Pruebas unitarias, de integración y de contrato HTTP automatizadas; \textit{Testcontainers} con PostgreSQL real; reporte de errores. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{2.9.5. Documentos de referencia}
 
-% [PENDIENTE]: Redactar "Documentos de referencia".
+\begin{itemize}
+    \item IEEE Std 730-2014, procesos de aseguramiento de la calidad del software \parencite{ieee730_2014}.
+    \item IEEE Std 830-1998, especificación de requisitos de software \parencite{ieee830_1998}.
+    \item ISO 9001:2015, como referencia general de gestión de la calidad \parencite{iso9001_2015}.
+    \item Pressman \parencite{pressman2010ingenieria}, atributos de calidad del software.
+    \item Reglas internas del repositorio: convenciones de Git, estándares de código, integración continua, pruebas y guía de errores.
+\end{itemize}
 
 \subsection{2.10. Gestión}
 
@@ -109,29 +151,29 @@ La metodología de desarrollo adoptada es el Proceso Unificado de Desarrollo de 
 
 \paragraph{2.10.1.1. Organigrama.}
 
-% [PENDIENTE]: Redactar "Organigrama".
+La estructura es plana: los dos líderes de NEXWARE, Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga, comparten la dirección y rinden cuentas al docente guía; la DUBSS es el cliente. El organigrama se presenta en la Figura~\ref{fig:organigrama} (sección 1.9). No existe una unidad de calidad separada: cada líder aplica y verifica el plan sobre su bloque y revisa el del otro.
 
 \subsubsection{2.10.2. Tareas}
 
-% [PENDIENTE]: Redactar "Tareas".
+Las tareas de calidad son: validar \textit{commits} y estilo (automático, en cada \textit{commit}); ejecutar análisis, pruebas y compilación (automático, en cada \textit{pull request}); revisar los \textit{pull requests} (el otro líder); documentar los códigos de error nuevos (quien los introduce); consultar la bitácora para auditoría (CU-25); y reportar errores y avances con los formularios de la sección 1.10.
 
 \subsubsection{2.10.3. Responsabilidades}
 
 \paragraph{2.10.3.1. Equipo de desarrollo.}
 
-% [PENDIENTE]: Redactar "Equipo de desarrollo".
+Cada líder es responsable, de punta a punta, de los casos de uso de su bloque: base de datos, servicio, pantallas y pruebas. Debe mantener sus pruebas al día, cumplir los estándares de codificación y documentar los errores que introduce.
 
 \paragraph{2.10.3.2. Aseguramiento de la Calidad del Software (SQA).}
 
-% [PENDIENTE]: Redactar "Aseguramiento de la Calidad del Software (SQA)".
+La función de SQA no recae en una persona dedicada. La ejercen de forma conjunta los dos líderes: mantienen la configuración de los controles automáticos y, mediante la revisión cruzada de \textit{pull requests}, verifican que cada cambio cumpla el plan. El docente guía supervisa el cumplimiento general.
 
 \paragraph{2.10.3.3. Cliente.}
 
-% [PENDIENTE]: Redactar "Cliente".
+La DUBSS aporta los requisitos y los datos institucionales, valida los resultados por caso de uso y confirma los parámetros de negocio pendientes, como el puntaje mínimo y el número de cupos.
 
 \paragraph{2.10.3.4. Gerencia de proyecto.}
 
-% [PENDIENTE]: Redactar "Gerencia de proyecto".
+La gerencia del proyecto la ejercen conjuntamente los dos líderes. Planifican las tareas, controlan el avance con el tablero de Trello y los formularios de reporte, y convocan la reunión semanal de seguimiento. El docente guía revisa el avance.
 
 \subsection{2.11. Documentación}
 
@@ -151,92 +193,92 @@ El contenido del DDS corresponde al flujo de trabajo de Diseño del PUDS, desarr
 
 \paragraph{2.11.3.1. Modelo a usar para el plan de verificación y validación.}
 
-% [PENDIENTE]: Redactar "Modelo a usar para el plan de verificación y validación".
+La verificación se realiza con pruebas automatizadas que se ejecutan en la integración continua y se documentan en el flujo de Pruebas (sección 3.6 y Capítulo 9). La estructura formal del plan de verificación y validación seguirá la IEEE 730. [PENDIENTE]: confirmar con el equipo la plantilla del plan.
 
 \subsubsection{2.11.4. Informe de Verificación y Validación (SWR)}
 
 \paragraph{2.11.4.1. Modelo a usar para el reporte sumario.}
 
-% [PENDIENTE]: Redactar "Modelo a usar para el reporte sumario".
+El reporte sumario consolida los resultados de las pruebas automatizadas de cada proyecto (pruebas ejecutadas, aprobadas y fallidas) y el estado de los errores abiertos. [PENDIENTE]: definir el formato del reporte.
 
 \paragraph{2.11.4.2. Reporte de anomalías.}
 
-% [PENDIENTE]: Redactar "Reporte de anomalías".
+Las anomalías se reportan con el formulario de errores de la Tabla~\ref{tab:form_errores}, que registra identificador, caso de uso, componente, descripción, severidad, responsable y estado.
 
 \paragraph{2.11.4.3. Reporte final.}
 
-% [PENDIENTE]: Redactar "Reporte final".
+[PENDIENTE]: el reporte final se elaborará al cierre del proyecto, con los resultados de la prueba de extremo a extremo del flujo completo.
 
 \subsubsection{2.11.5. Documentación del Usuario (UD)}
 
-% [PENDIENTE]: Redactar "Documentación del Usuario (UD)".
+El repositorio incluye una guía del sistema, el catálogo de errores por módulo, la documentación de la interfaz de servicio (Swagger UI) y una ficha por caso de uso. [PENDIENTE]: manual de usuario para el postulante y para el personal de la DUBSS.
 
 \subsection{2.12. Estándares, Prácticas y Convenciones}
 
 \subsubsection{2.12.1. Estándar de codificación}
 
-% [PENDIENTE]: Redactar "Estándar de codificación".
+Se sigue la convención propia de cada lenguaje: \textit{camelCase} para variables y métodos, \textit{PascalCase} para clases y tipos, \texttt{UPPER\_SNAKE\_CASE} para constantes, y para los archivos \texttt{PascalCase.java}, \texttt{camelCase.ts} (componentes React en \textit{PascalCase}) y \texttt{snake\_case.dart}. La sangría es de 4 espacios en Java y SQL y de 2 en TypeScript, JSON, YAML y Markdown, con fin de línea LF (configuración de \texttt{.editorconfig}). El cumplimiento se verifica con Prettier, ESLint, Checkstyle con configuración propia, \textit{flutter analyze} y, en el módulo de inteligencia artificial, Ruff.
 
 \subsubsection{2.12.2. Estándar de comentarios}
 
-% [PENDIENTE]: Redactar "Estándar de comentarios".
+Un comentario explica el porqué de una decisión no evidente (una restricción externa, una solución provisional o un comportamiento sorprendente) y no repite lo que el código ya expresa. Si eliminar el comentario no deja dudas a quien lee el código, el comentario sobra.
 
 \subsubsection{2.12.3. Responsables de verificar el cumplimiento}
 
-% [PENDIENTE]: Redactar "Responsables de verificar el cumplimiento".
+La verificación es automática en dos puntos (el \textit{hook} de Git y la integración continua) y manual en la revisión de cada \textit{pull request} por el otro líder.
 
 \subsection{2.13. Revisiones y Auditorías}
 
 \subsubsection{2.13.1. Propósito}
 
-% [PENDIENTE]: Redactar "Propósito".
+Comprobar que los productos y el proceso cumplen este plan, y detectar desviaciones antes de la integración.
 
 \subsubsection{2.13.2. Evaluación de la calidad de los productos}
 
 \paragraph{2.13.2.1. Objetivo.}
 
-% [PENDIENTE]: Redactar "Objetivo".
+Verificar que cada cambio de código cumple el estilo, supera las pruebas y compila.
 
 \paragraph{2.13.2.2. Procedimiento.}
 
-% [PENDIENTE]: Redactar "Procedimiento".
+Al confirmar un cambio se ejecutan el \textit{hook} de estilo y la validación del mensaje. Al abrir un \textit{pull request}, GitHub Actions detecta los proyectos modificados y para cada uno corre el análisis de estilo, las pruebas y la compilación. En el backend principal las pruebas de integración usan PostgreSQL y Redis reales, por lo que las migraciones también se verifican. Un cambio con resultado fallido no se incorpora a la rama principal. El repositorio cuenta con 160 archivos de prueba en el backend principal, 99 en el panel web, 15 en la aplicación móvil y una prueba de salud en el módulo de inteligencia artificial. [PENDIENTE]: medir la cobertura de pruebas.
 
 \subsubsection{2.13.3. Revisión del ajuste del proceso}
 
 \paragraph{2.13.3.1. Objetivo.}
 
-% [PENDIENTE]: Redactar "Objetivo".
+Verificar que el equipo sigue el proceso definido.
 
 \paragraph{2.13.3.2. Procedimiento.}
 
-% [PENDIENTE]: Redactar "Procedimiento".
+En la reunión semanal se revisan el avance, los impedimentos y los errores abiertos con los formularios de seguimiento, y se contrasta el estado de cada caso de uso (pendiente, en progreso o hecho) con su ficha en el repositorio.
 
 \subsubsection{2.13.4. Revisión técnica formal (RTF)}
 
 \paragraph{2.13.4.1. Objetivo.}
 
-% [PENDIENTE]: Redactar "Objetivo".
+Detectar defectos de diseño y de código mediante la lectura conjunta del trabajo antes de integrarlo.
 
 \paragraph{2.13.4.2. Procedimiento.}
 
-% [PENDIENTE]: Redactar "Procedimiento".
+El autor abre un \textit{pull request} con un solo alcance; el otro líder lo revisa, solicita cambios si corresponde y lo aprueba. Solo entonces se integra a la rama principal.
 
 \paragraph{2.13.4.3. Requerimientos mínimos.}
 
-% [PENDIENTE]: Redactar "Requerimientos mínimos".
+Para aprobar un \textit{pull request}: formato de \textit{commit} válido, controles de estilo en verde, pruebas aprobadas, compilación exitosa, pruebas actualizadas al comportamiento nuevo y códigos de error nuevos documentados.
 
 \subsection{2.14. Agenda}
 
-% [PENDIENTE]: Redactar "Agenda".
+Reunión semanal de seguimiento del equipo y coordinación diaria breve por mensajería cuando existen dependencias entre bloques. La revisión de calidad ocurre en cada \textit{pull request}. [PENDIENTE]: calendario de revisiones formales por hito (H1 a H6).
 
 \subsection{2.15. Gestión de Configuración}
 
-% [PENDIENTE]: Redactar "Gestión de Configuración".
+El código y la documentación se versionan con Git en un repositorio de GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripción}, con tipos \texttt{feat}, \texttt{fix}, \texttt{refactor}, \texttt{docs}, \texttt{test}, \texttt{chore}, \texttt{style}, \texttt{perf}, \texttt{build} y \texttt{ci}, y alcances \texttt{BACK}, \texttt{FRONT}, \texttt{MOBILE}, \texttt{INFRA}, \texttt{DOCS} y \texttt{REPO}; un \textit{commit} nunca mezcla alcances. Las dependencias se fijan en archivos de bloqueo, el esquema de la base de datos con migraciones versionadas y el entorno completo con Docker Compose. Todavía no existe despliegue continuo ni versiones etiquetadas. [PENDIENTE]: política de versionado de las entregas.
 
 \subsection{2.16. Gestión de Problemas y Acciones Correlativas}
 
-% [PENDIENTE]: Redactar "Gestión de Problemas y Acciones Correlativas".
+Los errores se reportan con el formulario de la sección 1.10 y se siguen hasta su cierre. En el backend, cada error de negocio lleva un código único con el formato \texttt{ERR\_MODULO\_NUMERO} (67 códigos documentados en el catálogo \texttt{docs/errors}), una respuesta HTTP uniforme y registro en el log estructurado en formato JSON, con métricas expuestas a Prometheus y tableros en Grafana. Las acciones de negocio relevantes se anotan en la bitácora mediante la anotación \texttt{@Auditar}, de solo inserción. Si una prueba falla en la integración continua, la corrección es prioritaria y no se permite desactivar la prueba sin justificación.
 
 \subsection{2.17. Bibliografía}
 
-% [PENDIENTE]: Redactar "Bibliografía".
+Las fuentes citadas en este capítulo figuran en la bibliografía general del documento.
