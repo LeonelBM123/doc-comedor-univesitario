@@ -467,7 +467,7 @@
 \endlastfoot
 \textbf{Propósito} & Presentar al Administrador DUBSS las postulaciones de una convocatoria ordenadas de mayor a menor puntaje de vulnerabilidad, para que la auditoría se concentre únicamente en los postulantes mejor puntuados. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el sistema construye y muestra la lista priorizada de postulantes de una convocatoria a partir de las postulaciones en estado «calificada» y de su puntaje vigente calculado por el módulo de IA (CU-03). La lista no se almacena como tal: se obtiene mediante una consulta ordenada y paginada, por lo que siempre refleja el último puntaje calculado. Es incluido por el CU-05. Respalda el RF-04. \\
+\textbf{Descripción} & Este caso de uso describe cómo el sistema construye y muestra la lista priorizada de postulantes de una convocatoria a partir de las postulaciones en estado «calificada» y de su puntaje vigente calculado por el módulo de IA (CU-03). La lista no se almacena como tal: se obtiene mediante una consulta ordenada y paginada (10, 20 o 50 filas por página), con búsqueda por nombre o CI y filtro por carrera, por lo que siempre refleja el último puntaje calculado. Cada postulación conserva su posición en la lista completa aunque se filtre, y la lista puede exportarse a PDF. Es incluido por el CU-05. Respalda el RF-04. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -482,24 +482,28 @@
 \textbf{Proceso} & \textbf{Flujo principal.}
 \begin{cupasos}
     \item El Administrador DUBSS selecciona la opción «Lista priorizada» (o accede a ella desde el CU-05).
-    \item El sistema muestra las convocatorias disponibles.
+    \item El sistema muestra las convocatorias disponibles y deja seleccionada la más reciente.
     \item El Administrador DUBSS selecciona una convocatoria.
     \item El sistema obtiene las postulaciones de la convocatoria en estado «calificada» y su puntaje de vulnerabilidad vigente.
-    \item El sistema ordena las postulaciones de mayor a menor puntaje y muestra la lista paginada con: posición, código de postulación, nombre, CI y carrera del postulante, puntaje y fecha de cálculo.
-    \item El Administrador DUBSS revisa la lista y, si lo desea, selecciona una postulación para continuar con su auditoría (CU-05).
+    \item El sistema ordena las postulaciones de mayor a menor puntaje y muestra la primera página con: posición, nombre, CI y carrera del postulante, puntaje y fecha de cálculo, junto con el total de la lista y cuántas postulaciones siguen pendientes de precalificación.
+    \item El Administrador DUBSS recorre las páginas, cambia la cantidad de filas por página o aplica una búsqueda o un filtro por carrera.
+    \item Si lo desea, el Administrador DUBSS exporta la lista a PDF: el documento incluye la convocatoria, la fecha de generación, los filtros aplicados y todas las postulaciones de la lista, en el mismo orden que en pantalla.
+    \item El Administrador DUBSS selecciona una postulación para ver su detalle y, si corresponde, continuar con su auditoría (CU-05).
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (paso 4): si la convocatoria no tiene postulaciones calificadas, el sistema muestra un mensaje informativo.
-    \item A2 (paso 6): si el Administrador DUBSS aplica un filtro o criterio de ordenamiento (por ejemplo, por carrera), el sistema vuelve a consultar las postulaciones y los puntajes y muestra la lista resultante.
-    \item A3 (paso 5): si dos o más postulaciones tienen el mismo puntaje, el sistema aplica el criterio de desempate vigente (por definir con la DUBSS).
-    \item A4 (paso 4): las postulaciones en estado «pendiente», «devuelta», «archivada», «adjudicada» o «no adjudicada» no forman parte de la lista priorizada activa; el sistema informa cuántas postulaciones siguen pendientes de precalificación.
-    \item A5 (paso 6): si el Administrador DUBSS solicita exportar la lista, el sistema genera un documento PDF con la lista priorizada de la convocatoria (respetando el filtro u orden aplicado), registra la exportación en la bitácora (CU-25) y ofrece la descarga del archivo.
+    \item A1 (paso 4): si la convocatoria no tiene postulaciones calificadas, el sistema muestra un mensaje informativo, indica cuántas siguen pendientes de precalificación y no muestra la tabla.
+    \item A2 (paso 6): si el Administrador DUBSS busca por nombre o CI o filtra por carrera, el sistema vuelve a consultar y muestra solo las postulaciones que cumplen el criterio, conservando su posición en la lista completa, y vuelve a la primera página.
+    \item A3 (paso 5): si dos o más postulaciones tienen el mismo puntaje, el sistema desempata por la fecha de envío (la enviada antes primero) y, si también coinciden, por la fecha de creación, de modo que la paginación no repita ni omita postulaciones.
+    \item A4 (paso 4): las postulaciones en estado «borrador», «pendiente», «devuelta», «archivada», «adjudicada» o «no adjudicada» no forman parte de la lista priorizada activa; el sistema informa cuántas postulaciones siguen pendientes de precalificación.
+    \item A5 (paso 8): si el CU-05 aún no está disponible o la postulación ya no está «calificada», el sistema muestra el detalle de solo lectura y, en el segundo caso, informa que ya no está en la lista activa y la actualiza.
+    \item A6 (paso 3): si la convocatoria pedida no existe o fue eliminada, el sistema responde 404 y vuelve a la selección de convocatoria; si no existe ninguna convocatoria, informa que todavía no hay registradas.
+    \item A7 (paso 7): si la lista está vacía, el sistema no genera el PDF e informa que no hay postulaciones para exportar; si falla la generación, no descarga nada y permite reintentar.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
     \item El Administrador DUBSS visualiza la lista priorizada de la convocatoria; la consulta no modifica ningún dato de las postulaciones ni de los puntajes.
-    \item Si exportó la lista a PDF (A5), queda un registro de la exportación en la bitácora.
+    \item Si exportó la lista a PDF, la exportación queda registrada en la bitácora (CU-25).
 \end{cuvin} \\
 \midrule
 \textbf{Excepciones} & \vspace{-\baselineskip}\begin{cuvin}
