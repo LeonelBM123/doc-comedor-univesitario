@@ -5,8 +5,33 @@
 
 \subsubsection{1.6.1. Identificación de riesgo}
 
-% [PENDIENTE]: Redactar "Identificación de riesgo". Los riesgos propios del proyecto se confirman con el equipo.
+Los riesgos son sucesos inciertos que, de ocurrir, afectan al costo, al plazo o a la calidad del proyecto \parencite{pressman2010ingenieria}. Dadas las condiciones del proyecto (un equipo de dos personas, 14 semanas y un cliente institucional), se identificaron diez riesgos: abandono del proyecto o de un integrante (R1), caída de internet o de energía (R2), pérdida de información (R3), retrasos (R4), cambios de requisitos (R5), falta de datos de la DUBSS (R6), fallas de herramientas y servicios (R7), alcance excesivo (R8), baja precisión del módulo de inteligencia artificial (R9) y falta de experiencia con alguna tecnología (R10).
 
 \subsubsection{1.6.2. Probabilidad de presencia de riesgo}
 
-% [PENDIENTE]: Redactar "Probabilidad de presencia de riesgo" (tabla riesgo, probabilidad, impacto, reducir probabilidad, reducir impacto).
+La Tabla~\ref{tab:riesgos} califica cada riesgo con una probabilidad (baja, media o alta) y un impacto (medio o alto), y propone cómo reducir la probabilidad y cómo reducir el impacto. Las calificaciones son una valoración del equipo, no resultan de datos históricos.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.8cm} >{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{3.5cm}}
+\caption{Análisis de riesgos del proyecto}\label{tab:riesgos}\\
+\toprule
+ID & Riesgo & Prob. & Impacto & Reducir la probabilidad & Reducir el impacto \\
+\midrule
+\endfirsthead
+\toprule
+ID & Riesgo & Prob. & Impacto & Reducir la probabilidad & Reducir el impacto \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+R1 & Abandono del proyecto o de un integrante & Baja & Alto & Documentar a diario, dividir el trabajo en bloques con contratos claros y revisión cruzada del código & Cada integrante conoce el bloque del otro; el docente guía puede redistribuir los casos de uso de prioridad alta \\
+R2 & Caída de internet o de energía eléctrica & Media & Medio & Trabajar con repositorio local y entorno de desarrollo en contenedores, y tener un plan de conexión alterno & Confirmar el trabajo (\textit{commit}) con frecuencia y reprogramar las reuniones de manera virtual o diferida \\
+R3 & Pérdida de información o del código & Baja & Alto & Repositorio remoto en GitHub, ramas por integrante y copias de seguridad periódicas de la base de datos & Restaurar desde el repositorio o la última copia de seguridad \\
+R4 & Retrasos en el cronograma & Alta & Alto & Priorizar los 16 casos de uso de prioridad alta y seguir el avance cada semana & Posponer los casos de prioridad baja (CU-15, CU-17 y CU-26) y recortar el alcance de los de prioridad media \\
+R5 & Cambios en los requisitos & Media & Alto & Acordar los requisitos con la DUBSS y congelar el alcance de cada iteración & Evaluar el impacto de cada cambio y negociarlo para una iteración posterior \\
+R6 & Falta de datos o demora de la DUBSS (umbral de puntaje, cupos, documentos) & Alta & Medio & Marcar los valores como parámetros configurables y solicitar los datos con anticipación & Trabajar con valores de prueba y reprocesar los puntajes cuando lleguen los datos definitivos \\
+R7 & Fallas en herramientas o servicios externos (MinIO, Firebase, servidor de pruebas) & Media & Medio & Usar versiones estables y fijar las dependencias & Disponer de alternativas locales para almacenar archivos y de datos semilla para las pruebas \\
+R8 & Alcance excesivo frente a la capacidad del equipo & Alta & Alto & Priorización por paquetes y por dificultad en puntos (sección 1.5) & Reducir funcionalidades y entregar un producto mínimo funcional \\
+R9 & Baja precisión del módulo de inteligencia artificial por pocos datos reales & Media & Medio & Validar el modelo con datos sintéticos y con ejemplos de gestiones anteriores aportados por la DUBSS & Ajustar los pesos del modelo desde el caso de uso CU-26 y reprocesar los puntajes \\
+R10 & Falta de experiencia con alguna tecnología (Flutter, Spring Boot, Python) & Media & Medio & Capacitación breve y prototipos de prueba al inicio & Pedir apoyo del docente y reutilizar ejemplos documentados \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia. Prob. = probabilidad.

@@ -3,7 +3,7 @@
 % ==============================================================================
 \subsection{1.9. Organización interna}
 
-El proyecto lo desarrolla un equipo de dos integrantes, Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga, bajo la guía del docente de la asignatura, Ing. José Junior Villagómez Melgar. Con solo dos personas no se justifica una jerarquía de mando: ambos participan en las decisiones de diseño, comparten la responsabilidad por el resultado final y se revisan mutuamente el trabajo. Esta forma de trabajo corresponde a un equipo de tipo democrático descentralizado en la clasificación de equipos de software de \textcite{pressman2010ingenieria}. % [PENDIENTE]: confirmar con el equipo el tipo de organización.
+El proyecto lo desarrolla NEXWARE, un equipo de desarrollo de software de dos integrantes, Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga, bajo la guía del docente de la asignatura, Ing. José Junior Villagómez Melgar. Con solo dos personas no se justifica una jerarquía de mando: ambos participan en las decisiones de diseño, comparten la responsabilidad por el resultado final y se revisan mutuamente el trabajo. Esta forma de trabajo corresponde a un equipo de tipo democrático descentralizado en la clasificación de equipos de software de \textcite{pressman2010ingenieria}.
 
 El trabajo técnico se reparte en dos bloques de igual esfuerzo (58 puntos de dificultad cada uno), definidos de manera que cada integrante sea dueño de punta a punta (base de datos, interfaz de servicio, pantallas y pruebas) de los casos de uso que le corresponden. La Tabla~\ref{tab:organizacion_roles} resume el reparto.
 
@@ -28,13 +28,34 @@ Plataformas principales & Web (React) e inicio de sesión y perfil móvil & Web,
 \end{threeparttable}
 \end{table}
 
-Las decisiones que afectan a ambos bloques (esquema de la base de datos, estados de la postulación y contratos de integración) se toman de común acuerdo antes de que cada integrante se concentre en su bloque. Los cargos, la afiliación formal del equipo y la relación con la DUBSS como cliente se definirán con los datos institucionales del equipo [PENDIENTE: nombre del equipo o empresa desarrolladora y organigrama].
+Las decisiones que afectan a ambos bloques (esquema de la base de datos, estados de la postulación y contratos de integración) se toman de común acuerdo antes de que cada integrante se concentre en su bloque. NEXWARE es la empresa desarrolladora y la DUBSS es el cliente. La estructura es plana: Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga son líderes en igualdad de condiciones, cada uno responsable de su bloque, y ambos rinden cuentas al docente guía. La Figura~\ref{fig:organigrama} presenta el organigrama.
+
+\begin{figure}[H]
+\caption{Organigrama de NEXWARE}
+\label{fig:organigrama}
+\centering
+\begin{tikzpicture}[node distance=1cm, box/.style={draw, rounded corners, align=center, minimum width=5cm, minimum height=1.1cm}]
+
+\node[box] (cli) {Cliente: DUBSS};
+
+\node[box, below=of cli] (neo) {NEXWARE\\Dirección compartida};
+
+\node[box, below left=of neo, xshift=-0.3cm] (a) {Líder de bloque A\\Mauro Boris Gutierrez Primintela};
+
+\node[box, below right=of neo, xshift=0.3cm] (b) {Líder de bloque B\\Carlos Leonel Barrios Mayorga};
+\draw (cli) -- (neo); \draw (neo) -- (a); \draw (neo) -- (b);
+\end{tikzpicture}
+
+\smallskip
+
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{figure}
 
 \subsection{1.10. Mecanismos de seguimiento y control}
 
 El seguimiento del proyecto se apoya en el plan de desarrollo, que descompone el sistema en 31 tareas (27 tareas implementan los 26 casos de uso, ya que la precalificación con inteligencia artificial se divide en dos, y cuatro son tareas técnicas adicionales: tres del bloque A y una del B) y en seis hitos de integración (H1 a H6), el último de los cuales es la prueba de extremo a extremo local del flujo completo: postular, puntuar, priorizar, auditar, adjudicar, registrar asistencia y consultar indicadores. Cada tarea tiene un responsable, una estimación en puntos y una definición de terminado (base de datos, servicio, pantallas y pruebas).
 
-El control se realiza mediante tres formularios de reporte que cada integrante completa por tarea y que se revisan en las reuniones de seguimiento del equipo. Las Tablas~\ref{tab:form_finalizadas}, \ref{tab:form_proceso} y \ref{tab:form_errores} describen sus campos. La herramienta en la que se registran los formularios (la sección 1.7 menciona Jira como plataforma de gestión del proyecto) y la periodicidad de las reuniones están pendientes de confirmación por el equipo [PENDIENTE: confirmar herramienta y periodicidad].
+El control se realiza mediante tres formularios de reporte que cada integrante completa por tarea y que se revisan en las reuniones de seguimiento del equipo. Las Tablas~\ref{tab:form_finalizadas}, \ref{tab:form_proceso} y \ref{tab:form_errores} describen sus campos. Los formularios se registran en GitHub Projects, junto al repositorio del código, y el equipo se reúne una vez por semana para revisar el avance, los impedimentos y los errores abiertos. Además, se realiza una breve coordinación diaria por mensajería cuando existen dependencias entre los dos bloques.
 
 \begin{table}[H]
 \caption{Formulario de reporte de tareas finalizadas}

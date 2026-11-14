@@ -36,7 +36,34 @@
 
 \subsection{2.6. Políticas de calidad}
 
-% [PENDIENTE]: Redactar "Políticas de calidad".
+% [PENDIENTE]: Redactar las políticas de calidad del equipo (misión, visión y políticas son del equipo desarrollador).
+
+\subsubsection{2.6.1. Criterios de calidad}
+
+La calidad del producto se evalúa con ocho criterios, tomados de los atributos de calidad del software descritos por \textcite{pressman2010ingenieria}. La Tabla~\ref{tab:criterios_calidad} define cada criterio e indica cómo se verifica en este proyecto.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{4.7cm} >{\raggedright\arraybackslash}p{5.3cm}}
+\caption{Criterios de calidad del software y su verificación}\label{tab:criterios_calidad}\\
+\toprule
+Criterio & Definición & Verificación en el proyecto \\
+\midrule
+\endfirsthead
+\toprule
+Criterio & Definición & Verificación en el proyecto \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1. Correcto & Grado en que el sistema cumple sus especificaciones y los objetivos del usuario. & Trazabilidad entre casos de uso y requisitos funcionales, pruebas de aceptación por caso de uso y revisión de los criterios de aceptación de cada RF. \\
+2. Eficiente & Uso adecuado del tiempo de respuesta y de los recursos del servidor. & Pruebas de carga contra los RNF (carga de pantallas en 3 s o menos y puntaje individual en 5 s o menos) y revisión de las consultas a la base de datos. \\
+3. Fiable & Capacidad de funcionar sin fallas durante un periodo y de recuperarse ante errores. & Registro y seguimiento de errores, peticiones idempotentes (RNF-03), manejo de excepciones y copias de seguridad de la base de datos. \\
+4. Disponible & Proporción del tiempo en que el sistema está operativo cuando se necesita. & Meta de disponibilidad de 99 \% en los periodos de postulación y evaluación, medida con monitoreo del servicio y contenedores reiniciables. \\
+5. Seguro & Protección de los datos y control de acceso a las funciones. & Autenticación con JWT, contraseñas con \textit{hash}, comunicación por HTTPS, roles por caso de uso y bitácora de acciones (CU-25). \\
+6. Fácil de mantener & Facilidad para corregir, modificar y ampliar el sistema. & Arquitectura por paquetes, estándar de codificación, comentarios, control de versiones y revisión cruzada del código. \\
+7. Fácil de usar & Facilidad con que los usuarios aprenden y operan el sistema. & Prototipos de interfaz validados con la DUBSS, mensajes claros y pruebas de usabilidad con postulantes y personal administrativo. \\
+8. Portable & Capacidad de operar en distintos entornos con poco esfuerzo. & Despliegue con Docker, aplicación web compatible con los navegadores actuales, aplicación móvil para Android y configuración por variables de entorno. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia.
 
 \subsection{2.7. Eslogan}
 

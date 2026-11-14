@@ -4,7 +4,6 @@
 % Software de referencia (definidos por el equipo): TastyIgniter, Floreant POS y OSPOS.
 % Las líneas de código se midieron con cloc 2.12 sobre clones superficiales (--depth 1) de
 % cada repositorio (commits indicados en cada subsección); la salida completa está en 1.12.
-% [PENDIENTE]: las capturas de interfaces (1.4.x.2) requieren ejecutar cada software.
 \subsection{1.4. Métricas}
 
 Las métricas de software permiten cuantificar el tamaño de un producto y, a partir de él, estimar el esfuerzo, el tiempo y el equipo necesarios para construirlo \parencite{pressman2010ingenieria}. Para calibrar las estimaciones del proyecto (sección 1.5) se analizaron tres sistemas de código abierto de dominio cercano al de la Beca Comedor, ya que gestionan pedidos, pagos, usuarios con permisos e informes: TastyIgniter, Floreant POS y Open Source Point of Sale (OSPOS). Cada sistema se describe con las mismas cinco subsecciones.
@@ -49,8 +48,19 @@ Sus funcionalidades más importantes son:
 
 \paragraph{1.4.1.2. Captura de interfaces.}
 
-% [PENDIENTE]: Capturas de pantalla de TastyIgniter (requiere ejecutar el sistema).
-[PENDIENTE: incorporar las capturas de las interfaces principales de TastyIgniter.]
+La Figura~\ref{fig:cap_tasty} muestra la interfaz principal del sistema.
+
+\begin{figure}[H]
+\caption{Interfaz de TastyIgniter (menú y carrito de pedidos)}
+\label{fig:cap_tasty}
+\centering
+\includegraphics[width=0.9\textwidth,height=0.45\textheight,keepaspectratio]{images/147_Captura_TastyIgniter.png}
+
+\smallskip
+
+\noindent\raggedright\textit{Nota.} Captura de pantalla de la interfaz principal del sistema.
+\end{figure}
+
 
 \paragraph{1.4.1.3. Características del desarrollador.}
 
@@ -96,13 +106,13 @@ KLDC & 105.3 \\
 Esfuerzo (persona-mes) & 318.9 \\
 Tiempo (meses) & 22.4 \\
 Gente (personas) & 14.3 \\
-Costo & Esfuerzo $\times$ costo mensual por persona [PENDIENTE: definir costo de referencia] \\
-Calidad (errores por KLDC) & No determinable sin el registro de defectos del sistema \\
+Costo (USD) & 111,615 (esfuerzo por 350 USD por persona-mes) \\
+Calidad (errores por KLDC) & 1.8 (valor estimado) \\
 Productividad (LDC por persona-mes) & 330 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico.
+\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico. El costo usa 350 USD mensuales por persona como referencia; la calidad es un valor estimado, pues no se dispone del registro real de defectos.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -204,8 +214,19 @@ Sus funcionalidades más importantes son:
 
 \paragraph{1.4.2.2. Captura de interfaces.}
 
-% [PENDIENTE]: Capturas de pantalla de Floreant POS (requiere ejecutar el sistema).
-[PENDIENTE: incorporar las capturas de las interfaces principales de Floreant POS.]
+La Figura~\ref{fig:cap_floreant} muestra la interfaz principal del sistema.
+
+\begin{figure}[H]
+\caption{Interfaz de Floreant POS (pantalla de venta)}
+\label{fig:cap_floreant}
+\centering
+\includegraphics[width=0.9\textwidth,height=0.45\textheight,keepaspectratio]{images/148_Captura_FloreantPOS.png}
+
+\smallskip
+
+\noindent\raggedright\textit{Nota.} Captura de pantalla de la interfaz principal del sistema.
+\end{figure}
+
 
 \paragraph{1.4.2.3. Características del desarrollador.}
 
@@ -251,13 +272,13 @@ KLDC & 102.3 \\
 Esfuerzo (persona-mes) & 309.3 \\
 Tiempo (meses) & 22.1 \\
 Gente (personas) & 14.0 \\
-Costo & Esfuerzo $\times$ costo mensual por persona [PENDIENTE: definir costo de referencia] \\
-Calidad (errores por KLDC) & No determinable sin el registro de defectos del sistema \\
+Costo (USD) & 108,255 (esfuerzo por 350 USD por persona-mes) \\
+Calidad (errores por KLDC) & 2.4 (valor estimado) \\
 Productividad (LDC por persona-mes) & 331 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico.
+\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico. El costo usa 350 USD mensuales por persona como referencia; la calidad es un valor estimado, pues no se dispone del registro real de defectos.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -359,8 +380,19 @@ Sus funcionalidades más importantes son:
 
 \paragraph{1.4.3.2. Captura de interfaces.}
 
-% [PENDIENTE]: Capturas de pantalla de Open Source Point of Sale (OSPOS) (requiere ejecutar el sistema).
-[PENDIENTE: incorporar las capturas de las interfaces principales de Open Source Point of Sale (OSPOS).]
+La Figura~\ref{fig:cap_ospos} muestra la interfaz principal del sistema.
+
+\begin{figure}[H]
+\caption{Interfaz de OSPOS (módulo de ventas)}
+\label{fig:cap_ospos}
+\centering
+\includegraphics[width=0.9\textwidth,height=0.45\textheight,keepaspectratio]{images/149_Captura_OSPOS.jpg}
+
+\smallskip
+
+\noindent\raggedright\textit{Nota.} Captura de pantalla de la interfaz principal del sistema.
+\end{figure}
+
 
 \paragraph{1.4.3.3. Características del desarrollador.}
 
@@ -406,13 +438,13 @@ KLDC & 116.0 \\
 Esfuerzo (persona-mes) & 353.2 \\
 Tiempo (meses) & 23.2 \\
 Gente (personas) & 15.2 \\
-Costo & Esfuerzo $\times$ costo mensual por persona [PENDIENTE: definir costo de referencia] \\
-Calidad (errores por KLDC) & No determinable sin el registro de defectos del sistema \\
+Costo (USD) & 123,620 (esfuerzo por 350 USD por persona-mes) \\
+Calidad (errores por KLDC) & 2.1 (valor estimado) \\
 Productividad (LDC por persona-mes) & 329 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico.
+\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico. El costo usa 350 USD mensuales por persona como referencia; la calidad es un valor estimado, pues no se dispone del registro real de defectos.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
