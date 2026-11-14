@@ -3,14 +3,38 @@
 % ==============================================================================
 \subsection{1.3. Desafíos de la ingeniería de software}
 
+La ingeniería de software enfrenta de manera recurrente tres desafíos: construir productos con la calidad que los usuarios esperan, mantener una productividad sostenida del equipo y aprovechar la innovación tecnológica sin comprometer los dos primeros \parencite{pressman2010ingenieria}. A continuación se describe cómo el proyecto aborda cada uno de ellos.
+
 \subsubsection{1.3.1. Calidad}
 
-% [PENDIENTE]: Redactar "Calidad" (cómo el proyecto aborda la calidad: IEEE 830, UML, pruebas; vincular con el SQAP del Capítulo 2).
+El Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor maneja datos socioeconómicos y documentos personales de hasta 20,000 postulantes por gestión, y sus resultados determinan quién recibe una beca. Un error de cálculo, una pérdida de documentos o una caída del servicio durante el periodo de postulación tiene un costo directo para los estudiantes y para la Dirección Universitaria de Bienestar Social y Salud (DUBSS). Por ello, la calidad se trata como un atributo que se construye durante todo el ciclo de vida y no como una verificación final.
+
+El proyecto aborda la calidad mediante cuatro prácticas:
+
+\begin{itemize}
+    \item \textbf{Requisitos verificables.} La especificación sigue la norma IEEE 830 \parencite{ieee830_1998}: cada requisito funcional se redacta con su criterio de aceptación y se traza hacia un caso de uso, de modo que cada funcionalidad pueda comprobarse contra un criterio explícito.
+    \item \textbf{Modelado antes de construir.} El análisis y el diseño se documentan con UML \parencite{booch2005uml, rumbaugh2004uml} dentro del Proceso Unificado de Desarrollo de Software \parencite{jacobson1999unified}, lo que permite detectar inconsistencias entre requisitos, clases y base de datos antes de escribir código.
+    \item \textbf{Requisitos no funcionales medibles.} Seguridad, disponibilidad, tiempo de respuesta, concurrencia y usabilidad se especifican como RNF con criterios de aceptación (RNF-01 a RNF-05), de manera que puedan verificarse en las pruebas.
+    \item \textbf{Pruebas por caso de uso.} Cada caso de uso se prueba contra sus flujos principal y alternativos, y los casos críticos (postulación, precalificación con inteligencia artificial y adjudicación) reciben pruebas adicionales de integración.
+\end{itemize}
+
+Los estándares, las revisiones y las métricas de calidad que se aplican a estas prácticas se detallan en el Plan de Aseguramiento de la Calidad de Software (SQAP) del Capítulo 2.
 
 \subsubsection{1.3.2. Productividad}
 
-% [PENDIENTE]: Redactar "Productividad" (equipo de 2 integrantes, reparto por paquetes, herramientas).
+El proyecto se desarrolla con un equipo de dos integrantes en un periodo de aproximadamente 14 semanas (24 de agosto al 30 de noviembre de 2026) para construir una aplicación web, una aplicación móvil, un servicio backend, un módulo de inteligencia artificial y un conjunto de reportes de Business Intelligence. Esta relación entre alcance, equipo y plazo hace de la productividad un desafío central: no existe margen para retrabajo ni para esperas entre los integrantes.
+
+Para sostener la productividad se aplican las siguientes decisiones:
+
+\begin{itemize}
+    \item \textbf{Reparto por bloques completos de casos de uso.} Los 26 casos de uso se agrupan en seis paquetes y se reparten entre los dos integrantes de forma que todas las relaciones \textit{include} y \textit{extend} de un caso de uso queden bajo un mismo responsable, con una carga equilibrada de 58 puntos de dificultad por integrante.
+    \item \textbf{Contratos de integración.} Las dependencias entre ambos integrantes se limitan a contratos de datos (tablas, estados de la postulación e interfaces de servicio) definidos al inicio, con datos semilla para que cada uno avance sin esperar al otro.
+    \item \textbf{Reutilización de tecnología consolidada.} Se emplean marcos de trabajo de uso extendido (Spring Boot, React, Flutter y PostgreSQL) y el almacenamiento de archivos con MinIO, en lugar de desarrollar componentes de infraestructura propios.
+    \item \textbf{Entorno reproducible.} El uso de contenedores Docker y control de versiones con GitHub evita pérdidas de tiempo por diferencias entre los equipos de desarrollo (véase la sección 1.7).
+\end{itemize}
 
 \subsubsection{1.3.3. Innovación}
 
-% [PENDIENTE]: Redactar "Innovación" (precalificación con IA y reportes BI aplicados a la Beca Comedor).
+El aporte innovador del proyecto está en reemplazar la revisión manual de carpetas físicas de la Beca Comedor por un proceso de preselección asistido por inteligencia artificial. Actualmente la DUBSS revisa alrededor del 40 \% de las carpetas recibidas (aproximadamente 8,000 de 20,000), y el 60 \% restante nunca se abre. El módulo de inteligencia artificial, desarrollado en Python y consumido por el backend como un servicio independiente, calcula un puntaje de vulnerabilidad socioeconómica para todas las postulaciones, y ese puntaje ordena los expedientes que la DUBSS audita primero \parencite{russellnorvig2021ia}.
+
+La segunda innovación es la incorporación de reportes de Business Intelligence sobre postulaciones, adjudicaciones y asistencia al comedor, que ofrecen a la dirección indicadores de gestión que hoy no existen \parencite{golfarelli2009dw, few2006dashboard}. El desafío es incorporar estas tecnologías de forma controlada: el puntaje de inteligencia artificial no adjudica por sí solo, ya que la decisión final, la auditoría de los finalistas y la verificación presencial siguen en manos del personal de la DUBSS.

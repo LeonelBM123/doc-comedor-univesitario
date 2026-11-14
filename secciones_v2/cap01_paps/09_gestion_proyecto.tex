@@ -3,11 +3,102 @@
 % ==============================================================================
 \subsection{1.9. Organización interna}
 
-% [PENDIENTE]: Redactar "Organización interna" (equipo de 2 integrantes; confirmar tipo de organización con el equipo).
+El proyecto lo desarrolla un equipo de dos integrantes, Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga, bajo la guía del docente de la asignatura, Ing. José Junior Villagómez Melgar. Con solo dos personas no se justifica una jerarquía de mando: ambos participan en las decisiones de diseño, comparten la responsabilidad por el resultado final y se revisan mutuamente el trabajo. Esta forma de trabajo corresponde a un equipo de tipo democrático descentralizado en la clasificación de equipos de software de \textcite{pressman2010ingenieria}. % [PENDIENTE]: confirmar con el equipo el tipo de organización.
+
+El trabajo técnico se reparte en dos bloques de igual esfuerzo (58 puntos de dificultad cada uno), definidos de manera que cada integrante sea dueño de punta a punta (base de datos, interfaz de servicio, pantallas y pruebas) de los casos de uso que le corresponden. La Tabla~\ref{tab:organizacion_roles} resume el reparto.
+
+\begin{table}[H]
+\caption{Organización del equipo y reparto del trabajo}
+\label{tab:organizacion_roles}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{5cm} >{\raggedright\arraybackslash}p{5.2cm}}
+\toprule
+Aspecto & Mauro Boris Gutierrez Primintela (bloque A) & Carlos Leonel Barrios Mayorga (bloque B) \\
+\midrule
+Bloques de casos de uso & Cuentas y acceso, auditoría y adjudicación, reportes de Business Intelligence, notificaciones y consulta del estado de la postulación & Convocatoria y postulación, preselección con inteligencia artificial, becados y asistencia, y consulta de bitácora \\
+Casos de uso & 13 & 13 \\
+Tareas adicionales (no son casos de uso) & 3 & 1 \\
+Puntos de dificultad & 58 & 58 \\
+Plataformas principales & Web (React) e inicio de sesión y perfil móvil & Web, móvil (Flutter) y módulo de inteligencia artificial (Python) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia, a partir del plan de desarrollo del proyecto. La integración entre ambos bloques se limita a contratos de datos acordados al inicio.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Las decisiones que afectan a ambos bloques (esquema de la base de datos, estados de la postulación y contratos de integración) se toman de común acuerdo antes de que cada integrante se concentre en su bloque. Los cargos, la afiliación formal del equipo y la relación con la DUBSS como cliente se definirán con los datos institucionales del equipo [PENDIENTE: nombre del equipo o empresa desarrolladora y organigrama].
 
 \subsection{1.10. Mecanismos de seguimiento y control}
 
-% [PENDIENTE]: Redactar "Mecanismos de seguimiento y control" (formularios de reporte de tareas finalizadas, en proceso y de errores; confirmar con el equipo).
+El seguimiento del proyecto se apoya en el plan de desarrollo, que descompone el sistema en 31 tareas (27 tareas implementan los 26 casos de uso, ya que la precalificación con inteligencia artificial se divide en dos, y cuatro son tareas técnicas adicionales: tres del bloque A y una del B) y en seis hitos de integración (H1 a H6), el último de los cuales es la prueba de extremo a extremo local del flujo completo: postular, puntuar, priorizar, auditar, adjudicar, registrar asistencia y consultar indicadores. Cada tarea tiene un responsable, una estimación en puntos y una definición de terminado (base de datos, servicio, pantallas y pruebas).
+
+El control se realiza mediante tres formularios de reporte que cada integrante completa por tarea y que se revisan en las reuniones de seguimiento del equipo. Las Tablas~\ref{tab:form_finalizadas}, \ref{tab:form_proceso} y \ref{tab:form_errores} describen sus campos. La herramienta en la que se registran los formularios (la sección 1.7 menciona Jira como plataforma de gestión del proyecto) y la periodicidad de las reuniones están pendientes de confirmación por el equipo [PENDIENTE: confirmar herramienta y periodicidad].
+
+\begin{table}[H]
+\caption{Formulario de reporte de tareas finalizadas}
+\label{tab:form_finalizadas}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\raggedright\arraybackslash}p{9cm}}
+\toprule
+Campo & Contenido \\
+\midrule
+Tarea y caso de uso & Identificador de la tarea (por ejemplo, A9) y caso de uso que implementa. \\
+Responsable y fecha & Integrante que la completó y fecha de cierre. \\
+Puntos estimados y esfuerzo real & Puntos asignados en el plan y días-persona efectivamente invertidos. \\
+Entregables & Base de datos, servicio, pantallas y pruebas terminados. \\
+Criterios de aceptación & Resultado de la verificación contra los criterios del requisito funcional asociado. \\
+Contratos afectados & Contratos de integración que la tarea produce o consume. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Formulario de reporte de tareas en proceso}
+\label{tab:form_proceso}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\raggedright\arraybackslash}p{9cm}}
+\toprule
+Campo & Contenido \\
+\midrule
+Tarea y responsable & Identificador de la tarea y del integrante que la desarrolla. \\
+Porcentaje de avance & Avance declarado respecto de la definición de terminado. \\
+Trabajo restante & Actividades pendientes y fecha estimada de cierre. \\
+Dependencias & Tareas o contratos del otro integrante de los que depende. \\
+Impedimentos & Obstáculos que requieren una decisión o ayuda del equipo. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Formulario de reporte de errores}
+\label{tab:form_errores}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\raggedright\arraybackslash}p{9cm}}
+\toprule
+Campo & Contenido \\
+\midrule
+Identificador y fecha & Número correlativo del error y fecha de detección. \\
+Caso de uso y componente & Caso de uso afectado y componente (web, móvil, servicio o módulo de inteligencia artificial). \\
+Descripción y pasos & Descripción del fallo y pasos para reproducirlo. \\
+Severidad & Crítico, alto, medio o bajo, según el impacto sobre el flujo de la postulación. \\
+Responsable y estado & Integrante asignado; estado abierto, en corrección o cerrado. \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsection{1.11. Tecnologías para el desarrollo de proyecto}
 
@@ -15,14 +106,109 @@ Las tecnologías seleccionadas para el desarrollo se describen en el Capítulo 6
 
 \subsection{1.12. Anexos}
 
-\subsubsection{1.12.1. Líneas de código de Software de referencia 1}
+\subsubsection{1.12.1. Líneas de código de Software de referencia 1: TastyIgniter}
 
-% [PENDIENTE]: Salida de cloc del software 1 (ver 1.4.1.3).
+Salida de \textit{cloc} 2.12 sobre el repositorio clonado (primero el repositorio TastyIgniter y luego el paquete tastyigniter/core).
 
-\subsubsection{1.12.2. Líneas de código de Software de referencia 2}
+\begingroup\footnotesize
+\begin{verbatim}
+github.com/AlDanial/cloc v 2.12  T=1.23 s (53.6 files/s, 2622.3 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+PHP                             54            405           1198           1198
+JSON                             2              0              0            120
+Markdown                         2             25              0             62
+YAML                             2              9              0             62
+Bourne Shell                     1              8              0             55
+XML                              1              0              2             29
+SVG                              1              0              0             18
+INI                              1              4              0             14
+JavaScript                       1              2             11              4
+Text                             1              0              0              2
+-------------------------------------------------------------------------------
+SUM:                            66            453           1211           1564
+-------------------------------------------------------------------------------
 
-% [PENDIENTE]: Salida de cloc del software 2 (ver 1.4.2.3).
+github.com/AlDanial/cloc v 2.12  T=26.80 s (54.7 files/s, 6251.3 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+PHP                           1030          21860          13300          84276
+JSON                            17              0              0          20671
+JavaScript                     138           1472           1292          14192
+Blade                          218            212              1           5614
+SCSS                            36            342            131           2688
+CSS                             20            181            122            926
+YAML                             1              8              0             70
+Markdown                         2             16              0             42
+Text                             1              5              0             37
+XML                              1              0              0             28
+SVG                              1              0              0             18
+INI                              1              4              0             14
+-------------------------------------------------------------------------------
+SUM:                          1466          24100          14846         128576
+-------------------------------------------------------------------------------
+\end{verbatim}
+\endgroup
 
-\subsubsection{1.12.3. Líneas de código de Software de referencia 3}
+\subsubsection{1.12.2. Líneas de código de Software de referencia 2: Floreant POS}
 
-% [PENDIENTE]: Salida de cloc del software 3 (ver 1.4.3.3).
+Salida de \textit{cloc} 2.12 sobre el repositorio clonado.
+
+\begingroup\footnotesize
+\begin{verbatim}
+github.com/AlDanial/cloc v 2.12  T=16.92 s (68.1 files/s, 14309.1 lines/s)
+----------------------------------------------------------------------------------------
+Language                              files          blank        comment           code
+----------------------------------------------------------------------------------------
+Java                                    938          28031          33334         102268
+Text                                      2              1              0          42622
+Jasper Report XML/Template               34             12              4          14689
+XML                                      72            616             21          11548
+Properties                                9            363              4           4872
+Hibernate                                81            241             76           1843
+Maven                                     5             40              6            656
+HTML                                      1              8             11            593
+Markdown                                  1             46              0            131
+DOS Batch                                 9              1              0             56
+Bourne Shell                              1              2              0              1
+----------------------------------------------------------------------------------------
+SUM:                                   1153          29361          33456         179279
+----------------------------------------------------------------------------------------
+\end{verbatim}
+\endgroup
+
+\subsubsection{1.12.3. Líneas de código de Software de referencia 3: OSPOS}
+
+Salida de \textit{cloc} 2.12 sobre el repositorio clonado.
+
+\begingroup\footnotesize
+\begin{verbatim}
+github.com/AlDanial/cloc v 2.12  T=25.01 s (56.5 files/s, 6185.7 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+PHP                           1289          10951          11357         115287
+JSON                             3              0              0           6264
+SQL                             40            605            468           1867
+YAML                            19            199            106           1486
+Markdown                        12            387              4           1393
+CSS                             12            235             38           1221
+JavaScript                       6            158            354            742
+Bourne Shell                     6            109             53            465
+SVG                              9              0              0            422
+PowerShell                       3             74             33            170
+HTML                             8             16              0             72
+XML                              1              0              4             51
+Dockerfile                       2             10              0             36
+TOML                             1              1              2             25
+INI                              1              3              0             12
+CSV                              1              0              0              2
+Text                             1              0              0              2
+-------------------------------------------------------------------------------
+SUM:                          1414          12748          12419         129517
+-------------------------------------------------------------------------------
+\end{verbatim}
+\endgroup
+

@@ -1,76 +1,478 @@
 % ==============================================================================
 % 1.4 MÉTRICAS (sobre tres software de referencia)
 % ==============================================================================
-% [PENDIENTE: DEFINIR CON EL EQUIPO] Los tres software de referencia. Cada uno lleva las
-% mismas cinco subsecciones; las líneas de código se miden con cloc sobre el repositorio
-% real (no se inventan cifras). Reemplazar «Software de referencia N» por el nombre elegido.
+% Software de referencia (definidos por el equipo): TastyIgniter, Floreant POS y OSPOS.
+% Las líneas de código se midieron con cloc 2.12 sobre clones superficiales (--depth 1) de
+% cada repositorio (commits indicados en cada subsección); la salida completa está en 1.12.
+% [PENDIENTE]: las capturas de interfaces (1.4.x.2) requieren ejecutar cada software.
 \subsection{1.4. Métricas}
 
+Las métricas de software permiten cuantificar el tamaño de un producto y, a partir de él, estimar el esfuerzo, el tiempo y el equipo necesarios para construirlo \parencite{pressman2010ingenieria}. Para calibrar las estimaciones del proyecto (sección 1.5) se analizaron tres sistemas de código abierto de dominio cercano al de la Beca Comedor, ya que gestionan pedidos, pagos, usuarios con permisos e informes: TastyIgniter, Floreant POS y Open Source Point of Sale (OSPOS). Cada sistema se describe con las mismas cinco subsecciones.
+
+La medición siguió el procedimiento descrito a continuación. Primero se clonó la última versión del repositorio de cada sistema y se contaron sus líneas con la herramienta \textit{cloc} (versión 2.12), excluyendo los directorios \texttt{.git}, \texttt{node\_modules} y \texttt{vendor}. Segundo, para las métricas orientadas al tamaño se consideraron como líneas de código (LDC) únicamente las líneas de código de los lenguajes de programación y de plantillas de cada sistema; se excluyen líneas en blanco, comentarios, datos, configuración y documentación. Tercero, el esfuerzo, el tiempo y el equipo se estimaron con las ecuaciones del modelo COCOMO básico en modo orgánico \parencite{pressman2010ingenieria}, donde $E = 2.4 \cdot \mathrm{KLDC}^{1.05}$ es el esfuerzo en persona-mes, $T = 2.5 \cdot E^{0.38}$ es el tiempo en meses y $P = E / T$ es el número de personas. La productividad se calculó como LDC por persona-mes. Por último, los puntos de función se obtuvieron con el método de conteo de componentes y los 14 factores de ajuste.
+
 % ---------------------------------------------------------------- Software 1
-\subsubsection{1.4.1. Software de referencia 1}
+\subsubsection{1.4.1. Software de referencia 1: TastyIgniter}
 
 \paragraph{1.4.1.1. Funcionalidades importantes.}
 
-% [PENDIENTE]: Descripción general, repositorio, licencia y funcionalidades del software 1.
+TastyIgniter es una plataforma de código abierto para restaurantes que desean ofrecer pedidos en línea y reservas de mesa a sus clientes \parencite{tastyigniter2026}. Está desarrollada en PHP sobre el marco Laravel y su interfaz de administración utiliza Bootstrap. El repositorio principal contiene la aplicación base, mientras que la lógica común de la plataforma reside en el paquete \textit{tastyigniter/core} \parencite{tastyignitercore2026}, que el repositorio declara como dependencia (su carpeta de extensiones está vacía); por esa razón la medición incluye ambos repositorios.
+
+\begin{table}[H]
+\caption{Datos generales de TastyIgniter}
+\label{tab:ref1_datos}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+Característica & Detalle \\
+\midrule
+Repositorio & \url{https://github.com/tastyigniter/TastyIgniter} y \url{https://github.com/tastyigniter/core} \\
+Licencia & MIT \\
+Versión medida (commit) & ebb91a3 (17-oct-2026) y be78de7 (14-nov-2026) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia a partir de los repositorios públicos.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Sus funcionalidades más importantes son:
+
+\begin{itemize}
+    \item Administración de personal (\textit{staff}) y de estados con historial de cambios.
+    \item Gestión de idiomas, monedas, países y traducciones.
+    \item Sistema de extensiones y temas para ampliar la plataforma; los pedidos, las reservas y los pagos se incorporan mediante extensiones.
+    \item Plantillas, diseños y bloques de correo electrónico configurables.
+    \item Registros del sistema y de peticiones, panel de control con widgets y administrador de medios.
+\end{itemize}
 
 \paragraph{1.4.1.2. Captura de interfaces.}
 
-% [PENDIENTE]: Capturas de pantalla del software 1.
+% [PENDIENTE]: Capturas de pantalla de TastyIgniter (requiere ejecutar el sistema).
+[PENDIENTE: incorporar las capturas de las interfaces principales de TastyIgniter.]
 
 \paragraph{1.4.1.3. Características del desarrollador.}
 
-% [PENDIENTE]: Conteo de líneas de código (cloc) del software 1.
+La Tabla~\ref{tab:ref1_cloc} resume el conteo de líneas de código obtenido con \textit{cloc}; la salida completa se presenta en la sección 1.12.1.
+
+\begin{table}[H]
+\caption{Conteo de líneas de código de TastyIgniter (cloc)}
+\label{tab:ref1_cloc}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.2cm} rrrr}
+\toprule
+Lenguaje & Archivos & En blanco & Comentarios & Código \\
+\midrule
+PHP & 1,084 & 22,265 & 14,498 & 85,474 \\
+JSON & 19 & 0 & 0 & 20,791 \\
+JavaScript & 139 & 1,474 & 1,303 & 14,196 \\
+Blade & 218 & 212 & 1 & 5,614 \\
+SCSS & 36 & 342 & 131 & 2,688 \\
+Otros (8 lenguajes) & 36 & 260 & 124 & 1,377 \\
+\textbf{Total} & \textbf{1,532} & \textbf{24,553} & \textbf{16,057} & \textbf{130,140} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con \textit{cloc} 2.12.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.4.1.4. Métrica orientada al tamaño.}
 
-% [PENDIENTE]: Tabla KLDC, costo, tiempo, esfuerzo, gente, calidad y productividad del software 1.
+Con las líneas de código medidas se obtienen los valores de la Tabla~\ref{tab:ref1_tam}. El valor suma los repositorios TastyIgniter y tastyigniter/core; se consideran código los archivos PHP, JavaScript y Blade.
+
+\begin{table}[H]
+\caption{Métricas orientadas al tamaño de TastyIgniter}
+\label{tab:ref1_tam}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+Métrica & Valor \\
+\midrule
+Líneas de código (LDC) & 105,284 (PHP, JavaScript, Blade) \\
+KLDC & 105.3 \\
+Esfuerzo (persona-mes) & 318.9 \\
+Tiempo (meses) & 22.4 \\
+Gente (personas) & 14.3 \\
+Costo & Esfuerzo $\times$ costo mensual por persona [PENDIENTE: definir costo de referencia] \\
+Calidad (errores por KLDC) & No determinable sin el registro de defectos del sistema \\
+Productividad (LDC por persona-mes) & 330 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.4.1.5. Aplicación de las métricas orientada a la función.}
 
-% [PENDIENTE]: Puntos de función del software 1 (conteo, 14 factores Fi y PF final).
+Los componentes se contaron por inspección de la estructura del código (EI y EQ corresponden a las acciones de los controladores del núcleo; EO a los paneles y registros; ILF a las entidades del modelo; EIF al servicio de actualizaciones y extensiones) y se ponderaron con los pesos de complejidad promedio. Se trata de una estimación basada en la estructura del código y no de un conteo funcional sobre los requisitos del sistema. La Tabla~\ref{tab:ref1_pf} presenta el conteo y la Tabla~\ref{tab:ref1_fi} la valoración de los 14 factores de ajuste ($F_i$, en una escala de 0 a 5).
+
+\begin{table}[H]
+\caption{Conteo de puntos de función de TastyIgniter}
+\label{tab:ref1_pf}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6cm} rrr}
+\toprule
+Componente & Cantidad & Peso & Subtotal \\
+\midrule
+Entradas externas (EI) & 17 & 4 & 68 \\
+Salidas externas (EO) & 3 & 5 & 15 \\
+Consultas externas (EQ) & 62 & 4 & 248 \\
+Archivos lógicos internos (ILF) & 17 & 10 & 170 \\
+Archivos de interfaz externos (EIF) & 1 & 7 & 7 \\
+\textbf{Puntos de función sin ajustar} &  &  & \textbf{508} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. Pesos de complejidad promedio.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Factores de ajuste de TastyIgniter}
+\label{tab:ref1_fi}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{7cm} r}
+\toprule
+Factor & Descripción & Valor \\
+\midrule
+$F_{1}$ & Comunicación de datos & 4 \\
+$F_{2}$ & Procesamiento distribuido & 3 \\
+$F_{3}$ & Rendimiento & 3 \\
+$F_{4}$ & Configuración muy utilizada & 3 \\
+$F_{5}$ & Tasa de transacciones & 3 \\
+$F_{6}$ & Entrada de datos en línea & 5 \\
+$F_{7}$ & Eficiencia del usuario final & 4 \\
+$F_{8}$ & Actualización en línea & 4 \\
+$F_{9}$ & Procesamiento complejo & 2 \\
+$F_{10}$ & Reutilización del código & 4 \\
+$F_{11}$ & Facilidad de instalación & 3 \\
+$F_{12}$ & Facilidad de operación & 3 \\
+$F_{13}$ & Múltiples sitios & 3 \\
+$F_{14}$ & Facilidad de cambios & 4 \\
+ & \textbf{Suma} ($\sum F_i$) & \textbf{48} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia; valoración estimada por el equipo.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+El valor de ajuste es $0.65 + 0.01 \times 48 = 1.13$ y los puntos de función finales resultan $PF = 508 \times 1.13 \approx 574$.
 
 % ---------------------------------------------------------------- Software 2
-\subsubsection{1.4.2. Software de referencia 2}
+\subsubsection{1.4.2. Software de referencia 2: Floreant POS}
 
 \paragraph{1.4.2.1. Funcionalidades importantes.}
 
-% [PENDIENTE]: Ver 1.4.1.1.
+Floreant POS es un sistema de punto de venta de escritorio para restaurantes \parencite{floreantpos2026}. Está desarrollado en Java con interfaz Swing, usa Hibernate para la persistencia y Jasper Reports para sus informes, y se distribuye bajo la licencia pública Mozilla Reciprocal (MRPL 1.2).
+
+\begin{table}[H]
+\caption{Datos generales de Floreant POS}
+\label{tab:ref2_datos}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+Característica & Detalle \\
+\midrule
+Repositorio & \url{https://github.com/floreantpos/floreantpos} \\
+Licencia & MRPL 1.2 (Mozilla Reciprocal Public License) \\
+Versión medida (commit) & 6cf73ad (23-may-2026) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia a partir de los repositorios públicos.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Sus funcionalidades más importantes son:
+
+\begin{itemize}
+    \item Pantalla de pedidos con categorías, grupos y artículos de menú, y envío de órdenes a cocina.
+    \item Gestión de tipos de pedido (en mesa, para llevar), mesas, clientes y reservas.
+    \item Formas de pago, propinas, impuestos y control de caja y del cajón de dinero.
+    \item Módulos de administración (\textit{back office}) para menú, modificadores, usuarios, turnos, cupones y monedas.
+    \item Informes de ventas, asistencia, nómina, inventario, compras y excepciones.
+\end{itemize}
 
 \paragraph{1.4.2.2. Captura de interfaces.}
 
-% [PENDIENTE]: Ver 1.4.1.2.
+% [PENDIENTE]: Capturas de pantalla de Floreant POS (requiere ejecutar el sistema).
+[PENDIENTE: incorporar las capturas de las interfaces principales de Floreant POS.]
 
 \paragraph{1.4.2.3. Características del desarrollador.}
 
-% [PENDIENTE]: Ver 1.4.1.3.
+La Tabla~\ref{tab:ref2_cloc} resume el conteo de líneas de código obtenido con \textit{cloc}; la salida completa se presenta en la sección 1.12.2.
+
+\begin{table}[H]
+\caption{Conteo de líneas de código de Floreant POS (cloc)}
+\label{tab:ref2_cloc}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.2cm} rrrr}
+\toprule
+Lenguaje & Archivos & En blanco & Comentarios & Código \\
+\midrule
+Java & 938 & 28,031 & 33,334 & 102,268 \\
+Text & 2 & 1 & 0 & 42,622 \\
+Jasper Report XML/Template & 34 & 12 & 4 & 14,689 \\
+XML & 72 & 616 & 21 & 11,548 \\
+Properties & 9 & 363 & 4 & 4,872 \\
+Otros (6 lenguajes) & 98 & 338 & 93 & 3,280 \\
+\textbf{Total} & \textbf{1,153} & \textbf{29,361} & \textbf{33,456} & \textbf{179,279} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con \textit{cloc} 2.12.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.4.2.4. Métrica orientada al tamaño.}
 
-% [PENDIENTE]: Ver 1.4.1.4.
+Con las líneas de código medidas se obtienen los valores de la Tabla~\ref{tab:ref2_tam}. Se considera código únicamente el lenguaje Java; se excluyen los archivos de texto, las plantillas Jasper y los descriptores XML, Hibernate y Properties.
+
+\begin{table}[H]
+\caption{Métricas orientadas al tamaño de Floreant POS}
+\label{tab:ref2_tam}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+Métrica & Valor \\
+\midrule
+Líneas de código (LDC) & 102,268 (Java) \\
+KLDC & 102.3 \\
+Esfuerzo (persona-mes) & 309.3 \\
+Tiempo (meses) & 22.1 \\
+Gente (personas) & 14.0 \\
+Costo & Esfuerzo $\times$ costo mensual por persona [PENDIENTE: definir costo de referencia] \\
+Calidad (errores por KLDC) & No determinable sin el registro de defectos del sistema \\
+Productividad (LDC por persona-mes) & 331 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.4.2.5. Aplicación de las métricas orientada a la función.}
 
-% [PENDIENTE]: Ver 1.4.1.5.
+Los componentes se contaron por inspección de la estructura del código (EI corresponde a los cuadros de diálogo de captura; EO a las plantillas de informe Jasper; EQ a los exploradores de listas; ILF a las entidades Hibernate; EIF a la pasarela de pago externa) y se ponderaron con los pesos de complejidad promedio. Se trata de una estimación basada en la estructura del código y no de un conteo funcional sobre los requisitos del sistema. La Tabla~\ref{tab:ref2_pf} presenta el conteo y la Tabla~\ref{tab:ref2_fi} la valoración de los 14 factores de ajuste ($F_i$, en una escala de 0 a 5).
+
+\begin{table}[H]
+\caption{Conteo de puntos de función de Floreant POS}
+\label{tab:ref2_pf}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6cm} rrr}
+\toprule
+Componente & Cantidad & Peso & Subtotal \\
+\midrule
+Entradas externas (EI) & 94 & 4 & 376 \\
+Salidas externas (EO) & 34 & 5 & 170 \\
+Consultas externas (EQ) & 25 & 4 & 100 \\
+Archivos lógicos internos (ILF) & 92 & 10 & 920 \\
+Archivos de interfaz externos (EIF) & 1 & 7 & 7 \\
+\textbf{Puntos de función sin ajustar} &  &  & \textbf{1573} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. Pesos de complejidad promedio.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Factores de ajuste de Floreant POS}
+\label{tab:ref2_fi}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{7cm} r}
+\toprule
+Factor & Descripción & Valor \\
+\midrule
+$F_{1}$ & Comunicación de datos & 2 \\
+$F_{2}$ & Procesamiento distribuido & 2 \\
+$F_{3}$ & Rendimiento & 3 \\
+$F_{4}$ & Configuración muy utilizada & 3 \\
+$F_{5}$ & Tasa de transacciones & 4 \\
+$F_{6}$ & Entrada de datos en línea & 5 \\
+$F_{7}$ & Eficiencia del usuario final & 4 \\
+$F_{8}$ & Actualización en línea & 5 \\
+$F_{9}$ & Procesamiento complejo & 3 \\
+$F_{10}$ & Reutilización del código & 3 \\
+$F_{11}$ & Facilidad de instalación & 3 \\
+$F_{12}$ & Facilidad de operación & 3 \\
+$F_{13}$ & Múltiples sitios & 3 \\
+$F_{14}$ & Facilidad de cambios & 3 \\
+ & \textbf{Suma} ($\sum F_i$) & \textbf{46} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia; valoración estimada por el equipo.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+El valor de ajuste es $0.65 + 0.01 \times 46 = 1.11$ y los puntos de función finales resultan $PF = 1573 \times 1.11 \approx 1,746$.
 
 % ---------------------------------------------------------------- Software 3
-\subsubsection{1.4.3. Software de referencia 3}
+\subsubsection{1.4.3. Software de referencia 3: Open Source Point of Sale (OSPOS)}
 
 \paragraph{1.4.3.1. Funcionalidades importantes.}
 
-% [PENDIENTE]: Ver 1.4.1.1.
+Open Source Point of Sale (OSPOS) es un sistema de punto de venta web desarrollado en PHP con el marco CodeIgniter 4, que usa MySQL o MariaDB como base de datos y Bootstrap para la interfaz \parencite{opensourcepos2026}.
+
+\begin{table}[H]
+\caption{Datos generales de Open Source Point of Sale (OSPOS)}
+\label{tab:ref3_datos}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+Característica & Detalle \\
+\midrule
+Repositorio & \url{https://github.com/opensourcepos/opensourcepos} \\
+Licencia & MIT \\
+Versión medida (commit) & 483802a (12-nov-2026) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia a partir de los repositorios públicos.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Sus funcionalidades más importantes son:
+
+\begin{itemize}
+    \item Gestión de artículos y kits con atributos, inventario y múltiples ubicaciones de existencias.
+    \item Registro de ventas, cotizaciones, facturación, recepciones y tarjetas de regalo.
+    \item Impuestos (IVA, múltiples niveles y jurisdicciones), gastos y cierre de caja.
+    \item Base de datos de clientes y proveedores, empleados con control de permisos y mensajería SMS.
+    \item Más de veinte informes de ventas, recepciones, inventario, gastos e impuestos, con gráficos.
+\end{itemize}
 
 \paragraph{1.4.3.2. Captura de interfaces.}
 
-% [PENDIENTE]: Ver 1.4.1.2.
+% [PENDIENTE]: Capturas de pantalla de Open Source Point of Sale (OSPOS) (requiere ejecutar el sistema).
+[PENDIENTE: incorporar las capturas de las interfaces principales de Open Source Point of Sale (OSPOS).]
 
 \paragraph{1.4.3.3. Características del desarrollador.}
 
-% [PENDIENTE]: Ver 1.4.1.3.
+La Tabla~\ref{tab:ref3_cloc} resume el conteo de líneas de código obtenido con \textit{cloc}; la salida completa se presenta en la sección 1.12.3.
+
+\begin{table}[H]
+\caption{Conteo de líneas de código de Open Source Point of Sale (OSPOS) (cloc)}
+\label{tab:ref3_cloc}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.2cm} rrrr}
+\toprule
+Lenguaje & Archivos & En blanco & Comentarios & Código \\
+\midrule
+PHP & 1,289 & 10,951 & 11,357 & 115,287 \\
+JSON & 3 & 0 & 0 & 6,264 \\
+SQL & 40 & 605 & 468 & 1,867 \\
+YAML & 19 & 199 & 106 & 1,486 \\
+Markdown & 12 & 387 & 4 & 1,393 \\
+Otros (12 lenguajes) & 51 & 606 & 484 & 3,220 \\
+\textbf{Total} & \textbf{1,414} & \textbf{12,748} & \textbf{12,419} & \textbf{129,517} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con \textit{cloc} 2.12.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.4.3.4. Métrica orientada al tamaño.}
 
-% [PENDIENTE]: Ver 1.4.1.4.
+Con las líneas de código medidas se obtienen los valores de la Tabla~\ref{tab:ref3_tam}. Se considera código únicamente PHP y JavaScript; se excluyen los archivos JSON, SQL, YAML, CSS, SVG y de documentación.
+
+\begin{table}[H]
+\caption{Métricas orientadas al tamaño de Open Source Point of Sale (OSPOS)}
+\label{tab:ref3_tam}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+Métrica & Valor \\
+\midrule
+Líneas de código (LDC) & 116,029 (PHP, JavaScript) \\
+KLDC & 116.0 \\
+Esfuerzo (persona-mes) & 353.2 \\
+Tiempo (meses) & 23.2 \\
+Gente (personas) & 15.2 \\
+Costo & Esfuerzo $\times$ costo mensual por persona [PENDIENTE: definir costo de referencia] \\
+Calidad (errores por KLDC) & No determinable sin el registro de defectos del sistema \\
+Productividad (LDC por persona-mes) & 329 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con COCOMO básico, modo orgánico.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.4.3.5. Aplicación de las métricas orientada a la función.}
 
-% [PENDIENTE]: Ver 1.4.1.5.
+Los componentes se contaron por inspección de la estructura del código (EI corresponde a los métodos de guardado, eliminación e importación de los controladores; EO a los modelos de informes; EQ a los métodos de consulta, búsqueda y sugerencia; ILF a los modelos de entidad; EIF a MailChimp y la mensajería SMS) y se ponderaron con los pesos de complejidad promedio. Se trata de una estimación basada en la estructura del código y no de un conteo funcional sobre los requisitos del sistema. La Tabla~\ref{tab:ref3_pf} presenta el conteo y la Tabla~\ref{tab:ref3_fi} la valoración de los 14 factores de ajuste ($F_i$, en una escala de 0 a 5).
+
+\begin{table}[H]
+\caption{Conteo de puntos de función de Open Source Point of Sale (OSPOS)}
+\label{tab:ref3_pf}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6cm} rrr}
+\toprule
+Componente & Cantidad & Peso & Subtotal \\
+\midrule
+Entradas externas (EI) & 100 & 4 & 400 \\
+Salidas externas (EO) & 22 & 5 & 110 \\
+Consultas externas (EQ) & 172 & 4 & 688 \\
+Archivos lógicos internos (ILF) & 27 & 10 & 270 \\
+Archivos de interfaz externos (EIF) & 2 & 7 & 14 \\
+\textbf{Puntos de función sin ajustar} &  &  & \textbf{1482} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. Pesos de complejidad promedio.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Factores de ajuste de Open Source Point of Sale (OSPOS)}
+\label{tab:ref3_fi}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{7cm} r}
+\toprule
+Factor & Descripción & Valor \\
+\midrule
+$F_{1}$ & Comunicación de datos & 3 \\
+$F_{2}$ & Procesamiento distribuido & 2 \\
+$F_{3}$ & Rendimiento & 3 \\
+$F_{4}$ & Configuración muy utilizada & 3 \\
+$F_{5}$ & Tasa de transacciones & 4 \\
+$F_{6}$ & Entrada de datos en línea & 5 \\
+$F_{7}$ & Eficiencia del usuario final & 4 \\
+$F_{8}$ & Actualización en línea & 5 \\
+$F_{9}$ & Procesamiento complejo & 3 \\
+$F_{10}$ & Reutilización del código & 3 \\
+$F_{11}$ & Facilidad de instalación & 4 \\
+$F_{12}$ & Facilidad de operación & 3 \\
+$F_{13}$ & Múltiples sitios & 3 \\
+$F_{14}$ & Facilidad de cambios & 3 \\
+ & \textbf{Suma} ($\sum F_i$) & \textbf{48} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia; valoración estimada por el equipo.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+El valor de ajuste es $0.65 + 0.01 \times 48 = 1.13$ y los puntos de función finales resultan $PF = 1482 \times 1.13 \approx 1,675$.
+

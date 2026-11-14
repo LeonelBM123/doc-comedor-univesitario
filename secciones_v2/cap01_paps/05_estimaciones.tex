@@ -1,21 +1,52 @@
 % ==============================================================================
 % 1.5 ESTIMACIONES
 % ==============================================================================
+% Fuentes: casos_de_uso_filtrados.md, plan_desarrollo_tareas.md y las mediciones de 1.4.
+% Las cifras de COCOMO II y de la ecuación del software son estimaciones con supuestos
+% explícitos; no son datos institucionales.
 \subsection{1.5. Estimaciones}
 
 \subsubsection{1.5.1. Dimensiones del proyecto}
 
 \paragraph{1.5.1.1. Tamaño.}
 
-% [PENDIENTE]: Redactar "Tamaño" (26 casos de uso en 6 paquetes; puntos por CU de casos_de_uso_filtrados.md / plan_desarrollo_tareas.md).
+El sistema se compone de 26 casos de uso agrupados en seis paquetes funcionales. Para dimensionarlo se asignó a cada caso de uso una dificultad en una escala de 2, 3, 5 u 8 puntos (2: lectura o mantenimiento simple; 3: lógica moderada o generación de documentos; 5: varias pantallas, servicio externo o flujo con estados; 8: alta complejidad por volumen, integración o inteligencia artificial). Los casos de uso suman 104 puntos y las tareas técnicas adicionales (entorno local, notificaciones, interceptor de bitácora y datos semilla) suman 12 puntos más, para un total de 116 puntos. La Tabla~\ref{tab:tamano_paquetes} muestra su distribución por paquete.
+
+\begin{table}[H]
+\caption{Tamaño del proyecto por paquete funcional}
+\label{tab:tamano_paquetes}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.6cm} >{\raggedright\arraybackslash}p{4.4cm} r r}
+\toprule
+Paquete & Casos de uso & Cantidad & Puntos \\
+\midrule
+P1. Cuentas y acceso & CU-01, CU-14, CU-15 & 3 & 10 \\
+P2. Convocatoria y postulación & CU-13, CU-02, CU-16, CU-18, CU-17, CU-04 & 6 & 24 \\
+P3. Preselección con IA & CU-03, CU-26 & 2 & 13 \\
+P4. Auditoría y adjudicación & CU-05, CU-06, CU-07, CU-19, CU-20, CU-21, CU-08, CU-22 & 8 & 27 \\
+P5. Becados y asistencia & CU-23, CU-09, CU-10, CU-11, CU-24 & 5 & 20 \\
+P6. Reportes y trazabilidad & CU-12, CU-25 & 2 & 10 \\
+\midrule
+\textbf{Subtotal de casos de uso} & & \textbf{26} & \textbf{104} \\
+Tareas técnicas adicionales & & 4 & 12 \\
+\textbf{Total} & & \textbf{30} & \textbf{116} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia a partir del plan de desarrollo del proyecto. El total de tareas del plan es 31 porque la precalificación con inteligencia artificial (CU-03) se divide en dos tareas.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Como segunda medida de tamaño, se aplicó el método de puntos de función descrito en la sección 1.4, esta vez sobre los requisitos del sistema: 29 entradas externas (registro, autenticación, alta, edición y baja de convocatorias y usuarios, envío y borrador de postulaciones, auditoría, adjudicación, gestión del padrón, asistencia, entre otras), 9 salidas externas (acta, planilla, exportación de la lista priorizada, tres indicadores del tablero, notificaciones y puntaje), 9 consultas externas, 32 archivos lógicos internos (las 32 tablas del diseño de la base de datos) y 2 archivos de interfaz externos (el servicio de notificaciones push y el módulo de inteligencia artificial). Con los pesos promedio, los puntos de función sin ajustar son $29 \times 4 + 9 \times 5 + 9 \times 4 + 32 \times 10 + 2 \times 7 = 531$. Los 14 factores de ajuste suman 48 (comunicación de datos 4, procesamiento distribuido 3, rendimiento 4, configuración muy utilizada 3, tasa de transacciones 3, entrada de datos en línea 5, eficiencia del usuario final 4, actualización en línea 4, procesamiento complejo 3, reutilización 3, facilidad de instalación 3, facilidad de operación 3, múltiples sitios 2 y facilidad de cambios 4), de modo que el factor de ajuste es $0.65 + 0.01 \times 48 = 1.13$ y el tamaño funcional es $PF = 531 \times 1.13 \approx 600$ puntos de función.
 
 \paragraph{1.5.1.2. Complejidad.}
 
-% [PENDIENTE]: Redactar "Complejidad".
+La complejidad del proyecto proviene de cinco fuentes. La primera es la integración de componentes heterogéneos: un servicio backend en Java, una aplicación web en React, una aplicación móvil en Flutter y un módulo de inteligencia artificial en Python que se consume mediante una interfaz de servicio. La segunda es el volumen de datos, de hasta 20,000 postulaciones por gestión con documentos adjuntos. La tercera es el flujo de estados de la postulación (pendiente, devuelta, archivada, calificada, adjudicada y no adjudicada), que atraviesa varios casos de uso y ambos bloques de trabajo. La cuarta es la seguridad: autenticación propia con tokens JWT y datos personales y socioeconómicos sensibles. La quinta es la necesidad de idempotencia en el registro de asistencia y en el envío de postulaciones. Los casos de mayor complejidad, con 8 puntos, son el envío de la postulación (CU-02), la precalificación con inteligencia artificial (CU-03) y el tablero de indicadores (CU-12).
 
 \paragraph{1.5.1.3. Estructuración del cliente.}
 
-% [PENDIENTE]: Redactar "Estructuración del cliente".
+El cliente es una única unidad institucional, la Dirección Universitaria de Bienestar Social y Salud (DUBSS) de la UAGRM, con un proceso de selección bien delimitado y un conjunto reducido de roles: Administrador DUBSS, Directivo, Personal del Comedor y Postulante. Esta estructura simplifica la validación de requisitos, pues las decisiones se concentran en un solo interlocutor. Persisten, sin embargo, parámetros que la DUBSS debe definir y que el sistema deja configurables: el puntaje mínimo de adjudicación, el número exacto de cupos (cercano a 900, según el presupuesto de la gestión) y el procedimiento de apelación del postulante. Mientras no se definan, constituyen una incertidumbre sobre el alcance.
 
 \subsubsection{1.5.2. Ámbito del proyecto}
 
@@ -33,11 +64,11 @@ Los requerimientos del sistema se especifican en las secciones 3.2.1 a 3.2.3 (Es
 
 \paragraph{1.5.2.4. Rendimiento.}
 
-% [PENDIENTE]: Redactar "Rendimiento" (RNF: carga <= 3 s, puntaje individual <= 5 s, 20,000 postulaciones por gestión, >= 50 administrativos concurrentes).
+Los requisitos de rendimiento del sistema, especificados en el RNF-03, son los siguientes: las pantallas deben cargar en un máximo de 3 segundos; el puntaje individual de precalificación debe calcularse en un máximo de 5 segundos; el sistema debe soportar 20,000 postulaciones por gestión y al menos 50 usuarios administrativos concurrentes revisando expedientes; y los reportes de Business Intelligence se calculan en lote, de modo que no compiten con la operación en línea. Estos valores condicionan el diseño: la lista priorizada de postulantes se pagina y se ordena en la base de datos, y el recálculo masivo de puntajes se ejecuta en segundo plano.
 
 \paragraph{1.5.2.5. Fiabilidad.}
 
-% [PENDIENTE]: Redactar "Fiabilidad" (disponibilidad >= 99 % en periodos de postulación y evaluación; idempotencia, RNF-03).
+El sistema debe estar disponible al menos el 99 \% del tiempo durante los periodos de postulación y evaluación (RNF-02), que son los de mayor demanda. La fiabilidad se refuerza con peticiones idempotentes, de manera que un reenvío por una conexión inestable no duplique una postulación ni un registro de asistencia, con la trazabilidad de cada puntaje mediante su fecha de cálculo y con una bitácora de las acciones de los usuarios. La disponibilidad y los tiempos de respuesta se verificarán en las pruebas descritas en el Capítulo 9.
 
 \paragraph{1.5.2.6. Restricciones.}
 
@@ -45,22 +76,147 @@ Los requerimientos del sistema se especifican en las secciones 3.2.1 a 3.2.3 (Es
 
 \paragraph{1.5.2.7. Infraestructura externa.}
 
-% [PENDIENTE]: Redactar "Infraestructura externa" (Firebase Auth, FCM y Storage; AWS; módulo de IA en Python).
+El sistema se apoya en los siguientes elementos de infraestructura, ninguno de los cuales forma parte del código que se desarrolla:
+
+\begin{itemize}
+    \item \textbf{Autenticación propia.} El backend emite y verifica sus propios tokens JWT (de acceso y de renovación por dispositivo) y almacena las contraseñas como \textit{hash}; no se usa un proveedor externo de identidad.
+    \item \textbf{Firebase Cloud Messaging (FCM).} Servicio externo utilizado únicamente para las notificaciones push a los dispositivos móviles.
+    \item \textbf{MinIO.} Almacenamiento de objetos para los documentos digitalizados de las postulaciones.
+    \item \textbf{PostgreSQL.} Base de datos relacional del sistema.
+    \item \textbf{Módulo de inteligencia artificial en Python.} Servicio independiente consumido por el backend mediante una interfaz de servicio.
+    \item \textbf{AWS y Docker.} Infraestructura de despliegue en la nube y contenedores para estandarizar los entornos.
+\end{itemize}
 
 \subsubsection{1.5.3. Estimaciones para el proyecto}
 
 \paragraph{1.5.3.1. Valor esperado.}
 
-% [PENDIENTE]: Redactar "Valor esperado".
+El valor esperado combina tres estimaciones del tamaño, la optimista $S_{opt}$, la más probable $S_m$ y la pesimista $S_{pes}$, mediante la ecuación $S = (S_{opt} + 4 S_m + S_{pes}) / 6$ \parencite{pressman2010ingenieria}. El tamaño funcional del proyecto, $PF \approx 600$, se convirtió a líneas de código con las razones observadas en los sistemas de referencia de la sección 1.4: 65.0 LDC por punto de función en Floreant POS (el valor más bajo medido, 102,268 LDC entre 1,573 PF), 78.3 en OSPOS (el valor más alto, 116,029 LDC entre 1,482 PF) y 71.7 como promedio de ambos. TastyIgniter no se usó en la calibración porque sus extensiones, que contienen la lógica del negocio, no forman parte de los repositorios medidos. La Tabla~\ref{tab:valor_esperado} presenta el resultado.
+
+\begin{table}[H]
+\caption{Estimación del tamaño por valor esperado}
+\label{tab:valor_esperado}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm} r r r}
+\toprule
+Escenario & Puntos de función & LDC por PF & KLDC \\
+\midrule
+Optimista ($S_{opt}$) & 600 & 65.0 & 39.0 \\
+Más probable ($S_m$) & 600 & 71.7 & 43.0 \\
+Pesimista ($S_{pes}$) & 600 & 78.3 & 47.0 \\
+\midrule
+\textbf{Valor esperado ($S$)} & & & \textbf{43.0} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. $S = (39.0 + 4 \times 43.0 + 47.0) / 6 = 43.0$ KLDC.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{1.5.3.2. COCOMO II.}
 
-% [PENDIENTE]: Redactar "COCOMO II".
+El modelo COCOMO II de arquitectura posterior estima el esfuerzo en persona-mes como $PM = A \cdot S^{E} \cdot \prod EM_i$, con $A = 2.94$, $S$ en KLDC y $E = 0.91 + 0.01 \sum SF_j$, donde $SF_j$ son los cinco factores de escala y $EM_i$ los multiplicadores de esfuerzo \parencite{boehm2000cocomo}. El tiempo de desarrollo es $TDEV = 3.67 \cdot PM^{F}$, con $F = 0.28 + 0.2 \, (E - 0.91)$. Se usó $S = 43.0$ KLDC (sección 1.5.3.1) y los valores de las Tablas~\ref{tab:cocomo_sf} y \ref{tab:cocomo_em}, que son una valoración propuesta; los factores no mencionados se tomaron en su valor nominal (1.00).
+
+\begin{table}[H]
+\caption{Factores de escala de COCOMO II}
+\label{tab:cocomo_sf}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.4cm} l r}
+\toprule
+Factor de escala & Nivel & Valor \\
+\midrule
+Precedencia (PREC) & Bajo & 4.96 \\
+Flexibilidad de desarrollo (FLEX) & Nominal & 3.04 \\
+Arquitectura y resolución de riesgos (RESL) & Nominal & 4.24 \\
+Cohesión del equipo (TEAM) & Alto & 2.19 \\
+Madurez del proceso (PMAT) & Bajo & 6.24 \\
+\midrule
+\textbf{Suma} & & \textbf{20.67} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con los valores de \textcite{boehm2000cocomo}; los niveles son una propuesta pendiente de confirmar por el equipo. Con esta suma, $E = 0.91 + 0.2067 = 1.1167$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[H]
+\caption{Multiplicadores de esfuerzo de COCOMO II distintos del nominal}
+\label{tab:cocomo_em}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.8cm} l r >{\raggedright\arraybackslash}p{4.6cm}}
+\toprule
+Multiplicador & Nivel & Valor & Justificación \\
+\midrule
+Complejidad del producto (CPLX) & Alto & 1.17 & Integración de web, móvil, servicio e inteligencia artificial \\
+Documentación requerida (DOCU) & Alto & 1.11 & Documentación académica exhaustiva (PUDS, UML, IEEE 830) \\
+Experiencia en la aplicación (APEX) & Bajo & 1.10 & Primer proyecto del equipo en este dominio \\
+Experiencia con la plataforma (PLEX) & Bajo & 1.09 & Tecnologías nuevas para el equipo (Flutter, MinIO) \\
+\midrule
+\textbf{Producto} & & \textbf{1.557} & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia; los niveles son una propuesta pendiente de confirmar por el equipo.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Con estos valores, $PM = 2.94 \times 43.0^{1.1167} \times 1.557 \approx 305$ persona-mes y $TDEV = 3.67 \times 305^{0.3213} \approx 23.1$ meses, lo que implica un equipo promedio de $305 / 23.1 \approx 13$ personas. Con los tamaños optimista (39.0 KLDC) y pesimista (47.0 KLDC) el esfuerzo varía entre 274 y 337 persona-mes. La capacidad real del proyecto es de dos personas durante 3.3 meses, es decir, unos 6.6 persona-mes. Esta diferencia de más de un orden de magnitud tiene una explicación: COCOMO II está calibrado con proyectos industriales y las líneas de código de los sistemas de referencia incluyen años de evolución, pruebas y funcionalidades que no están en el alcance de este proyecto. Aun así, la brecha debe asumirse como un riesgo de alcance, que se gestiona con la priorización de casos de uso (16 de prioridad alta, 7 media y 3 baja) y con la reutilización de marcos de trabajo y de componentes de infraestructura. % [PENDIENTE]: validar con el docente si debe calibrarse el tamaño (KLDC) con el código real del sistema una vez implementado.
 
 \paragraph{1.5.3.3. La ecuación del software.}
 
-% [PENDIENTE]: Redactar "La ecuación del software".
+La ecuación del software de Putnam relaciona el tamaño con el esfuerzo y el tiempo mediante $S = C \cdot K^{1/3} \cdot t_d^{4/3}$, donde $S$ es el tamaño en LDC, $K$ el esfuerzo en persona-años, $t_d$ el tiempo de desarrollo en años y $C$ una constante tecnológica que depende del entorno de desarrollo \parencite{putnam1992measures}. Despejando el esfuerzo se obtiene $K = (S / (C \cdot t_d^{4/3}))^{3}$, de modo que el esfuerzo es inversamente proporcional a la cuarta potencia del tiempo. Se adoptó $C = 8{,}000$ como valor intermedio del rango habitual para entornos de desarrollo de nivel medio, supuesto que debería calibrarse con datos propios, y $S = 43{,}000$ LDC. La Tabla~\ref{tab:putnam} compara dos plazos.
+
+\begin{table}[H]
+\caption{Esfuerzo según la ecuación del software para dos plazos}
+\label{tab:putnam}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} r r}
+\toprule
+Plazo de desarrollo & Tiempo $t_d$ (meses) & Esfuerzo (persona-mes) \\
+\midrule
+Tiempo estimado por COCOMO II & 23.1 & 136 \\
+Plazo del proyecto (24-ago al 30-nov-2026) & 3.3 & 325,826 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia con $C = 8{,}000$ y $S = 43{,}000$ LDC.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+El resultado para el plazo real muestra que comprimir un proyecto de este tamaño de 23.1 a 3.3 meses es imposible desde el punto de vista de la ecuación (el esfuerzo crece con la cuarta potencia de la reducción del plazo), por lo que el proyecto solo es viable si su tamaño efectivo es mucho menor que el estimado, lo cual refuerza la necesidad de la priorización y del control de alcance. Para el plazo de 14 semanas, la estimación de referencia para la planificación es la que proviene de la dificultad relativa de los casos de uso (sección 1.5.3.4).
 
 \paragraph{1.5.3.4. Planning póker.}
 
-% [PENDIENTE]: Redactar "Planning póker" (sobre casos de uso, no historias de usuario).
+El planning póker es una técnica de estimación por consenso en la que cada integrante propone en privado una estimación de dificultad para cada elemento de trabajo y, si las propuestas difieren, se discute y se repite hasta converger \parencite{cohn2005agile}. En este proyecto la técnica se aplica sobre los casos de uso y no sobre historias de usuario, con la escala de 2, 3, 5 y 8 puntos definida en la sección 1.5.1.1. La Tabla~\ref{tab:planning_poker} presenta la estimación por caso de uso agrupada por paquete y su reparto entre los dos integrantes.
+
+\begin{table}[H]
+\caption{Estimación de dificultad por caso de uso (planning póker)}
+\label{tab:planning_poker}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{9.4cm}}
+\toprule
+Paquete & Casos de uso (puntos) \\
+\midrule
+P1. Cuentas y acceso & CU-01 (5), CU-14 (3), CU-15 (2) \\
+P2. Convocatoria y postulación & CU-13 (3), CU-02 (8), CU-16 (5), CU-18 (2), CU-17 (3), CU-04 (3) \\
+P3. Preselección con IA & CU-03 (8), CU-26 (5) \\
+P4. Auditoría y adjudicación & CU-05 (5), CU-06 (3), CU-07 (5), CU-19 (3), CU-20 (2), CU-21 (3), CU-08 (3), CU-22 (3) \\
+P5. Becados y asistencia & CU-23 (5), CU-09 (3), CU-10 (5), CU-11 (5), CU-24 (2) \\
+P6. Reportes y trazabilidad & CU-12 (8), CU-25 (2) \\
+\midrule
+Total de casos de uso & 104 puntos \\
+Bloque A (Mauro) & 48 puntos de casos de uso y 10 de tareas adicionales: 58 \\
+Bloque B (Leonel) & 56 puntos de casos de uso y 2 de tareas adicionales: 58 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia a partir del plan de desarrollo del proyecto. Los 58 puntos de cada bloque incluyen las tareas técnicas adicionales.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Los 116 puntos del proyecto se reparten en 58 por integrante a lo largo de aproximadamente 14 semanas, lo que equivale a unos 4 puntos por semana y por integrante. La velocidad real se calibrará con el avance de las primeras tareas. % [PENDIENTE]: los puntos fueron propuestos en el plan; confirmar con Leonel y Mau en una sesión de planning póker antes de la entrega.
