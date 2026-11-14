@@ -207,7 +207,7 @@ erDiagram
                         varchar storage_path }
 ```
 
-**`gestion_academica`**: `id`, `etiqueta` (UQ, p. ej. «2026-II» **[formato por definir]**), `fecha_inicio`, `fecha_fin`.
+**`gestion_academica`**: `id`, `etiqueta` (`varchar(50)`, UQ, p. ej. «2026-II» **[formato por definir]**), `fecha_inicio`, `fecha_fin` (`CHECK (fecha_fin > fecha_inicio)`).
 
 **`convocatoria`** (CU-13)
 
@@ -219,7 +219,8 @@ erDiagram
 | fecha_apertura / fecha_cierre | timestamptz | NN, CHECK (cierre > apertura) | el sistema solo recibe envíos con convocatoria `ABIERTA` |
 | cupos | int | CHECK (cupos > 0) | **[número por definir; ~900 según presupuesto]** |
 | puntaje_minimo | numeric(5,2) | CHECK (0–100) | umbral de adjudicación **[por definir con la DUBSS]** |
-| estado | enum `estado_convocatoria` | NN | `BORRADOR`, `ABIERTA`, `CERRADA` |
+| cantidad_finalistas | int | CHECK (> 0), nulo | cuántos finalistas se eligen en el CU-05 (propuesta por defecto; solo la ve el Administrador; la escribe el CU-13) |
+| estado | enum `estado_convocatoria` | NN | `BORRADOR`, `ABIERTA`, `CERRADA`, `PUBLICADA` (al publicar los resultados, CU-22) |
 | creado_por | bigint | FK→usuario | |
 
 Regla: **una sola convocatoria vigente por gestión** → índice único parcial `UNIQUE (gestion_id) WHERE estado = 'ABIERTA'`.
@@ -251,7 +252,7 @@ Regla: **una sola convocatoria vigente por gestión** → índice único parcial
 | procedencia | varchar(150) | |
 | patrimonio | varchar(255) | descripción o categoría **[por definir]** |
 | estado_vulnerabilidad | varchar(50) | categoría declarada **[catálogo por definir]** |
-| promedio_academico | numeric(5,2) | CHECK (0–100) **[escala por definir]** |
+| promedio_academico | numeric(5,2) | **[escala por definir]**; el rango 0–100 se valida en el servicio (la tabla aún no lleva `CHECK`, se agrega con el CU-02) |
 | datos_extra | jsonb | variables adicionales sin migrar el esquema |
 
 **`nota_academica`** (entidad del modelo de dominio): `id`, `postulacion_id` FK, `periodo`, `promedio`. `UNIQUE (postulacion_id, periodo)`.
@@ -266,7 +267,7 @@ Regla: **una sola convocatoria vigente por gestión** → índice único parcial
 | nombre_archivo | varchar(255) | NN | |
 | storage_path | varchar(500) | NN | ruta del objeto en MinIO |
 | mime_type | varchar(100) | NN | formatos permitidos **[por definir]** |
-| tamano_bytes | bigint | CHECK (> 0) | tamaño máximo **[por definir]** |
+| tamano_bytes | bigint | CHECK (>= 0) | tamaño máximo **[por definir]** |
 | subido_en | timestamptz | NN | |
 
 **`postulacion_historial`** (CU-02, CU-19, CU-20, CU-05; base del estado visible en CU-04)
@@ -309,7 +310,7 @@ erDiagram
                            varchar estado }
 ```
 
-**`modelo_preseleccion`**: `id`, `version` (UQ), `descripcion`, `activo` (boolean; solo uno `true` → índice único parcial), `creado_por`.
+**`modelo_preseleccion`**: `id`, `version` (`varchar(50)`, UQ), `descripcion`, `activo` (boolean; solo uno `true` → índice único parcial), `creado_por`.
 **`parametro_modelo`** (CU-26): `id`, `modelo_id` FK, `clave`, `ponderacion` numeric, `valor` jsonb. `UNIQUE (modelo_id, clave)`. Contenido **[criterios y ponderaciones por definir con la DUBSS]**.
 
 **`puntaje_postulacion`** (CU-03) — **historial de puntajes** (RF-03, RF-21: se conserva el anterior)
@@ -369,7 +370,7 @@ erDiagram
 | plazo_entrega | date | | **[plazo por definir con la DUBSS]** |
 | documentacion_recibida_en | timestamptz | | CU-21: registro de entrega física |
 
-**`auditoria_expediente`** (CU-07): `id`, `finalista_id` FK, `auditor_id` FK→usuario, `resultado` (`VALIDADO`, `OBSERVADO`, `NO_VALIDO`), `puntaje_academico` numeric(5,2) `CHECK` entre 0 y 30 (nulo salvo resultado `VALIDADO`), `observaciones` varchar(500), `fecha_auditoria`. El puntaje total (IA + académico) no se guarda: se calcula. Una finalista puede tener varias auditorías (p. ej. tras una devolución).
+**`auditoria_expediente`** (CU-07): `id`, `finalista_id` FK, `auditor_id` FK→usuario, `resultado` (`VALIDADO`, `OBSERVADO`, `NO_VALIDO`), `puntaje_academico` numeric(5,2) `CHECK` entre 0 y 30 (nulo salvo resultado `VALIDADO`), `observaciones` varchar(500), `fecha_auditoria`, `clave_idempotencia` uuid (nulo; la manda el cliente para que repetir la misma petición no duplique la auditoría; índice único parcial `UNIQUE (finalista_id, clave_idempotencia) WHERE clave_idempotencia IS NOT NULL`). El puntaje total (IA + académico) no se guarda: se calcula. Una finalista puede tener varias auditorías (p. ej. tras una devolución).
 > Devolver (CU-19) y archivar/rechazar (CU-20) **no tienen tabla propia**: son transiciones de estado registradas en `postulacion_historial` con su `motivo`.
 
 **`adjudicacion`** (CU-05; resultado por postulación)
@@ -379,12 +380,12 @@ erDiagram
 | id | bigint | PK | |
 | postulacion_id | bigint | FK, UQ, NN | |
 | resultado | enum | NN | `ADJUDICADA`, `NO_ADJUDICADA` |
-| puntaje_final | numeric(5,2) | | copia del puntaje vigente al decidir (inmutable) |
+| puntaje_final | numeric(5,2) | CHECK (0–100), nulo | puntaje total (IA + académico) calculado al decidir (inmutable); nulo si «No adjudicar» sobre una auditoría sin puntaje académico |
 | decidido_por | bigint | FK→usuario, NN | |
 | fecha_adjudicacion | timestamptz | NN | entidad `BecaComedor.fecha de adjudicación` del dominio |
 
 **`acta_adjudicacion`** (CU-08, **pendiente de consulta**): `id`, `convocatoria_id` FK, `numero` (UQ), `storage_path` (PDF en MinIO), `generada_por`, `generada_en`.
-**`publicacion_resultado`** (CU-22): `id`, `convocatoria_id` FK (UQ), `publicado_por`, `publicado_en`. Una vez insertada, `adjudicacion` de esa convocatoria deja de ser editable (control en servicio + bitácora).
+**`publicacion_resultado`** (CU-22): `id`, `codigo_publicacion_resultado` (UUID, UQ), `convocatoria_id` FK (UQ), `publicado_por` FK a `usuario`, `publicado_en` (`timestamptz`, NN) y las columnas comunes. Una fila por convocatoria; al publicar, la convocatoria pasa a `PUBLICADA` y se avisa a cada finalista con decisión (eventos `BECA_ADJUDICADA` y `BECA_NO_ADJUDICADA`). Una vez insertada, `adjudicacion` de esa convocatoria deja de ser editable (control en servicio + bitácora).
 
 **`comunicado`** (CU-21, fusionado con avisos): `id`, `convocatoria_id` FK (nullable), `titulo`, `contenido` text, `destinatarios` (`TODOS`, `FINALISTAS`, `ADJUDICADOS`), `publicado_por`, `publicado_en`.
 
@@ -400,7 +401,7 @@ erDiagram
 | leida | boolean NN default false | consultable desde la app |
 | enviada_en | timestamptz | NULL si falló el push |
 
-**`dispositivo_fcm`**: `id`, `usuario_id` FK, `token` (UQ), `plataforma` (`ANDROID`, `IOS`, `WEB`).
+**`dispositivo_fcm`**: `id`, `usuario_id` FK, `token` (`varchar(512)`, UQ parcial), `plataforma` (`varchar(20)`: `ANDROID`, `IOS`, `WEB`; los valores los valida el backend con un enum Java, la tabla no lleva `CHECK`).
 
 ---
 
@@ -492,11 +493,12 @@ Sin `UPDATE`/`DELETE` para el rol de la aplicación (`REVOKE UPDATE, DELETE ON b
 | Enum | Valores | Observación |
 |---|---|---|
 | `estado_postulacion` | `borrador`*, `pendiente`, `devuelta`, `archivada`, `calificada`, `adjudicada`, `no_adjudicada` | Los seis últimos vienen del modelo de dominio. `*borrador` es adición por CU-17 (Q1). RF-06 usa otra nomenclatura (recibida, en evaluación, finalista…): **unificar** (Q2). |
-| `estado_convocatoria` | `BORRADOR`, `ABIERTA`, `CERRADA` | |
+| `estado_convocatoria` | `BORRADOR`, `ABIERTA`, `CERRADA`, `PUBLICADA` | `PUBLICADA` la fija el CU-22 al publicar los resultados |
 | `estado_beca` | `VIGENTE`, `SUSPENDIDA`, `BAJA` | RF-19 |
 | `resultado_adjudicacion` | `ADJUDICADA`, `NO_ADJUDICADA` | |
 | `tipo_movimiento_beca` | `BAJA`, `SUSPENSION`, `REACTIVACION`, `REEMPLAZO` | |
 | `destinatarios_comunicado` | `TODOS`, `FINALISTAS`, `ADJUDICADOS` | |
+| `resultado_auditoria` | `VALIDADO`, `OBSERVADO`, `NO_VALIDO` | resultado de `auditoria_expediente` (CU-07); tipo `enum` nativo de PostgreSQL |
 
 **Ciclo de vida de `postulacion.estado`**
 
@@ -529,9 +531,9 @@ stateDiagram-v2
 | Asistencia idempotente | `UNIQUE (beca_id, fecha)` |
 | Padrón vigente | `beca (convocatoria_id, estado)` |
 | Búsqueda de usuarios | `usuario (ci)`, `usuario (correo)` (ya únicos) |
-| Notificaciones no leídas | `notificacion (usuario_id, leida, creado_en DESC)` |
-| Reglas de negocio en BD | `CHECK` de rangos (puntajes 0–100, fechas, cupos > 0). Las reglas con estados (p. ej. «publicar solo si todas las adjudicaciones están decididas», «motivo obligatorio al archivar») se validan en la capa de servicio con transacción. |
-| Integridad referencial | `ON DELETE RESTRICT` en general; no se borran postulaciones ni usuarios (se archivan / desactivan). al eliminar un **borrador** se marca `eliminado_en` (en cascada, desde el servicio) en `documento_adjunto` y `respuesta_socioeconomica`; no hay `DELETE` físico (§1.1). |
+| Notificaciones no leídas | `notificacion (usuario_id, creado_en DESC)` (parcial, `WHERE eliminado_en IS NULL`) |
+| Reglas de negocio en BD | `CHECK` de rangos (puntaje de la IA 0–70, puntaje académico 0–30, puntaje mínimo y final 0–100, fechas, cupos > 0). Las reglas con estados (p. ej. «publicar solo si todas las adjudicaciones están decididas», «motivo obligatorio al archivar») se validan en la capa de servicio con transacción. |
+| Integridad referencial | claves foráneas sin `ON DELETE CASCADE` (la base las crea con la acción por defecto `NO ACTION`, que rechaza el borrado igual que `RESTRICT`); no se borran postulaciones ni usuarios (se archivan / desactivan). al eliminar un **borrador** se marca `eliminado_en` (en cascada, desde el servicio) en `documento_adjunto` y `respuesta_socioeconomica`; no hay `DELETE` físico (§1.1). |
 
 ---
 
