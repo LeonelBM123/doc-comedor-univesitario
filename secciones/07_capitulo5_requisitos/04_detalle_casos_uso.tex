@@ -580,7 +580,7 @@
     \item A5 (paso 6): si el expediente ya tenía una auditoría (por ejemplo, después de una devolución), el sistema registra la nueva auditoría y conserva las anteriores; una postulación devuelta y reenviada recorre de nuevo el flujo finalista, entrega física y auditoría.
     \item A6 (paso 1): si la entrega física del finalista no está registrada, el sistema rechaza la auditoría (conflicto) e indica registrar primero la entrega (CU-21).
     \item A7 (paso 6): si la postulación ya no está en estado «calificada» (por ejemplo, otro administrador la devolvió o archivó), el sistema rechaza la auditoría (conflicto).
-    \item A8 (paso 6): si los datos son inválidos (observaciones de más de 500 caracteres, falta el puntaje académico en un resultado «validado» o puntaje fuera del rango de 0 a 30), el sistema informa el error y no registra la auditoría.
+    \item A8 (paso 6): si los datos son inválidos (falta el resultado, las observaciones están vacías en un resultado «observado» o «no válido» o superan los 500 caracteres, falta el puntaje académico en un resultado «validado» o el puntaje está fuera del rango de 0 a 30), el sistema responde 400, informa los campos inválidos y no registra la auditoría.
     \item A9 (paso 6): si la misma petición se repite (doble clic o reintento), el sistema la trata de forma idempotente y no duplica la auditoría.
 \end{cuvin} \\
 \midrule
@@ -1605,7 +1605,7 @@
 \endlastfoot
 \textbf{Propósito} & Permitir al Administrador DUBSS cerrar formalmente una postulación que no procede, archivándola o rechazándola, y dejar constancia del motivo de la decisión. \\
 \midrule
-\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS, durante la auditoría de un expediente finalista, archiva o rechaza una postulación registrando el motivo. Al archivarla, la postulación pasa al estado «archivada»; al rechazarla, pasa al estado «no adjudicada». En ambos casos deja de aparecer en la lista priorizada activa, el cambio queda en el historial de la postulación y esta se conserva para consulta histórica y reportes. Extiende el CU-07. Respalda el RF-15. \\
+\textbf{Descripción} & Este caso de uso describe cómo el Administrador DUBSS, durante la auditoría de un expediente finalista, archiva o rechaza una postulación registrando el motivo. El motivo es obligatorio y de hasta 500 caracteres. Al archivarla, la postulación pasa al estado «archivada»; al rechazarla, pasa al estado «no adjudicada» (sin crear una adjudicación). En ambos casos deja de aparecer en la lista priorizada activa, el cambio queda en el historial de la postulación y en la bitácora, el Postulante recibe un aviso con el motivo por bandeja, push y correo, y la postulación se conserva para consulta histórica y reportes. No exige auditoría previa ni entrega física. Extiende el CU-07. Respalda el RF-15. \\
 \midrule
 \textbf{Actores} & Administrador DUBSS. \\
 \midrule
@@ -1620,26 +1620,30 @@
 \textbf{Proceso} & \textbf{Flujo principal A: archivar la postulación.}
 \begin{cupasos}
     \item El Administrador DUBSS selecciona la opción «Archivar» en el expediente.
-    \item El sistema solicita el motivo del archivo.
+    \item El sistema muestra una ventana de confirmación con el nombre del postulante y la convocatoria y solicita el motivo del archivo (hasta 500 caracteres).
     \item El Administrador DUBSS registra el motivo y confirma.
-    \item El sistema valida que el motivo no esté vacío.
+    \item El sistema valida que el finalista exista, que el motivo no esté vacío ni supere los 500 caracteres, que la postulación siga «calificada» y que los resultados no estén publicados.
     \item El sistema actualiza el estado de la postulación a «archivada» y la retira de la lista priorizada activa.
-    \item El sistema registra el cambio en el historial de la postulación (estado anterior, estado nuevo, usuario y motivo) y en la bitácora, y confirma la operación.
+    \item El sistema registra el cambio en el historial de la postulación (estado anterior, estado nuevo, usuario y motivo) y en la bitácora, todo en una misma operación.
+    \item El sistema avisa al Postulante con el motivo (bandeja, push y correo) y confirma la operación.
 \end{cupasos} \\
  & \textbf{Flujo principal B: rechazar la postulación.}
 \begin{cupasos}
     \item El Administrador DUBSS selecciona la opción «Rechazar» en el expediente.
-    \item El sistema solicita el motivo del rechazo.
+    \item El sistema muestra una ventana de confirmación con el nombre del postulante y la convocatoria y solicita el motivo del rechazo (hasta 500 caracteres).
     \item El Administrador DUBSS registra el motivo y confirma.
-    \item El sistema valida que el motivo no esté vacío.
+    \item El sistema valida que el finalista exista, que el motivo no esté vacío ni supere los 500 caracteres, que la postulación siga «calificada» y que los resultados no estén publicados.
     \item El sistema actualiza el estado de la postulación a «no adjudicada» y la retira de la lista priorizada activa.
-    \item El sistema registra el cambio en el historial de la postulación (estado anterior, estado nuevo, usuario y motivo) y en la bitácora, y confirma la operación.
+    \item El sistema registra el cambio en el historial de la postulación (estado anterior, estado nuevo, usuario y motivo) y en la bitácora, todo en una misma operación.
+    \item El sistema avisa al Postulante con el motivo (bandeja, push y correo) y confirma la operación.
 \end{cupasos} \\
  & \textbf{Flujos alternativos.}
 \begin{cuvin}
-    \item A1 (flujos A y B, paso 4): si no se registra el motivo, el sistema no permite completar la operación.
+    \item A1 (flujos A y B, paso 4): si el motivo falta, es solo espacios o supera los 500 caracteres, el sistema responde 400 y no cambia nada.
     \item A2 (flujos A y B, paso 3): si el Administrador DUBSS cancela la operación, la postulación conserva su estado.
-    \item A3 (flujos A y B, paso 1): si la postulación ya se encuentra en un estado final («archivada», «adjudicada» o «no adjudicada») o los resultados de la convocatoria fueron publicados (CU-22), el sistema no permite la operación.
+    \item A3 (flujos A y B, paso 4): si el finalista no existe o fue eliminado, el sistema responde 404 y vuelve a la lista de finalistas.
+    \item A4 (flujos A y B, paso 4): si la postulación ya no está «calificada» (devuelta, archivada, no adjudicada o adjudicada, incluidos dos administradores a la vez o un doble clic) o los resultados de la convocatoria fueron publicados (CU-22), el sistema responde 409 (ERR\_ARC\_01), informa el estado actual y no cambia nada.
+    \item A5 (flujos A y B, paso 6): si falla el envío del aviso, la decisión queda registrada, el aviso queda en la bandeja y el servicio de notificaciones (CU-EXTRA-01) reintenta el push y el correo.
 \end{cuvin} \\
 \midrule
 \textbf{Postcondición} & \vspace{-\baselineskip}\begin{cuvin}
