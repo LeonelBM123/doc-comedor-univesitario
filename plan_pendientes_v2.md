@@ -1,17 +1,17 @@
 # Plan de pendientes del documento v2 — reparto entre dos personas
 
-Inventario de lo que falta en `main_v2.tex` (numeración vigente de 12 capítulos), dividido entre **Persona A** y **Persona B**, más las dos tareas pedidas sobre el capítulo 3 (corregirlo según PUDS y dividir los casos de uso en ciclos). Estado al **13-nov-2026**.
+Inventario de lo que falta en `main_v2.tex` (numeración vigente de 12 capítulos), dividido entre **Persona A** y **Persona B**, más las dos tareas pedidas sobre el capítulo 3 (corregirlo según PUDS y dividir los casos de uso en ciclos). Estado revisado el **15-nov-2026** contra los `.tex` reales (los estados de la Persona A se corrigieron ese día; la Persona B no se tocó).
 
 - La implementación del sistema (código) ya está repartida en [`plan_desarrollo_tareas.md`](plan_desarrollo_tareas.md) con las mismas Personas A y B (58 puntos cada una). Este plan reparte **el documento** y usa el mismo criterio: cada persona documenta lo que construye.
 - Quién es A y quién es B lo deciden ustedes; el reparto no depende de los nombres.
-- Los conteos son aproximados: cuentan los marcadores `[PENDIENTE]` de cada archivo (≈ 281 en total: 144 para A y 137 para B). Una sección con `[PENDIENTE]` puede ser una línea o varias páginas.
+- Los conteos de §6 son aproximados y de la fecha original (13-nov): cuentan marcadores `[PENDIENTE]`. Una sección con `[PENDIENTE]` puede ser una línea o varias páginas.
 - Según el cronograma del proyecto (24-ago a 30-nov-2026) quedan **17 días**. Por eso §5 da un orden de ataque y §4 lista lo que bloquea.
 
 | | Persona A | Persona B |
 |---|---|---|
 | Código (plan_desarrollo_tareas.md) | Cuentas, auditoría y adjudicación, BI, notificaciones (58 pts) | Postulación, IA, becados y asistencia, bitácora (58 pts) |
-| Documento (secciones pendientes) | ≈ 144 | ≈ 137 |
-| Tema del documento | PAPS, SQAP, Inicio e iteraciones 1 y 3, CASE, infraestructura | Pruebas, iteración 2, paquetes de postulación/IA/becados, y los capítulos de la empresa de software |
+| Documento (estado 15-nov) | Caps. 1, 2, 4, 6.8/6.9 y 12 redactados; cap. 3 sin asignar; quedan 3 ajustes menores (§5) | Pendiente: caps. 5, 7, 8, 9, 10 y 11, y los anexos (DB-8) |
+| Tema del documento | PAPS, SQAP, CASE, infraestructura, producto | Capítulos de la empresa de software, pruebas y anexos |
 
 ---
 
@@ -25,8 +25,8 @@ Esta división reemplaza el reparto de las §5 y §6 en lo que respecta a **qui�
 | Tareas de §5/§6 | DA-1, DA-2, DA-5, DA-6 y DB-8 (cap. 12 y anexos) | DB-2, DB-3, DB-4, DB-5, DB-6 y DB-7 |
 
 Notas:
-- DA-3 y DA-4 (capítulo 3 y las introducciones de análisis/diseño) y DB-1 (capítulo 3) no están asignadas por ahora.
-- Los datos bloqueantes de §4 siguen igual: el dato 1 (3 software de referencia) bloquea 1.4 y 1.12; el dato 2 (herramientas reales) bloquea cap. 4 y 6.8; el dato 3 (empresa de software) bloquea cap. 2 (parte), 7, 8, 10 y 11.
+- DA-3 y DB-1 (capítulo 3) no están asignadas por ahora y siguen sin hacerse. DA-4 (introducciones de análisis y diseño) ya está hecha.
+- Datos bloqueantes de §4: los datos 1 y 2 ya están resueltos; el dato 3 (empresa de software) sigue bloqueando los caps. 7, 8, 10 y 11 de Leonel (el SQAP ya usa NEXWARE).
 
 ---
 
@@ -83,29 +83,42 @@ Archivos: `secciones_v2/cap03_procesos_puds/` (`01_definiciones_iniciales.tex`, 
 
 | # | Falta | Bloquea | Quién lo resuelve |
 |---|---|---|---|
-| 1 | **3 software de referencia** para métricas y puntos de función (con repositorio público para medir con `cloc`) | 1.4 y 1.12 (DA-1) | A y B eligen; A mide |
-| 2 | Herramientas reales del equipo (solo falta Docs/Drive) | Cap. 4, 6.8 | A y B |
+| 1 | ~~3 software de referencia~~ — **resuelto**: 1.4 y 1.12 ya redactados | — | — |
+| 2 | ~~Herramientas reales del equipo~~ — **resuelto**: cap. 4 y 6.8 redactados (Trello como única gestión) | — | — |
 | 3 | Datos de la empresa de software: nombre, misión, visión, eslogan, organigrama, políticas de calidad, servicios y precios | Cap. 2 (2.4 a 2.7, 2.10), 5, 7, 8, 10, 11 | A y B; **no se inventan** |
 | 4 | Casos de uso a probar en el cap. 9 (propuestos: CU-02, 03 y 05) | Cap. 9 | B |
 | 5 | ¿Se aplicará la encuesta del cap. 8 (8.9)? | 8.9 | B |
 | 6 | Confirmar con el docente: ciclos de §3, títulos del flujo de pruebas (3.6) y vocabulario de §2 | 3.1, 3.6, 3.7 a 3.9 | A |
 | 7 | Pendientes con la DUBSS: umbral mínimo de puntaje, número de cupos, apelación del postulante | Cap. 3 y requisitos | A y B |
-| 8 | Alinear el texto de las secciones 3.2 y 3.4 con la decisión de autenticación propia (JWT) y con los estados de la postulación (`plan_desarrollo_tareas.md` §6, puntos 1 y 5) | 3.2.3, 3.4 | A |
+| 8 | Alinear el texto de las secciones 3.2 y 3.4 con la decisión de autenticación propia (JWT) y con los estados de la postulación (`plan_desarrollo_tareas.md` §6, puntos 1 y 5) | 3.2.3, 3.4 | A (por verificar) |
 
 ---
 
-## 5. Persona A — ≈ 144 secciones
+## 5. Persona A (Mauro) — estado al 15-nov-2026
 
-| ID | Tarea | Archivos | ≈ Sec. | Notas |
-|---|---|---|---|---|
-| DA-1 | **Cap. 1 PAPS completo**: 1.3 Desafíos, 1.4 Métricas (3 software), 1.5 Estimaciones, 1.6 Riesgos, 1.9 a 1.12 | `secciones_v2/cap01_paps/` | 36 | 1.5 se puede escribir ya con los 26 CU y `plan_desarrollo_tareas.md`; 1.4 y 1.12 esperan el dato 1 de §4 |
-| DA-2 | **Cap. 2 SQAP** completo | `secciones_v2/cap02_sqap/capitulo2.tex` | 40 | Misión, visión, políticas y organigrama esperan el dato 3 |
-| DA-3 | **Cap. 3**: DC-1; 3.1 Inicio; 3.7 Iteración 1 y 3.9 Iteración 3 (casos de uso, objetivo, diseño de BD y arquitectura, tareas, revisión, retrospectiva); 3.5 Implementación: estrategia, modelo, integración y paquetes Cuentas y Acceso, Auditoría y Adjudicación, Reportes y Trazabilidad | `secciones_v2/cap03_procesos_puds/` | 9 + 14 + 7 = 30 | Depende de DC-2 |
-| DA-4 | Introducciones que faltan en Análisis (3.3.1 arquitectura, 3.3.1.3 encapsulamiento, 3.3.3 análisis de paquetes) y en Diseño (introducción de 3.4.1) | `secciones/08_capitulo6_analisis/`, `secciones/09_capitulo7_diseno/` | 4 | Son archivos compartidos con `main.tex`: escribir sin números de capítulo fijos |
-| DA-5 | **Cap. 4 Herramientas CASE** | `secciones_v2/cap04_herramientas_case/` | 17 | Esperan el dato 2 |
-| DA-6 | **Cap. 6**: 6.8 Gestión de infraestructura y 6.9 Anexos | `secciones_v2/cap06_infraestructura/` | 17 | Esperan el dato 2 |
+| ID | Tarea | Archivos | Estado |
+|---|---|---|---|
+| DA-1 | Cap. 1 PAPS (1.3 a 1.6, 1.9 a 1.12) | `secciones_v2/cap01_paps/` | ✅ Hecho (sin `[PENDIENTE]`). Solo queda recalcular las cifras provisionales de 64.5 KLDC y la proyección cuando termine el bloque B (ver abajo) |
+| DA-2 | Cap. 2 SQAP | `secciones_v2/cap02_sqap/capitulo2.tex` | ✅ Hecho (misión, visión, políticas, reporte final de V&V) |
+| DA-3 | Cap. 3: DC-1; 3.1 Inicio; 3.7 y 3.9 Iteraciones; 3.5 Implementación | `secciones_v2/cap03_procesos_puds/` | ❌ **No hecho**, y fuera del reparto vigente (§0). Sigue con `[PENDIENTE]` en `01_definiciones_iniciales.tex` (9), `05_implementacion.tex` (12), `06_pruebas.tex` (7) y `07_iteraciones.tex` (21) |
+| DA-4 | Introducciones de análisis y diseño (3.3.1, 3.3.1.3, 3.3.3, 3.4.1) | `secciones/08_*`, `secciones/09_*` | ✅ Hecho |
+| DA-5 | Cap. 4 Herramientas CASE | `secciones_v2/cap04_herramientas_case/` | ✅ Hecho (Enterprise Architect, Trello, Git/GitHub, Claude Desktop) |
+| DA-6 | Cap. 6: 6.8 Gestión de infraestructura y 6.9 Anexos | `secciones_v2/cap06_infraestructura/` | ✅ Hecho |
+| — | Cap. 12 Software como producto | `secciones_v2/cap12_producto/` | ✅ Redactado; ver pendientes de abajo |
 
-## 6. Persona B — ≈ 137 secciones
+**Lo que realmente sigue pendiente de Persona A:**
+
+1. **Cap. 12 — capturas de pantalla** de cada pantalla descrita en el manual (`% TODO` en `capitulo12.tex`, línea ≈ 19).
+2. **Cap. 12 — chatbot**: definición de lo previsto en 12.1.2 (`% TODO`, línea ≈ 106).
+3. **Cifras que esperan el bloque B de Leonel** (se recalculan al terminar la implementación):
+   - 64.5 KLDC y su proyección (`cap01_paps/05_estimaciones.tex`, notas en líneas ≈ 255 y 272).
+   - «13 de 26 CU» implementados y su lista en el manual (`cap12_producto/capitulo12.tex`, líneas ≈ 17–18).
+4. **Opcional:** informe de cobertura de pruebas.
+5. **DA-3 (cap. 3)**: sigue sin asignar; se trata aparte (§0, DC-1 y DC-2).
+
+Los anexos (carátula de la propuesta y del PAPS, códigos QR) **no** son de Persona A: son de Leonel (DB-8, §6).
+
+## 6. Persona B (Leonel) — sin revisar el 15-nov (conteos del 13-nov)
 
 | ID | Tarea | Archivos | ≈ Sec. | Notas |
 |---|---|---|---|---|
@@ -116,15 +129,15 @@ Archivos: `secciones_v2/cap03_procesos_puds/` (`01_definiciones_iniciales.tex`, 
 | DB-5 | **Cap. 8 Estudio de mercado** | `secciones_v2/cap08_mercado/` | 30 | Sin cifras inventadas; espera los datos 3 y 5 |
 | DB-6 | **Cap. 10 Marketing** | `secciones_v2/cap10_marketing/` | 22 | Espera el dato 3 |
 | DB-7 | **Cap. 11 Puesta en marcha** | `secciones_v2/cap11_puesta_marcha/` | 13 | Despliegue, licencias y políticas de privacidad |
-| DB-8 | **Cap. 12 Software como producto** y anexos (carátula de la propuesta y PAPS, códigos QR) | `secciones_v2/cap12_producto/`, `secciones_v2/anexos_v2.tex` | 3 + 2 = 5 | El manual de usuario se escribe al terminar la implementación |
+| DB-8 | Anexos (carátula de la propuesta y PAPS, códigos QR) | `secciones_v2/anexos_v2.tex` | 2 | El cap. 12 ya lo redactó Mauro (ver §5); aquí quedan solo los anexos, aún con `[PENDIENTE]` |
 
 ---
 
-## 7. Orden de ataque sugerido
+## 7. Orden de ataque (actualizado 15-nov)
 
-1. **Primero (desbloquea a todos):** DC-2 (aprobar los ciclos) y los datos de §4. Mientras tanto, cada persona avanza en lo que no depende de ellos: A en 1.5, 1.6, 1.3 y 1.9 a 1.11; B en el cap. 5 (legal) y el cap. 11 (puesta en marcha).
-2. **Después:** DC-1 y las iteraciones (DA-3, DB-1), junto con DA-2 (SQAP) y DB-3 a DB-5.
-3. **Con el código avanzado:** 3.5 Implementación por paquetes, cap. 9 con resultados reales, 3.6 Pruebas, 3.7 a 3.9 (revisión y retrospectiva), manual de usuario.
+1. **Persona A:** capturas y chatbot del cap. 12; luego recalcular KLDC y «13 de 26 CU» cuando termine el bloque B.
+2. **Persona B (Leonel):** caps. 5, 7, 8, 9, 10 y 11 y anexos (DB-8); el cap. 9 con resultados reales al final.
+3. **Cap. 3 (sin asignar):** DC-2 (aprobar los ciclos), DC-1, y luego 3.1, 3.5, 3.6 y 3.7 a 3.9.
 4. **Al final:** DC-4 (revisión conjunta, Conclusiones y compilación de ambos documentos).
 
 Reglas de edición (de `.claude/rules/`): no inventar datos institucionales, de mercado ni fuentes; los capítulos 3 a 7 de `main.tex` se comparten con la v2 mediante macros (`\wfa`, `\wn`…), así que al editar `secciones/` hay que compilar **ambos** documentos.
