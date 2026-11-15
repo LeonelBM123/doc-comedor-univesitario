@@ -1,78 +1,130 @@
 % ==============================================================================
-% 12.8 en adelante: GESTIÓN DE LA INFRAESTRUCTURA DE PRODUCCIÓN
+% 6.8 en adelante: GESTIÓN DE LA INFRAESTRUCTURA DE PRODUCCIÓN
 % ==============================================================================
-% [PENDIENTE]: Confirmar las herramientas realmente utilizadas (la herramienta de gestión confirmada es Trello; falta confirmar Antigravity).
 
 \subsection{6.8. Gestión de la Infraestructura de Producción}
 
 \subsubsection{6.8.1. Gestión de configuración}
 
-% [PENDIENTE]: Redactar "Gestión de configuración".
+La configuración del sistema se gestiona como código dentro del repositorio. El entorno completo se levanta con Docker Compose, que define doce servicios en una red interna común (Tabla~\ref{tab:servicios_compose}). Las variables sensibles (credenciales de la base de datos, de MinIO y claves de firma) se leen de archivos de entorno que no se versionan, y cada proyecto incluye un archivo de ejemplo con los nombres de las variables. El esquema de la base de datos se versiona con 16 migraciones de Flyway, y los datos iniciales (roles y usuario administrador) se cargan con \textit{scripts} semilla. Un único servidor de entrada (nginx) publica el panel web en la raíz, la interfaz de servicio bajo \texttt{/api/} y la página institucional bajo \texttt{/landing-page/}.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{6.4cm}}
+\caption{Servicios de Docker Compose del entorno de desarrollo}\label{tab:servicios_compose}\\
+\toprule
+Servicio & Imagen base & Función \\
+\midrule
+\endfirsthead
+\toprule
+Servicio & Imagen base & Función \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+proxy & nginx (alpine) & Punto de entrada único en el puerto 80; enruta al panel web, a la API y a la página institucional. \\
+comedoruagrm & Node.js 22 & Panel web (React, Vite) con recarga en caliente, puerto 5173. \\
+nexware-landing & Node.js 22 & Página institucional de NEXWARE (Astro), puerto 4321. \\
+core & Maven con JDK 21 & Backend principal (Spring Boot, perfil de desarrollo), puerto 8080. \\
+ia & Python 3.12 & Módulo de inteligencia artificial (FastAPI), puerto 8000. \\
+postgres & PostgreSQL 18 & Base de datos con volumen persistente, puerto 5432. \\
+redis & Redis 8 & Caché; memoria máxima de 256 MB con expulsión de las claves menos usadas y persistencia habilitada. \\
+mailpit & Mailpit & Bandeja de correos de prueba (SMTP en 1025, interfaz en 8025). \\
+minio & MinIO & Almacenamiento de archivos compatible con S3 (API en 9000, consola en 9001). \\
+minio-init & MinIO Client & Crea el \textit{bucket} del sistema al iniciar. \\
+prometheus & Prometheus & Recolecta métricas del backend cada 5 segundos, puerto 9090. \\
+grafana & Grafana & Visualización de las métricas, con la fuente de datos preconfigurada, puerto 3000. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir del archivo \texttt{docker-compose.yml} del repositorio.
+
+El archivo de Compose está pensado para desarrollo local (código montado, recarga en caliente y ejecución del backend con Maven), no para producción tal cual.
 
 \subsubsection{6.8.2. Gestión para la configuración del software}
 
 \paragraph{6.8.2.1. Spring Boot (Backend).}
 
-% [PENDIENTE]: Redactar "Spring Boot (Backend)".
+El backend principal usa Java 21, Spring Boot y Maven. Se ejecuta con el perfil de desarrollo dentro del contenedor \texttt{core}. Usa PostgreSQL con migraciones Flyway, Redis para caché, MinIO para los archivos, JasperReports para generar PDF y expone métricas para Prometheus. La interfaz de servicio se documenta con Swagger UI. El análisis de estilo se realiza con Checkstyle.
 
 \paragraph{6.8.2.2. React (Frontend).}
 
-% [PENDIENTE]: Redactar "React (Frontend)".
+El panel web usa React 19 con TypeScript y Vite, con TanStack (Query, Router, Form y Table) y Tailwind CSS 4. Se gestiona con pnpm dentro de un espacio de trabajo (\textit{workspace}) y corre en el contenedor \texttt{comedoruagrm}. Sus dependencias se fijan en el archivo de bloqueo de pnpm.
 
 \paragraph{6.8.2.3. Flutter (Móvil).}
 
-% [PENDIENTE]: Redactar "Flutter (Móvil)".
+La aplicación móvil usa Flutter 3.44 y Dart, con prioridad en Android. No se ejecuta en Docker: se compila en el equipo del desarrollador. La integración continua fija la versión de Flutter para evitar cambios imprevistos entre versiones, y ejecuta el análisis estático y las pruebas.
 
 \paragraph{6.8.2.4. Python (Módulo de IA).}
 
-% [PENDIENTE]: Redactar "Python (Módulo de IA)".
+El módulo de inteligencia artificial usa Python 3.12 y FastAPI. Corre en el contenedor \texttt{ia} con recarga automática y es consumido por el backend a través de la red interna. Su estilo se verifica con Ruff y sus pruebas con Pytest.
 
 \paragraph{6.8.2.5. PostgreSQL (Base de datos).}
 
-% [PENDIENTE]: Redactar "PostgreSQL (Base de datos)".
+PostgreSQL 18 corre en el contenedor \texttt{postgres} con un volumen persistente. El esquema lo crea y evoluciona Flyway desde el backend, y los \textit{scripts} semilla cargan los roles y el usuario administrador inicial.
 
 \paragraph{6.8.2.6. Visual Studio Code.}
 
-% [PENDIENTE]: Redactar "Visual Studio Code".
+Visual Studio Code es el editor de código del equipo. [PENDIENTE]: confirmar extensiones y configuración compartida del equipo.
 
 \paragraph{6.8.2.7. Docker.}
 
-% [PENDIENTE]: Redactar "Docker".
+Docker y Docker Compose empaquetan los servicios en contenedores y permiten que ambos integrantes levanten el mismo entorno con un solo comando, con las mismas versiones de PostgreSQL, Redis, MinIO y demás servicios. Los datos persisten en volúmenes con nombre.
 
-\paragraph{6.8.2.8. Antigravity.}
+\paragraph{6.8.2.8. Claude Desktop.}
 
-% [PENDIENTE]: Redactar "Antigravity".
+Claude Desktop es la herramienta de asistencia con inteligencia artificial del equipo (véase la sección 4.1.4). Se configura mediante archivos de reglas versionados en el repositorio, que describen la arquitectura de cada proyecto, los estándares de código, las convenciones de \textit{commits} y el flujo de casos de uso.
 
 \subsubsection{6.8.3. Gestión de proyectos}
 
 \paragraph{6.8.3.1. Trello.}
 
-% [PENDIENTE]: Redactar "Trello".
+Trello es la herramienta de gestión de proyectos del equipo (véase la sección 4.1.2). El tablero registra las tareas del plan de desarrollo con su responsable, y el detalle técnico de cada una vive en las fichas de unidad de trabajo del repositorio.
 
 \subsubsection{6.8.4. Gestión de versiones}
 
 \paragraph{6.8.4.1. Git.}
 
-% [PENDIENTE]: Redactar "Git".
+Git versiona el código y la documentación en un monorepo. Los \textit{commits} siguen el formato \texttt{tipo[ALCANCE]: descripci\'on}, que verifica un \textit{hook} con commitlint al confirmar, y otro \textit{hook} previo ejecuta el análisis de estilo. Un \textit{commit} no mezcla alcances.
 
 \paragraph{6.8.4.2. GitHub.}
 
-% [PENDIENTE]: Redactar "GitHub".
+GitHub aloja el repositorio y ejecuta la integración continua con GitHub Actions. El flujo de trabajo se activa en cada \textit{pull request} hacia la rama principal y en cada \textit{push} a ella. Un primer trabajo detecta qué proyectos cambiaron y solo se ejecutan los trabajos de esos proyectos (backend, módulo de IA, panel web, página institucional y aplicación móvil); cada uno corre análisis de estilo, pruebas y compilación. Todavía no existe despliegue continuo ni publicación de imágenes Docker: el destino de producción no está definido (véase la sección 6.9).
 
 \subsubsection{6.8.5. Gestión de documentos}
 
 \paragraph{6.8.5.1. Documentos Google.}
 
-% [PENDIENTE]: Redactar "Documentos Google".
+[PENDIENTE]: confirmar con el equipo si se usan Documentos de Google y para qué (borradores o actas).
 
 \paragraph{6.8.5.2. Google Drive.}
 
-% [PENDIENTE]: Redactar "Google Drive".
+[PENDIENTE]: confirmar con el equipo si se usa Google Drive y para qué (almacenamiento compartido de archivos).
 
 \paragraph{6.8.5.3. LaTeX.}
 
-% [PENDIENTE]: Redactar "LaTeX".
+Este documento se redacta en LaTeX con la clase \texttt{apa7}, la bibliografía con Biber y la compilación con MiKTeX, con una fuente común para los dos documentos del proyecto (el del Taller de Grado I y la versión 2).
 
 \subsection{6.9. Anexos}
 
-% [PENDIENTE]: Redactar "Anexos".
+\subsubsection{6.9.1. Infraestructura prevista para producción}
+
+Hoy el sistema se ejecuta únicamente en el entorno local de desarrollo. Está previsto, pero aún no existe, lo siguiente: el despliegue en AWS (la infraestructura definida en el alcance del proyecto), el despliegue continuo desde GitHub Actions, la publicación de imágenes Docker de cada proyecto en un registro, el empaquetado del backend como archivo ejecutable en lugar de ejecutar Maven en el contenedor, y la publicación de la aplicación móvil. [PENDIENTE]: definir la plataforma de destino de producción.
+
+\subsubsection{6.9.2. Resumen de herramientas de verificación automática}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}p{5.4cm}}
+\caption{Verificaciones automáticas por proyecto en la integración continua}\label{tab:verificaciones_ci}\\
+\toprule
+Proyecto & Estilo & Pruebas y compilación \\
+\midrule
+\endfirsthead
+\toprule
+Proyecto & Estilo & Pruebas y compilación \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Backend principal & Checkstyle & Pruebas con PostgreSQL y Redis reales; compilación con Maven. \\
+Módulo de IA & Ruff (revisión y formato) & Pytest. \\
+Panel web & ESLint (	extit{lint}) & Pruebas y compilación con pnpm. \\
+Página institucional & Lint, verificación de tipos y de los textos en ambos idiomas & Pruebas y compilación con npm. \\
+Aplicación móvil & Análisis estático de Flutter & Pruebas de Flutter. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir del flujo de trabajo de GitHub Actions del repositorio.
