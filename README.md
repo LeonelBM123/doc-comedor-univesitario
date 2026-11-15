@@ -31,7 +31,7 @@ doc-comedor/
 │   ├── rules/                # Reglas obligatorias del sistema (buzón texto_formatter/)
 │   ├── roles/                # Roles especializados (Orquestador, Redactor, Bibliógrafo, Auditor)
 │   └── workflows/            # Procedimiento paso a paso y Checklist interactivo APA 7
-├── .agents/                  # Reglas nativas para Antigravity IDE (.agents/rules/)
+├── .agents/                  # Reglas nativas para agentes de IA (.agents/rules/)
 ├── AGENTS.md                 # Directiva maestra global para agentes de IA en el repositorio
 ├── .gitignore                # Archivos auxiliares de LaTeX a ignorar
 └── README.md                 # Este manual de uso

@@ -56,7 +56,7 @@ Los agentes deben respetar la modularidad del documento:
 - **`agents/`**: Directorio de documentación de roles, flujos y checklists de trabajo.
 - **`agents/rules/`**: Reglas del sistema de agentes (p. ej., buzón de entrada `texto_formatter/`).
 - **`texto_formatter/`**: Buzón de entrada donde el usuario deposita texto en bruto (sin formato LaTeX) para que los agentes lo conviertan a APA 7 en LaTeX. Es de SOLO LECTURA para los agentes; el texto convertido se escribe en `secciones/` (en la sección que indique el usuario). Regla obligatoria: [`agents/rules/01_carpeta_texto_formatter.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/rules/01_carpeta_texto_formatter.md).
-- **`.agents/`**: Reglas y skills nativas para el entorno Antigravity IDE.
+- **`.agents/`**: Reglas y skills nativas para agentes de IA (el equipo usa Claude Desktop como asistente).
 - **`main_v2.tex`** y **`secciones_v2/`**: segunda versión del documento (PAPS, SQAP, procesos PUDS, implementación, pruebas, CASE, legal, infraestructura, sitio web, mercado, marketing, puesta en marcha y software como producto; 17 capítulos). Comparte con `main.tex` `config/`, `images/`, `figuras/`, `tablas/` y `referencias.bib`. Reutiliza con `\input` los capítulos 4–7 (sin cambios), el perfil (cap. 1), la DUBSS (3.1–3.5) y el marco tecnológico (cap. 12). **Los capítulos nuevos solo se escriben en `secciones_v2/`; lo reutilizado se edita en `secciones/` (el cambio aparece en ambos PDF).**
 
 ### Dos documentos, una sola fuente

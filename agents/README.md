@@ -81,7 +81,7 @@ Todo agente debe cumplir la regla completa en [`agents/rules/01_carpeta_texto_fo
 
 ## 💡 Cómo Usar los Contextos de los Agentes
 
-Puedes invocar a un agente específico en tu prompt de conversación adjuntando su rol o instruyendo a Antigravity:
+Puedes invocar a un agente específico en tu prompt de conversación adjuntando su rol o instruyendo al asistente (Claude Desktop):
 
 > *"Actúa bajo el rol de **Bibliógrafo y Gestor de Citas** ([`agents/roles/03_bibliografo_citas.md`](file:///c:/Users/PC/Documents/doc-comedor/agents/roles/03_bibliografo_citas.md)) y audita todas las citas en [`secciones/01_introduccion.tex`](file:///c:/Users/PC/Documents/doc-comedor/secciones/01_introduccion.tex) contra [`referencias.bib`](file:///c:/Users/PC/Documents/doc-comedor/referencias.bib)."*
 

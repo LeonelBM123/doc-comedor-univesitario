@@ -84,7 +84,7 @@ Archivos: `secciones_v2/cap03_procesos_puds/` (`01_definiciones_iniciales.tex`, 
 | # | Falta | Bloquea | Quién lo resuelve |
 |---|---|---|---|
 | 1 | **3 software de referencia** para métricas y puntos de función (con repositorio público para medir con `cloc`) | 1.4 y 1.12 (DA-1) | A y B eligen; A mide |
-| 2 | Herramientas reales del equipo (Jira, Antigravity, Enterprise Architect, Docs/Drive) | Cap. 4, 6.8 | A y B |
+| 2 | Herramientas reales del equipo (solo falta Docs/Drive) | Cap. 4, 6.8 | A y B |
 | 3 | Datos de la empresa de software: nombre, misión, visión, eslogan, organigrama, políticas de calidad, servicios y precios | Cap. 2 (2.4 a 2.7, 2.10), 5, 7, 8, 10, 11 | A y B; **no se inventan** |
 | 4 | Casos de uso a probar en el cap. 9 (propuestos: CU-02, 03 y 05) | Cap. 9 | B |
 | 5 | ¿Se aplicará la encuesta del cap. 8 (8.9)? | 8.9 | B |

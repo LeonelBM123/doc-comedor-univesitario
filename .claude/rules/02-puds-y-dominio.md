@@ -25,6 +25,6 @@
 
 ## No inventar
 - No inventar datos institucionales (umbral de puntaje, número de cupos, formatos), cifras de mercado, precios, presupuestos, URLs, autores ni fuentes. Marcar como **«por definir»** / `[PENDIENTE]`.
-- Las herramientas del equipo (Jira, Antigravity, Enterprise Architect…) están **sin confirmar**; preguntar antes de afirmar su uso.
+- Las herramientas del equipo confirmadas: Enterprise Architect, Trello (única de gestión), Git/GitHub y Claude Desktop (asistente de IA; no se usa Antigravity). Docs/Drive y VS Code (detalles) siguen sin confirmar.
 - Misión, visión, eslogan y políticas de calidad del cap. 2 son del **equipo desarrollador** (la DUBSS es el *cliente*; su misión/visión ya están en 3.1).
 - Los capítulos 11, 13, 14, 15 y 16 (legal, sitio web, mercado, marketing, puesta en marcha) son de empresa de software: pedir al usuario los datos (nombre de la empresa, servicios, precios) antes de redactarlos.

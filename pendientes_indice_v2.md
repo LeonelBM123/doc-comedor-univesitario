@@ -94,7 +94,7 @@ Total: unas **250 secciones** por redactar en `secciones_v2/`, más los 6 huecos
 - [ ] 10.1.1 Enterprise Architect (Propósito, Modelos elaborados, Cómo lo usamos)
 - [ ] 10.1.2 Jira (Funcionalidades, Integración, Beneficios, Aplicación, Cómo lo usamos)
 - [ ] 10.1.3 Git y GitHub (Git, GitHub, Beneficios, Cómo lo usamos)
-- [ ] 10.1.4 Antigravity (Funcionalidades, Beneficios, Aplicación, Cómo lo usamos)
+- [ ] 4.1.4 Claude Desktop (redactado) (Funcionalidades, Beneficios, Aplicación, Cómo lo usamos)
 
 ### Capítulo 11: Aspectos Legales (todo ⬜)
 
@@ -105,7 +105,7 @@ Total: unas **250 secciones** por redactar en `secciones_v2/`, más los 6 huecos
 
 ### Capítulo 12: Infraestructura (12.1 a 12.7 ✅)
 
-- [ ] 12.8.1 Gestión de configuración · 12.8.2 Configuración del software: Spring Boot · React · Flutter · Python · PostgreSQL · VS Code · Docker · Antigravity ❓
+- [ ] 12.8.1 Gestión de configuración · 12.8.2 Configuración del software: Spring Boot · React · Flutter · Python · PostgreSQL · VS Code · Docker · Claude Desktop
 - [ ] 12.8.3 Gestión de proyectos (Jira ❓) · 12.8.4 Gestión de versiones (Git, GitHub) · 12.8.5 Gestión de documentos (Google Docs, Drive, LaTeX)
 - [ ] 12.9 Anexos
 
@@ -151,7 +151,7 @@ Total: unas **250 secciones** por redactar en `secciones_v2/`, más los 6 huecos
 ## Decisiones y datos que bloquean la redacción
 
 1. **Número de iteraciones** y qué paquetes (P1 a P6) entran en cada una (3.7 a 3.9).
-2. **Herramientas reales del equipo** (Jira, Antigravity, Enterprise Architect, Docs/Drive) para los caps. 10 y 12.
+2. **Herramientas reales del equipo** (Docs/Drive) para los caps. 10 y 12.
 3. **Datos de la empresa desarrolladora**: nombre, misión, visión, eslogan, organigrama, políticas de calidad, servicios y precios (caps. 2, 13, 14, 15, 16).
 4. **Casos de uso a probar** en el cap. 9 (propuestos: CU-02, CU-03 y CU-05).
 5. **Encuesta** del cap. 14.9: ¿se aplicará?
