@@ -61,7 +61,7 @@ PostgreSQL 18 corre en el contenedor \texttt{postgres} con un volumen persistent
 
 \paragraph{6.8.2.6. Visual Studio Code.}
 
-Visual Studio Code es el editor de código del equipo. [PENDIENTE]: confirmar extensiones y configuración compartida del equipo.
+Visual Studio Code es el editor de código del equipo. El repositorio no declara una lista de extensiones recomendadas; solo versiona un archivo de configuración del espacio de trabajo que fija el JDK 21 para el servidor de lenguaje de Java y para las tareas de Maven, porque el sistema resuelve por defecto una versión antigua de Java. El estilo común del código se hace cumplir fuera del editor, con el archivo \texttt{.editorconfig}, Prettier, ESLint, Checkstyle y las verificaciones previas al \textit{commit}, de modo que no depende de las extensiones que instale cada integrante.
 
 \paragraph{6.8.2.7. Docker.}
 
@@ -91,11 +91,11 @@ GitHub aloja el repositorio y ejecuta la integración continua con GitHub Action
 
 \paragraph{6.8.5.1. Documentos Google.}
 
-[PENDIENTE]: confirmar con el equipo si se usan Documentos de Google y para qué (borradores o actas).
+El equipo no utiliza Documentos de Google. Toda la documentación del proyecto, incluido este documento, se redacta en LaTeX.
 
 \paragraph{6.8.5.2. Google Drive.}
 
-[PENDIENTE]: confirmar con el equipo si se usa Google Drive y para qué (almacenamiento compartido de archivos).
+Google Drive se usa solo para guardar las imágenes de los diagramas que luego se incluyen en el documento. Los textos no se almacenan allí.
 
 \paragraph{6.8.5.3. LaTeX.}
 
@@ -105,7 +105,7 @@ Este documento se redacta en LaTeX con la clase \texttt{apa7}, la bibliografía 
 
 \subsubsection{6.9.1. Infraestructura prevista para producción}
 
-Hoy el sistema se ejecuta únicamente en el entorno local de desarrollo. Está previsto, pero aún no existe, lo siguiente: el despliegue en AWS (la infraestructura definida en el alcance del proyecto), el despliegue continuo desde GitHub Actions, la publicación de imágenes Docker de cada proyecto en un registro, el empaquetado del backend como archivo ejecutable en lugar de ejecutar Maven en el contenedor, y la publicación de la aplicación móvil. [PENDIENTE]: definir la plataforma de destino de producción.
+Hoy el sistema se ejecuta únicamente en el entorno local de desarrollo. Está previsto, pero aún no existe, lo siguiente: el despliegue en AWS (la infraestructura definida en el alcance del proyecto), el despliegue continuo desde GitHub Actions, la publicación de imágenes Docker de cada proyecto en un registro, el empaquetado del backend como archivo ejecutable en lugar de ejecutar Maven en el contenedor, y la publicación de la aplicación móvil. La plataforma de producción es el servidor o la nube donde funcionará el sistema ya terminado, distinta de la computadora de desarrollo de cada integrante. Para ella se prevé un servidor propio o un servidor privado virtual (VPS) que ejecute los mismos servicios con Docker Compose y nginx como punto único de entrada, de forma coherente con el entorno actual. Esta decisión es provisional y aún no se ha implementado.
 
 \subsubsection{6.9.2. Resumen de herramientas de verificación automática}
 
@@ -123,7 +123,7 @@ Proyecto & Estilo & Pruebas y compilación \\
 \endfoot
 Backend principal & Checkstyle & Pruebas con PostgreSQL y Redis reales; compilación con Maven. \\
 Módulo de IA & Ruff (revisión y formato) & Pytest. \\
-Panel web & ESLint (	extit{lint}) & Pruebas y compilación con pnpm. \\
+Panel web & ESLint (\textit{lint}) & Pruebas y compilación con pnpm. \\
 Página institucional & Lint, verificación de tipos y de los textos en ambos idiomas & Pruebas y compilación con npm. \\
 Aplicación móvil & Análisis estático de Flutter & Pruebas de Flutter. \\
 \end{longtable}

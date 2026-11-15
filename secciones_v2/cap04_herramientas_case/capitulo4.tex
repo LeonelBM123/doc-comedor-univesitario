@@ -32,7 +32,7 @@ Trello es una herramienta de gestión de proyectos basada en tableros, listas y 
 
 \paragraph{4.1.2.2. Integración con otras herramientas.}
 
-Trello permite enlazar en las tarjetas los \textit{pull requests} y los \textit{commits} de GitHub, de modo que cada tarea queda vinculada con el código que la implementa. [PENDIENTE]: confirmar si el equipo usa la integración nativa con GitHub o enlaces manuales.
+Trello admite complementos que enlazan las tarjetas con los \textit{pull requests} y los \textit{commits} de GitHub. En este proyecto no se utiliza esa integración: el tablero de Trello no está conectado a GitHub, el seguimiento de cada tarea se lleva en el propio tablero y el código se gestiona por separado en el repositorio.
 
 \paragraph{4.1.2.3. Beneficios para el proceso de desarrollo.}
 
@@ -44,7 +44,7 @@ En proyectos de software el tablero suele organizarse con listas para las tareas
 
 \paragraph{4.1.2.5. Cómo lo usamos en nuestro proyecto.}
 
-Trello es la única herramienta de gestión del proyecto. Su tablero refleja las 31 tareas del plan de desarrollo y los seis hitos de integración (H1 a H6) descritos en el Capítulo~1, con la persona responsable de cada una. El detalle técnico de cada tarea (alcance, dependencias y pasos de validación) se conserva en las fichas de unidad de trabajo del repositorio. [PENDIENTE]: nombres exactos de las listas del tablero.
+Trello es la única herramienta de gestión del proyecto. Su tablero refleja las 31 tareas del plan de desarrollo y los seis hitos de integración (H1 a H6) descritos en el Capítulo~1, con la persona responsable de cada una. El detalle técnico de cada tarea (alcance, dependencias y pasos de validación) se conserva en las fichas de unidad de trabajo del repositorio. El tablero se organiza en cinco listas que representan el avance de cada tarea: \textit{Tareas pendientes}, \textit{Tareas en Proceso}, \textit{Tarea Realizada}, \textit{Tarea En Revision} y \textit{Tarea Finalizada Correctamente}.
 
 \subsubsection{4.1.3. Git y GitHub}
 
@@ -80,4 +80,4 @@ En proyectos de software se emplea como asistente de programación en pareja: ge
 
 \paragraph{4.1.4.4. Cómo lo usamos en nuestro proyecto.}
 
-El equipo utiliza Claude Desktop como herramienta de asistencia al desarrollo y a la documentación. El repositorio del sistema incluye reglas para el asistente (arquitectura de cada proyecto, estándares de código, convenciones de \textit{commits}, pruebas y casos de uso) que orientan su trabajo para que respete las decisiones del equipo. Con esa guía se apoya la implementación de las tareas, la escritura de pruebas y la redacción de este documento. Los integrantes revisan siempre los resultados antes de incorporarlos. [PENDIENTE]: confirmar con el equipo el alcance exacto de su uso por bloque de trabajo.
+El equipo utiliza Claude Desktop como herramienta de asistencia al desarrollo y a la documentación. El repositorio del sistema incluye reglas para el asistente (arquitectura de cada proyecto, estándares de código, convenciones de \textit{commits}, pruebas y casos de uso) que orientan su trabajo para que respete las decisiones del equipo. Claude Desktop se utilizó para redactar los casos de uso y las unidades de trabajo (del backend, del frontend y de la aplicación móvil) y para realizarlas. El trabajo sigue una metodología basada en especificaciones: primero se escribe la especificación de cada caso de uso o unidad de trabajo y el asistente la implementa a partir de ella, en lugar de recibir instrucciones sueltas. Los integrantes revisan siempre los resultados antes de incorporarlos.
