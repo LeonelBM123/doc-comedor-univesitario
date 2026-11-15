@@ -1,23 +1,107 @@
 % ==============================================================================
-% CAPÍTULO 17: SOFTWARE COMO PRODUCTO (Orquestador del Capítulo)
+% CAPÍTULO 12: SOFTWARE COMO PRODUCTO (Orquestador del Capítulo)
 % ==============================================================================
 \preportadacapitulo{12}{Software como Producto}
 
 \newpage
 \section{Capítulo 12: Software como Producto}\label{cap:producto}
 
-% [INSTRUCCIÓN]: Software como producto. Contenido propio de esta versión.
+Este capítulo reúne los materiales de ayuda al usuario del sistema de la Beca Comedor: el manual de usuario y, como material previsto, un asistente conversacional y tutoriales guiados.
 
 \subsection{12.1. Para el Usuario}
 
 \subsubsection{12.1.1. Manual de usuario}
 
-% [PENDIENTE]: Redactar "Manual de usuario".
+\paragraph{12.1.1.1. Alcance del manual.}
+
+El manual describe las funciones del sistema que están implementadas a la fecha: 13 de los 26 casos de uso (CU-01, CU-04, CU-05, CU-06, CU-07, CU-08, CU-12, CU-14, CU-15, CU-19, CU-20, CU-21 y CU-22), junto con el servicio de avisos que los acompaña. Las funciones de los casos de uso restantes (entre ellas el envío de la postulación, la precalificación con inteligencia artificial y el control de asistencia) se agregarán al manual cuando se implementen. El sistema se usa desde un navegador web (panel web) y desde una aplicación móvil Android; la aplicación móvil cubre hoy el acceso, el perfil, los avisos y la consulta de las postulaciones del postulante. [PENDIENTE]: capturas de pantalla de cada pantalla descrita.
+
+\paragraph{12.1.1.2. Perfiles de usuario.}
+
+Los usuarios del sistema pertenecen a cuatro perfiles, y cada uno ve solo las opciones que le corresponden: el Postulante (estudiante de la UAGRM), el Administrador de la DUBSS, el Directivo y el Personal del Comedor. Al iniciar sesión el sistema lleva a cada persona al módulo de su perfil. La Tabla~\ref{tab:menu_por_rol} resume las opciones del panel web por perfil.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{9.4cm}}
+\caption{Opciones del panel web según el perfil del usuario}\label{tab:menu_por_rol}\\
+\toprule
+Perfil & Opciones del menú \\
+\midrule
+\endfirsthead
+\toprule
+Perfil & Opciones del menú \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Sin sesión & Inicio, Iniciar sesión, Crear cuenta y Recuperar contraseña. \\
+Postulante & Mis postulaciones, Resultados, Perfil y bandeja de avisos. \\
+Administrador de la DUBSS & Dashboard, Lista priorizada, Finalistas, Auditoría y adjudicación, Publicar resultados, Actas, Administradores DUBSS, Directivos, Personal del Comedor, Perfil y bandeja de avisos. \\
+Directivo & Dashboard de indicadores. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir de las opciones de menú del panel web. Las opciones heredadas del prototipo inicial (Menús, Pedidos, Mi Menú y Mis Pedidos) no forman parte de este producto.
+
+\paragraph{12.1.1.3. Guía para el Postulante.}
+
+\textbf{Crear una cuenta y entrar (CU-01).} El Postulante abre la pantalla \textit{Crear cuenta} (en el panel web o en la aplicación móvil), completa sus nombres, apellidos, carné de identidad, registro universitario (9 dígitos), carrera, correo electrónico y contraseña, y confirma. El sistema crea la cuenta con el perfil de Postulante y abre la sesión. El carné, el registro universitario y el correo no pueden estar repetidos. Para entrar en otras ocasiones, usa \textit{Iniciar sesión} con su correo y contraseña. Tras cinco intentos fallidos la cuenta se bloquea durante un tiempo, aunque luego se escriba la contraseña correcta. Para salir usa la opción \textit{Cerrar sesión} del menú de usuario.
+
+\textbf{Recuperar la contraseña (CU-15).} En la pantalla de acceso, el Postulante pulsa \textit{¿Olvidó su contraseña?}, escribe su correo y recibe siempre el mismo mensaje, exista o no la cuenta. Si existe, le llega un enlace de un solo uso que vence en 60 minutos; al abrirlo define una contraseña nueva y se cierran sus otras sesiones.
+
+\textbf{Gestionar el perfil (CU-15).} En \textit{Perfil} el Postulante ve sus datos, edita los de contacto (el carné de identidad no se puede cambiar) y puede cambiar su contraseña escribiendo primero la actual.
+
+\textbf{Consultar el estado de una postulación (CU-04).} En \textit{Mis postulaciones} el Postulante ve la lista de sus postulaciones, de la más reciente a la más antigua, con la gestión académica, la fecha de envío y el estado. Puede filtrar por gestión. Al abrir una postulación ve el detalle con una línea de tiempo con la fecha y la hora de cada cambio y los pasos que aún faltan. Según el estado, se agrega información: en \textit{devuelta}, las observaciones del personal y la opción de corregir y reenviar; en \textit{archivada} o \textit{no adjudicada} por rechazo, el motivo registrado; en el caso de un finalista, el plazo y los documentos que debe entregar en la DUBSS. Hasta que la DUBSS publique los resultados, una postulación ya decidida se sigue mostrando como \textit{calificada}. La misma consulta está disponible en la aplicación móvil.
+
+\textbf{Ver los resultados (CU-22).} Una vez publicados los resultados de la convocatoria, el Postulante los consulta en \textit{Resultados}. Cada postulante ve su propio resultado.
+
+\textbf{Avisos.} El sistema avisa al Postulante, en la bandeja de avisos, con una notificación en el celular y por correo, cuando es notificado como finalista, cuando se registra el resultado de la auditoría de su expediente, cuando su postulación es devuelta, archivada o rechazada, cuando se publican los resultados y cuando la DUBSS emite un comunicado. Al tocar un aviso se abre la postulación correspondiente.
+
+\paragraph{12.1.1.4. Guía para el Administrador de la DUBSS.}
+
+\textbf{Gestionar usuarios y roles (CU-14).} En las opciones \textit{Administradores DUBSS}, \textit{Directivos} y \textit{Personal del Comedor} el Administrador ve las cuentas del personal por perfil y puede crear una cuenta, editarla, cambiar su rol, desactivarla y reactivarla. Al crear una cuenta el sistema genera una contraseña temporal que se muestra una sola vez. Las cuentas nunca se borran; no es posible desactivar la propia cuenta ni la del último administrador activo.
+
+\textbf{Visualizar la lista priorizada (CU-06).} En \textit{Lista priorizada} el Administrador elige la convocatoria (por defecto la más reciente) y ve las postulaciones calificadas ordenadas de mayor a menor puntaje de vulnerabilidad, con su posición, nombre, carné, carrera y puntaje. Puede buscar por nombre o carné, filtrar por carrera y exportar la lista filtrada a PDF; la exportación queda anotada en la bitácora. La lista siempre muestra el puntaje vigente.
+
+\textbf{Notificar finalistas, registrar la entrega y publicar comunicados (CU-21).} En \textit{Finalistas} el Administrador realiza tres tareas: (a) notificar a los finalistas elegidos indicando el plazo, el lugar, el horario y los documentos a presentar; (b) marcar la documentación recibida, con la fecha y las observaciones, cuando el finalista entrega sus papeles; y (c) redactar un comunicado con título y contenido, elegir los destinatarios (todos o solo los finalistas), revisar la vista previa y publicarlo. Sin la documentación recibida no es posible auditar el expediente.
+
+\textbf{Auditar el expediente de un finalista (CU-07).} Desde la fila del finalista, con la opción \textit{Auditar}, el Administrador abre el expediente: datos del postulante, respuestas socioeconómicas, documentos (recibidos o faltantes, que se abren con un acceso temporal) y puntaje de la inteligencia artificial. Registra el resultado de la auditoría (\textit{Validado}, \textit{Observado} o \textit{No válido}), las observaciones (hasta 500 caracteres) y el puntaje académico de 0 a 30, obligatorio cuando el resultado es \textit{Validado}. El sistema muestra el puntaje total (máximo 100), suma del puntaje de la inteligencia artificial (hasta 70) y del puntaje académico (hasta 30), y avisa al postulante del resultado. Un finalista puede tener varias auditorías y vale la última.
+
+\textbf{Devolver, archivar o rechazar desde el expediente (CU-19 y CU-20).} Desde el expediente, el Administrador puede devolver la postulación para corrección (CU-19), con un motivo obligatorio de hasta 500 caracteres; la opción solo se habilita si la postulación está calificada y fue auditada después de la última devolución. También puede archivarla o rechazarla (CU-20), con motivo, cuando no procede y no tiene arreglo. Estas dos acciones son definitivas. En los tres casos se avisa al postulante con el motivo.
+
+\textbf{Auditar y adjudicar becas (CU-05).} En \textit{Auditoría y adjudicación} el Administrador elige la convocatoria y ve el panel con los cupos totales, los adjudicados, los no adjudicados, los cupos disponibles y el puntaje mínimo. Selecciona como finalistas a los postulantes mejor puntuados (el sistema propone la cantidad configurada en la convocatoria, que puede ajustar), y decide desde el expediente de cada finalista auditado con \textit{Adjudicar} o \textit{No adjudicar}. Para adjudicar, la última auditoría debe ser \textit{Validado}, el puntaje total debe alcanzar el mínimo y deben quedar cupos; para no adjudicar se exige un motivo. La decisión es final y el postulante no recibe aviso hasta la publicación de los resultados.
+
+\textbf{Publicar resultados (CU-22).} En \textit{Publicar resultados} el Administrador elige la convocatoria, revisa el resumen de adjudicados y no adjudicados y pulsa \textit{Publicar}. El sistema advierte que la publicación no se puede deshacer, y solo la permite cuando no quedan finalistas pendientes de decisión; al publicar avisa a cada finalista de su resultado.
+
+\textbf{Generar el acta de adjudicación (CU-08).} En \textit{Actas} el Administrador ve las actas generadas y las convocatorias con resultados publicados que aún no tienen acta. Elige una convocatoria, puede ver una vista previa marcada como borrador y pulsa \textit{Generar PDF}; el sistema advierte que el acta es definitiva, la genera con los adjudicados (nombre, carné, carrera y puntaje final) y la guarda. El acta se descarga o imprime desde la misma pantalla con \textit{Descargar}; la descarga queda anotada en la bitácora.
+
+\paragraph{12.1.1.5. Guía para el Directivo.}
+
+\textbf{Visualizar el dashboard de indicadores (CU-12).} Al iniciar sesión el Directivo abre \textit{Dashboard}, que muestra cuatro indicadores y los gráficos de postulaciones y de asistencia por mes de la gestión académica vigente, junto con la fecha de la última actualización. Puede elegir otra gestión o una convocatoria, pulsar \textit{Aplicar} para actualizar la vista y, si lo desea, pulsar \textit{Descargar PDF} para obtener el informe de lo que está viendo. Si no hay datos, el sistema lo informa y muestra los indicadores en cero.
+
+\paragraph{12.1.1.6. Mensajes y problemas frecuentes.}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{5.2cm} >{\raggedright\arraybackslash}p{7.6cm}}
+\caption{Situaciones frecuentes y qué hacer}\label{tab:problemas_frecuentes}\\
+\toprule
+Situación & Qué hacer \\
+\midrule
+\endfirsthead
+\toprule
+Situación & Qué hacer \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+La cuenta está bloqueada por intentos fallidos & Esperar a que termine el bloqueo, que aumenta si se sigue fallando, o recuperar la contraseña. \\
+El enlace de recuperación no funciona & Es de un solo uso y vence a los 60 minutos; solicitar uno nuevo. \\
+No se habilita \textit{Auditar} & Registrar primero la documentación recibida del finalista. \\
+No se puede devolver una postulación & Debe estar calificada y haber sido auditada después de la última devolución. \\
+No se puede publicar los resultados & Quedan finalistas sin decisión; el mensaje indica cuántos faltan. \\
+Dos personas ejecutan la misma acción a la vez & La segunda recibe un aviso de conflicto y no se repite la operación. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir de las reglas de los casos de uso.
 
 \subsubsection{12.1.2. Chatbots}
 
-% [PENDIENTE]: Redactar "Chatbots".
+Un asistente conversacional (\textit{chatbot}) es un programa que responde preguntas en lenguaje natural. El sistema todavía no incluye uno; esta sección describe lo previsto. El asistente resolvería las dudas frecuentes de los postulantes y del personal (requisitos de la beca, documentos a presentar, significado de cada estado de la postulación, plazos y cómo corregir una postulación devuelta) con respuestas basadas en el manual de usuario y en la información oficial de la convocatoria. Estaría disponible dentro del panel web y de la aplicación móvil, y derivaría a la DUBSS las consultas que no pueda resolver. Las consultas sobre la situación personal de un postulante se responderían solo con el estado que el propio usuario autenticado puede ver. [PENDIENTE]: definir la tecnología, las fuentes de conocimiento y el alcance del asistente con la DUBSS.
 
 \subsubsection{12.1.3. Tutoriales}
 
-% [PENDIENTE]: Redactar "Tutoriales".
+Todavía no existen tutoriales. Está previsto incorporar un recorrido guiado (\textit{tour}) dentro del propio software, que oriente al usuario la primera vez que ingresa y pueda repetirse desde el menú de ayuda. El recorrido resaltaría paso a paso los elementos de la pantalla según el perfil: para el Postulante, cómo completar y enviar la postulación, cargar los documentos y consultar el estado; para el personal de la DUBSS, cómo revisar la lista priorizada, auditar un expediente y publicar resultados. Se complementaría con videos cortos y fichas de ayuda por caso de uso, que se elaborarían cuando las funciones respectivas estén implementadas. [PENDIENTE]: definir la herramienta del recorrido guiado y el calendario de elaboración.
