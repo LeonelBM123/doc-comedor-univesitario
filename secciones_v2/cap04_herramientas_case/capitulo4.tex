@@ -1,85 +1,83 @@
 % ==============================================================================
-% CAPÍTULO 10: HERRAMIENTAS CASE (Orquestador del Capítulo)
+% CAPÍTULO 4: HERRAMIENTAS CASE (Orquestador del Capítulo)
 % ==============================================================================
 \preportadacapitulo{4}{Herramientas CASE}
 
 \newpage
 \section{Capítulo 4: Herramientas CASE}\label{cap:case}
 
-% [INSTRUCCIÓN]: Herramientas CASE. Contenido propio de esta versión.
+Las herramientas CASE (\textit{Computer-Aided Software Engineering}) dan soporte automatizado a las actividades del ciclo de vida del software. Este capítulo describe las cuatro herramientas que NEXWARE utiliza en el proyecto: Enterprise Architect para el modelado, Trello para la gestión de las tareas, Git y GitHub para el control de versiones y Claude Desktop como asistente de inteligencia artificial para el desarrollo.
 
 \subsection{4.1. Aspectos Relacionados con la Productividad}
-
-% [PENDIENTE]: Confirmar las herramientas CASE realmente utilizadas por el equipo.
 
 \subsubsection{4.1.1. Enterprise Architect}
 
 \paragraph{4.1.1.1. Propósito y beneficios.}
 
-% [PENDIENTE]: Redactar "Propósito y beneficios".
+Enterprise Architect es una herramienta de modelado visual basada en UML que permite elaborar, en un mismo repositorio, los diagramas de requisitos, análisis, diseño y despliegue de un sistema. Su beneficio principal es mantener la consistencia entre modelos: un actor, una clase o un caso de uso se define una sola vez y se reutiliza en todos los diagramas donde aparece. También facilita la trazabilidad entre casos de uso, requisitos y elementos de diseño, y la exportación de los diagramas como imágenes para el documento.
 
 \paragraph{4.1.1.2. Modelos elaborados.}
 
-% [PENDIENTE]: Redactar "Modelos elaborados".
+Con Enterprise Architect se elaboran los modelos que sustentan los flujos de trabajo del proceso unificado: el diagrama general de casos de uso y el modelo de dominio (requisitos), los diagramas de contexto, de análisis por caso de uso y de paquetes (análisis), y los diagramas de clases, de secuencia y de despliegue (diseño). Las figuras correspondientes se presentan en las secciones 3.2 a 3.4 de este documento.
 
 \paragraph{4.1.1.3. Cómo lo usamos en nuestro proyecto.}
 
-% [PENDIENTE]: Redactar "Cómo lo usamos en nuestro proyecto".
+Cada integrante modela los casos de uso de su bloque de trabajo. Los diagramas se dibujan a partir de los insumos de texto del repositorio (lista de casos de uso, actores por caso de uso y esquema de la base de datos), se exportan como imagen a la carpeta de figuras del documento y se citan desde el texto en LaTeX. Los diagramas se revisan junto con el código para que el modelo refleje lo implementado.
 
 \subsubsection{4.1.2. Trello}
 
 \paragraph{4.1.2.1. Funcionalidades principales.}
 
-% [PENDIENTE]: Redactar "Funcionalidades principales".
+Trello es una herramienta de gestión de proyectos basada en tableros, listas y tarjetas, según el método Kanban. Cada tarjeta representa una tarea y puede incluir descripción, responsables, fechas límite, listas de verificación, etiquetas y archivos adjuntos. Las tarjetas se mueven entre listas que representan el estado del trabajo, lo que da una vista inmediata del avance.
 
 \paragraph{4.1.2.2. Integración con otras herramientas.}
 
-% [PENDIENTE]: Redactar "Integración con otras herramientas".
+Trello permite enlazar en las tarjetas los \textit{pull requests} y los \textit{commits} de GitHub, de modo que cada tarea queda vinculada con el código que la implementa. [PENDIENTE]: confirmar si el equipo usa la integración nativa con GitHub o enlaces manuales.
 
 \paragraph{4.1.2.3. Beneficios para el proceso de desarrollo.}
 
-% [PENDIENTE]: Redactar "Beneficios para el proceso de desarrollo".
+Para un equipo de dos integrantes, Trello aporta visibilidad del trabajo en curso, reparto claro de responsabilidades entre los dos bloques y un seguimiento ligero, sin la carga administrativa de herramientas más pesadas. El tablero sirve de apoyo a la reunión semanal de seguimiento.
 
 \paragraph{4.1.2.4. Aplicación en proyectos de desarrollo.}
 
-% [PENDIENTE]: Redactar "Aplicación en proyectos de desarrollo".
+En proyectos de software el tablero suele organizarse con listas para las tareas pendientes, en curso, en revisión y terminadas, y con una tarjeta por unidad de trabajo. Bajo el proceso unificado, cada tarjeta corresponde a una tarea derivada de un caso de uso.
 
 \paragraph{4.1.2.5. Cómo lo usamos en nuestro proyecto.}
 
-% [PENDIENTE]: Redactar "Cómo lo usamos en nuestro proyecto".
+Trello es la única herramienta de gestión del proyecto. Su tablero refleja las 31 tareas del plan de desarrollo y los seis hitos de integración (H1 a H6) descritos en el Capítulo~1, con la persona responsable de cada una. El detalle técnico de cada tarea (alcance, dependencias y pasos de validación) se conserva en las fichas de unidad de trabajo del repositorio. [PENDIENTE]: nombres exactos de las listas del tablero.
 
 \subsubsection{4.1.3. Git y GitHub}
 
 \paragraph{4.1.3.1. Git: sistema de control de versiones.}
 
-% [PENDIENTE]: Redactar "Git: sistema de control de versiones".
+Git es un sistema de control de versiones distribuido que registra el historial de cambios del código, permite trabajar en ramas paralelas y fusionarlas, y hace posible volver a un estado anterior. Cada copia del repositorio contiene el historial completo, por lo que se puede trabajar sin conexión.
 
 \paragraph{4.1.3.2. GitHub: plataforma colaborativa.}
 
-% [PENDIENTE]: Redactar "GitHub: plataforma colaborativa".
+GitHub aloja los repositorios de Git en la nube y añade herramientas de colaboración: \textit{pull requests} para revisar los cambios antes de incorporarlos, \textit{issues}, protección de ramas y GitHub Actions para ejecutar flujos de integración continua.
 
 \paragraph{4.1.3.3. Beneficios para el proceso de desarrollo.}
 
-% [PENDIENTE]: Redactar "Beneficios para el proceso de desarrollo".
+Permiten el trabajo simultáneo de los dos integrantes sin pisarse, la revisión cruzada del código, la trazabilidad de cada cambio y la verificación automática de la calidad antes de integrar. El historial sirve además como evidencia del avance del proyecto.
 
 \paragraph{4.1.3.4. Cómo lo usamos en nuestro proyecto.}
 
-% [PENDIENTE]: Redactar "Cómo lo usamos en nuestro proyecto".
+El sistema se mantiene en un único repositorio (\textit{monorepo}) en GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripci\'on}, validado automáticamente con Husky y commitlint. Al abrir un \textit{pull request}, GitHub Actions ejecuta el análisis de estilo, las pruebas y la compilación de cada proyecto modificado (Capítulo~\ref{cap:sqap}). La configuración se detalla en la sección 6.8.
 
-\subsubsection{4.1.4. Antigravity}
+\subsubsection{4.1.4. Claude Desktop}
 
 \paragraph{4.1.4.1. Funcionalidades principales.}
 
-% [PENDIENTE]: Redactar "Funcionalidades principales".
+Claude Desktop es la aplicación de escritorio de Claude, el asistente de inteligencia artificial desarrollado por Anthropic. Permite conversar con el asistente en lenguaje natural y, en su modo de programación, trabajar sobre una carpeta de código: leer los archivos del proyecto, proponer y aplicar cambios, ejecutar comandos de compilación y pruebas, y explicar o revisar código existente. El asistente puede recibir instrucciones permanentes del proyecto en archivos de reglas, que consulta antes de actuar.
 
 \paragraph{4.1.4.2. Beneficios para el proceso de desarrollo.}
 
-% [PENDIENTE]: Redactar "Beneficios para el proceso de desarrollo".
+Reduce el tiempo de las tareas repetitivas (código base, pruebas, documentación), ayuda a detectar errores y a explorar alternativas de diseño, y acelera la comprensión de código ajeno. Para un equipo de dos personas amplía la capacidad de trabajo sin sustituir el criterio de los integrantes: todo cambio propuesto pasa por la misma verificación que el código escrito a mano (estilo, pruebas, \textit{pull request} y revisión).
 
 \paragraph{4.1.4.3. Aplicación en proyectos de desarrollo.}
 
-% [PENDIENTE]: Redactar "Aplicación en proyectos de desarrollo".
+En proyectos de software se emplea como asistente de programación en pareja: generación y refactorización de código, escritura de pruebas, revisión de cambios, análisis de errores y redacción de documentación técnica.
 
 \paragraph{4.1.4.4. Cómo lo usamos en nuestro proyecto.}
 
-% [PENDIENTE]: Redactar "Cómo lo usamos en nuestro proyecto".
+El equipo utiliza Claude Desktop como herramienta de asistencia al desarrollo y a la documentación. El repositorio del sistema incluye reglas para el asistente (arquitectura de cada proyecto, estándares de código, convenciones de \textit{commits}, pruebas y casos de uso) que orientan su trabajo para que respete las decisiones del equipo. Con esa guía se apoya la implementación de las tareas, la escritura de pruebas y la redacción de este documento. Los integrantes revisan siempre los resultados antes de incorporarlos. [PENDIENTE]: confirmar con el equipo el alcance exacto de su uso por bloque de trabajo.
