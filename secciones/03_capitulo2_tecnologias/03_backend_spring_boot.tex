@@ -5,7 +5,7 @@
 
 \subsubsection{\capnum{2}.3.1. Framework Spring Boot y Lenguaje Java}\label{sec:spring_boot_java}
 
-Spring Boot es un framework de código abierto basado en Java diseñado para simplificar el desarrollo de aplicaciones empresariales mediante la configuración automática y la creación de microservicios independientes \parencite{walls2019springboot}. Su ecosistema ofrece alta robustez, escalabilidad y un tipado fuerte, garantizando el procesamiento seguro de transacciones en la gestión del comedor universitario.
+Spring Boot es un framework de código abierto basado en Java diseñado para simplificar el desarrollo de aplicaciones empresariales mediante la configuración automática y la creación de microservicios independientes \parencite{walls2015springboot}. Su ecosistema ofrece alta robustez, escalabilidad y un tipado fuerte, garantizando el procesamiento seguro de transacciones en la gestión del comedor universitario.
 
 \begin{figure}[H]
 \caption{Logotipo del framework Spring Boot}
@@ -23,4 +23,4 @@ La arquitectura REST (\textit{Representational State Transfer}) es un estilo arq
 
 \subsubsection{\capnum{2}.3.3. Seguridad, Autenticación y Cifrado de Datos (Spring Security y JWT)}\label{sec:backend_seguridad}
 
-Spring Security proporciona mecanismos avanzados de autenticación y control de acceso basado en roles (RBAC) \parencite{mularien2010springsecurity}. En el sistema, el propio backend verifica las credenciales y emite un \textit{JSON Web Token} (JWT) de acceso, firmado y de vida corta, junto con un token de renovación por dispositivo; el backend verifica el JWT en cada petición de forma \textit{stateless} \parencite{rouse2018jwt}. Las contraseñas de estudiantes y personal administrativo se almacenan únicamente como hash (BCrypt) y el token de renovación solo como hash, de modo que los datos sensibles de postulación permanecen protegidos.
+Spring Security proporciona mecanismos avanzados de autenticación y control de acceso basado en roles (RBAC) \parencite{mularien2010springsecurity}. En el sistema, el propio backend verifica las credenciales y emite un \textit{JSON Web Token} (JWT) de acceso, firmado y de vida corta, junto con un token de renovación por dispositivo; el backend verifica el JWT en cada petición de forma \textit{stateless} \parencite{jones2015jwt}. Las contraseñas de estudiantes y personal administrativo se almacenan únicamente como hash (BCrypt) y el token de renovación solo como hash, de modo que los datos sensibles de postulación permanecen protegidos.

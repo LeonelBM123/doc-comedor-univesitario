@@ -160,7 +160,7 @@ Detalle completo en [`casos_de_uso_filtrados.md`](casos_de_uso_filtrados.md) §2
 | P6 Reportes y trazabilidad | CU-12, 25 | 2 |
 
 - **Prioridad:** Alta 16 CU · Media 7 · Baja 3 (Baja: CU-15, CU-17, CU-26). Orden de implementación sugerido en el `.md` §3.
-- **Reparto** (13 CU c/u): Persona A = cuentas, postulación, IA y notificaciones (54 pts); Persona B = auditoría, adjudicación, asistencia y reportes (53 pts).
+- **Reparto vigente del documento** (`plan_pendientes_v2.md` §0, sin el cap. 3): Persona A (Mauro) = cap. 1 (PAPS), cap. 2 (SQAP), cap. 4 (CASE), cap. 6.8 y 6.9 (infraestructura y anexos), cap. 12 (producto) y DA-4 (introducciones de análisis y diseño); Persona B (Leonel) = caps. 5, 7, 8, 9, 10 y 11. El reparto por CU de `casos_de_uso_filtrados.md` §4 (13 CU c/u) es histórico y no rige el documento.
 - Estos paquetes son el punto de partida para **6.1.1 Identificación de Paquetes** y **6.1.3 Encapsulamiento de CU por paquetes**; la relación entre paquetes (6.1.2) debe derivarse de la columna «Relación» del `.md`.
 
 ---
