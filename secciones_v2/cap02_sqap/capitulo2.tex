@@ -52,7 +52,7 @@ Las políticas de calidad de NEXWARE son las reglas que el equipo ya aplica en e
     \item Todo código de error nuevo se documenta en el mismo cambio que lo introduce.
     \item Cada tarea se desarrolla a partir de un caso de uso con criterios de aceptación definidos.
 \end{itemize}
-La redacción formal de la política institucional del equipo queda pendiente de confirmación por los líderes.
+NEXWARE se compromete a entregar software que cumpla lo que el cliente necesita, que funcione de forma confiable y que pueda mantenerse en el tiempo. Para ello, el equipo verifica su trabajo en cada cambio y evalúa el producto con los ocho criterios de calidad de la sección 2.6.1: correcto, eficiente, fiable, disponible, seguro, fácil de mantener, fácil de usar y portable.
 
 \subsubsection{2.6.1. Criterios de calidad}
 
@@ -193,7 +193,26 @@ El contenido del DDS corresponde al flujo de trabajo de Diseño del PUDS, desarr
 
 \paragraph{2.11.3.1. Modelo a usar para el plan de verificación y validación.}
 
-La verificación se realiza con pruebas automatizadas que se ejecutan en la integración continua y se documentan en el flujo de Pruebas (sección 3.6 y Capítulo 9). La estructura formal del plan de verificación y validación seguirá la IEEE 730. [PENDIENTE]: confirmar con el equipo la plantilla del plan.
+La verificación se realiza con pruebas automatizadas que se ejecutan en la integración continua y se documentan en el flujo de Pruebas (sección 3.6 y Capítulo 9). La estructura formal del plan de verificación y validación sigue la IEEE 730. Cada elemento verificado se registra con la plantilla de la Tabla~\ref{tab:plantilla_verificacion}.
+
+\begin{table}[H]
+\caption{Plantilla del plan de verificación}
+\label{tab:plantilla_verificacion}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.2cm} >{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{1.3cm} >{\raggedright\arraybackslash}p{1.4cm} >{\raggedright\arraybackslash}p{1.8cm}}
+\toprule
+ID & Elemento a verificar & Método & Responsable & Criterio de aceptación & Fecha & Resultado & Observaciones \\
+\midrule
+VER-01 & & & & & & & \\
+VER-02 & & & & & & & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\small
+\item \textit{Nota.} Método: prueba automatizada, inspección o revisión del \textit{pull request}. Resultado: aprobado, fallido u omitido. Elaboración propia.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \subsubsection{2.11.4. Informe de Verificación y Validación (SWR)}
 
@@ -273,7 +292,7 @@ Reunión semanal de seguimiento del equipo y coordinación diaria breve por mens
 
 \subsection{2.15. Gestión de Configuración}
 
-El código y la documentación se versionan con Git en un repositorio de GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripción}, con tipos \texttt{feat}, \texttt{fix}, \texttt{refactor}, \texttt{docs}, \texttt{test}, \texttt{chore}, \texttt{style}, \texttt{perf}, \texttt{build} y \texttt{ci}, y alcances \texttt{BACK}, \texttt{FRONT}, \texttt{MOBILE}, \texttt{INFRA}, \texttt{DOCS} y \texttt{REPO}; un \textit{commit} nunca mezcla alcances. Las dependencias se fijan en archivos de bloqueo, el esquema de la base de datos con migraciones versionadas y el entorno completo con Docker Compose. Todavía no existe despliegue continuo ni versiones etiquetadas. Para las entregas se adopta el versionado semántico (mayor.menor.parche): al cerrar cada hito de integración (H1 a H6) se etiquetará la rama principal con una versión menor (por ejemplo, v0.1.0 para H1), y la entrega final del proyecto llevará la versión 1.0.0. [PENDIENTE]: confirmar esta política con el equipo.
+El código y la documentación se versionan con Git en un repositorio de GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripción}, con tipos \texttt{feat}, \texttt{fix}, \texttt{refactor}, \texttt{docs}, \texttt{test}, \texttt{chore}, \texttt{style}, \texttt{perf}, \texttt{build} y \texttt{ci}, y alcances \texttt{BACK}, \texttt{FRONT}, \texttt{MOBILE}, \texttt{INFRA}, \texttt{DOCS} y \texttt{REPO}; un \textit{commit} nunca mezcla alcances. Las dependencias se fijan en archivos de bloqueo, el esquema de la base de datos con migraciones versionadas y el entorno completo con Docker Compose. Todavía no existe despliegue continuo ni versiones etiquetadas. Para las entregas se adopta el versionado semántico (mayor.menor.parche): al cerrar cada hito de integración (H1 a H6) se etiquetará la rama principal con una versión menor, y la entrega final del proyecto llevará la versión 1.0.0. Las versiones previstas son: v0.1.0 en H1 (30 de agosto de 2026), v0.2.0 en H2 (13 de septiembre), v0.3.0 en H3 (27 de septiembre), v0.4.0 en H4 (11 de octubre), v0.5.0 en H5 (25 de octubre) y v1.0.0 en H6 (8 de noviembre de 2026). Entre dos hitos, las correcciones de errores incrementan el número de parche (por ejemplo, v0.2.1).
 
 \subsection{2.16. Gestión de Problemas y Acciones Correlativas}
 
