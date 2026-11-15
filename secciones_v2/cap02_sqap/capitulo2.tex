@@ -199,7 +199,7 @@ La verificación se realiza con pruebas automatizadas que se ejecutan en la inte
 
 \paragraph{2.11.4.1. Modelo a usar para el reporte sumario.}
 
-El reporte sumario consolida los resultados de las pruebas automatizadas de cada proyecto (pruebas ejecutadas, aprobadas y fallidas) y el estado de los errores abiertos. [PENDIENTE]: definir el formato del reporte.
+El reporte sumario consolida los resultados de las pruebas automatizadas de cada proyecto y el estado de los errores abiertos. Se presenta como una tabla con una fila por proyecto (backend principal, módulo de inteligencia artificial, panel web y aplicación móvil) y las columnas pruebas ejecutadas, aprobadas, fallidas y omitidas, seguida de la lista de anomalías abiertas con su severidad, tomada del formulario de errores. Los resultados se toman de la salida de la integración continua y se emiten al cierre de cada hito.
 
 \paragraph{2.11.4.2. Reporte de anomalías.}
 
@@ -211,7 +211,7 @@ Las anomalías se reportan con el formulario de errores de la Tabla~\ref{tab:for
 
 \subsubsection{2.11.5. Documentación del Usuario (UD)}
 
-El repositorio incluye una guía del sistema, el catálogo de errores por módulo, la documentación de la interfaz de servicio (Swagger UI) y una ficha por caso de uso. [PENDIENTE]: manual de usuario para el postulante y para el personal de la DUBSS.
+El repositorio incluye una guía del sistema, el catálogo de errores por módulo, la documentación de la interfaz de servicio (Swagger UI) y una ficha por caso de uso. El manual de usuario para el postulante, el personal de la DUBSS y el directivo se presenta en la sección 12.1.1.
 
 \subsection{2.12. Estándares, Prácticas y Convenciones}
 
@@ -241,7 +241,7 @@ Verificar que cada cambio de código cumple el estilo, supera las pruebas y comp
 
 \paragraph{2.13.2.2. Procedimiento.}
 
-Al confirmar un cambio se ejecutan el \textit{hook} de estilo y la validación del mensaje. Al abrir un \textit{pull request}, GitHub Actions detecta los proyectos modificados y para cada uno corre el análisis de estilo, las pruebas y la compilación. En el backend principal las pruebas de integración usan PostgreSQL y Redis reales, por lo que las migraciones también se verifican. Un cambio con resultado fallido no se incorpora a la rama principal. El repositorio cuenta con 160 archivos de prueba en el backend principal, 99 en el panel web, 15 en la aplicación móvil y una prueba de salud en el módulo de inteligencia artificial. [PENDIENTE]: medir la cobertura de pruebas.
+Al confirmar un cambio se ejecutan el \textit{hook} de estilo y la validación del mensaje. Al abrir un \textit{pull request}, GitHub Actions detecta los proyectos modificados y para cada uno corre el análisis de estilo, las pruebas y la compilación. En el backend principal las pruebas de integración usan PostgreSQL y Redis reales, por lo que las migraciones también se verifican. Un cambio con resultado fallido no se incorpora a la rama principal. El repositorio cuenta con 160 archivos de prueba en el backend principal, 99 en el panel web, 15 en la aplicación móvil y una prueba de salud en el módulo de inteligencia artificial. La cobertura de pruebas (porcentaje de código ejecutado por las pruebas) todavía no se mide, porque ningún proyecto tiene configurada una herramienta de cobertura; incorporarla en la integración continua es una mejora prevista, y mientras tanto se usa como indicador el número de archivos de prueba por proyecto.
 
 \subsubsection{2.13.3. Revisión del ajuste del proceso}
 
@@ -269,11 +269,11 @@ Para aprobar un \textit{pull request}: formato de \textit{commit} válido, contr
 
 \subsection{2.14. Agenda}
 
-Reunión semanal de seguimiento del equipo y coordinación diaria breve por mensajería cuando existen dependencias entre bloques. La revisión de calidad ocurre en cada \textit{pull request}. [PENDIENTE]: calendario de revisiones formales por hito (H1 a H6).
+Reunión semanal de seguimiento del equipo y coordinación diaria breve por mensajería cuando existen dependencias entre bloques. La revisión de calidad ocurre en cada \textit{pull request}. Las revisiones formales se hacen al completarse cada hito de integración del plan de desarrollo: H1 cuando el acceso real reemplaza al token de prueba en el bloque de auditoría; H2 cuando las postulaciones reales reemplazan los datos semilla; H3 cuando la adjudicación alimenta el padrón de becados; H4 cuando la asistencia real alimenta el historial y los indicadores; H5 cuando la bitácora real se muestra en pantalla; y H6 con la prueba de extremo a extremo local del flujo completo. [PENDIENTE]: fechas de cada hito.
 
 \subsection{2.15. Gestión de Configuración}
 
-El código y la documentación se versionan con Git en un repositorio de GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripción}, con tipos \texttt{feat}, \texttt{fix}, \texttt{refactor}, \texttt{docs}, \texttt{test}, \texttt{chore}, \texttt{style}, \texttt{perf}, \texttt{build} y \texttt{ci}, y alcances \texttt{BACK}, \texttt{FRONT}, \texttt{MOBILE}, \texttt{INFRA}, \texttt{DOCS} y \texttt{REPO}; un \textit{commit} nunca mezcla alcances. Las dependencias se fijan en archivos de bloqueo, el esquema de la base de datos con migraciones versionadas y el entorno completo con Docker Compose. Todavía no existe despliegue continuo ni versiones etiquetadas. [PENDIENTE]: política de versionado de las entregas.
+El código y la documentación se versionan con Git en un repositorio de GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripción}, con tipos \texttt{feat}, \texttt{fix}, \texttt{refactor}, \texttt{docs}, \texttt{test}, \texttt{chore}, \texttt{style}, \texttt{perf}, \texttt{build} y \texttt{ci}, y alcances \texttt{BACK}, \texttt{FRONT}, \texttt{MOBILE}, \texttt{INFRA}, \texttt{DOCS} y \texttt{REPO}; un \textit{commit} nunca mezcla alcances. Las dependencias se fijan en archivos de bloqueo, el esquema de la base de datos con migraciones versionadas y el entorno completo con Docker Compose. Todavía no existe despliegue continuo ni versiones etiquetadas. Para las entregas se adopta el versionado semántico (mayor.menor.parche): al cerrar cada hito de integración (H1 a H6) se etiquetará la rama principal con una versión menor (por ejemplo, v0.1.0 para H1), y la entrega final del proyecto llevará la versión 1.0.0. [PENDIENTE]: confirmar esta política con el equipo.
 
 \subsection{2.16. Gestión de Problemas y Acciones Correlativas}
 
