@@ -87,7 +87,7 @@ El sistema se apoya en los siguientes elementos de infraestructura, ninguno de l
     \item \textbf{Servidor de correo (SMTP).} Envío de los correos de recuperación de contraseña y de notificación; en desarrollo los correos llegan a Mailpit, una bandeja de pruebas.
     \item \textbf{Módulo de inteligencia artificial en Python.} Servicio independiente (FastAPI) consumido por el backend mediante una interfaz de servicio; a la fecha de redacción existe como esqueleto con su verificación de estado, y el cálculo del puntaje corresponde al caso de uso CU-03.
     \item \textbf{Prometheus y Grafana.} Recolección y visualización de las métricas de funcionamiento del backend.
-    \item \textbf{Docker y AWS.} Docker Compose levanta todo el sistema en desarrollo y estandariza los entornos; el despliegue en la nube (AWS) está previsto pero su destino aún no está decidido, por lo que no existe todavía un flujo de entrega continua.
+    \item \textbf{Docker y AWS.} Docker Compose levanta todo el sistema en desarrollo y estandariza los entornos; el despliegue en la nube (AWS) es el destino de producción previsto pero aún no está implementado, por lo que no existe todavía un flujo de entrega continua.
 \end{itemize}
 
 \subsubsection{1.5.3. Estimaciones para el proyecto}
@@ -139,7 +139,7 @@ Madurez del proceso (PMAT) & Bajo & 6.24 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \textit{Nota.} Elaboración propia con los valores de \textcite{boehm2000cocomo}; los niveles son una propuesta pendiente de confirmar por el equipo. Con esta suma, $E = 0.91 + 0.2067 = 1.1167$.
+\item \textit{Nota.} Elaboración propia con los valores de \textcite{boehm2000cocomo}; los niveles fueron confirmados por el equipo. Con esta suma, $E = 0.91 + 0.2067 = 1.1167$.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -161,7 +161,7 @@ Experiencia con la plataforma (PLEX) & Bajo & 1.09 & Tecnologías nuevas para el
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \textit{Nota.} Elaboración propia; los niveles son una propuesta pendiente de confirmar por el equipo.
+\item \textit{Nota.} Elaboración propia; los niveles fueron confirmados por el equipo.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -252,6 +252,7 @@ Landing institucional (Astro, fuera del plan) & 57 & 2,333 & 176 \\
 \end{threeparttable}
 \end{table}
 
+% NOTA: 64.5 KLDC cambiará cuando Leonel termine el bloque B.
 Con esa medición se obtienen los indicadores de la Tabla~\ref{tab:indicadores_reales}. El tamaño de producción medido (32.2 KLDC) corresponde a 58 de los 116 puntos del plan, es decir, a la mitad del trabajo, de modo que la proyección lineal del sistema completo es de unos 64.5 KLDC, mayor que los 43.0 KLDC estimados por puntos de función. Aplicado a los 600 puntos de función, esto equivale a unas 107 LDC por punto de función, por encima del rango de 65.0 a 78.3 observado en los sistemas de referencia (sección 1.5.3.1), lo que indica que la estimación del tamaño fue conservadora. La proyección es solo indicativa: parte de ese código es infraestructura que no se repite en el bloque B (autenticación, almacenamiento, servicio de notificaciones y configuración de integración continua), y el bloque B incluye el módulo de inteligencia artificial, cuyo tamaño aún no se conoce.
 
 \begin{table}[H]
@@ -268,6 +269,7 @@ API REST & 22 controladores y 61 operaciones \\
 Pruebas automatizadas & 2,304 (1,362 backend, 764 web y 178 móvil) \\
 Relación entre código de pruebas y de producción & 1.1 líneas de prueba por línea de producción \\
 LDC de producción por punto de dificultad & 556 (32,244 entre 58 puntos) \\
+% NOTA: cifra provisional; cambiará cuando Leonel termine el bloque B (recalcular KLDC y la proyección).
 Proyección del sistema completo (116 puntos) & 64.5 KLDC \\
 Productividad observada del bloque A & unas 11,900 LDC por persona-mes (32,244 LDC en 2.7 meses de una persona) \\
 Historial de cambios (\textit{commits}) & 219 entre el 27 de agosto y el 14 de noviembre de 2026 \\

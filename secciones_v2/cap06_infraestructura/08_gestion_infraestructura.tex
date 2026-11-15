@@ -85,7 +85,7 @@ Git versiona el código y la documentación en un monorepo. Los \textit{commits}
 
 \paragraph{6.8.4.2. GitHub.}
 
-GitHub aloja el repositorio y ejecuta la integración continua con GitHub Actions. El flujo de trabajo se activa en cada \textit{pull request} hacia la rama principal y en cada \textit{push} a ella. Un primer trabajo detecta qué proyectos cambiaron y solo se ejecutan los trabajos de esos proyectos (backend, módulo de IA, panel web, página institucional y aplicación móvil); cada uno corre análisis de estilo, pruebas y compilación. Todavía no existe despliegue continuo ni publicación de imágenes Docker: el destino de producción no está definido (véase la sección 6.9).
+GitHub aloja el repositorio y ejecuta la integración continua con GitHub Actions. El flujo de trabajo se activa en cada \textit{pull request} hacia la rama principal y en cada \textit{push} a ella. Un primer trabajo detecta qué proyectos cambiaron y solo se ejecutan los trabajos de esos proyectos (backend, módulo de IA, panel web, página institucional y aplicación móvil); cada uno corre análisis de estilo, pruebas y compilación. Todavía no existe despliegue continuo ni publicación de imágenes Docker: el despliegue en AWS está previsto pero aún no se implementa (véase la sección 6.9).
 
 \subsubsection{6.8.5. Gestión de documentos}
 
@@ -105,7 +105,7 @@ Este documento se redacta en LaTeX con la clase \texttt{apa7}, la bibliografía 
 
 \subsubsection{6.9.1. Infraestructura prevista para producción}
 
-Hoy el sistema se ejecuta únicamente en el entorno local de desarrollo. Está previsto, pero aún no existe, lo siguiente: el despliegue en AWS (la infraestructura definida en el alcance del proyecto), el despliegue continuo desde GitHub Actions, la publicación de imágenes Docker de cada proyecto en un registro, el empaquetado del backend como archivo ejecutable en lugar de ejecutar Maven en el contenedor, y la publicación de la aplicación móvil. La plataforma de producción es el servidor o la nube donde funcionará el sistema ya terminado, distinta de la computadora de desarrollo de cada integrante. Para ella se prevé un servidor propio o un servidor privado virtual (VPS) que ejecute los mismos servicios con Docker Compose y nginx como punto único de entrada, de forma coherente con el entorno actual. Esta decisión es provisional y aún no se ha implementado.
+Hoy el sistema se ejecuta únicamente en el entorno local de desarrollo. La producción se prevé en AWS (la infraestructura definida en el alcance del proyecto), pero aún no está implementada. La plataforma de producción es la nube donde funcionará el sistema ya terminado, distinta de la computadora de desarrollo de cada integrante. Se prevé un servidor de cómputo (por ejemplo, una instancia EC2) que ejecute los mismos servicios con Docker Compose y nginx como punto único de entrada, de forma coherente con el entorno actual, y el servicio de almacenamiento de objetos de AWS (S3) para los archivos, en lugar de MinIO, que es compatible con S3. También están previstos, y aún no existen, el despliegue continuo desde GitHub Actions, la publicación de imágenes Docker de cada proyecto en un registro, el empaquetado del backend como archivo ejecutable en lugar de ejecutar Maven en el contenedor, y la publicación de la aplicación móvil. Los servicios concretos de AWS están sujetos a confirmación al implementar el despliegue.
 
 \subsubsection{6.9.2. Resumen de herramientas de verificación automática}
 
