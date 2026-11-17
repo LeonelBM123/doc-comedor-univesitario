@@ -1,5 +1,5 @@
 % ==============================================================================
-% CAPÍTULO 16: ASPECTOS DE PUESTA EN MARCHA DEL SOFTWARE (Orquestador del Capítulo)
+% CAPÍTULO 11: ASPECTOS DE PUESTA EN MARCHA DEL SOFTWARE (Orquestador del Capítulo)
 % ==============================================================================
 \preportadacapitulo{11}{Aspectos de Puesta en Marcha del Software}
 
@@ -7,63 +7,132 @@
 \section{Capítulo 11: Aspectos de Puesta en Marcha del Software}\label{cap:puesta_marcha}
 
 % [INSTRUCCIÓN]: Puesta en marcha y despliegue (fase de Transición del PUDS). Contenido propio de esta versión.
+% [VERIFICAR]: las normas citadas se confirman en su texto oficial antes de la entrega; los precios de servidores y de la tienda de aplicaciones se toman de las páginas oficiales en la fecha de cotización.
+
+Este capítulo corresponde a la fase de Transición del Proceso Unificado: lleva el sistema a producción y define las condiciones bajo las que se entrega. Se comparan las plataformas de alojamiento, se definen las licencias, y se resumen los términos, condiciones y políticas de privacidad.
 
 \subsection{11.1. Aspectos de Puesta en Marcha y Despliegue}
 
+El sistema tiene cuatro piezas que se despliegan: la API, el módulo de inteligencia artificial, la base de datos con el almacenamiento de archivos, y las interfaces (panel web y aplicación móvil Android). Las primeras se empaquetan con Docker, como en el entorno de desarrollo (Capítulo~\ref{cap:infraestructura}).
+
 \subsubsection{11.1.1. Amazon Web Services (AWS)}
 
-% [PENDIENTE]: Redactar "Amazon Web Services (AWS)".
+AWS es la plataforma de nube elegida para el sistema (sección 1.11). Permite alojar los contenedores de la API y del módulo de IA, la base de datos PostgreSQL como servicio administrado y el almacenamiento de archivos. Ofrece copias de seguridad, escalamiento y monitoreo. Su uso permite aumentar los recursos cuando crece la cantidad de postulaciones durante la convocatoria.
 
 \subsubsection{11.1.2. Microsoft Azure}
 
-% [PENDIENTE]: Redactar "Microsoft Azure".
+Azure ofrece servicios equivalentes (máquinas virtuales, contenedores y bases de datos administradas) y se integra bien con entornos que ya usan productos de Microsoft. Se la considera una alternativa si la institución cliente tuviera ya un contrato con ella.
 
 \subsubsection{11.1.3. Google Cloud Platform (GCP)}
 
-% [PENDIENTE]: Redactar "Google Cloud Platform (GCP)".
+GCP ofrece también contenedores, bases de datos administradas y almacenamiento, con buenas herramientas de análisis de datos. Es la tercera alternativa comparada.
 
 \subsubsection{11.1.4. Play Store (despliegue móvil)}
 
-% [PENDIENTE]: Redactar "Play Store (despliegue móvil)".
+La aplicación móvil del postulante tiene como prioridad la plataforma Android (sección 1.11). Se publica en Google Play Store con una cuenta de desarrollador, un paquete firmado, una ficha con descripción y capturas, y la política de privacidad de la sección 11.5. Google revisa la aplicación antes de publicarla. Las actualizaciones posteriores se suben como nuevas versiones.
 
 \subsection{11.2. Planes y Cotización (Resumen de Servidores)}
 
-% [PENDIENTE]: Redactar "Planes y Cotización (Resumen de Servidores)".
+La tabla compara las tres plataformas en los servicios que necesita el sistema.
+
+\begin{table}[H]
+\centering
+\caption{Servicios que requiere el sistema en cada plataforma de nube}
+\label{tab:nube}
+\small
+\begin{tabular}{@{}p{3.6cm}p{3.6cm}p{3.6cm}p{3.6cm}@{}}
+\toprule
+\textbf{Necesidad} & \textbf{AWS} & \textbf{Azure} & \textbf{GCP} \\
+\midrule
+Contenedores de la API y de la IA & Servicio de contenedores o máquina virtual & Servicio de contenedores o máquina virtual & Servicio de contenedores o máquina virtual \\
+Base de datos PostgreSQL & Servicio administrado & Servicio administrado & Servicio administrado \\
+Archivos (documentos y actas) & Almacenamiento de objetos & Almacenamiento de objetos & Almacenamiento de objetos \\
+Costo mensual estimado & Por cotizar & Por cotizar & Por cotizar \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia. Los costos se completan con la calculadora de precios oficial de cada proveedor.
+\end{table}
+
+% [PENDIENTE]: costo mensual de cada plataforma con la calculadora oficial (ver 11.6.1) para la carga prevista (20,000 postulaciones por gestión y al menos 50 administrativos concurrentes). No inventar montos.
 
 \subsection{11.3. Tipos de Licencia Ofrecidos}
 
-% [PENDIENTE]: Redactar "Tipos de Licencia Ofrecidos".
+NEXWARE ofrece el sistema con una licencia de uso, no con la venta del código. Se consideran dos modalidades:
+
+\begin{itemize}
+    \item \textbf{Licencia de uso con vigencia anual:} la institución usa el sistema durante un año y recibe las actualizaciones de mantenimiento. Se renueva cada año.
+    \item \textbf{Licencia de uso permanente:} la institución usa la versión entregada sin límite de tiempo; las actualizaciones y el soporte se contratan aparte.
+\end{itemize}
+
+En ambos casos el código fuente sigue siendo de NEXWARE (sección 5.2). La institución no puede ceder ni revender el sistema. Los precios se definen en la sección 8.7.3.
 
 \subsection{11.4. Términos y Condiciones}
 
 \subsubsection{11.4.1. Normas bolivianas aplicables}
 
-% [PENDIENTE]: Redactar "Normas bolivianas aplicables".
+Los términos y condiciones del servicio deben ajustarse a estas normas:
+
+\begin{itemize}
+    \item \textbf{Código de Comercio} \parencite{codigocomercio1977}: regula los contratos mercantiles.
+    \item \textbf{Ley N.º~1322 de Derecho de Autor} \parencite{ley1322}: protege el software y fija los derechos del titular.
+    \item \textbf{Ley N.º~164 General de Telecomunicaciones, Tecnologías de Información y Comunicación (2011):} marco general de los servicios digitales, el comercio electrónico y la firma digital.
+    \item \textbf{Ley N.º~453 General de los Derechos de las Usuarias y los Usuarios y de las Consumidoras y los Consumidores (2013):} derechos de los usuarios frente a quien presta un servicio.
+\end{itemize}
 
 \subsubsection{11.4.2. Requisitos para plataformas con suscripciones digitales en Bolivia}
 
-% [PENDIENTE]: Redactar "Requisitos para plataformas con suscripciones digitales en Bolivia".
+Para ofrecer el sistema con licencia de pago periódico, NEXWARE debe:
+
+\begin{itemize}
+    \item Estar inscrita en el Registro de Comercio y en el padrón del SIN, y emitir factura por cada pago (sección 5.1.4).
+    \item Dar a conocer al cliente, antes de contratar, el precio, la vigencia, la forma de renovación y de cancelación.
+    \item Atender los reclamos del cliente y mantener un canal de soporte (Capítulo~\ref{cap:sitio_web}).
+    \item Firmar un contrato con el alcance del servicio, las responsabilidades de cada parte y las condiciones de la licencia.
+\end{itemize}
 
 \subsection{11.5. Políticas de Seguridad y Privacidad}
 
+El sistema trata datos personales y socioeconómicos de estudiantes (ingresos familiares, dependientes, patrimonio y documentos). Esa información exige especial cuidado.
+
 \subsubsection{11.5.1. Leyes y normas bolivianas aplicables sobre datos personales}
 
-% [PENDIENTE]: Redactar "Leyes y normas bolivianas aplicables sobre datos personales".
+\begin{itemize}
+    \item \textbf{Constitución Política del Estado:} garantiza el derecho a la privacidad y a la intimidad y establece la acción de protección de privacidad para quien vea afectados sus datos.
+    \item \textbf{Ley N.º~164 (2011):} reconoce los derechos de los usuarios de servicios digitales a su privacidad.
+    \item \textbf{Ley N.º~1080 de Ciudadanía Digital (2018):} regula la identidad y los trámites digitales ante entidades públicas.
+\end{itemize}
+
+Hasta donde el equipo ha podido verificar, Bolivia no cuenta con una ley específica y completa de protección de datos personales, por lo que el sistema aplica además buenas prácticas reconocidas.
+
+% [VERIFICAR]: confirmar el estado actual de la legislación de protección de datos personales en Bolivia y el texto de las normas citadas.
 
 \subsubsection{11.5.2. Redacción de las políticas de privacidad y gestión de datos}
 
-% [PENDIENTE]: Redactar "Redacción de las políticas de privacidad y gestión de datos".
+Las políticas del sistema se resumen así:
+
+\begin{itemize}
+    \item \textbf{Datos recogidos:} solo los necesarios para evaluar la postulación y controlar la asistencia.
+    \item \textbf{Uso:} calcular el puntaje, auditar y adjudicar. No se venden ni se ceden a terceros.
+    \item \textbf{Acceso:} cada rol ve solo lo que necesita; las acciones críticas quedan en la bitácora de auditoría.
+    \item \textbf{Protección:} comunicación cifrada (HTTPS), contraseñas guardadas como \textit{hash}, sesiones con tokens que vencen (Capítulo~\ref{cap:pruebas}).
+    \item \textbf{Conservación:} los datos se conservan mientras dure la gestión y los plazos que fije la institución.
+    \item \textbf{Derechos del titular:} el estudiante puede consultar y pedir corregir sus datos.
+\end{itemize}
+
+El texto completo de la política se publica en el sitio de NEXWARE y en la ficha de la aplicación en Play Store.
 
 \subsection{11.6. Anexos}
 
 \subsubsection{11.6.1. Herramientas de proyección de infraestructura (Cloud y Móvil)}
 
-% [PENDIENTE]: Redactar "Herramientas de proyección de infraestructura (Cloud y Móvil)".
+Para calcular el costo de la nube se usan las calculadoras oficiales de los tres proveedores: AWS Pricing Calculator, la calculadora de precios de Azure y la calculadora de precios de Google Cloud. En el caso del despliegue móvil, la cuenta de desarrollador de Google Play tiene un pago de registro que se consulta en la página oficial de Google.
 
 \subsubsection{11.6.2. Marco legal y normativo (Bolivia)}
 
-% [PENDIENTE]: Redactar "Marco legal y normativo (Bolivia)".
+Las normas del capítulo son el Código de Comercio, la Ley N.º~1322, la Ley N.º~164, la Ley N.º~453, la Ley N.º~1080 y la Constitución Política del Estado. Los trámites de constitución se tratan en el Capítulo~\ref{cap:legal}.
 
 \subsubsection{11.6.3. Recursos y evidencia del proyecto}
 
-% [PENDIENTE]: Redactar "Recursos y evidencia del proyecto".
+% [PENDIENTE]: enlaces y evidencias reales (repositorio, captura del despliegue, ficha de Play Store) una vez que el sistema esté desplegado; no se incluyen evidencias que no existan.

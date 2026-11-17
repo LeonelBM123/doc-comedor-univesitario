@@ -1,5 +1,5 @@
 % ==============================================================================
-% CAPÍTULO 14: ESTUDIO DE MERCADO (Orquestador del Capítulo)
+% CAPÍTULO 8: ESTUDIO DE MERCADO (Orquestador del Capítulo)
 % ==============================================================================
 \preportadacapitulo{8}{Estudio de Mercado}
 
@@ -7,16 +7,27 @@
 \section{Capítulo 8: Estudio de Mercado}\label{cap:mercado}
 
 % [INSTRUCCIÓN]: Estudio de mercado. Contenido propio de esta versión; no inventar cifras de mercado ni precios.
+% [PENDIENTE]: precios, proyecciones de clientes e ingresos, punto de equilibrio, mercado potencial en cifras y encuesta (8.5.6, 8.7.3 a 8.7.7, 8.9): requieren datos reales (DUBSS, otras universidades, resultados de una encuesta). Las cifras de este capítulo provienen solo de los datos de la DUBSS ya citados en el Capítulo 1.
+
+Este capítulo analiza el mercado del Sistema de Gestión de Postulación y Asistencia del Comedor Universitario. Como el cliente es una institución pública (la Dirección Universitaria de Bienestar Estudiantil y Servicios Sociales, DUBSS, de la UAGRM), el mercado no es de consumidores sino de instituciones de educación superior que administran becas de alimentación. Las cifras usadas son únicamente las que la DUBSS entregó al proyecto; donde hace falta un dato que el equipo no tiene, se indica expresamente.
 
 \subsection{8.1. Resumen Ejecutivo}
 
-% [PENDIENTE]: Redactar "Resumen Ejecutivo".
+NEXWARE desarrolla el sistema que digitaliza el proceso de la Beca Comedor: la postulación, la preselección con inteligencia artificial, la auditoría y adjudicación, y el control diario de la asistencia de los becados. Hoy la DUBSS recibe cerca de 20,000 solicitudes por gestión, logra revisar unas 8,000 carpetas físicas y adjudica alrededor de 900 cupos; unos 12,000 estudiantes (60\,\%) no llegan a ser evaluados (sección 1.2). El sistema permite evaluar el 100\,\% de las solicitudes y ordenar los expedientes por necesidad antes de pedir documentos físicos.
+
+La oportunidad comercial consiste en ofrecer este mismo sistema, adaptado, a otras instituciones que gestionan becas con muchos postulantes y pocos cupos. El modelo de negocio previsto combina una licencia de uso con servicios de implementación, capacitación y soporte. Los precios y las proyecciones económicas no se incluyen porque aún no se cuenta con datos reales para calcularlos (secciones 8.5.6 y 8.7).
 
 \subsection{8.2. Descripción del Producto}
 
 \subsubsection{8.2.1. Propuesta de valor}
 
-% [PENDIENTE]: Redactar "Propuesta de valor".
+El sistema permite que la institución evalúe todas las solicitudes con el mismo criterio y dedique el tiempo de su personal solo a los expedientes con mayor necesidad. La propuesta de valor se resume en tres puntos:
+
+\begin{itemize}
+    \item \textbf{Equidad:} ningún postulante queda sin evaluar y la selección deja de depender del azar o del orden de llegada.
+    \item \textbf{Eficiencia:} la documentación física se pide solo a los finalistas, lo que reduce el papel, el espacio de archivo y las horas de trabajo.
+    \item \textbf{Trazabilidad:} cada puntaje, auditoría y adjudicación queda registrado en una bitácora, con lo que el proceso puede ser auditado.
+\end{itemize}
 
 \subsubsection{8.2.2. Funcionalidades principales}
 
@@ -24,132 +35,148 @@ Las funciones principales del sistema se describen en los requisitos funcionales
 
 \subsubsection{8.2.3. Beneficios para la institución}
 
-% [PENDIENTE]: Redactar "Beneficios para la institución".
+\begin{itemize}
+    \item Evaluación del 100\,\% de las solicitudes en lugar del 40\,\% actual.
+    \item Menor recepción de carpetas físicas, porque el expediente en papel se pide solo a los finalistas.
+    \item Resultados publicados de forma transparente y consultables por el postulante desde su celular o la web.
+    \item Control digital de la asistencia diaria y planillas imprimibles para las auditorías.
+    \item Indicadores de gestión para la dirección de la DUBSS.
+\end{itemize}
 
 \subsection{8.3. Análisis del Problema}
 
 \subsubsection{8.3.1. Causas del problema}
 
-Ver la descripción del problema (sección 1.2).
+Ver la descripción del problema (sección 1.2). En síntesis: el proceso es manual, la capacidad de revisión de la DUBSS es limitada y la cantidad de solicitudes supera ampliamente la de cupos.
 
 \subsubsection{8.3.2. Consecuencias del problema}
 
-Ver la descripción del problema (sección 1.2).
+Ver la descripción del problema (sección 1.2). En síntesis: gran parte de los postulantes no es evaluada, los plazos de respuesta son largos y el proceso tiene poca transparencia y trazabilidad.
 
 \subsection{8.4. Análisis de la Competencia}
 
 \subsubsection{8.4.1. Tendencias actuales}
 
-% [PENDIENTE]: Redactar "Tendencias actuales".
+Las instituciones públicas avanzan hacia la digitalización de sus trámites: la identidad digital de los ciudadanos, el registro de comercio en línea y la facturación electrónica son ejemplos que se tratan en el Capítulo~\ref{cap:legal}. En el ámbito de la gestión de becas, la tendencia es reemplazar las carpetas físicas por expedientes digitales y apoyar la revisión con herramientas de análisis de datos. El sistema sigue esa tendencia al usar un modelo de preselección que ordena los expedientes, sin sustituir la decisión de la persona que audita.
 
 \subsubsection{8.4.2. Competencias}
 
-% [PENDIENTE]: Redactar "Competencias".
+Se distinguen tres alternativas a las que acudiría una institución:
+
+\begin{itemize}
+    \item \textbf{El proceso manual actual:} carpetas físicas, planillas en papel y hojas de cálculo. No tiene costo de licencia, pero es la causa del problema descrito.
+    \item \textbf{Software genérico de gestión:} sistemas de pedidos, de punto de venta o de formularios en línea. Los tres sistemas de referencia analizados en la sección 1.4 (TastyIgniter, Floreant POS y OSPOS) son de este tipo, y entre las funcionalidades relevadas no figuran la priorización socioeconómica de solicitudes ni la gestión de becas.
+    \item \textbf{Desarrollo a medida por otra empresa o por la propia universidad:} resuelve el problema, pero exige un proyecto completo para cada institución.
+\end{itemize}
+
+% [VERIFICAR]: no se identificó un software comercial específico de gestión de becas de comedor en Bolivia; confirmarlo con una búsqueda documentada antes de afirmarlo en el texto final.
 
 \subsubsection{8.4.3. Público objetivo}
 
-% [PENDIENTE]: Redactar "Público objetivo".
+El cliente directo es la unidad de bienestar estudiantil de una institución de educación superior que otorga becas de alimentación. Los usuarios del sistema son los estudiantes postulantes y becados, el personal administrativo de la DUBSS, el personal del comedor y los directivos.
 
 \subsection{8.5. Segmentación del Mercado}
 
 \subsubsection{8.5.1. Segmentación geográfica}
 
-% [PENDIENTE]: Redactar "Segmentación geográfica".
+El mercado inicial es Santa Cruz de la Sierra, donde se encuentran la UAGRM y NEXWARE. Como el sistema es una aplicación web y móvil, puede ofrecerse a instituciones de otros departamentos de Bolivia sin cambios en su arquitectura.
 
 \subsubsection{8.5.2. Segmentación institucional}
 
-% [PENDIENTE]: Redactar "Segmentación institucional".
+Por tipo de institución, se consideran las universidades públicas, las universidades privadas con programas de becas y otras entidades que entreguen becas de alimentación. La universidad pública, con muchos postulantes y presupuesto limitado, es el segmento que mejor se ajusta al sistema desarrollado.
 
 \subsubsection{8.5.3. Segmentación por necesidad}
 
-% [PENDIENTE]: Redactar "Segmentación por necesidad".
+Se segmentan por el volumen de postulantes: una institución con pocas decenas de postulantes puede resolver el proceso con una hoja de cálculo, mientras que una con miles necesita priorización automática y control de la documentación. El sistema se dirige a las del segundo grupo.
 
 \subsubsection{8.5.4. Mercado objetivo inicial}
 
-% [PENDIENTE]: Redactar "Mercado objetivo inicial".
+El mercado objetivo inicial es la propia DUBSS de la UAGRM: unas 20,000 solicitudes por gestión, unos 900 cupos y unos 900 becados cuya asistencia se controla a diario.
 
 \subsubsection{8.5.5. Mercado potencial}
 
-% [PENDIENTE]: Redactar "Mercado potencial".
+El mercado potencial lo forman las demás instituciones de educación superior de Bolivia que administran becas de alimentación.
+
+% [PENDIENTE]: cantidad de instituciones y de postulantes del mercado potencial, con fuente verificable (no inventar).
 
 \subsubsection{8.5.6. Análisis de precios}
 
-% [PENDIENTE]: Redactar "Análisis de precios".
+% [PENDIENTE]: comparación de precios. Requiere cotizaciones o tarifas reales de alternativas y del costo del desarrollo a medida; no se inventan precios.
 
 \subsection{8.6. Análisis de Tecnologías y Tendencias}
 
-% [PENDIENTE]: Redactar "Análisis de Tecnologías y Tendencias".
+El sistema se apoya en tecnologías vigentes y de uso extendido, todas descritas en la sección 1.11: una API en Java con Spring Boot, una interfaz web en React, una aplicación móvil en Flutter, una base de datos PostgreSQL y un módulo de inteligencia artificial en Python. Esta combinación permite usar el sistema desde la computadora y desde el celular, y tener un módulo de IA separado que puede mejorarse sin tocar el resto. El sistema incluye una aplicación móvil porque el postulante debe poder digitalizar sus documentos con la cámara del teléfono. Se utilizan componentes de código abierto, por lo que no hay un costo de licencias de terceros (sección 5.1.1).
 
 \subsection{8.7. Estudio de Monetización y Viabilidad Económica}
 
 \subsubsection{8.7.1. Modelo de monetización}
 
-% [PENDIENTE]: Redactar "Modelo de monetización".
+El modelo previsto es de licencia de uso del sistema acompañada de servicios. La institución obtiene el derecho de usar el sistema en su infraestructura o en la que NEXWARE le indique, y paga por los servicios que necesite para ponerlo en marcha y mantenerlo.
 
 \subsubsection{8.7.2. Fuentes de ingresos}
 
 \paragraph{8.7.2.1. Licenciamiento anual.}
 
-% [PENDIENTE]: Redactar "Licenciamiento anual".
+Pago periódico por el derecho de uso del sistema, que incluye las actualizaciones de mantenimiento mientras la licencia esté vigente.
 
 \paragraph{8.7.2.2. Servicios de implementación.}
 
-% [PENDIENTE]: Redactar "Servicios de implementación".
+Instalación del sistema, configuración de la convocatoria, de los criterios de puntaje y de los usuarios, y carga de los datos iniciales de la institución.
 
 \paragraph{8.7.2.3. Capacitación.}
 
-% [PENDIENTE]: Redactar "Capacitación".
+Sesiones para el personal de la DUBSS y del comedor sobre el uso del sistema, con el manual del Capítulo~\ref{cap:producto}.
 
 \paragraph{8.7.2.4. Soporte técnico.}
 
-% [PENDIENTE]: Redactar "Soporte técnico".
+Atención de consultas y de incidentes durante la vigencia del contrato, con los canales y niveles de atención que define NEXWARE (Capítulo~\ref{cap:sitio_web}).
 
 \paragraph{8.7.2.5. Desarrollo personalizado.}
 
-% [PENDIENTE]: Redactar "Desarrollo personalizado".
+Cambios y funciones nuevas que pida la institución, como otra forma de calcular el puntaje o un reporte adicional, cotizados por separado.
 
 \subsubsection{8.7.3. Estrategia de licenciamiento}
 
-% [PENDIENTE]: Redactar "Estrategia de licenciamiento".
+% [PENDIENTE]: niveles de licencia, alcance de cada uno y precios. Requiere definir el costo del proyecto y consultar a la institución; no se inventan precios.
 
 \subsubsection{8.7.4. Proyección de clientes}
 
-% [PENDIENTE]: Redactar "Proyección de clientes".
+% [PENDIENTE]: proyección de clientes. Depende del mercado potencial (8.5.5) y del plan comercial.
 
 \subsubsection{8.7.5. Proyección de ingresos}
 
-% [PENDIENTE]: Redactar "Proyección de ingresos".
+% [PENDIENTE]: proyección de ingresos. Depende de los precios (8.7.3) y de la proyección de clientes (8.7.4).
 
 \subsubsection{8.7.6. Punto de equilibrio}
 
-% [PENDIENTE]: Redactar "Punto de equilibrio".
+% [PENDIENTE]: punto de equilibrio. Se calcula con los costos del proyecto (esfuerzo de COCOMO II, sección 1.5.3, y costos de infraestructura del Capítulo 6) y los precios de 8.7.3.
 
 \subsubsection{8.7.7. Viabilidad económica}
 
-% [PENDIENTE]: Redactar "Viabilidad económica".
+% [PENDIENTE]: conclusión de viabilidad económica, a partir de 8.7.4 a 8.7.6.
 
 \subsection{8.8. Modelo de Negocio y Estrategia de Comercialización}
 
 \subsubsection{8.8.1. Modelo de negocio}
 
-% [PENDIENTE]: Redactar "Modelo de negocio".
+NEXWARE desarrolla y mantiene el sistema; la institución cliente lo usa y paga la licencia y los servicios. El producto inicial se construye con la DUBSS como cliente y como primer caso de referencia. El valor para la institución es una gestión más justa y más eficiente de sus becas; el valor para NEXWARE es un producto reutilizable y un caso de éxito.
 
 \subsubsection{8.8.2. Fuentes de ingresos}
 
-% [PENDIENTE]: Redactar "Fuentes de ingresos".
+Las fuentes son las descritas en la sección 8.7.2: licencia, implementación, capacitación, soporte y desarrollo personalizado.
 
 \subsubsection{8.8.3. Estrategia de comercialización}
 
-% [PENDIENTE]: Redactar "Estrategia de comercialización".
+La venta es directa y consultiva: reuniones con las autoridades y con el personal de bienestar estudiantil, demostración del sistema con datos de prueba y propuesta formal. El caso de la DUBSS, una vez en operación, es la principal prueba de que el sistema funciona. Las acciones de difusión se detallan en el Capítulo~\ref{cap:marketing}.
 
 \subsubsection{8.8.4. Estrategia de expansión}
 
-% [PENDIENTE]: Redactar "Estrategia de expansión".
+La expansión se hace por etapas: primero la DUBSS de la UAGRM; luego otras universidades de Santa Cruz y de otros departamentos; y, por último, otros tipos de beca (transporte, residencia universitaria) que comparten el proceso de postulación, puntaje, auditoría y adjudicación. Esas ampliaciones son propuestas y no forman parte del alcance actual.
 
 \subsubsection{8.8.5. Propuesta de sostenibilidad}
 
-% [PENDIENTE]: Redactar "Propuesta de sostenibilidad".
+La sostenibilidad se apoya en la reutilización del código entre clientes, en el ingreso recurrente por licencias y soporte y en el uso de componentes de código abierto, que evita costos de licencias de terceros. El código se mantiene con pruebas automáticas y control de versiones, lo que mantiene bajo el costo de las actualizaciones (Capítulo~\ref{cap:sqap}).
 
 \subsection{8.9. Encuesta y Resultados}
 
-% [PENDIENTE]: Redactar "Encuesta y Resultados".
+% [PENDIENTE]: decidir si se aplica una encuesta (a estudiantes postulantes o al personal de la DUBSS). Si se aplica: instrumento, muestra y resultados reales; si no, justificarlo. No inventar resultados.

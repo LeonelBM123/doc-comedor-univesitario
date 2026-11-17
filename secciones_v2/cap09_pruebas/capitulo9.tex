@@ -7,67 +7,277 @@
 \section{Capítulo 9: Pruebas en el Software}\label{cap:pruebas}
 
 % [INSTRUCCIÓN]: Flujo de trabajo de Pruebas del PUDS. Contenido propio de esta versión.
+% [PENDIENTE]: las columnas «Resultado obtenido» y las mediciones de 9.4 se llenan con resultados reales al terminar la implementación (no inventar). Casos de uso a probar: CU-02, CU-03 y CU-05 (confirmar con el docente).
+
+Este capítulo presenta el plan de pruebas del Sistema de Gestión de Postulación y Asistencia del Comedor Universitario. Se diseñan casos de prueba de caja blanca y de caja negra para tres casos de uso representativos del camino crítico, se describen las pruebas de vulnerabilidad y se contrastan los tiempos de respuesta con los requisitos no funcionales. Los resultados obtenidos se registran en cada caso al ejecutarlo.
 
 \subsection{9.1. Pruebas}
 
-% [PENDIENTE]: Redactar "Pruebas".
+Probar el software es ejecutarlo con datos elegidos a propósito para encontrar fallas antes de que lo haga el usuario. Una prueba compara el resultado obtenido con el resultado esperado según los requisitos. Se distinguen tres niveles: la prueba de unidad (una función o clase), la de integración (varios componentes juntos, como la API con la base de datos) y la de sistema o aceptación (el caso de uso completo, visto por el usuario).
+
+Se eligieron tres casos de uso que forman el camino crítico del sistema, de la postulación a la beca:
+
+\begin{itemize}
+    \item \textbf{CU-02, Enviar postulación a Beca Comedor:} es la entrada de datos del postulante y concentra las reglas de validación (RF-02).
+    \item \textbf{CU-03, Precalificar postulación con Inteligencia Artificial:} calcula el puntaje de vulnerabilidad, que ordena los expedientes (RF-03).
+    \item \textbf{CU-05, Auditar y adjudicar becas:} decide quién recibe la beca a partir del puntaje de la IA (hasta 70 puntos) y el rendimiento académico registrado por el auditor (hasta 30 puntos) (RF-04).
+\end{itemize}
 
 \subsection{9.2. Flujo de Trabajo de Pruebas en PUDS}
 
-% [PENDIENTE]: Redactar "Flujo de Trabajo de Pruebas en PUDS".
+En el Proceso Unificado el flujo de trabajo de pruebas se ejecuta dentro de cada iteración, no al final del proyecto. Sus actividades son:
+
+\begin{enumerate}
+    \item \textbf{Planificar las pruebas:} se decide qué casos de uso se prueban en la iteración y con qué técnicas.
+    \item \textbf{Diseñar los casos de prueba:} para cada caso de uso se derivan casos de prueba de sus flujos, reglas y requisitos.
+    \item \textbf{Implementar las pruebas:} se automatizan las que se pueden repetir (JUnit, \textit{pytest}, Vitest) y se preparan guías para las manuales.
+    \item \textbf{Ejecutar y evaluar:} se corren las pruebas, se registran los defectos y se verifica que el incremento cumpla su criterio de aceptación.
+\end{enumerate}
+
+Las pruebas automatizadas se ejecutan en cada \textit{pull request} mediante GitHub Actions (Capítulo~\ref{cap:sqap}). Este capítulo trata las pruebas del producto terminado y la sección 3.6 describe el flujo dentro del proceso.
 
 \subsection{9.3. Técnicas de Pruebas}
 
 \subsubsection{9.3.1. Caja Blanca}
 
-% [PENDIENTE]: Casos de uso a probar (propuestos: CU-02, CU-03 y CU-05; ajustar).
+La prueba de caja blanca examina la lógica interna del código. Para cada caso de uso se dibuja el grafo de flujo de la lógica, se calcula la complejidad ciclomática $V(G)$ = decisiones + 1 y se define un caso de prueba por cada camino independiente. Los grafos de esta sección se derivan de las reglas del caso de uso y se confirman contra el código al ejecutar las pruebas.
 
 \paragraph{9.3.1.1. Caso de uso: Enviar postulación a Beca Comedor (CU-02).}
 
-% [PENDIENTE]: Redactar "Caso de uso: Enviar postulación a Beca Comedor (CU-02)".
+Las decisiones de la lógica de envío son cuatro: (1) ¿existe ya una postulación vigente del postulante en la gestión?; (2) ¿están completos los campos obligatorios?; (3) ¿están adjuntos los documentos obligatorios?; (4) ¿responde el módulo de IA? Por tanto $V(G)=5$ y hay cinco caminos independientes.
+
+\begin{table}[H]
+\centering
+\caption{Caminos independientes de CU-02 (caja blanca)}
+\label{tab:cb_cu02}
+\small
+\begin{tabular}{@{}p{0.9cm}p{4.2cm}p{5.3cm}p{3.2cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Camino} & \textbf{Dato de entrada} & \textbf{Resultado esperado} \\
+\midrule
+CB-02-01 & Decisión 1 verdadera & Postulante con postulación vigente en la gestión. & Rechazo: ya existe una postulación. \\
+CB-02-02 & Decisión 2 falsa & Formulario sin el dato de ingresos familiares. & Rechazo con mensaje del campo faltante. \\
+CB-02-03 & Decisión 3 falsa & Formulario completo sin documento de identidad adjunto. & Rechazo con mensaje del documento faltante. \\
+CB-02-04 & Decisión 4 falsa & Datos completos y módulo de IA caído. & Postulación guardada sin puntaje y reintento posterior. \\
+CB-02-05 & Camino principal & Datos y documentos completos, IA disponible. & Postulación enviada, con puntaje y estado inicial. \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir de RF-02 y de las reglas del sistema. Resultado obtenido: por registrar al ejecutar.
+\end{table}
 
 \paragraph{9.3.1.2. Caso de uso: Precalificar postulación con Inteligencia Artificial (CU-03).}
 
-% [PENDIENTE]: Redactar "Caso de uso: Precalificar postulación con Inteligencia Artificial (CU-03)".
+La lógica de precalificación tiene tres decisiones: (1) ¿los datos de la postulación están completos y son válidos?; (2) ¿el modelo devuelve un puntaje?; (3) ¿el puntaje está dentro del rango permitido (0 a 70)? Resulta $V(G)=4$.
+
+\begin{table}[H]
+\centering
+\caption{Caminos independientes de CU-03 (caja blanca)}
+\label{tab:cb_cu03}
+\small
+\begin{tabular}{@{}p{0.9cm}p{4.2cm}p{5.3cm}p{3.2cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Camino} & \textbf{Dato de entrada} & \textbf{Resultado esperado} \\
+\midrule
+CB-03-01 & Decisión 1 falsa & Solicitud con ingresos negativos. & Error de validación; no se calcula puntaje. \\
+CB-03-02 & Decisión 2 falsa & Datos válidos y falla interna del modelo. & Error controlado; la postulación queda sin puntaje. \\
+CB-03-03 & Decisión 3 falsa & Puntaje fuera de 0 a 70. & Se descarta el valor y se registra el error. \\
+CB-03-04 & Camino principal & Datos válidos y modelo disponible. & Puntaje entre 0 y 70 con fecha de cálculo. \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir de RF-03. Resultado obtenido: por registrar al ejecutar.
+\end{table}
 
 \paragraph{9.3.1.3. Caso de uso: Auditar y adjudicar becas (CU-05).}
 
-% [PENDIENTE]: Redactar "Caso de uso: Auditar y adjudicar becas (CU-05)".
+La lógica de adjudicación tiene cuatro decisiones: (1) ¿la postulación es finalista?; (2) ¿el rendimiento académico está entre 0 y 30?; (3) ¿el total (puntaje de IA más rendimiento) alcanza el mínimo requerido?; (4) ¿hay cupos disponibles? Resulta $V(G)=5$. El valor del mínimo y el número de cupos se definen con la DUBSS; en las pruebas se usan los valores que se configuren.
+
+\begin{table}[H]
+\centering
+\caption{Caminos independientes de CU-05 (caja blanca)}
+\label{tab:cb_cu05}
+\small
+\begin{tabular}{@{}p{0.9cm}p{4.2cm}p{5.3cm}p{3.2cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Camino} & \textbf{Dato de entrada} & \textbf{Resultado esperado} \\
+\midrule
+CB-05-01 & Decisión 1 falsa & Expediente que no es finalista. & No se permite auditarlo. \\
+CB-05-02 & Decisión 2 falsa & Rendimiento académico de 35. & Rechazo del dato fuera de rango. \\
+CB-05-03 & Decisión 3 falsa & Total menor al mínimo requerido. & Estado «no adjudicada». \\
+CB-05-04 & Decisión 4 falsa & Total suficiente y sin cupos. & No se adjudica; queda en espera. \\
+CB-05-05 & Camino principal & Total suficiente y con cupos. & Estado «adjudicada» y registro en bitácora. \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir de RF-04. Resultado obtenido: por registrar al ejecutar.
+\end{table}
 
 \subsubsection{9.3.2. Caja Negra}
 
-% [PENDIENTE]: Mismos casos de uso que en caja blanca (ajustar).
+La prueba de caja negra verifica el comportamiento visible sin mirar el código. Se aplican las técnicas de partición de equivalencia (una prueba por cada clase de datos válidos e inválidos) y de análisis de valores límite (los bordes de cada rango).
 
 \paragraph{9.3.2.1. Caso de uso: Enviar postulación a Beca Comedor (CU-02).}
 
-% [PENDIENTE]: Redactar "Caso de uso: Enviar postulación a Beca Comedor (CU-02)".
+\begin{table}[H]
+\centering
+\caption{Casos de prueba de caja negra de CU-02}
+\label{tab:cn_cu02}
+\small
+\begin{tabular}{@{}p{1.1cm}p{3.7cm}p{4.0cm}p{3.1cm}p{1.8cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Escenario} & \textbf{Datos de entrada} & \textbf{Resultado esperado} & \textbf{Técnica} \\
+\midrule
+CN-02-01 & Envío con todos los datos válidos. & Formulario completo y documentos adjuntos. & Se acepta y se confirma al postulante. & Partición (válida) \\
+CN-02-02 & Campo obligatorio vacío. & Ingresos familiares vacío. & Se rechaza y se señala el campo. & Partición (inválida) \\
+CN-02-03 & Ingresos en el límite inferior. & Ingresos = 0. & Se acepta como valor válido. & Valor límite \\
+CN-02-04 & Ingresos por debajo del límite. & Ingresos = $-1$. & Se rechaza el valor. & Valor límite \\
+CN-02-05 & Documento de formato no permitido. & Archivo ejecutable como adjunto. & Se rechaza el archivo. & Partición (inválida) \\
+CN-02-06 & Segundo envío en la misma gestión. & Postulante con postulación vigente. & Se rechaza el segundo envío. & Partición (inválida) \\
+CN-02-07 & Petición duplicada. & El mismo envío dos veces seguidas. & Se registra una sola postulación (RNF-03). & Partición (inválida) \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir de RF-02. Resultado obtenido: por registrar al ejecutar.
+\end{table}
 
 \paragraph{9.3.2.2. Caso de uso: Precalificar postulación con Inteligencia Artificial (CU-03).}
 
-% [PENDIENTE]: Redactar "Caso de uso: Precalificar postulación con Inteligencia Artificial (CU-03)".
+\begin{table}[H]
+\centering
+\caption{Casos de prueba de caja negra de CU-03}
+\label{tab:cn_cu03}
+\small
+\begin{tabular}{@{}p{1.1cm}p{3.7cm}p{4.0cm}p{3.1cm}p{1.8cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Escenario} & \textbf{Datos de entrada} & \textbf{Resultado esperado} & \textbf{Técnica} \\
+\midrule
+CN-03-01 & Perfil de alta vulnerabilidad. & Ingresos bajos y varios dependientes. & Puntaje en el tramo alto. & Partición (válida) \\
+CN-03-02 & Perfil de baja vulnerabilidad. & Ingresos altos y sin dependientes. & Puntaje en el tramo bajo. & Partición (válida) \\
+CN-03-03 & Mismos datos, dos veces. & Misma solicitud repetida. & El mismo puntaje en ambas. & Partición (válida) \\
+CN-03-04 & Puntaje máximo. & Perfil de máxima vulnerabilidad. & Puntaje no mayor que 70. & Valor límite \\
+CN-03-05 & Datos incompletos. & Solicitud sin estado de vulnerabilidad. & Error de validación. & Partición (inválida) \\
+CN-03-06 & Tiempo de cálculo. & Una postulación individual. & Puntaje en 5 s o menos (RNF-03). & Valor límite \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir de RF-03 y RNF-03. Resultado obtenido: por registrar al ejecutar.
+\end{table}
 
 \paragraph{9.3.2.3. Caso de uso: Auditar y adjudicar becas (CU-05).}
 
-% [PENDIENTE]: Redactar "Caso de uso: Auditar y adjudicar becas (CU-05)".
+\begin{table}[H]
+\centering
+\caption{Casos de prueba de caja negra de CU-05}
+\label{tab:cn_cu05}
+\small
+\begin{tabular}{@{}p{1.1cm}p{3.7cm}p{4.0cm}p{3.1cm}p{1.8cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Escenario} & \textbf{Datos de entrada} & \textbf{Resultado esperado} & \textbf{Técnica} \\
+\midrule
+CN-05-01 & Adjudicación de un finalista. & Puntaje IA de 60 y rendimiento de 25, con total sobre el mínimo. & Estado «adjudicada». & Partición (válida) \\
+CN-05-02 & Rendimiento en el límite superior. & Rendimiento = 30. & Se acepta el valor. & Valor límite \\
+CN-05-03 & Rendimiento sobre el límite. & Rendimiento = 31. & Se rechaza el valor. & Valor límite \\
+CN-05-04 & Total justo en el mínimo. & Total igual al mínimo requerido. & Se adjudica. & Valor límite \\
+CN-05-05 & Total bajo el mínimo. & Total igual al mínimo menos 1. & Estado «no adjudicada». & Valor límite \\
+CN-05-06 & Acceso de un rol no autorizado. & Sesión de postulante que abre la adjudicación. & Acceso denegado (403). & Partición (inválida) \\
+CN-05-07 & Trazabilidad. & Adjudicación realizada por el administrador. & Se registra el evento en la bitácora. & Partición (válida) \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir de RF-04 y de las reglas de puntaje del sistema. Resultado obtenido: por registrar al ejecutar.
+\end{table}
 
 \subsubsection{9.3.3. Pruebas de Vulnerabilidad}
 
+Como el sistema guarda datos personales y socioeconómicos de estudiantes, el requisito RNF-01 exige protección de los datos. Las pruebas de vulnerabilidad buscan debilidades de seguridad, con la lista de riesgos más comunes de aplicaciones web del proyecto OWASP como referencia.
+
 \paragraph{9.3.3.1. OWASP ZAP.}
 
-% [PENDIENTE]: Redactar "OWASP ZAP".
+OWASP ZAP es una herramienta gratuita que ataca una aplicación web de forma automática y reporta las vulnerabilidades que encuentra. Se ejecuta contra el entorno de pruebas (nunca contra producción) con dos modos: un rastreo pasivo que solo observa el tráfico de la API y un ataque activo que envía entradas maliciosas. Los hallazgos se clasifican por riesgo (alto, medio y bajo) y se corrigen los altos antes de la entrega.
 
 \paragraph{9.3.3.2. Prueba de vulnerabilidad manual.}
 
-% [PENDIENTE]: Redactar "Prueba de vulnerabilidad manual".
+Complementa a la herramienta con comprobaciones que esta no cubre bien:
+
+\begin{itemize}
+    \item \textbf{Control de acceso:} un postulante intenta abrir rutas del administrador y leer la postulación de otro usuario; se espera una respuesta 403.
+    \item \textbf{Inyección SQL:} se envían comillas y sentencias SQL en los campos de texto; se espera que se traten como texto.
+    \item \textbf{Autenticación:} se prueban tokens vencidos, modificados y reutilizados tras cerrar sesión; se espera el rechazo.
+    \item \textbf{Archivos:} se intenta subir archivos con extensión falsa o de tamaño excesivo; se espera el rechazo.
+    \item \textbf{Contraseñas:} se verifica que la base de datos solo contenga el \textit{hash} de la contraseña.
+\end{itemize}
 
 \subsubsection{9.3.4. Lista de Comprobación}
 
-% [PENDIENTE]: Redactar "Lista de Comprobación".
+La lista de comprobación recoge los puntos que se revisan antes de aceptar cada incremento.
+
+\begin{table}[H]
+\centering
+\caption{Lista de comprobación de la entrega}
+\label{tab:lista_comprobacion}
+\small
+\begin{tabular}{@{}p{9.4cm}p{2.0cm}p{2.0cm}@{}}
+\toprule
+\textbf{Punto a verificar} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+Los campos obligatorios se validan en pantalla y en el servidor. & & \\
+Solo se aceptan los formatos de documento permitidos. & & \\
+Cada rol accede únicamente a sus funciones (RNF-01). & & \\
+Las contraseñas se guardan como \textit{hash}. & & \\
+Las acciones críticas quedan en la bitácora de auditoría. & & \\
+Las peticiones duplicadas no generan registros repetidos (RNF-03). & & \\
+La pantalla carga en 3 s o menos (RNF-03). & & \\
+El puntaje de una postulación se calcula en 5 s o menos (RNF-03). & & \\
+Los mensajes de error son claros para el usuario (RNF-04). & & \\
+La aplicación web funciona en los navegadores y la móvil en Android definidos (RNF-05). & & \\
+Las pruebas automáticas pasan en la integración continua. & & \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia. Las columnas «Cumple» y «Observación» se llenan al ejecutar la revisión.
+\end{table}
 
 \subsection{9.4. Representación del Tiempo de Respuesta}
 
-% [PENDIENTE]: Contrastar con los RNF de rendimiento (carga <= 3 s; puntaje individual <= 5 s).
+El requisito RNF-03 fija dos límites: la carga de una pantalla en 3 segundos o menos y el cálculo del puntaje de una postulación en 5 segundos o menos. Cada uno se mide repitiendo la operación al menos 30 veces y se reporta el promedio y el valor máximo. Se registran en la Tabla~\ref{tab:tiempos}.
+
+\begin{table}[H]
+\centering
+\caption{Tiempos de respuesta frente al requisito RNF-03}
+\label{tab:tiempos}
+\small
+\begin{tabular}{@{}p{5.2cm}p{2.2cm}p{2.0cm}p{2.0cm}@{}}
+\toprule
+\textbf{Operación} & \textbf{Límite (s)} & \textbf{Promedio} & \textbf{Máximo} \\
+\midrule
+Carga de la pantalla de postulación & 3 & & \\
+Carga de la lista priorizada (CU-06) & 3 & & \\
+Cálculo del puntaje de una postulación (CU-03) & 5 & & \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Los valores medidos se registran al terminar la implementación.
+\end{table}
 
 \subsection{9.5. Herramientas para Asistir el Proceso de Pruebas en el Software}
 
-% [PENDIENTE]: Redactar "Herramientas para Asistir el Proceso de Pruebas en el Software".
+\begin{itemize}
+    \item \textbf{JUnit y Testcontainers:} pruebas de unidad y de integración del \textit{backend} en Java, con una base PostgreSQL real levantada en un contenedor.
+    \item \textbf{pytest:} pruebas del módulo de IA en Python.
+    \item \textbf{Vitest:} pruebas de la interfaz web y del sitio de NEXWARE.
+    \item \textbf{\textit{flutter test}:} pruebas de la aplicación móvil.
+    \item \textbf{Swagger UI (springdoc-openapi):} ejecución manual de las operaciones de la API.
+    \item \textbf{OWASP ZAP:} análisis de vulnerabilidades (sección 9.3.3).
+    \item \textbf{GitHub Actions:} ejecución automática de todas las pruebas en cada \textit{pull request}.
+\end{itemize}
+
+Las herramientas son las del repositorio descritas en los capítulos~\ref{cap:paps} y~\ref{cap:sqap}.

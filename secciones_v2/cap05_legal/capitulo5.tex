@@ -1,5 +1,5 @@
 % ==============================================================================
-% CAPÍTULO 11: ASPECTOS LEGALES (Orquestador del Capítulo)
+% CAPÍTULO 5: ASPECTOS LEGALES (Orquestador del Capítulo)
 % ==============================================================================
 \preportadacapitulo{5}{Aspectos Legales}
 
@@ -7,75 +7,144 @@
 \section{Capítulo 5: Aspectos Legales}\label{cap:legal}
 
 % [INSTRUCCIÓN]: Aspectos legales. Contenido propio de esta versión; toda fuente debe registrarse en referencias.bib.
+% [VERIFICAR]: los costos, plazos y porcentajes de este capítulo provienen del documento modelo de la materia y de las guías de trámites vigentes a noviembre de 2026; confirmarlos en los portales oficiales antes de la entrega.
+
+Este capítulo resume los trámites y las normas que NEXWARE debe cumplir para constituirse como empresa de desarrollo de software en Santa Cruz de la Sierra, Bolivia, y para proteger su producto. Primero se tratan las licencias de software y la constitución de la empresa; después, el registro del software y de la marca ante el Servicio Nacional de Propiedad Intelectual.
 
 \subsection{5.1. Aspectos Legales para la Apertura de una Empresa de Desarrollo de Software}
 
 \subsubsection{5.1.1. Licencias de Software}
 
+Una licencia de software es el contrato por el cual el titular de los derechos de autor autoriza a un tercero a usar, copiar, modificar o distribuir un programa en determinadas condiciones. El tipo de licencia define qué puede hacer el usuario y qué conserva la empresa.
+
 \paragraph{5.1.1.1. Software libre.}
 
-% [PENDIENTE]: Redactar "Software libre".
+El software libre se distribuye con licencias que garantizan al usuario cuatro libertades: ejecutar el programa con cualquier propósito, estudiar su código fuente, redistribuir copias y modificarlo y publicar sus mejoras. Ejemplos de estas licencias son la GPL, la MIT y la Apache 2.0. El código fuente es abierto, de modo que su uso no genera costo de licenciamiento, aunque cada licencia impone condiciones, como mantener el aviso de autoría o publicar con la misma licencia las obras derivadas.
+
+NEXWARE usa software libre como base técnica del sistema (el \textit{framework} de la API, la biblioteca de la interfaz web, la base de datos y las bibliotecas de ciencia de datos descritas en el Capítulo~\ref{cap:case} y en la sección 3.4). Por ello debe respetar las condiciones de cada licencia de las bibliotecas que incorpora.
 
 \paragraph{5.1.1.2. Software privado.}
 
-% [PENDIENTE]: Redactar "Software privado".
+El software privado (propietario) es aquel cuyo titular conserva los derechos de uso, copia, modificación y distribución. El usuario recibe solo una licencia de uso, normalmente limitada en el tiempo, en el número de equipos o en las funciones, y no accede al código fuente.
+
+Este es el modelo que NEXWARE aplicaría a sus productos propios: el código del sistema pertenece a la empresa y los clientes adquieren una licencia de uso. Esta decisión es compatible con el uso de componentes libres, siempre que se cumplan las condiciones de cada licencia, y se formaliza en el contrato de licenciamiento descrito en el Capítulo~\ref{cap:puesta_marcha}.
 
 \subsubsection{5.1.2. Razón Social}
 
-% [PENDIENTE]: Redactar "Razón Social".
+La razón social es el nombre bajo el cual la empresa figura en el Registro de Comercio y en los documentos legales. El nombre elegido es \textbf{NEXWARE}, formado por \textit{nexo} y \textit{software} (sección 2.7). Antes de adoptarlo se debe pasar el control de homonimia del SEPREC, que verifica que no exista otra empresa registrada con el mismo nombre. Si la sociedad es de responsabilidad limitada, el nombre debe ir seguido del aditamento «S.R.L.» o «Ltda.».
 
 \subsubsection{5.1.3. Organización Jurídica}
 
 \paragraph{5.1.3.1. Alternativas de conformación.}
 
-% [PENDIENTE]: Redactar "Alternativas de conformación".
+El Código de Comercio \parencite{codigocomercio1977} permite a una persona o a un grupo de personas ejercer el comercio bajo distintas formas. Las dos que se consideran para una empresa de software pequeña son:
+
+\begin{itemize}
+    \item \textbf{Empresa unipersonal:} una persona natural que se dedica habitualmente a una actividad comercial con fines de lucro. Una persona no puede registrar más de una empresa unipersonal.
+    \item \textbf{Sociedad de Responsabilidad Limitada (S.R.L.):} sociedad cuyo capital se divide en cuotas no representadas por títulos negociables y en la que los socios responden únicamente hasta el monto de su aporte.
+\end{itemize}
+
+También existen la sociedad colectiva y la sociedad en comandita simple, que no se consideran porque los socios responden con su patrimonio personal de forma solidaria e ilimitada.
 
 \paragraph{5.1.3.2. Tipo de sociedad.}
 
-% [PENDIENTE]: Redactar "Tipo de sociedad".
+NEXWARE está integrada por dos socios, los líderes del proyecto (sección 2.10), por lo que la forma que mejor se ajusta es la \textbf{Sociedad de Responsabilidad Limitada}. Una empresa unipersonal solo admite un titular y este responde con todos sus bienes. La S.R.L. permite repartir la propiedad entre los dos socios y limitar la responsabilidad de cada uno a su aporte. Su constitución exige una escritura pública ante notario y un poder para el representante legal, lo que encarece el trámite respecto de la empresa unipersonal.
 
 \subsubsection{5.1.4. Apertura de una Empresa}
 
+La apertura sigue un orden fijo: la identidad digital de los socios, el registro de comercio, la inscripción tributaria, la licencia municipal y, cuando se contrata personal, el registro como empleador en las instituciones de seguridad social y laboral.
+
 \paragraph{5.1.4.1. Registro de Ciudadanía Digital.}
 
-% [PENDIENTE]: Redactar "Registro de Ciudadanía Digital".
+La Ciudadanía Digital \parencite{ciudadaniadigital2026} es la identidad electrónica con la que una persona realiza trámites en línea con las entidades públicas. Los trámites del SEPREC y de otras instituciones se inician con las credenciales de ciudadanía digital del propietario o del representante legal. Cada socio debe registrarla y activarla antes de iniciar los demás trámites.
 
 \paragraph{5.1.4.2. Servicio Plurinacional de Registro de Comercio (SEPREC).}
 
-% [PENDIENTE]: Redactar "Servicio Plurinacional de Registro de Comercio (SEPREC)".
+El SEPREC \parencite{seprec2026} otorga existencia jurídica a la empresa mediante la Matrícula de Comercio. El trámite comienza en el portal de trámites del SEPREC con la reserva de nombre (control de homonimia), que tarda hasta tres días hábiles. La Tabla~\ref{tab:seprec} compara el trámite para una empresa unipersonal y para una S.R.L.
+
+\begin{table}[H]
+\centering
+\caption{Registro de comercio: empresa unipersonal y S.R.L.}
+\label{tab:seprec}
+\small
+\begin{tabular}{@{}p{2.6cm}p{5.6cm}p{5.6cm}@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Empresa unipersonal} & \textbf{S.R.L.} \\
+\midrule
+Requisitos & Formulario virtual de inscripción (declaración jurada) con ciudadanía digital y pago en la plataforma. & Formulario virtual, testimonio de escritura pública de constitución, testimonio del poder del representante legal (si no consta en la escritura) y pago con la publicación en la Gaceta Electrónica. \\
+Modalidad & Virtual. & Presencial o virtual (con documentos notariales firmados digitalmente). \\
+Documentos emitidos & Certificado de Matrícula de Comercio. & Certificado de Matrícula de Comercio y certificados de registro de los testimonios de constitución y de poder. \\
+Plazo & 24 horas desde el día hábil siguiente al pago. & 24 horas desde el día hábil siguiente a la presentación o al llenado del formulario. \\
+Costo & Bs~130. & Bs~455 más Bs~192 por la publicación en la Gaceta Electrónica. \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Los costos y plazos corresponden a la guía de trámites del SEPREC vigente a la fecha de redacción \parencite{seprec2026}.
+\end{table}
+
+Si el registro tiene observaciones, estas aparecen en la bandeja «Observados» del portal, donde se subsanan y se reingresa el trámite. El certificado se descarga desde la bandeja «Mis certificados».
 
 \paragraph{5.1.4.3. Servicio de Impuestos Nacionales.}
 
-% [PENDIENTE]: Redactar "Servicio de Impuestos Nacionales".
+La empresa debe inscribirse en el padrón del Servicio de Impuestos Nacionales \parencite{sin2026} para obtener el Número de Identificación Tributaria (NIT) y emitir facturas por servicios de desarrollo, soporte y licencias. Asume las obligaciones del Impuesto al Valor Agregado (IVA, 13\,\%), del Impuesto a las Transacciones (IT, 3\,\%) y del Impuesto sobre las Utilidades de las Empresas (IUE, 25\,\% anual). Los requisitos principales para una S.R.L. son:
+
+\begin{itemize}
+    \item Testimonio de constitución de la sociedad y poder notarial del representante legal.
+    \item Cédula de identidad del representante legal.
+    \item Factura de luz del domicilio fiscal y del domicilio del representante legal.
+    \item Croquis de ambos domicilios.
+\end{itemize}
+
+En la práctica, el SIN también solicita el respaldo legal del domicilio (contrato de alquiler o anticrético notariado, o documento de propiedad), un cuestionario sobre la actividad de la empresa y la asignación a la modalidad de facturación en línea.
 
 \paragraph{5.1.4.4. Licencia de Funcionamiento (Gobierno Autónomo Municipal).}
 
-% [PENDIENTE]: Redactar "Licencia de Funcionamiento (Gobierno Autónomo Municipal)".
+La licencia de funcionamiento autoriza la actividad en un local. Se tramita ante el Gobierno Autónomo Municipal de Santa Cruz de la Sierra con la declaración jurada, la carta de compromiso ambiental (el impacto ambiental de una empresa de software es nulo), el NIT, la cédula de identidad y un recibo de luz o agua del local. En una S.R.L. se agrega la copia legalizada de la constitución y del poder. Antes de otorgarla, el municipio realiza una inspección al local. El costo referencial es de Bs~180 (Bs~60 de empadronamiento y Bs~120 del certificado).
 
 \paragraph{5.1.4.5. Caja Nacional de Salud (CNS).}
 
-% [PENDIENTE]: Redactar "Caja Nacional de Salud (CNS)".
+Cuando NEXWARE contrate personal, debe afiliarlo a un ente gestor del seguro de salud a corto plazo. La Caja Nacional de Salud es una de las opciones, junto con otros entes como la Caja Petrolera de Salud. El empleador paga un aporte patronal equivalente al 10\,\% del total ganado de cada trabajador, que no se descuenta del sueldo.
 
 \paragraph{5.1.4.6. Gestora Pública de la Seguridad Social de Largo Plazo.}
 
-% [PENDIENTE]: Redactar "Gestora Pública de la Seguridad Social de Largo Plazo".
+La Gestora administra los aportes de jubilación, invalidez y riesgo profesional. Se retiene al trabajador el 12,71\,\% de su sueldo y la empresa actúa solo como agente de retención. Además, la empresa paga un aporte patronal del 7,1\,\%: 1,71\,\% de prima de riesgo profesional, 2\,\% para vivienda y 3\,\% de aporte patronal solidario.
 
 \paragraph{5.1.4.7. Ministerio de Trabajo, Empleo y Previsión Social.}
 
-% [PENDIENTE]: Redactar "Ministerio de Trabajo, Empleo y Previsión Social".
+El Ministerio de Trabajo \parencite{mintrabajo2026} regula la relación laboral. La empresa debe inscribirse en el Registro Obligatorio de Empleadores (ROE) mediante su oficina virtual, visar los contratos de trabajo y presentar cada mes la planilla de sueldos, con un pago no menor al salario mínimo nacional. La empresa debe prever además el aguinaldo de Navidad (8,33\,\% mensual) y la indemnización por tiempo de servicio (otro 8,33\,\% mensual). Sumados los aportes, el costo real de un empleado supera su sueldo nominal en alrededor del 33,7\,\%.
 
 \subsection{5.2. Aspectos Legales del Producto y Propiedad Intelectual}
 
+El código fuente y el diseño de la base de datos son el principal activo de la empresa, y la identidad visual es lo que la distingue en el mercado. Cada uno se protege con una figura distinta ante el SENAPI.
+
 \subsubsection{5.2.1. Servicio Nacional de Propiedad Intelectual (SENAPI)}
+
+En Bolivia el software no se patenta: la Ley N.º~1322 de Derecho de Autor \parencite{ley1322} lo protege como obra literaria. Se protege la forma en que está escrito el código y no la idea. El registro se hace ante el SENAPI \parencite{senapi2026}.
 
 \paragraph{5.2.1.1. Requisitos para el registro de software.}
 
-% [PENDIENTE]: Redactar "Requisitos para el registro de software".
+El depósito de una obra de software incluye:
+
+\begin{itemize}
+    \item \textbf{Soporte con el código:} un disco cerrado con el código fuente completo, el código objeto (programa compilado) y los \textit{scripts} de la base de datos.
+    \item \textbf{Muestra impresa:} las primeras y las últimas 25 páginas del código fuente principal, sin bibliotecas de terceros ni código generado por \textit{frameworks}.
+    \item \textbf{Memoria descriptiva:} documento con la arquitectura del sistema, el diagrama de la base de datos, el manual técnico de instalación y el manual de usuario.
+    \item \textbf{Titularidad:} contrato de cesión de derechos patrimoniales a favor de la empresa o, en su defecto, la declaración de los porcentajes de coautoría de cada desarrollador.
+\end{itemize}
+
+En NEXWARE, los dos integrantes desarrollan el sistema, por lo que se firmará la cesión de sus derechos patrimoniales a la empresa. La memoria descriptiva se arma con las secciones 3.3 y 3.4 de este documento y con el manual del Capítulo~\ref{cap:producto}.
 
 \subsubsection{5.2.2. Registro de Marca}
 
-% [PENDIENTE]: Redactar "Registro de Marca".
+El derecho de autor protege el código; la marca protege el nombre y el logotipo. El registro de marca ante el SENAPI sigue tres pasos:
+
+\begin{enumerate}
+    \item \textbf{Búsqueda de antecedentes:} se verifica en la base de datos del SENAPI, de forma fonética y figurativa, que el nombre y el logotipo no estén registrados por un tercero.
+    \item \textbf{Clasificación de Niza:} el producto se registra en la clase 9 (software y aplicaciones móviles) y el servicio, en la clase 42 (desarrollo de software a medida y software como servicio).
+    \item \textbf{Publicación y oposición:} la solicitud se publica en la Gaceta Oficial. Si en 30 días hábiles nadie se opone, el SENAPI emite el título de concesión de la marca, con vigencia de diez años.
+\end{enumerate}
 
 \subsection{5.3. Bibliografía del Capítulo}
 
-% [PENDIENTE]: Redactar "Bibliografía del Capítulo".
+Las fuentes de este capítulo son las normas citadas (el Código de Comercio \parencite{codigocomercio1977} y la Ley N.º~1322 \parencite{ley1322}) y los portales oficiales de las instituciones que realizan los trámites: Ciudadanía Digital \parencite{ciudadaniadigital2026}, SEPREC \parencite{seprec2026}, Servicio de Impuestos Nacionales \parencite{sin2026}, SENAPI \parencite{senapi2026} y Ministerio de Trabajo \parencite{mintrabajo2026}. Su referencia completa figura en la lista de referencias del documento.
