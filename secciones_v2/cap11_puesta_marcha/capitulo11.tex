@@ -13,7 +13,7 @@ Este capítulo corresponde a la fase de Transición del Proceso Unificado: lleva
 
 \subsection{11.1. Aspectos de Puesta en Marcha y Despliegue}
 
-El sistema tiene cuatro piezas que se despliegan: la API, el módulo de inteligencia artificial, la base de datos con el almacenamiento de archivos, y las interfaces (panel web y aplicación móvil Android). Las primeras se empaquetan con Docker, como en el entorno de desarrollo (Capítulo~\ref{cap:infraestructura}).
+El sistema tiene cuatro piezas que se despliegan: la API, el módulo de inteligencia artificial, la base de datos con el almacenamiento de archivos, y las interfaces (panel web y aplicación móvil Android). Las primeras se empaquetan con Docker, como en el entorno de desarrollo (Capítulo~\hyperref[cap:infraestructura]{6}).
 
 \subsubsection{11.1.1. Amazon Web Services (AWS)}
 
@@ -94,7 +94,7 @@ Para ofrecer el sistema con licencia de pago periódico, NEXWARE debe:
 \begin{itemize}
     \item Estar inscrita en el Registro de Comercio y en el padrón del SIN, y emitir factura por cada pago (sección 5.1.4).
     \item Dar a conocer al cliente, antes de contratar, el precio, la vigencia, la forma de renovación y de cancelación.
-    \item Atender los reclamos del cliente y mantener un canal de soporte (Capítulo~\ref{cap:sitio_web}).
+    \item Atender los reclamos del cliente y mantener un canal de soporte (Capítulo~\hyperref[cap:sitio_web]{7}).
     \item Firmar un contrato con el alcance del servicio, las responsabilidades de cada parte y las condiciones de la licencia.
 \end{itemize}
 
@@ -122,7 +122,7 @@ Las políticas del sistema se resumen así:
     \item \textbf{Datos recogidos:} solo los necesarios para evaluar la postulación y controlar la asistencia.
     \item \textbf{Uso:} calcular el puntaje, auditar y adjudicar. No se venden ni se ceden a terceros.
     \item \textbf{Acceso:} cada rol ve solo lo que necesita; las acciones críticas quedan en la bitácora de auditoría.
-    \item \textbf{Protección:} comunicación cifrada (HTTPS), contraseñas guardadas como \textit{hash}, sesiones con tokens que vencen (Capítulo~\ref{cap:pruebas}).
+    \item \textbf{Protección:} comunicación cifrada (HTTPS), contraseñas guardadas como \textit{hash}, sesiones con tokens que vencen (Capítulo~\hyperref[cap:pruebas]{9}).
     \item \textbf{Conservación:} los datos se conservan mientras dure la gestión y los plazos que fije la institución.
     \item \textbf{Derechos del titular:} el estudiante puede consultar y pedir corregir sus datos.
 \end{itemize}
@@ -137,7 +137,7 @@ Para calcular el costo de la nube en AWS se usa la API de precios y la calculado
 
 \subsubsection{11.6.2. Marco legal y normativo (Bolivia)}
 
-Las normas del capítulo son el Código de Comercio, la Ley N.º~1322, la Ley N.º~164, la Ley N.º~453, la Ley N.º~1080 y la Constitución Política del Estado. Los trámites de constitución se tratan en el Capítulo~\ref{cap:legal}.
+Las normas del capítulo son el Código de Comercio, la Ley N.º~1322, la Ley N.º~164, la Ley N.º~453, la Ley N.º~1080 y la Constitución Política del Estado. Los trámites de constitución se tratan en el Capítulo~\hyperref[cap:legal]{5}.
 
 \subsubsection{11.6.3. Recursos y evidencia del proyecto}
 
@@ -148,6 +148,6 @@ El sistema está desplegado y se accede a él en las direcciones siguientes:
     \item \textbf{Sitio web de NEXWARE:} \url{https://d38nteg7p7v4qz.cloudfront.net/landing-page/es/}
 \end{itemize}
 
-El despliegue usa los servicios de AWS descritos en la sección 11.2.1. Para el despliegue de la aplicación móvil, el equipo prepara un archivo de instalación (APK) de Android; todavía no está publicada en Google Play Store.
+El despliegue usa los servicios de AWS descritos en la sección 11.2.1. Para el despliegue de la aplicación móvil, el equipo prepara un archivo de instalación (APK) de Android, que se descarga de una carpeta de Google Drive: \url{https://drive.google.com/drive/u/0/folders/1QCsApY6fykM3yeWxPKp1LF3xyRLz25TH}. Todavía no está publicada en Google Play Store.
 
-% [PENDIENTE]: enlace al APK (Drive), captura del despliegue y, si se decide, enlace público del repositorio. No incluir evidencias que no existan.
+% [PENDIENTE]: confirmar que el APK ya está en la carpeta de Drive y que el enlace es público; captura del despliegue y, si se decide, enlace público del repositorio. No incluir evidencias que no existan.

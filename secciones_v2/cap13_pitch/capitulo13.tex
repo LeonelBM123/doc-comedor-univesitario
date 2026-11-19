@@ -7,7 +7,7 @@
 \section{Capítulo 13: Pitch}\label{cap:pitch}
 
 % [INSTRUCCIÓN]: Pitch para presentar la idea del proyecto. Contenido propio de esta versión; solo usa cifras ya citadas en el Capítulo 1 y no inventa precios ni cifras de mercado.
-% [VERIFICAR]: antes de presentar, actualizar el estado del producto (frase marcada en 13.2.5) con los CU implementados a esa fecha (Capítulo~\ref{cap:producto}) y ajustar el tiempo al que fije el docente o el jurado.
+% [VERIFICAR]: antes de presentar, actualizar el estado del producto (frase marcada en 13.2.5) con los CU implementados a esa fecha (Capítulo~\hyperref[cap:producto]{12}) y ajustar el tiempo al que fije el docente o el jurado.
 
 Este capítulo presenta el proyecto en formato de \textit{pitch}: una exposición breve y persuasiva que explica qué problema resuelve el sistema, cómo lo resuelve y por qué vale la pena construirlo. Incluye una versión corta (de 30 a 60 segundos), una versión completa con guion y tiempos, y las respuestas previstas a las preguntas más probables. Todas las cifras provienen de los datos de la DUBSS citados en la sección~1.2.
 
@@ -86,10 +86,10 @@ Una vez que hay becados, el comedor registra la asistencia diaria desde el siste
 \begin{quote}
 Esto aporta tres cosas. Equidad: se evalúa el cien por ciento de las solicitudes, no el cuarenta. Eficiencia: se reciben, guardan y revisan unas 2\,700 carpetas físicas en lugar de 20\,000. Y trazabilidad: cada puntaje, auditoría y adjudicación queda registrado en una bitácora que se puede revisar.
 
-El proyecto ya tiene sus requisitos, su análisis y su diseño documentados, y se desarrolla entre el 24 de agosto y el 30 de noviembre de 2026. Hoy funcionan el acceso, la consulta de postulaciones, la auditoría, la adjudicación, la publicación de resultados, el acta y el tablero de indicadores.
+El proyecto ya tiene sus requisitos, su análisis y su diseño documentados, y se desarrolla entre el 24 de agosto y el 30 de noviembre de 2026. Hoy están implementados los 26 casos de uso: la postulación, la preselección con inteligencia artificial, la auditoría, la adjudicación, la publicación de resultados, el acta, el control de asistencia y el tablero de indicadores. El sistema está en línea, y su API se probó caso de uso por caso de uso, sin fallos, con más de 3\,500 pruebas automatizadas escritas.
 \end{quote}
 
-% [VERIFICAR]: la última frase de 13.2.5 refleja los CU implementados al 15-nov-2026 (Capítulo~\ref{cap:producto}); actualizarla antes de presentar.
+% [VERIFICAR]: la última frase de 13.2.5 refleja el estado al 19-nov-2026 (26 CU, pruebas del Capítulo~\hyperref[cap:pruebas]{9}); si cambia antes de presentar, actualizarla.
 
 \subsubsection{13.2.6. Equipo y cierre}
 
@@ -122,7 +122,7 @@ Pregunta & Respuesta breve \\
 ¿Y la asistencia? & El sistema no tiene biometría propia: registra el resultado de la verificación del comedor y genera planillas imprimibles para las auditorías. \\
 ¿Cuál es el puntaje mínimo y cuántos cupos hay? & Son datos institucionales que se definen con la DUBSS en cada gestión; el sistema los toma como parámetros. \\
 ¿Qué tan seguros están los datos? & El acceso usa tokens y las contraseñas se guardan como hash, la comunicación es por HTTPS y los archivos se guardan en un almacenamiento propio. Las acciones relevantes quedan en la bitácora. \\
-¿Puede usarse en otras instituciones? & Sí. El modelo de negocio previsto es ofrecer el sistema, adaptado, a otras instituciones con muchos postulantes y pocos cupos (Capítulo~\ref{cap:mercado}). \\
+¿Puede usarse en otras instituciones? & Sí. El modelo de negocio previsto es ofrecer el sistema, adaptado, a otras instituciones con muchos postulantes y pocos cupos (Capítulo~\hyperref[cap:mercado]{8}). \\
 \end{longtable}
 \noindent\textit{Nota.} Elaboración propia a partir de los requisitos y del alcance del sistema.
 
@@ -131,7 +131,7 @@ Pregunta & Respuesta breve \\
 \begin{itemize}
     \item Abrir con el gancho y con la cifra de 12\,000 carpetas sin abrir; es el dato que más se recuerda.
     \item Repetir tres cifras en toda la presentación: 20\,000 solicitudes, 900 cupos y 2\,700 carpetas físicas para finalistas.
-    \item Mostrar el sistema en funcionamiento (recorrido del postulante y de la DUBSS) en lugar de describir pantallas (Capítulo~\ref{cap:producto}).
+    \item Mostrar el sistema en funcionamiento (recorrido del postulante y de la DUBSS) en lugar de describir pantallas (Capítulo~\hyperref[cap:producto]{12}).
     \item No prometer lo que aún no está implementado; presentarlo como parte del plan de desarrollo.
     \item Dividir el guion entre los dos integrantes: uno expone el problema y la solución, el otro el funcionamiento y el cierre.
 \end{itemize}

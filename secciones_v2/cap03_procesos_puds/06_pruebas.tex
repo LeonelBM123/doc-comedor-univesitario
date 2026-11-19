@@ -1,33 +1,79 @@
 % ==============================================================================
 % 3.6 PRUEBAS (flujo de trabajo PUDS dentro del Capítulo 3)
 % Las pruebas sobre el producto terminado y los mecanismos de prueba se desarrollan en el Capítulo 9.
-% [PENDIENTE: CONFIRMAR] Los apartados 3.6.1 a 3.6.6 siguen las actividades del flujo de
-% trabajo de Pruebas del Proceso Unificado; ajustarlos si el PUDS de la cátedra usa otros títulos.
+% [INSTRUCCIÓN]: los apartados 3.6.1 a 3.6.6 siguen las actividades del flujo de trabajo de Pruebas del
+% Proceso Unificado; ajustarlos si el PUDS de la cátedra usa otros títulos. Las cifras son las medidas el
+% 18-nov-2026 (informe de pruebas del repositorio) y se actualizan en el Capítulo 9.
 % ==============================================================================
 \subsection{3.6. Pruebas}\label{sec:v2_flujo_pruebas}
 
-Este flujo de trabajo del PUDS verifica que el sistema implementado cumpla los requisitos especificados en la sección 3.2. Las pruebas sobre el producto terminado y los mecanismos de prueba utilizados se desarrollan en el Capítulo 9.
+Este flujo de trabajo del PUDS verifica que el sistema implementado cumpla los requisitos especificados en la sección 3.2. Las pruebas sobre el producto terminado y los mecanismos de prueba utilizados se desarrollan en el Capítulo~\hyperref[cap:pruebas]{9}; aquí se describe cómo se planificaron, diseñaron, implementaron y evaluaron durante el desarrollo.
 
 \subsubsection{3.6.1. Planificar las pruebas}
 
-% [PENDIENTE]: Redactar "Planificar las pruebas".
+El objetivo de las pruebas es comprobar que cada uno de los 26 casos de uso funciona como lo describen sus flujos y que el sistema cumple los requisitos no funcionales de rendimiento (pantallas en 3 s o menos y cálculo del puntaje en 5 s o menos). La planificación define cuatro decisiones:
+
+\begin{itemize}
+    \item \textbf{Niveles de prueba:} unidad (cada servicio y componente), integración (el caso de uso completo contra una base de datos real), sistema (la API y el panel web en funcionamiento) y rendimiento (carga y tiempos de respuesta).
+    \item \textbf{Alcance por parte del sistema:} el \textit{backend}, el panel web, la aplicación móvil y el módulo de inteligencia artificial tienen pruebas automatizadas propias; la API completa y el panel web se prueban además de punta a punta.
+    \item \textbf{Entorno:} PostgreSQL real levantado en un contenedor (Testcontainers) en las pruebas de integración; el \textit{backend} en perfil de desarrollo, con datos de prueba, en las pruebas de sistema.
+    \item \textbf{Criterios de aceptación:} todas las pruebas automatizadas pasan en la integración continua; cada caso de uso prueba su camino correcto, sus errores de negocio y el permiso por rol; y se cumplen los umbrales de rendimiento.
+\end{itemize}
+
+Como el tiempo del proyecto es corto, se priorizaron los casos de uso de prioridad alta (CU-02, CU-03 y CU-05) para el análisis más detallado de la sección 9.3, con técnicas de caja blanca y de caja negra.
 
 \subsubsection{3.6.2. Diseñar las pruebas}
 
-% [PENDIENTE]: Redactar "Diseñar las pruebas" (casos de prueba derivados de los casos de uso).
+Los casos de prueba se derivan de los casos de uso, con la misma estructura de la especificación de cada uno:
+
+\begin{itemize}
+    \item \textbf{Flujo principal:} un caso de prueba del camino correcto.
+    \item \textbf{Flujos alternativos y excepciones:} un caso por cada error de negocio, con el código de error esperado (por ejemplo, postulación duplicada o convocatoria cerrada).
+    \item \textbf{Reglas de permiso:} un caso por rol no autorizado, con respuesta 403.
+\end{itemize}
+
+Sobre tres casos de uso se aplicaron técnicas formales (Capítulo~\hyperref[cap:pruebas]{9}): caja blanca por caminos básicos, con la complejidad ciclomática de los métodos del \textit{backend} (6 para el envío de la postulación, 6 para la precalificación y 9 para la selección de finalistas); caja negra por partición de equivalencia y valores límite; y listas de comprobación para la verificación del equipo. Los tiempos de respuesta se diseñaron con los límites de los requisitos no funcionales.
 
 \subsubsection{3.6.3. Implementar las pruebas}
 
-% [PENDIENTE]: Redactar "Implementar las pruebas".
+Los casos de prueba se implementaron como pruebas automatizadas y como colecciones ejecutables. La Tabla~\ref{tab:pruebas_proyecto} muestra cuántas existen por parte del sistema: 406 archivos de prueba con 3\,548 pruebas escritas (\textit{backend}, panel web, aplicación móvil, módulo de IA y sitio de NEXWARE). Además:
+
+\begin{itemize}
+    \item Una colección de Bruno con 191 peticiones, una carpeta por caso de uso, para probar la API.
+    \item Cinco pruebas de extremo a extremo con Playwright sobre el panel web.
+    \item Un \textit{script} de k6 para la prueba de carga.
+\end{itemize}
+
+Las pruebas se ejecutan automáticamente en cada \textit{pull request} mediante GitHub Actions (sección 9.5.3).
 
 \subsubsection{3.6.4. Realizar las pruebas de integración}
 
-% [PENDIENTE]: Redactar "Realizar las pruebas de integración".
+La integración se prueba con 22 clases de integración del \textit{backend}, que recorren el caso de uso completo (controlador, servicio y repositorio) contra una base PostgreSQL real levantada con Testcontainers. Esto comprueba también las migraciones de la base de datos y las restricciones reales del motor, que una base simulada no reproduce. La integración entre el \textit{backend} y el módulo de IA se cubre con pruebas que verifican que el cálculo del puntaje del módulo de Python coincide con el del \textit{backend}; en las pruebas del \textit{backend} el módulo de IA se reemplaza por simulaciones para controlar cada situación.
 
 \subsubsection{3.6.5. Realizar las pruebas de sistema}
 
-% [PENDIENTE]: Redactar "Realizar las pruebas de sistema".
+Las pruebas de sistema se hicieron con el \textit{backend} en perfil de desarrollo sobre una base recién creada:
+
+\begin{itemize}
+    \item \textbf{API (Bruno):} las 191 peticiones cubren los 26 casos de uso y las notificaciones, con su camino correcto, sus errores de negocio y los permisos por rol.
+    \item \textbf{Panel web (Playwright):} cuatro flujos en un navegador real: inicio de sesión, registro y postulación hasta guardar el borrador, auditoría y adjudicación, y consulta de la bitácora.
+    \item \textbf{Rendimiento:} la prueba de carga de k6 y la medición de los tiempos de respuesta del panel desplegado (sección 9.4).
+    \item \textbf{Verificación manual:} la revisión de los tres casos de uso con listas de comprobación (sección 9.3.4).
+\end{itemize}
 
 \subsubsection{3.6.6. Evaluar las pruebas}
 
-% [PENDIENTE]: Redactar "Evaluar las pruebas".
+El resultado de la ejecución del 18 de noviembre de 2026 fue el siguiente:
+
+\begin{itemize}
+    \item \textbf{\textit{Backend}:} 2\,032 pruebas ejecutadas (una omitida), todas aprobadas, con 97,0\,\% de cobertura de líneas.
+    \item \textbf{Panel web:} 1\,296 pruebas, todas aprobadas, con 83,4\,\% de cobertura de líneas.
+    \item \textbf{Aplicación móvil:} 310 pruebas, todas aprobadas, con 78,7\,\% de cobertura de líneas.
+    \item \textbf{API (Bruno):} 191 peticiones, 444 aserciones y 21 pruebas, sin ningún fallo.
+    \item \textbf{Extremo a extremo (Playwright):} 5 de 5 pruebas aprobadas.
+    \item \textbf{Carga (k6):} 0\,\% de peticiones fallidas y percentil 95 de 15,33 ms, por debajo de los umbrales de 1\,\% y 800 ms.
+\end{itemize}
+
+Los defectos que aparecieron se resolvieron durante las pruebas: una prueba de planillas esperaba un texto distinto al del PDF generado, y el \textit{script} de k6 usaba el rol equivocado para pedir los indicadores. Ambos fueron errores de las pruebas y no del sistema. El análisis estático con SonarQube Cloud calificó la seguridad del proyecto con C y registró 19 incidencias abiertas, que se revisan por severidad (sección 9.5.5).
+
+Las limitaciones son que la cobertura no es del 100\,\%, que la colección de Bruno no cubre la subida real de archivos (CU-16) ni el enlace de recuperación por correo (CU-15), que no hay pruebas de extremo a extremo de la aplicación móvil y que la prueba de carga es ligera (20 usuarios durante un minuto). El detalle de los resultados está en el Capítulo~\hyperref[cap:pruebas]{9}.
