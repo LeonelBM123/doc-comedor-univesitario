@@ -26,7 +26,7 @@ Los títulos llevan la numeración escrita a mano (`\subsection{6.1. Título}`),
 - `\pfxperfil` — vacío en `main.tex` (`3. Objetivos`); `1.` en `main_v2.tex` (`1.3. Objetivos`). Se usa en los encabezados de `secciones/02_capitulo1_perfil/`.
 
 Reglas:
-0. **Encabezados de DUBSS, ERS, requisitos, análisis y diseño** (`04_`, `05_`, `07_`, `08_`, `09_`): usar `\wfa{\wn{6}.1. Título}` (nivel: `\wfa` = subsection, `\wfb` = subsubsection, `\wfc` = paragraph; DUBSS: `\dbsa`, `\dbsb`). `\wn{clave}` da el prefijo numérico: identidad en `main.tex`; `main_v2.tex` lo mapea (4.1→3.2.1 … 6→3.3, 7→3.4, DUBSS 3.k→3.1.7.1.k). En prosa, `\wn{3.5}` y `\wfref{4}` en vez de «Sección 3.5» o «Capítulo 4» escritos a mano.
+0. **Encabezados de DUBSS, ERS, requisitos, análisis y diseño** (`04_`, `05_`, `07_`, `08_`, `09_`): usar `\wfa{\wn{6}.1. Título}` (nivel: `\wfa` = subsection, `\wfb` = subsubsection, `\wfc` = paragraph; DUBSS: `\dbsa`, `\dbsb`). `\wn{clave}` da el prefijo numérico: identidad en `main.tex`; `main_v2.tex` lo mapea (4.1→3.2.1 … 6→3.3, 7→3.4, DUBSS 3.k→3.1.6.1.k). En prosa, `\wn{3.5}` y `\wfref{4}` en vez de «Sección 3.5» o «Capítulo 4» escritos a mano.
 1. **Al agregar un encabezado nuevo** en `02_capitulo1_perfil/` escríbelo como `\subsection{\pfxperfil 9. Título}`; en `03_capitulo2_tecnologias/` como `\subsection{\capnum{2}.8. Título}`.
 2. **Nunca** quites ni "limpies" estas macros, aunque parezcan redundantes.
 3. Los capítulos 3 (3.1–3.5) y 4–7 conservan su número en ambos documentos: no los renumeres.
