@@ -55,7 +55,7 @@ Se adopta el estándar propio de cada lenguaje, sin inventar una convención dis
 \caption{Convenciones de nombrado por lenguaje}
 \label{tab:estandar_nombrado}
 \begin{threeparttable}
-\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{3.2cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{3.6cm}}
 \toprule
 Elemento & Java & TypeScript & Dart \\
 \midrule
@@ -120,7 +120,7 @@ El backend sigue una organización por funcionalidades bajo el paquete \texttt{c
 \caption{Nombres de clases del backend}
 \label{tab:estandar_clases_java}
 \begin{threeparttable}
-\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{5.2cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{5.0cm} >{\raggedright\arraybackslash}p{4.6cm}}
 \toprule
 Tipo & Convención & Ejemplo \\
 \midrule
@@ -148,6 +148,191 @@ Además, se aplican las siguientes reglas de estilo:
     \item En los Models se usa \texttt{@Getter} a nivel de clase y \texttt{@Setter} solo en los campos que realmente deben mutarse. No se usa \texttt{@Data}, porque \texttt{@ToString} y \texttt{@EqualsAndHashCode} automáticos pueden exponer campos sensibles (como \texttt{passwordHash}) o disparar la carga perezosa en relaciones bidireccionales.
     \item Las enumeraciones persistidas usan \texttt{@Enumerated(EnumType.STRING)}, nunca \texttt{ORDINAL}.
     \item Las anotaciones personalizadas (por ejemplo, \texttt{@CurrentUserId}) se definen una sola vez, en \texttt{security} o en \texttt{common}, y no se duplican entre módulos.
+\end{itemize}
+
+\subsection{Diseño de la API REST del backend}
+
+Todos los endpoints de negocio cumplen un mismo contrato, que clientes web y móvil dan por supuesto.
+
+\begin{itemize}
+    \item \textbf{Rutas:} llevan el prefijo fijo \texttt{/api/v1/}, con recursos en plural y \textit{kebab-case} (por ejemplo, \texttt{/api/v1/postulaciones}). Las acciones que no son un CRUD directo se expresan como un sub-recurso con verbo en infinitivo (\texttt{POST /api/v1/postulaciones/\{codigo\}/devolver}), nunca como parámetro de consulta.
+    \item \textbf{Identificador público:} la ruta usa siempre el código público (UUID) del recurso, nunca el identificador interno de la base de datos.
+    \item \textbf{Verbos:} \texttt{GET} no produce efectos secundarios; \texttt{PATCH} es el verbo por defecto para editar desde formularios; \texttt{PUT} se reserva para reemplazar el recurso completo.
+    \item \textbf{Listados:} todo \texttt{GET} de colección es paginado desde el primer día, con los parámetros \texttt{page} (por defecto 1), \texttt{pageSize} (por defecto 20), \texttt{search}, \texttt{filter[campo]} y \texttt{sort} (un solo campo; el prefijo \texttt{-} indica orden descendente). Un campo de orden no soportado produce un error 400, no se ignora en silencio.
+    \item \textbf{Controladores delgados:} un método de controlador valida el DTO con \texttt{@Valid}, llama a un único método del servicio y envuelve el resultado en la respuesta estándar. No contiene lógica de negocio, no accede a repositorios, no captura excepciones de negocio ni registra logs.
+\end{itemize}
+
+Toda respuesta usa el mismo sobre JSON, implementado en la clase \texttt{ApiResponse}: los campos \texttt{status} (\texttt{success} o \texttt{failed}), \texttt{data}, \texttt{message} (en español), \texttt{timestamp} (ISO-8601 en UTC) y, solo en caso de fallo, \texttt{error} con un código catalogado. El campo \texttt{data} es un objeto para un recurso único, un arreglo acompañado del bloque \texttt{meta} (\texttt{page}, \texttt{pageSize}, \texttt{totalItems}, \texttt{totalPages}) para un listado, y \texttt{null} cuando no hay contenido. Los controladores nunca devuelven Models ni DTO sin envolver.
+
+\subsection{Manejo de excepciones y códigos de error}
+
+Toda excepción de negocio extiende \texttt{BusinessException} y lleva un código de error y un estado HTTP. No se lanzan \texttt{RuntimeException} genéricas desde el código de negocio. La Tabla~\ref{tab:estandar_excepciones} resume la jerarquía.
+
+\begin{table}[H]
+\caption{Excepciones de negocio y su código HTTP}
+\label{tab:estandar_excepciones}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.0cm} c >{\raggedright\arraybackslash}p{6.4cm}}
+\toprule
+Excepción & HTTP & Cuándo se usa \\
+\midrule
+\texttt{ValidationException} & 400 & El dato incumple una regla de negocio más allá de \texttt{@Valid} \\
+\texttt{UnauthorizedException} & 401 & Falta el token, es inválido o expiró \\
+\texttt{ForbiddenException} & 403 & Usuario autenticado sin permiso sobre la acción \\
+\texttt{NotFoundException} & 404 & El recurso solicitado no existe \\
+\texttt{ConflictException} & 409 & Recurso duplicado o transición de estado inválida \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia. El error 429 (límite de solicitudes) lo escribe directamente el filtro de limitación de tasa, y el 500 resulta de una excepción no mapeada.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Un único \texttt{GlobalExceptionHandler} (\texttt{@RestControllerAdvice}) convierte las excepciones en la respuesta estándar. El manejador general responde 500 con un mensaje genérico, sin exponer la traza al cliente, y registra el detalle solo en el servidor.
+
+Todo error visible para el cliente está catalogado con el formato \texttt{ERR\_\{MODULO\}\_\{NUMERO\}}, donde el módulo es un prefijo fijo de dos o tres letras (por ejemplo, \texttt{AUTH}) y el número es secuencial dentro del módulo; un número nunca se reutiliza. Los códigos transversales usan el prefijo \texttt{SYS}. Un error nuevo se agrega al catálogo del módulo, y a la documentación de errores del repositorio, antes de fusionar el cambio.
+
+\subsection{Persistencia y base de datos}
+
+\begin{itemize}
+    \item \textbf{Fuente de verdad:} antes de crear un Model o una tabla se consulta el diseño lógico de la base de datos. Se implementan los nombres, tipos y relaciones exactos del diagrama; una entidad nueva se incorpora primero a la documentación.
+    \item \textbf{Doble identificador:} toda tabla tiene un \texttt{id} interno (\texttt{bigint}, generado) que nunca se expone, y un código público \texttt{codigo\_\{tabla\}} (UUID versión 7, único) que es el único que viaja a la API. Los repositorios usan \texttt{Long} como tipo de clave y un método \texttt{findByCodigo} para el identificador público.
+    \item \textbf{Columnas comunes:} \texttt{creado\_en}, \texttt{actualizado\_en} y \texttt{eliminado\_en}.
+    \item \textbf{Borrado lógico:} ninguna operación de la aplicación hace \texttt{DELETE} físico; se registra \texttt{eliminado\_en} y las consultas filtran las filas eliminadas. Las restricciones de unicidad son índices únicos parciales que ignoran las filas eliminadas. Las tablas \textit{append-only}, como la bitácora, nunca se actualizan ni se eliminan.
+    \item \textbf{Nombres:} en Java, \texttt{camelCase} y clases en singular; en la base de datos, \texttt{snake\_case} en español y en singular, con el nombre de tabla siempre explícito. Las claves foráneas se llaman \texttt{\{tabla\_referenciada\}\_id}.
+    \item \textbf{Migraciones:} se gestionan con Flyway y el formato \texttt{V\{aaaaMMddHHmmss\}\_\_descripcion.sql}. No se usan versiones secuenciales (\texttt{V1}, \texttt{V2}) porque dos ramas paralelas generarían el mismo número y provocarían un conflicto.
+    \item \textbf{Archivos y secretos:} los binarios se guardan en MinIO y la base solo almacena la ruta, el tipo y el tamaño. Las contraseñas existen únicamente como hash BCrypt, y los \textit{refresh tokens} como hash SHA-256.
+\end{itemize}
+
+\subsection{Seguridad y autenticación}
+
+\begin{itemize}
+    \item \textbf{Modelo:} el backend implementa su propia autenticación con un token de acceso JWT de vida corta (HS256, 15 minutos por defecto) y un \textit{refresh token} opaco de vida larga, uno por dispositivo y con rotación en cada renovación. El token de acceso lleva únicamente el código público del usuario; el rol se consulta en la base de datos en cada solicitud, de modo que desactivar a un usuario o cambiarle el rol surte efecto de inmediato.
+    \item \textbf{Transporte de tokens:} en la web viajan en cookies \texttt{HttpOnly} con \texttt{SameSite=Strict}, por lo que ningún token se guarda en \texttt{localStorage}; en la aplicación móvil viajan en el encabezado \texttt{Authorization: Bearer}, y el \textit{refresh token} se guarda con \texttt{flutter\_secure\_storage}.
+    \item \textbf{Secretos:} \texttt{JWT\_SECRET} es obligatorio, de al menos 32 caracteres, y nunca se versiona; si falta, el backend no arranca.
+    \item \textbf{Roles:} un usuario tiene un único rol. La autorización se declara con \texttt{@PreAuthorize} en los servicios, no en los controladores. El usuario autenticado se obtiene con la anotación \texttt{@CurrentUserId}, nunca de un campo del cuerpo o de la URL.
+    \item \textbf{Inicio de sesión:} el mensaje es el mismo cuando el correo no existe y cuando la contraseña es incorrecta, para no revelar cuál falló. Tras 5 intentos fallidos consecutivos la cuenta se bloquea con duración creciente. La recuperación de contraseña responde siempre igual, exista o no la cuenta.
+    \item \textbf{Limitación de tasa:} un filtro basado en Bucket4j limita las solicitudes por IP sobre \texttt{/api/v1/} y responde 429 al superar el cupo.
+    \item \textbf{Endpoints privados por defecto:} cualquier endpoint nuevo exige autenticación. Hacerlo público es una decisión explícita que se documenta con su motivo y se registra en la lista de rutas públicas.
+\end{itemize}
+
+\subsection{Registro de eventos (\textit{logging}) y bitácora}
+
+Los registros se emiten en formato JSON estructurado mediante \texttt{logstash-logback-encoder}. Cada entrada incluye la marca de tiempo, el nivel, el módulo y el mensaje, además de campos contextuales (por ejemplo, \texttt{userId}) agregados mediante MDC y nunca concatenados al mensaje. Las entradas de \texttt{WARN} y \texttt{ERROR} ligadas a una excepción catalogada incluyen su \texttt{errorCode}.
+
+\begin{itemize}
+    \item \textbf{Dónde:} siempre en la capa de servicio. El controlador no registra nada, y un mismo evento se registra una sola vez.
+    \item \textbf{Niveles:} \texttt{INFO} para operaciones de negocio exitosas (no se registra cada lectura); \texttt{WARN} para casos anómalos esperados, como un inicio de sesión fallido; \texttt{ERROR} para excepciones no controladas y fallos de infraestructura. Un \texttt{WARN} recurrente se investiga y se corrige, no se ignora.
+    \item \textbf{Nunca se registran} contraseñas, tokens completos (de acceso, de renovación o de notificaciones) ni datos de pago.
+\end{itemize}
+
+La bitácora de auditoría (tabla de solo inserción) se alimenta anotando con \texttt{@Auditar} el método de servicio que produce el evento. Un aspecto de Spring AOP registra la acción, el actor, la entidad y la IP solo si el método termina correctamente y dentro de la misma transacción. Las acciones son constantes de \texttt{BitacoraAcciones}, nunca cadenas sueltas, y ningún otro código inserta filas en la bitácora. Nunca se guardan contraseñas, tokens ni sus hashes en el detalle del evento.
+
+\subsection{Pruebas del backend}
+
+Las pruebas se concentran en la capa de servicio (lógica de negocio) y en los controladores (contrato HTTP). Las clases de prueba llevan el sufijo \texttt{Test} (\texttt{UsuarioServiceTest}) y los métodos describen la condición y el resultado esperado. Las pruebas de controlador verifican también la forma de \texttt{ApiResponse}, no solo el código de estado.
+
+\begin{itemize}
+    \item \textbf{Pruebas al día:} todo cambio que altera un comportamiento existente actualiza sus pruebas en el mismo cambio. No se admiten pruebas en rojo, pruebas desactualizadas que pasan por casualidad ni pruebas deshabilitadas sin justificación y plan de reactivación.
+    \item \textbf{Base de datos real:} las pruebas que lo requieren (consultas complejas, restricciones, migraciones) usan Testcontainers con la misma versión de PostgreSQL que el entorno de desarrollo. Si Docker no está disponible, la prueba se omite en lugar de fallar. Un test de integración que confirma datos los elimina al terminar, para no contaminar a los demás.
+    \item \textbf{Lógica pura:} se prueba con el repositorio simulado (Mockito); no toda prueba se convierte en prueba de integración.
+\end{itemize}
+
+\subsection{Estándares del frontend web (React y TypeScript)}
+
+\subsubsection{Organización del código}
+
+El frontend se organiza por funcionalidad de negocio (\texttt{src/features/\{feature\}/}), no por tipo técnico. Cada funcionalidad contiene las carpetas \texttt{api}, \texttt{components}, \texttt{schemas}, \texttt{screens}, \texttt{tests} y \texttt{types}, y un archivo \texttt{index.ts} que es su único punto de entrada público: otras partes de la aplicación importan desde ese archivo, nunca desde un archivo interno. Las carpetas transversales (\texttt{store}, \texttt{components/ui}, \texttt{lib}, \texttt{utils}, \texttt{shared}) nunca importan nada de \texttt{features}. Una pieza se mueve a \texttt{shared} únicamente cuando una segunda funcionalidad la necesita, no de forma anticipada.
+
+\subsubsection{Datos del servidor y estado de la interfaz}
+
+\begin{itemize}
+    \item \textbf{TanStack Query} es el único responsable de los datos que provienen del servidor. Las consultas y mutaciones viven en la carpeta \texttt{api} de cada funcionalidad; un componente nunca arma una clave de consulta ni llama a \texttt{axios} directamente.
+    \item \textbf{Claves de consulta:} siempre arreglos con el formato \texttt{[modulo, tipo, ...parametros]}, por ejemplo \texttt{['usuarios', 'list', \{ page, pageSize \}]} o \texttt{['usuarios', 'detail', id]}. Se definen en un único archivo \texttt{keys.ts} por módulo. Tras una mutación se invalida como mínimo el listado del módulo.
+    \item \textbf{Cliente HTTP único:} toda llamada usa la instancia \texttt{apiClient}, que desempaqueta el sobre estándar y rechaza los errores con un \texttt{ApiError} que conserva el código de negocio. La aplicación no guarda ningún token; la sesión viaja en cookies \texttt{HttpOnly}.
+    \item \textbf{Zustand} maneja únicamente estado de interfaz (modales, barra lateral, tema, elección de convocatoria en pantalla), nunca una copia de datos del servidor. Un estado local a un componente se resuelve con \texttt{useState}. Los \textit{hooks} de los stores se nombran \texttt{use\{Nombre\}Store}.
+\end{itemize}
+
+\subsubsection{Formularios y validación}
+
+El esquema de Zod de cada recurso vive en la carpeta \texttt{schemas} y se usa tanto para validar el formulario (TanStack Form) como para tipar la solicitud a la API mediante \texttt{z.infer}, sin duplicar la validación. Los mensajes de error se escriben en español dentro del esquema y se muestran debajo del campo correspondiente, solo cuando el usuario ya lo tocó. Los campos obligatorios llevan un asterisco rojo en su etiqueta. El backend sigue siendo la fuente de verdad final de la validación.
+
+\subsubsection{Estilos y componentes}
+
+\begin{itemize}
+    \item Se usan siempre las clases de tema de Tailwind y shadcn (\texttt{bg-primary}, \texttt{text-foreground}, entre otras). No se usan valores arbitrarios (\texttt{w-[123px]}, \texttt{bg-[\#ff0000]}) salvo una excepción justificada con un comentario; si un tono se necesita con frecuencia, se agrega como token al tema.
+    \item La paleta de marca (azul y rojo institucionales de la UAGRM) y la tipografía (Familjen Grotesk para títulos y Jost para el cuerpo) se definen en \texttt{index.css}.
+    \item Los componentes de \texttt{components/ui} los genera el CLI de shadcn y no se editan a mano salvo necesidad real, dejando constancia en un comentario. Los componentes de una sola funcionalidad viven en su propia carpeta \texttt{components}.
+\end{itemize}
+
+\subsubsection{Listados, rutas y navegación}
+
+\begin{itemize}
+    \item \textbf{Tablas:} todo listado paginado usa el paquete \texttt{tanstack-table} del proyecto (\texttt{useDataTable}, \texttt{DataTable}, \texttt{DataCards}), con paginación, orden y filtros siempre del lado del servidor. Antes de armar columnas, filtros u orden se verifica el contrato real del endpoint; un campo solo se declara ordenable si el endpoint lo documenta.
+    \item \textbf{Rutas:} se usa TanStack Router con enrutamiento por archivos. Las rutas que exigen sesión se agregan dentro del diseño \texttt{\_authenticated}, que valida la sesión una sola vez; no se repite esa validación en cada ruta.
+    \item \textbf{Diseños por rol:} existe un directorio por rol en \texttt{src/layouts}, y el encabezado de página lo dibuja el componente común, de modo que una pantalla solo indica su título y el elemento de menú activo.
+\end{itemize}
+
+\subsubsection{Pruebas del frontend}
+
+Se usa Vitest con Testing Library. Las pruebas del código transversal se ubican junto al archivo probado (\texttt{debounce.test.ts}); las de una funcionalidad, en su carpeta \texttt{tests}. Los archivos usan el sufijo \texttt{.test}, y las descripciones de cada caso se escriben en español y en minúscula. Se prueban las funciones puras con lógica no trivial, el comportamiento de los componentes de interfaz y los \textit{hooks} de \texttt{api} con \texttt{apiClient} simulado. No se exige cobertura de componentes triviales.
+
+\subsection{Estándares de la aplicación móvil (Flutter y Dart)}
+
+\begin{itemize}
+    \item \textbf{Organización:} misma lógica por funcionalidades que el frontend. \texttt{lib/features/\{feature\}/} contiene \texttt{providers}, \texttt{screens}, \texttt{services} y, cuando hace falta, \texttt{widgets}. Lo transversal vive en \texttt{lib/core} (\texttt{network}, \texttt{routing}, \texttt{theme}) y los widgets usados por dos o más funcionalidades, en \texttt{lib/shared/widgets}. Las funcionalidades pueden depender de \texttt{core} y \texttt{shared}, nunca al revés.
+    \item \textbf{Consumo de la API:} un único cliente \texttt{ApiClient} basado en Dio, con un interceptor que desempaqueta el sobre estándar y rechaza los fallos con una \texttt{ApiException} tipada, y otro que agrega el encabezado \texttt{Authorization} y renueva el token una sola vez ante un 401. Cada \textit{service} recibe el cliente compartido y solo conoce los endpoints de su funcionalidad.
+    \item \textbf{Estado:} se usa Riverpod. Los \textit{providers} que envuelven datos del backend se nombran \texttt{\{feature\}ListProvider}, \texttt{\{feature\}DetailProvider} y \texttt{\{feature\}Provider} (con mutaciones), y el estado puro de interfaz termina en \texttt{UiProvider}. Tras una mutación se invalida el \textit{provider} de listado.
+    \item \textbf{Navegación:} un único \texttt{GoRouter} con una redirección global que resuelve la sesión en un solo lugar; ninguna pantalla repite la verificación de sesión.
+    \item \textbf{Formularios:} se usa la validación nativa de Flutter (\texttt{Form}, \texttt{TextFormField} y \texttt{validator}), sin librerías externas. Los mensajes van en español y las reglas de un campo deben ser idénticas a las del formulario web.
+    \item \textbf{Tema:} \texttt{AppTheme} y \texttt{AppColors} (Material 3) replican la paleta y la tipografía de la web; un widget no escribe valores hexadecimales sueltos.
+    \item \textbf{Pruebas:} se escriben caso por caso cuando la lógica es crítica o compleja (lógica de \textit{providers}, interpretación de respuestas, funciones puras). No se exige una prueba por cada widget trivial, pero una prueba existente se mantiene en verde.
+\end{itemize}
+
+\subsection{Estándares del módulo de inteligencia artificial (Python)}
+
+\begin{itemize}
+    \item \textbf{Contrato:} expone una sola ruta de negocio, \texttt{POST /api/v1/puntaje}, cuyo cuerpo y respuesta coinciden con los del backend principal. Si uno cambia, el otro se actualiza en el mismo cambio, junto con los esquemas y las pruebas.
+    \item \textbf{Puntaje:} va de 0 a 70 y nunca se devuelve un valor mayor. Es determinista y explicable: cada variable aporta puntos y el detalle los muestra. Mide la necesidad económica y familiar, no el mérito, para no contar dos veces el rendimiento académico que registra el auditor.
+    \item \textbf{Sin estado:} no se guardan ponderaciones ni resultados; se aplican los parámetros que llegan en cada solicitud. Los errores de datos responden 422.
+    \item \textbf{Privacidad:} la solicitud no incluye nombre, CI ni contacto, y no se registra el cuerpo de la solicitud ni de la respuesta.
+    \item \textbf{Calidad:} se usa pytest y Ruff (\texttt{ruff check} y \texttt{ruff format}), con líneas de hasta 100 columnas. El modelo de segunda opinión es solo un contraste, no el puntaje oficial, y su entrenamiento con datos sintéticos se declara siempre junto a sus resultados.
+\end{itemize}
+
+\subsection{Integración continua}
+
+El repositorio cuenta con integración continua en GitHub Actions, que se ejecuta en cada \textit{pull request} hacia \texttt{main} y en cada \textit{push} directo a esa rama. Un trabajo previo detecta qué carpetas cambiaron y solo se ejecutan los trabajos de los proyectos afectados, lo que ahorra minutos de la cuota mensual. La Tabla~\ref{tab:estandar_ci} detalla los pasos de cada trabajo.
+
+\begin{table}[H]
+\caption{Trabajos de integración continua por proyecto}
+\label{tab:estandar_ci}
+\begin{threeparttable}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.0cm} >{\raggedright\arraybackslash}p{8.8cm}}
+\toprule
+Proyecto & Pasos \\
+\midrule
+Backend principal (Java) & Checkstyle, pruebas con Maven y empaquetado \\
+Módulo de IA (Python) & Instalación de dependencias, \texttt{ruff check}, \texttt{ruff format}, pytest \\
+Frontend web & Instalación con el \textit{lockfile} congelado, lint, pruebas y compilación \\
+Aplicación móvil & \texttt{flutter pub get}, \texttt{flutter analyze}, \texttt{flutter test} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Nota.} Elaboración propia a partir de las reglas del repositorio. La entrega continua (despliegue) aún no está implementada, porque depende de definir la plataforma de destino.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsection{Principios transversales}
+
+Las reglas del proyecto comparten algunos criterios de diseño que se aplican en los tres lenguajes:
+
+\begin{itemize}
+    \item \textbf{No anticipar estructura:} una carpeta, una abstracción o un módulo compartido se crea cuando existe el segundo caso real que lo justifica, no \textit{por si hace falta}.
+    \item \textbf{Una sola fuente de verdad:} el contrato de la API, el diseño de la base de datos y el catálogo de errores se documentan una vez, y los clientes derivan de ellos; cuando uno cambia, se actualizan todos los consumidores en el mismo cambio.
+    \item \textbf{Seguridad por defecto:} los endpoints son privados, los secretos no se versionan ni se registran, y la validación del cliente nunca reemplaza la del servidor.
+    \item \textbf{Trazabilidad:} los errores tienen códigos catalogados, los eventos de negocio se auditan y cada commit identifica su tipo y alcance.
 \end{itemize}
 
 \subsection{Comentarios y documentación en el código}
