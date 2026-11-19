@@ -44,7 +44,7 @@ En proyectos de software el tablero suele organizarse con listas para las tareas
 
 \paragraph{4.1.2.5. Cómo lo usamos en nuestro proyecto.}
 
-Trello es la única herramienta de gestión del proyecto. Su tablero refleja las 31 tareas del plan de desarrollo y los seis hitos de integración (H1 a H6) descritos en el Capítulo~\ref{cap:sqap} (Sección~\ref{sec:agenda_sqap}), con la persona responsable de cada una. El detalle técnico de cada tarea (alcance, dependencias y pasos de validación) se conserva en las fichas de unidad de trabajo del repositorio. El tablero se organiza en cinco listas que representan el avance de cada tarea: \textit{Tareas pendientes}, \textit{Tareas en Proceso}, \textit{Tarea Realizada}, \textit{Tarea En Revision} y \textit{Tarea Finalizada Correctamente}.
+Trello es la única herramienta de gestión del proyecto. Su tablero refleja las 31 tareas del plan de desarrollo y los seis hitos de integración (H1 a H6) descritos en el Capítulo~\hyperref[cap:sqap]{2} (Sección~\hyperref[sec:agenda_sqap]{2.14}), con la persona responsable de cada una. El detalle técnico de cada tarea (alcance, dependencias y pasos de validación) se conserva en las fichas de unidad de trabajo del repositorio. El tablero se organiza en cinco listas que representan el avance de cada tarea: \textit{Tareas pendientes}, \textit{Tareas en Proceso}, \textit{Tarea Realizada}, \textit{Tarea En Revision} y \textit{Tarea Finalizada Correctamente}.
 
 \subsubsection{4.1.3. Git y GitHub}
 
@@ -62,7 +62,7 @@ Permiten el trabajo simultáneo de los dos integrantes sin pisarse, la revisión
 
 \paragraph{4.1.3.4. Cómo lo usamos en nuestro proyecto.}
 
-El sistema se mantiene en un único repositorio (\textit{monorepo}) en GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripci\'on}, validado automáticamente con Husky y commitlint. Al abrir un \textit{pull request}, GitHub Actions ejecuta el análisis de estilo, las pruebas y la compilación de cada proyecto modificado (Capítulo~\ref{cap:sqap}). La configuración se detalla en la sección 6.8.
+El sistema se mantiene en un único repositorio (\textit{monorepo}) en GitHub. Las ramas de trabajo siguen la convención \texttt{feature/m\'odulo} y los cambios llegan a la rama principal por \textit{pull request}. Cada \textit{commit} sigue el formato \texttt{tipo[ALCANCE]: descripci\'on}, validado automáticamente con Husky y commitlint. Al abrir un \textit{pull request}, GitHub Actions ejecuta el análisis de estilo, las pruebas y la compilación de cada proyecto modificado (Capítulo~\hyperref[cap:sqap]{2}). La configuración se detalla en la sección 6.8.
 
 \subsubsection{4.1.4. Claude Desktop}
 
