@@ -1,0 +1,215 @@
+% ------------------------------------------------------------------------------
+% 8.3. HERRAMIENTAS PARA EL DESARROLLO
+% ------------------------------------------------------------------------------
+\subsection{8.3. Herramientas para el Desarrollo}\label{sec:cap8_herramientas}
+
+Las versiones citadas se tomaron de los archivos de dependencias del proyecto (\texttt{pom.xml}, \texttt{package.json}, \texttt{pubspec.yaml}, \texttt{requirements.txt}) y de \texttt{docker-compose.yml}. En el panel web y en la aplicación móvil figura el rango de versión declarado.
+
+\subsubsection{8.3.1. Lenguajes de programación}\label{sec:cap8_lenguajes}
+
+\begin{table}[H]
+\caption{Lenguajes de programación utilizados}
+\label{tab:impl_lenguajes}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{9cm}}
+\toprule
+\textbf{Lenguaje} & \textbf{Versión} & \textbf{Uso} \\
+\midrule
+Java & 21 & API REST \texttt{comedor-uagrm-core} \\
+TypeScript & 6.0 & Panel web (React) y landing (Astro) \\
+Dart & SDK 3.12 & Aplicación móvil \\
+Python & 3.12 & Módulo de IA \texttt{comedor-uagrm-ia} \\
+SQL (PostgreSQL) & 18 & Migraciones Flyway, vistas materializadas y consultas \\
+HTML y CSS & --- & Interfaces web (CSS con Tailwind) \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\subsubsection{8.3.2. Librerías}\label{sec:cap8_librerias}
+
+La Tabla~\ref{tab:impl_librerias_back} lista las librerías del \textit{backend}. Las que figuran como BOM toman la versión de Spring Boot 4.1.2.
+
+\begin{table}[H]
+\caption{Librerías del backend (Java, Maven)}
+\label{tab:impl_librerias_back}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.5cm}>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{7.5cm}}
+\toprule
+\textbf{Librería} & \textbf{Versión} & \textbf{Propósito} \\
+\midrule
+Spring Security y OAuth2 Resource Server & BOM & Verificación del JWT y control de acceso por rol \\
+Spring Data JPA (Hibernate) & BOM & Persistencia \\
+Flyway & BOM & Migraciones de la base de datos \\
+Spring Validation, Mail y AOP (AspectJ) & BOM & Validación, correo y auditoría con \texttt{@Auditar} \\
+Actuator y Micrometer Prometheus & BOM & Métricas y estado de salud \\
+springdoc-openapi & 2.8.5 & Documentación OpenAPI y Swagger UI \\
+MinIO Java client & 8.5.17 & Archivos en MinIO (S3) \\
+Bucket4j & 8.14.0 & Límite de peticiones por IP \\
+JasperReports & 7.1.0 & PDF de lista priorizada, actas y planillas \\
+Apache POI & 5.4.1 & Exportación a Excel \\
+Firebase Admin SDK & 9.11.0 & Notificaciones \textit{push} (FCM) \\
+logstash-logback-encoder & 8.1 & Registros (\textit{logs}) en JSON \\
+Spring Data Redis & BOM & Caché del dashboard BI (CU12) \\
+Lombok & BOM & Reducción de código repetitivo \\
+Testcontainers & 1.21.3 & Pruebas con PostgreSQL real \\
+Checkstyle (plugin) & 3.6.0 & Estilo de código \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+Las Tablas~\ref{tab:impl_librerias_web}, \ref{tab:impl_librerias_movil} y \ref{tab:impl_librerias_otros} presentan las librerías del panel web, de la aplicación móvil, del módulo de IA y de la landing de Nexware.
+
+\begin{table}[H]
+\caption{Librerías del panel web (React, pnpm)}
+\label{tab:impl_librerias_web}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{8cm}}
+\toprule
+\textbf{Librería} & \textbf{Versión} & \textbf{Propósito} \\
+\midrule
+TanStack Query & 5.101 & Consulta y caché de datos del servidor \\
+TanStack Router & 1.170 & Rutas y navegación \\
+TanStack Form & 1.33 & Formularios \\
+TanStack Table & 8.21 & Tablas de datos con paginación \\
+Zustand & 5.0 & Estado de la interfaz \\
+Zod & 4.4 & Validación de formularios y datos \\
+Axios & 1.19 & Cliente HTTP \\
+Recharts & 3.8 & Gráficos del dashboard \\
+shadcn & 4.16 & Componentes de interfaz \\
+Base UI & 1.6 & Componentes base accesibles \\
+Vitest y Testing Library & 4.1 y 16.3 & Pruebas unitarias y de componentes \\
+ESLint y Prettier & 10 y 3.9 & Análisis y formato del código \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Librerías de la aplicación móvil (Flutter)}
+\label{tab:impl_librerias_movil}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{8cm}}
+\toprule
+\textbf{Librería} & \textbf{Versión} & \textbf{Propósito} \\
+\midrule
+flutter\_riverpod & 2.6 & Estado de la aplicación \\
+go\_router & 18.0 & Navegación \\
+dio & 5.11 & Cliente HTTP \\
+flutter\_secure\_storage & 10.3 & Almacenamiento seguro del \textit{refresh token} \\
+firebase\_core & 5.1 & Inicialización de Firebase \\
+firebase\_messaging & 17.0 & Notificaciones \textit{push} \\
+image\_picker & 1.2 & Captura de fotos con la cámara \\
+image\_cropper & 12.2 & Recorte de imágenes de documentos \\
+file\_picker & 13.3 & Selección de archivos a adjuntar \\
+flutter\_lints & 6.0 & Análisis estático del código \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\begin{table}[H]
+\caption{Librerías del módulo de IA (Python) y de la landing de Nexware (Astro)}
+\label{tab:impl_librerias_otros}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{8cm}}
+\toprule
+\textbf{Librería} & \textbf{Versión} & \textbf{Propósito} \\
+\midrule
+scikit-learn & 1.9.1 & Modelo de aprendizaje automático (segunda opinión) \\
+NumPy & 2.3.3 & Cálculo numérico \\
+joblib & 1.6.0 & Carga del modelo entrenado \\
+Uvicorn & 0.54.0 & Servidor ASGI del módulo de IA \\
+\texttt{@astrojs/sitemap} & 3.7 & Mapa del sitio de la landing \\
+\texttt{sharp} & 0.35 & Optimización de imágenes de la landing \\
+Space Grotesk y JetBrains Mono & --- & Tipografías de la landing (\texttt{@fontsource}) \\
+Vitest & 5.0 & Pruebas de la landing \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\subsubsection{8.3.3. Frameworks}\label{sec:cap8_frameworks}
+
+\begin{table}[H]
+\caption{Frameworks utilizados}
+\label{tab:impl_frameworks}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{9cm}}
+\toprule
+\textbf{Framework} & \textbf{Versión} & \textbf{Uso} \\
+\midrule
+Spring Boot & 4.1.2 & API REST (con Spring MVC, Security y Data JPA) \\
+React & 19.2 & Panel web \\
+Vite & 8.2 & Servidor de desarrollo y empaquetado del panel \\
+Tailwind CSS & 4.0 & Estilos del panel web \\
+Astro & 7.4 & Landing institucional estática (español e inglés) \\
+Flutter & Dart 3.12 & Aplicación móvil Android \\
+FastAPI & 0.162.0 & Módulo de IA \\
+Docker Compose & --- & Orquestación del entorno: nginx, core, ia, panel, landing, postgres, redis, minio, mailpit, prometheus y grafana \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\subsubsection{8.3.4. Sistema gestor de base de datos}\label{sec:cap8_sgbd}
+
+El sistema gestor de base de datos es PostgreSQL 18 (imagen \texttt{postgres:18-alpine}), al que la API accede por JDBC. El esquema se gestiona con migraciones Flyway versionadas por fecha y hora (\texttt{V\{aaaaMMddHHmmss\}\_\_descripcion.sql}; 25 migraciones al redactar este capítulo). Cada tabla tiene un identificador interno \texttt{bigint} y un código público UUID, y el borrado es lógico mediante la columna \texttt{eliminado\_en}. Para el tablero BI se crearon cinco vistas materializadas. Los archivos no se guardan en la base sino en MinIO, y Redis se usa como caché del dashboard BI.
+
+\subsubsection{8.3.5. Lenguaje de modelado de software}\label{sec:cap8_modelado}
+
+El modelado se realizó con el Lenguaje Unificado de Modelado (UML 2.5): diagramas de casos de uso, de análisis, de secuencia, de clases, de componentes y de despliegue, elaborados con Sparx Enterprise Architect 15. El diseño lógico de la base de datos también se modeló en esa herramienta y se transcribió al archivo \texttt{DiagramaConceptual.mermaid} del repositorio del proyecto.
+
+\subsubsection{8.3.6. Protocolo de comunicación}\label{sec:cap8_protocolos}
+
+\begin{table}[H]
+\caption{Protocolos de comunicación del sistema}
+\label{tab:impl_protocolos}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{10cm}}
+\toprule
+\textbf{Enlace} & \textbf{Protocolo y formato} \\
+\midrule
+Navegador o app móvil con la API & HTTP (HTTPS en producción), arquitectura REST con JSON bajo \texttt{/api/v1}; carga de archivos con \texttt{multipart/form-data} \\
+Autenticación & JWT (HS256): cookies \texttt{HttpOnly} en la web y cabecera \texttt{Authorization: Bearer} en móvil \\
+API con el módulo de IA & HTTP interno con JSON (\texttt{POST /api/v1/puntaje}) en la red de Docker \\
+API con PostgreSQL & JDBC sobre el protocolo de PostgreSQL \\
+API con MinIO & API compatible con S3 sobre HTTP \\
+API con Redis & RESP sobre TCP (caché del dashboard, CU12) \\
+API con el correo & SMTP (Mailpit en desarrollo) \\
+API con Firebase & Firebase Admin SDK hacia FCM (HTTPS) \\
+Prometheus con la API & HTTP, punto de acceso \texttt{/prometheus} \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
