@@ -7,9 +7,9 @@
 \section{Capítulo 9: Pruebas en el Software}\label{cap:pruebas}
 
 % [INSTRUCCIÓN]: Flujo de trabajo de Pruebas del PUDS. Contenido propio de esta versión.
-% [PENDIENTE]: las columnas «Resultado obtenido» y las mediciones de 9.4 se llenan con resultados reales al terminar la implementación (no inventar). Casos de uso a probar: CU-02, CU-03 y CU-05 (confirmar con el docente).
+% [PENDIENTE]: las columnas «Resultado obtenido» y las mediciones de 9.4 se llenan con resultados reales al terminar la implementación (no inventar). Casos de uso a probar: CU-02, CU-03 y CU-05 (confirmar con el docente). La caja blanca (9.3.1) ya se derivó del código de comedor-uagrm-core; falta registrar los resultados.
 
-Este capítulo presenta el plan de pruebas del Sistema de Gestión de Postulación y Asistencia del Comedor Universitario. Se diseñan casos de prueba de caja blanca y de caja negra para tres casos de uso representativos del camino crítico, se describen las pruebas de vulnerabilidad y se contrastan los tiempos de respuesta con los requisitos no funcionales. Los resultados obtenidos se registran en cada caso al ejecutarlo.
+Este capítulo presenta el plan de pruebas del Sistema de Gestión de Postulación y Asistencia del Comedor Universitario. Se diseñan casos de prueba de caja blanca y de caja negra, y listas de comprobación, para tres casos de uso representativos del camino crítico, se describen las pruebas de vulnerabilidad y se contrastan los tiempos de respuesta con los requisitos no funcionales. Los resultados obtenidos se registran en cada caso al ejecutarlo.
 
 \subsection{9.1. Pruebas}
 
@@ -40,81 +40,655 @@ Las pruebas automatizadas se ejecutan en cada \textit{pull request} mediante Git
 
 \subsubsection{9.3.1. Caja Blanca}
 
-La prueba de caja blanca examina la lógica interna del código. Para cada caso de uso se dibuja el grafo de flujo de la lógica, se calcula la complejidad ciclomática $V(G)$ = decisiones + 1 y se define un caso de prueba por cada camino independiente. Los grafos de esta sección se derivan de las reglas del caso de uso y se confirman contra el código al ejecutar las pruebas.
+La prueba de caja blanca examina la lógica interna del código. Se aplica el método del camino básico a un método del \textit{backend} (módulo \texttt{comedor-uagrm-core}) de cada uno de tres casos de uso, elegido por tener una complejidad ciclomática $V(G)>3$. Para cada uno se sigue la misma secuencia: (1) el diagrama de flujo del código, con sus instrucciones numeradas (antes de cada diagrama se muestra el código del método, con el número del nodo al final de cada línea, para ver de dónde sale cada nodo); (2) el grafo de flujo, que agrupa en un solo nodo las instrucciones secuenciales; (3) la matriz de conexiones, que da la complejidad ciclomática; (4) los caminos básicos independientes; y (5) el diseño de los casos de prueba, con los valores de las variables que recorren cada camino. Todo se deriva del código fuente del sistema, no de la descripción del caso de uso.
+
+La complejidad ciclomática se calcula de tres formas que deben coincidir: $V(G)=A-N+2$ (aristas menos nodos más dos), $V(G)=P+1$ (nodos de decisión más uno) y la suma de la columna «conexiones $-1$» de la matriz más uno. Cada condición simple cuenta como una decisión: una condición compuesta con \texttt{\&\&} o \texttt{||} se separa en sus condiciones, y también cuentan los \texttt{if}, el operador ternario, los ciclos y los bloques \texttt{catch}. Las búsquedas con \texttt{orElseThrow} (por ejemplo, «el finalista no existe») se consideran parte de su nodo. La Tabla~\ref{tab:cb_vg} resume los métodos probados.
+
+\begin{table}[H]
+\centering
+\caption{Métodos probados con caja blanca y su complejidad ciclomática}
+\label{tab:cb_vg}
+\small
+\begin{tabular}{@{}p{1.3cm}p{5.6cm}rrrr@{}}
+\toprule
+\textbf{CU} & \textbf{Clase y método} & \textbf{Nodos} & \textbf{Aristas} & \textbf{Decisiones} & \textbf{$V(G)$} \\
+\midrule
+CU-02 & \texttt{EnvioPostulacionService.enviar} & 11 & 15 & 5 & 6 \\
+CU-03 & \texttt{PrecalificacionService.precalificar} & 11 & 15 & 5 & 6 \\
+CU-05 & \texttt{SeleccionFinalistasService.seleccionar} & 18 & 25 & 8 & 9 \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir del código del \textit{backend} a noviembre de 2026. Los nodos y las aristas son los del grafo de flujo.
+\end{table}
+
+Los casos de prueba se automatizan con JUnit y Mockito, que reemplazan los repositorios y el módulo de IA para controlar cada decisión. En todas las tablas de diseño, «Resultado obtenido» se registra al ejecutar las pruebas.
+
+\newcommand{\fcpitch}{1.7}
+\newcommand{\fcp}[4]{\node[fcp] (f#1) at (#2,{-#3*\fcpitch}) {\textbf{#1}.\ #4};}
+\newcommand{\fcs}[4]{\node[fcs] (f#1) at (#2,{-#3*\fcpitch}) {\textbf{#1}.\ #4};}
+\newcommand{\fcd}[4]{\node[fcd] (f#1) at (#2,{-#3*\fcpitch}) {\textbf{#1}.\ #4};}
+\newcommand{\fct}[3]{\node[fct] (f#1) at (#2,{-#3*\fcpitch}) {\textbf{#1}.\ Fin};}
+\newcommand{\cgn}[5]{\node[#4] (g#1) at (#2,{-#3*1.25}) {#5};}
+\tikzset{
+    fcp/.style={rectangle, draw, line width=0.6pt, text width=4.4cm, align=center, minimum height=0.8cm, inner sep=3pt, font=\small\linespread{1}\selectfont},
+    fcs/.style={fcp, text width=3.0cm, font=\footnotesize\linespread{1}\selectfont},
+    fcd/.style={diamond, draw, line width=0.6pt, aspect=5, minimum width=5.6cm, minimum height=1.1cm, inner sep=0pt, font=\footnotesize\linespread{1}\selectfont},
+    fct/.style={rectangle, rounded corners=8pt, draw, line width=0.6pt, minimum width=2.2cm, minimum height=0.7cm, font=\small},
+    cgs/.style={circle, draw, minimum size=8.5mm, inner sep=0pt, font=\footnotesize},
+    cgp/.style={cgs, fill=gray!30},
+    cgf/.style={cgs, double},
+    fca/.style={-{Stealth[length=2mm]}, semithick}
+}
 
 \paragraph{9.3.1.1. Caso de uso: Enviar postulación a Beca Comedor (CU-02).}
 
-Las decisiones de la lógica de envío son cuatro: (1) ¿existe ya una postulación vigente del postulante en la gestión?; (2) ¿están completos los campos obligatorios?; (3) ¿están adjuntos los documentos obligatorios?; (4) ¿responde el módulo de IA? Por tanto $V(G)=5$ y hay cinco caminos independientes.
+El método \texttt{enviar} recibe el envío de una postulación. Bloquea la fila y lee su estado; si ya se envió, devuelve el mismo comprobante (idempotencia, RNF-03); si el estado no permite enviar, la rechaza; y si es un borrador o una postulación devuelta, la valida, la pasa a «pendiente» y pide la precalificación (CU-03). Sus cinco decisiones son: (1) ¿el estado es «pendiente»?; (2) ¿es «calificada»?; (3) ¿es distinto de «borrador»?; (4) ¿es distinto de «devuelta»?; y (5) ¿es un reenvío? (operador ternario del motivo del historial). Las validaciones de campos y documentos (\texttt{validar} del CU-18 y \texttt{validarRespuestas}) son métodos aparte.
+
+\begin{figure}[H]
+\caption{Código de \texttt{EnvioPostulacionService.enviar} y sus nodos (CU-02)}
+\label{fig:cod_cu02}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/postulaciones/service/EnvioPostulacionService.java
+public ComprobantePostulacionResponse enviar(UUID usuarioCodigo, UUID postulacionCodigo,
+        EnviarPostulacionRequest request) {
+    CabeceraEnvio cabecera = consulta.cabecera(postulacionCodigo, usuarioCodigo)
+            .orElseThrow(...);                                      // 1
+    consulta.bloquearPostulacion(cabecera.postulacionId());         // 1
+    EstadoPostulacion estado = EstadoPostulacion.valueOf(
+            consulta.estadoActual(cabecera.postulacionId()).orElseThrow());   // 1
+
+    if (estado == EstadoPostulacion.pendiente                       // 2
+            || estado == EstadoPostulacion.calificada) {            // 3
+        return comprobante(cabecera, ..., false);                   // 4
+    }
+    if (estado != EstadoPostulacion.borrador                        // 5
+            && estado != EstadoPostulacion.devuelta) {              // 6
+        throw new ConflictException(ERR_ENV_03, "...");             // 7
+    }
+
+    validacion.validar(usuarioCodigo, cabecera.convocatoriaCodigo());   // 8
+    RespuestasValidadas validadas = validarRespuestas(request, cabecera); // 8
+    boolean reenvio = estado == EstadoPostulacion.devuelta;         // 8
+    consulta.guardarRespuesta(cabecera.postulacionId(), validadas.respuesta()); // 8
+    postulacion.enviar(reloj.instant());                            // 8
+    postulaciones.saveAndFlush(postulacion);                        // 8
+    historial.saveAndFlush(new PostulacionHistorial(                // 12
+            cabecera.postulacionId(), null, estado, EstadoPostulacion.pendiente,
+            reenvio ? MOTIVO_REENVIO : null));                      // 9: V -> 10, F -> 11
+
+    tras(() -> precalificacion.solicitar(cabecera.postulacionId()));  // 12
+    return new ComprobantePostulacionResponse(...);                 // 12
+}                                                                   // 13
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:df_cu02}.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Diagrama de flujo del método \texttt{EnvioPostulacionService.enviar} (CU-02)}
+\label{fig:df_cu02}
+\centering
+\begin{tikzpicture}
+\fcp{1}{0}{0}{Obtener la postulación, bloquear la fila y leer su estado}
+\fcd{2}{0}{1}{¿pendiente?}
+\fcd{3}{0}{2}{¿calificada?}
+\fcs{4}{5.4}{2}{Retornar el comprobante ya emitido}
+\fcd{5}{0}{3}{¿distinto de borrador?}
+\fcd{6}{0}{4}{¿distinto de devuelta?}
+\fcs{7}{5.4}{4}{Lanzar \texttt{ERR\_ENV\_03}}
+\fcp{8}{0}{5}{Validar (CU-18) y respuestas; guardar y pasar a «pendiente»}
+\fcd{9}{0}{6}{¿es reenvío?}
+\fcs{10}{5.4}{6}{Motivo: «Reenvío tras corregir»}
+\fcp{11}{0}{7}{Motivo: nulo}
+\fcp{12}{0}{8}{Guardar el historial, pedir la precalificación y retornar el comprobante}
+\fct{13}{0}{9}
+\draw[fca] (f1) -- (f2);
+\draw[fca] (f2) -| node[above,pos=.25,font=\scriptsize]{V} (f4);
+\draw[fca] (f2) -- node[right,font=\scriptsize]{F} (f3);
+\draw[fca] (f3) -- node[above,font=\scriptsize]{V} (f4);
+\draw[fca] (f3) -- node[right,font=\scriptsize]{F} (f5);
+\draw[fca] (f5) -- node[right,font=\scriptsize]{V} (f6);
+\draw[fca] (f5.west) -- node[above,font=\scriptsize]{F} ++(-1.0,0) |- (f8.west);
+\draw[fca] (f6) -- node[above,font=\scriptsize]{V} (f7);
+\draw[fca] (f6) -- node[right,font=\scriptsize]{F} (f8);
+\draw[fca] (f8) -- (f9);
+\draw[fca] (f9) -- node[above,font=\scriptsize]{V} (f10);
+\draw[fca] (f9) -- node[right,font=\scriptsize]{F} (f11);
+\draw[fca] (f10) |- (f12.east);
+\draw[fca] (f11) -- (f12);
+\draw[fca] (f12) -- (f13);
+\draw[fca] (f4.east) -- (7.8,{-2*\fcpitch}) |- (f13.east);
+\draw[fca] (f7.east) -- (7.4,{-4*\fcpitch}) |- (f13.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{EnvioPostulacionService.enviar} (CU-02)}
+\label{fig:gf_cu02}
+\centering
+\begin{tikzpicture}
+\cgn{A}{0}{0}{cgp}{1,2}\cgn{B}{0}{1}{cgp}{3}\cgn{C}{2}{1}{cgs}{4}\cgn{D}{0}{2}{cgp}{5}\cgn{E}{0}{3}{cgp}{6}\cgn{F}{2}{3}{cgs}{7}
+\cgn{G}{0}{4}{cgp}{8,9}\cgn{H}{2}{4}{cgs}{10}\cgn{I}{0}{5}{cgs}{11}\cgn{J}{0}{6}{cgs}{12}\cgn{K}{0}{7}{cgf}{13}
+\draw[fca] (gA) -- node[right,font=\scriptsize]{F} (gB);
+\draw[fca] (gA) -| node[above,pos=.25,font=\scriptsize]{V} (gC);
+\draw[fca] (gB) -- node[above,font=\scriptsize]{V} (gC);
+\draw[fca] (gB) -- node[right,font=\scriptsize]{F} (gD);
+\draw[fca] (gD) -- node[right,font=\scriptsize]{V} (gE);
+\draw[fca] (gD.west) -- node[above,font=\scriptsize]{F} ++(-1.0,0) |- (gG.west);
+\draw[fca] (gE) -- node[above,font=\scriptsize]{V} (gF);
+\draw[fca] (gE) -- node[right,font=\scriptsize]{F} (gG);
+\draw[fca] (gG) -- node[above,font=\scriptsize]{V} (gH);
+\draw[fca] (gG) -- node[right,font=\scriptsize]{F} (gI);
+\draw[fca] (gH) |- (gJ.east);
+\draw[fca] (gI) -- (gJ);
+\draw[fca] (gJ) -- (gK);
+\draw[fca] (gC.east) -- (3.4,{-1*1.25}) |- (gK.east);
+\draw[fca] (gF.east) -- (3.0,{-3*1.25}) |- (gK.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión. Cada nodo lleva los números de las instrucciones del diagrama de flujo que agrupa.
+\end{figure}
 
 \begin{table}[H]
 \centering
-\caption{Caminos independientes de CU-02 (caja blanca)}
-\label{tab:cb_cu02}
-\small
-\begin{tabular}{@{}p{0.9cm}p{4.2cm}p{5.3cm}p{3.2cm}@{}}
+\caption{Matriz de conexiones del grafo de flujo de CU-02}
+\label{tab:mat_cu02}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}ccccccccccccr@{}}
 \toprule
-\textbf{ID} & \textbf{Camino} & \textbf{Dato de entrada} & \textbf{Resultado esperado} \\
+ & 1,2 & 3 & 4 & 5 & 6 & 7 & 8,9 & 10 & 11 & 12 & 13 & \textbf{Conexiones $-1$} \\
 \midrule
-CB-02-01 & Decisión 1 verdadera & Postulante con postulación vigente en la gestión. & Rechazo: ya existe una postulación. \\
-CB-02-02 & Decisión 2 falsa & Formulario sin el dato de ingresos familiares. & Rechazo con mensaje del campo faltante. \\
-CB-02-03 & Decisión 3 falsa & Formulario completo sin documento de identidad adjunto. & Rechazo con mensaje del documento faltante. \\
-CB-02-04 & Decisión 4 falsa & Datos completos y módulo de IA caído. & Postulación guardada sin puntaje y reintento posterior. \\
-CB-02-05 & Camino principal & Datos y documentos completos, IA disponible. & Postulación enviada, con puntaje y estado inicial. \\
+1,2 &  & 1 & 1 &  &  &  &  &  &  &  &  & $2-1=1$ \\
+3 &  &  & 1 & 1 &  &  &  &  &  &  &  & $2-1=1$ \\
+4 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+5 &  &  &  &  & 1 &  & 1 &  &  &  &  & $2-1=1$ \\
+6 &  &  &  &  &  & 1 & 1 &  &  &  &  & $2-1=1$ \\
+7 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+8,9 &  &  &  &  &  &  &  & 1 & 1 &  &  & $2-1=1$ \\
+10 &  &  &  &  &  &  &  &  &  & 1 &  & $1-1=0$ \\
+11 &  &  &  &  &  &  &  &  &  & 1 &  & $1-1=0$ \\
+12 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+13 &  &  &  &  &  &  &  &  &  &  &  & $0$ \\
+\midrule
+\multicolumn{13}{@{}l}{$\sum=5$ \quad $V(G)=\sum+1=6$} \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
-\footnotesize\textit{Nota.} Elaboración propia a partir de RF-02 y de las reglas del sistema. Resultado obtenido: por registrar al ejecutar.
+\footnotesize\textit{Nota.} Elaboración propia. Cada «1» indica una arista del nodo de la fila al nodo de la columna; los nodos se identifican por los números del diagrama de flujo que agrupan.
 \end{table}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{9.0cm}@{}}
+\caption{Caminos básicos independientes de CU-02}\label{tab:cam_cu02}\\
+\toprule
+\textbf{Camino} & \textbf{Flujo (nodos del diagrama de flujo)} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Flujo (nodos del diagrama de flujo)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1 & 1, 2, 4, 13 \\
+C2 & 1, 2, 3, 4, 13 \\
+C3 & 1, 2, 3, 5, 6, 7, 13 \\
+C4 & 1, 2, 3, 5, 8, 9, 11, 12, 13 \\
+C5 & 1, 2, 3, 5, 6, 8, 9, 10, 12, 13 \\
+C6 & 1, 2, 3, 5, 6, 8, 9, 11, 12, 13 (no factible) \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia. $V(G)=6$ da seis caminos teóricos, pero C6 no es factible: el reenvío se define como el estado «devuelta», por lo que no puede ser falso en ese camino. Se prueban los cinco factibles.
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{6.0cm}@{}}
+\caption{Diseño de los casos de prueba de CU-02 (caja blanca)}\label{tab:dcp_cu02}\\
+\toprule
+\textbf{Camino} & \textbf{Estado de la postulación} & \textbf{Campos y documentos completos} & \textbf{Resultado esperado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Estado de la postulación} & \textbf{Campos y documentos completos} & \textbf{Resultado esperado} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1 & pendiente & --- & Se devuelve el comprobante ya emitido; no se guarda nada nuevo. \\
+C2 & calificada & --- & Se devuelve el comprobante ya emitido. \\
+C3 & archivada & --- & Error \texttt{ERR\_ENV\_03}: la postulación ya no se puede enviar. \\
+C4 & borrador & Sí & Pasa a «pendiente»; el historial queda sin motivo; se pide la precalificación; el comprobante no es un reenvío. \\
+C5 & devuelta & Sí & Pasa a «pendiente»; el historial lleva el motivo «Reenvío tras corregir»; el comprobante es un reenvío. \\
+C6 & devuelta & Sí & Camino no factible; no se prueba. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir de RF-02. Resultado obtenido: por registrar al ejecutar.
 
 \paragraph{9.3.1.2. Caso de uso: Precalificar postulación con Inteligencia Artificial (CU-03).}
 
-La lógica de precalificación tiene tres decisiones: (1) ¿los datos de la postulación están completos y son válidos?; (2) ¿el modelo devuelve un puntaje?; (3) ¿el puntaje está dentro del rango permitido (0 a 70)? Resulta $V(G)=4$.
+El método \texttt{precalificar} calcula y registra el puntaje de una postulación «pendiente». Sus cinco decisiones son: (1) ¿no hay datos de la postulación pendiente?; (2) ¿hay una versión vigente del modelo?; (3) ¿esa versión no tiene parámetros?; (4) ¿la IA no está disponible?; y (5) ¿la IA rechazó los datos? Las dos últimas son los bloques \texttt{catch} de la llamada a la IA.
+
+\begin{figure}[H]
+\caption{Código de \texttt{PrecalificacionService.precalificar} y sus nodos (CU-03)}
+\label{fig:cod_cu03}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/preseleccion/service/PrecalificacionService.java
+public Resultado precalificar(long postulacionId) {
+    DatosPuntaje datos = consulta.datosPendiente(postulacionId).orElse(null);   // 1
+    if (datos == null) {                                            // 2
+        return Resultado.OMITIDA;                                   // 3
+    }
+    ModeloAplicable vigente = modelosConsulta.vigente()
+            .map(m -> aplicable(m.id(), m.version())).orElse(null); // 4
+    if (vigente != null                                             // 5
+            && vigente.parametros().isEmpty()) {                    // 6
+        vigente = null;                                             // 7
+    }
+    PuntajeCalculado calculado;
+    try {
+        calculado = cliente.calcular(solicitud(datos, vigente));    // 8
+    } catch (IaNoDisponibleException e) {                           // 9
+        return Resultado.IA_NO_DISPONIBLE;                          // 10
+    } catch (IaDatosInvalidosException e) {                         // 11
+        registrarFallo(postulacionId);                              // 12
+        return Resultado.NO_CALCULADA;                              // 12
+    }
+    return transaccion.execute(estado -> registrar(postulacionId, calculado));  // 13
+}                                                                   // 14
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:df_cu03}.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Diagrama de flujo del método \texttt{PrecalificacionService.precalificar} (CU-03)}
+\label{fig:df_cu03}
+\centering
+\begin{tikzpicture}
+\fcp{1}{0}{0}{Leer los datos de la postulación pendiente}
+\fcd{2}{0}{1}{¿sin datos?}
+\fcs{3}{5.4}{1}{Retornar \texttt{OMITIDA}}
+\fcp{4}{0}{2}{Leer la versión vigente del modelo y sus parámetros}
+\fcd{5}{0}{3}{¿hay versión vigente?}
+\fcd{6}{0}{4}{¿sin parámetros?}
+\fcs{7}{5.4}{4}{Descartar la versión (modelo por defecto)}
+\fcp{8}{0}{5}{Pedir el puntaje al módulo de IA}
+\fcd{9}{0}{6}{¿IA no disponible?}
+\fcs{10}{5.4}{6}{Retornar \texttt{IA\_NO\_DISPONIBLE}}
+\fcd{11}{0}{7}{¿IA rechazó los datos?}
+\fcs{12}{5.4}{7}{Contar el rechazo y retornar \texttt{NO\_CALCULADA}}
+\fcp{13}{0}{8}{Registrar el puntaje y calificar la postulación}
+\fct{14}{0}{9}
+\draw[fca] (f1) -- (f2);
+\draw[fca] (f2) -- node[above,font=\scriptsize]{V} (f3);
+\draw[fca] (f2) -- node[right,font=\scriptsize]{F} (f4);
+\draw[fca] (f4) -- (f5);
+\draw[fca] (f5) -- node[right,font=\scriptsize]{V} (f6);
+\draw[fca] (f5.west) -- node[above,font=\scriptsize]{F} ++(-1.0,0) |- (f8.west);
+\draw[fca] (f6) -- node[above,font=\scriptsize]{V} (f7);
+\draw[fca] (f6) -- node[right,font=\scriptsize]{F} (f8);
+\draw[fca] (f7) |- (f8.east);
+\draw[fca] (f8) -- (f9);
+\draw[fca] (f9) -- node[above,font=\scriptsize]{V} (f10);
+\draw[fca] (f9) -- node[right,font=\scriptsize]{F} (f11);
+\draw[fca] (f11) -- node[above,font=\scriptsize]{V} (f12);
+\draw[fca] (f11) -- node[right,font=\scriptsize]{F} (f13);
+\draw[fca] (f13) -- (f14);
+\draw[fca] (f3.east) -- (8.2,{-1*\fcpitch}) |- (f14.east);
+\draw[fca] (f10.east) -- (7.8,{-6*\fcpitch}) |- (f14.east);
+\draw[fca] (f12.east) -- (7.4,{-7*\fcpitch}) |- (f14.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{PrecalificacionService.precalificar} (CU-03)}
+\label{fig:gf_cu03}
+\centering
+\begin{tikzpicture}
+\cgn{A}{0}{0}{cgp}{1,2}\cgn{B}{2}{0}{cgs}{3}\cgn{C}{0}{1}{cgp}{4,5}\cgn{D}{0}{2}{cgp}{6}\cgn{E}{2}{2}{cgs}{7}\cgn{F}{0}{3}{cgp}{8,9}
+\cgn{G}{2}{3}{cgs}{10}\cgn{H}{0}{4}{cgp}{11}\cgn{I}{2}{4}{cgs}{12}\cgn{J}{0}{5}{cgs}{13}\cgn{K}{0}{6}{cgf}{14}
+\draw[fca] (gA) -- node[above,font=\scriptsize]{V} (gB);
+\draw[fca] (gA) -- node[right,font=\scriptsize]{F} (gC);
+\draw[fca] (gC) -- node[right,font=\scriptsize]{V} (gD);
+\draw[fca] (gC.west) -- node[above,font=\scriptsize]{F} ++(-1.0,0) |- (gF.west);
+\draw[fca] (gD) -- node[above,font=\scriptsize]{V} (gE);
+\draw[fca] (gD) -- node[right,font=\scriptsize]{F} (gF);
+\draw[fca] (gE.south) -- (2,{-3*1.25+0.65}) -| (gF.north);
+\draw[fca] (gF) -- node[above,font=\scriptsize]{V} (gG);
+\draw[fca] (gF) -- node[right,font=\scriptsize]{F} (gH);
+\draw[fca] (gH) -- node[above,font=\scriptsize]{V} (gI);
+\draw[fca] (gH) -- node[right,font=\scriptsize]{F} (gJ);
+\draw[fca] (gJ) -- (gK);
+\draw[fca] (gB.east) -- (3.8,{0}) |- (gK.east);
+\draw[fca] (gG.east) -- (3.4,{-3*1.25}) |- (gK.east);
+\draw[fca] (gI.east) -- (3.0,{-4*1.25}) |- (gK.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión. Cada nodo lleva los números de las instrucciones del diagrama de flujo que agrupa.
+\end{figure}
 
 \begin{table}[H]
 \centering
-\caption{Caminos independientes de CU-03 (caja blanca)}
-\label{tab:cb_cu03}
-\small
-\begin{tabular}{@{}p{0.9cm}p{4.2cm}p{5.3cm}p{3.2cm}@{}}
+\caption{Matriz de conexiones del grafo de flujo de CU-03}
+\label{tab:mat_cu03}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}ccccccccccccr@{}}
 \toprule
-\textbf{ID} & \textbf{Camino} & \textbf{Dato de entrada} & \textbf{Resultado esperado} \\
+ & 1,2 & 3 & 4,5 & 6 & 7 & 8,9 & 10 & 11 & 12 & 13 & 14 & \textbf{Conexiones $-1$} \\
 \midrule
-CB-03-01 & Decisión 1 falsa & Solicitud con ingresos negativos. & Error de validación; no se calcula puntaje. \\
-CB-03-02 & Decisión 2 falsa & Datos válidos y falla interna del modelo. & Error controlado; la postulación queda sin puntaje. \\
-CB-03-03 & Decisión 3 falsa & Puntaje fuera de 0 a 70. & Se descarta el valor y se registra el error. \\
-CB-03-04 & Camino principal & Datos válidos y modelo disponible. & Puntaje entre 0 y 70 con fecha de cálculo. \\
+1,2 &  & 1 & 1 &  &  &  &  &  &  &  &  & $2-1=1$ \\
+3 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+4,5 &  &  &  & 1 &  & 1 &  &  &  &  &  & $2-1=1$ \\
+6 &  &  &  &  & 1 & 1 &  &  &  &  &  & $2-1=1$ \\
+7 &  &  &  &  &  & 1 &  &  &  &  &  & $1-1=0$ \\
+8,9 &  &  &  &  &  &  & 1 & 1 &  &  &  & $2-1=1$ \\
+10 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+11 &  &  &  &  &  &  &  &  & 1 & 1 &  & $2-1=1$ \\
+12 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+13 &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+14 &  &  &  &  &  &  &  &  &  &  &  & $0$ \\
+\midrule
+\multicolumn{13}{@{}l}{$\sum=5$ \quad $V(G)=\sum+1=6$} \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
-\footnotesize\textit{Nota.} Elaboración propia a partir de RF-03. Resultado obtenido: por registrar al ejecutar.
+\footnotesize\textit{Nota.} Elaboración propia. Cada «1» indica una arista del nodo de la fila al nodo de la columna; los nodos se identifican por los números del diagrama de flujo que agrupan.
 \end{table}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{9.0cm}@{}}
+\caption{Caminos básicos independientes de CU-03}\label{tab:cam_cu03}\\
+\toprule
+\textbf{Camino} & \textbf{Flujo (nodos del diagrama de flujo)} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Flujo (nodos del diagrama de flujo)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1 & 1, 2, 3, 14 \\
+C2 & 1, 2, 4, 5, 8, 9, 11, 13, 14 \\
+C3 & 1, 2, 4, 5, 6, 8, 9, 11, 13, 14 \\
+C4 & 1, 2, 4, 5, 6, 7, 8, 9, 11, 13, 14 \\
+C5 & 1, 2, 4, 5, 8, 9, 10, 14 \\
+C6 & 1, 2, 4, 5, 8, 9, 11, 12, 14 \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia. Los seis caminos teóricos ($V(G)=6$) son factibles.
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{5.0cm}@{}}
+\caption{Diseño de los casos de prueba de CU-03 (caja blanca)}\label{tab:dcp_cu03}\\
+\toprule
+\textbf{Camino} & \textbf{Datos de la postulación pendiente} & \textbf{Versión vigente del modelo} & \textbf{Respuesta de la IA} & \textbf{Resultado esperado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Datos de la postulación pendiente} & \textbf{Versión vigente del modelo} & \textbf{Respuesta de la IA} & \textbf{Resultado esperado} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1 & No hay (ya no está pendiente) & --- & --- & Retorna \texttt{OMITIDA}; no se llama a la IA. \\
+C2 & Hay & Ninguna & Puntaje & La solicitud va sin modelo ni parámetros; se registra el puntaje con su fecha de cálculo y la postulación queda «calificada». \\
+C3 & Hay & Con parámetros & Puntaje & La solicitud lleva la versión y sus parámetros; queda «calificada». \\
+C4 & Hay & Sin parámetros & Puntaje & La solicitud va sin versión ni parámetros (modelo por defecto de la IA); queda «calificada». \\
+C5 & Hay & Ninguna & No disponible & Retorna \texttt{IA\_NO\_DISPONIBLE}; la postulación sigue «pendiente» y se reintenta; no cuenta como rechazo. \\
+C6 & Hay & Ninguna & Rechaza los datos & Retorna \texttt{NO\_CALCULADA}; se cuenta un rechazo y no se registra puntaje. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir de RF-03. Resultado obtenido: por registrar al ejecutar.
 
 \paragraph{9.3.1.3. Caso de uso: Auditar y adjudicar becas (CU-05).}
 
-La lógica de adjudicación tiene cuatro decisiones: (1) ¿la postulación es finalista?; (2) ¿el rendimiento académico está entre 0 y 30?; (3) ¿el total (puntaje de IA más rendimiento) alcanza el mínimo requerido?; (4) ¿hay cupos disponibles? Resulta $V(G)=5$. El valor del mínimo y el número de cupos se definen con la DUBSS; en las pruebas se usan los valores que se configuren.
+Para este caso de uso se prueba la selección de finalistas, que es la primera función del Administrador en la adjudicación: el método \texttt{seleccionar} elige las postulaciones calificadas mejor puntuadas que pasan a la auditoría. Sus ocho decisiones son: (1) ¿ya se publicaron los resultados?; (2) ¿la convocatoria no admite decisiones?; (3) ¿hay cuerpo en la petición?; (4) ¿el cuerpo trae la cantidad?; (5) ¿la cantidad pedida es nula?; (6) ¿es menor o igual que cero?; (7) ¿supera a las disponibles?; y (8) el ciclo que guarda cada finalista.
+
+La decisión final de adjudicar (\texttt{validarAdjudicacion}, que exige auditoría validada, puntaje mínimo y cupo libre) tiene $V(G)=7$, pero varios de sus caminos no son factibles (por ejemplo, la ausencia de cupos definidos ya la rechaza antes la regla de decisiones posibles), por lo que sus reglas se verifican con las pruebas de caja negra de la sección~9.3.2.3.
+
+\begin{figure}[H]
+\caption{Código de \texttt{SeleccionFinalistasService.seleccionar} y sus nodos (CU-05)}
+\label{fig:cod_cu05}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/finalistas/service/SeleccionFinalistasService.java
+public ResultadoAuditado<SeleccionFinalistasResponse> seleccionar(UUID actorCodigo,
+        UUID convocatoriaCodigo, SeleccionarFinalistasRequest request) {
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);   // 1
+    DatosConvocatoria convocatoria =
+            adjudicacionService.convocatoriaBloqueada(convocatoriaCodigo);  // 1
+    if (adjudicacionService.resultadosPublicados(convocatoria.id())) {      // 2
+        throw new ConflictException(ERR_ADJ_01, "...");             // 3
+    }
+    if (!adjudicacionService.decisionesPosibles(convocatoria)) {    // 4
+        throw new ConflictException(ERR_ADJ_05, "...");             // 5
+    }
+    long disponibles =
+            adjudicacionService.contarCalificadasSinFinalista(convocatoria.id()); // 6
+    Integer pedida = request != null                                // 7
+            && request.cantidad() != null                           // 8
+            ? request.cantidad()                                    // 9
+            : convocatoria.cantidadFinalistas();                    // 10
+    if (pedida == null) {                                           // 11
+        throw new ValidationException("ERR_SYS_01", "...");         // 12
+    }
+    if (pedida <= 0) {                                              // 13
+        throw new ValidationException("ERR_SYS_01", "...");         // 14
+    }
+    if (pedida > disponibles) {                                     // 15
+        throw new ValidationException("ERR_SYS_01", "...");         // 16
+    }
+    List<FinalistaSeleccionado> creados = new ArrayList<>();
+    for (CandidataFinalista candidata : adjudicacionService
+            .siguientesSinFinalista(convocatoria.id(), pedida)) {   // 17
+        Finalista finalista = finalistaRepository.saveAndFlush(...);  // 18
+        creados.add(...);                                           // 18
+    }
+    LOG.info("Finalistas seleccionados", ...);                      // 19
+    return new ResultadoAuditado<>(respuesta, ...);                 // 19
+}                                                                   // 20
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:df_cu05}.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Diagrama de flujo del método \texttt{SeleccionFinalistasService.seleccionar} (CU-05)}
+\label{fig:df_cu05}
+\centering
+\renewcommand{\fcpitch}{1.2}
+\begin{tikzpicture}
+\fcp{1}{0}{0}{Obtener al administrador y la convocatoria (bloqueada)}
+\fcd{2}{0}{1}{¿publicados?}
+\fcs{3}{-5.2}{1}{Lanzar \texttt{ERR\_ADJ\_01}}
+\fcd{4}{0}{2}{¿no admite decisiones?}
+\fcs{5}{-5.2}{2}{Lanzar \texttt{ERR\_ADJ\_05}}
+\fcp{6}{0}{3}{Contar las calificadas que aún no son finalistas}
+\fcd{7}{0}{4}{¿hay cuerpo?}
+\fcd{8}{0}{5}{¿trae cantidad?}
+\fcp{9}{0}{6}{Cantidad = la de la petición}
+\fcs{10}{5.2}{6}{Cantidad = la configurada}
+\fcd{11}{0}{7}{¿cantidad nula?}
+\fcs{12}{-5.2}{7}{Lanzar \texttt{ERR\_SYS\_01}}
+\fcd{13}{0}{8}{¿cantidad $\leq 0$?}
+\fcs{14}{-5.2}{8}{Lanzar \texttt{ERR\_SYS\_01}}
+\fcd{15}{0}{9}{¿cantidad $>$ disponibles?}
+\fcs{16}{-5.2}{9}{Lanzar \texttt{ERR\_SYS\_01}}
+\fcd{17}{0}{10}{¿hay candidata?}
+\fcp{18}{0}{11}{Guardar el finalista con su posición}
+\fcp{19}{0}{12}{Registrar el log y retornar la respuesta}
+\fct{20}{0}{13}
+\draw[fca] (f1) -- (f2);
+\draw[fca] (f2) -- node[above,font=\scriptsize]{V} (f3);
+\draw[fca] (f2) -- node[right,font=\scriptsize]{F} (f4);
+\draw[fca] (f4) -- node[above,font=\scriptsize]{V} (f5);
+\draw[fca] (f4) -- node[right,font=\scriptsize]{F} (f6);
+\draw[fca] (f6) -- (f7);
+\draw[fca] (f7) -- node[right,font=\scriptsize]{V} (f8);
+\draw[fca] (f7.east) -- node[above,pos=.3,font=\scriptsize]{F} (5.2,{-4*\fcpitch}) -- (f10.north);
+\draw[fca] (f8) -- node[right,font=\scriptsize]{V} (f9);
+\draw[semithick] (f8.east) -- node[above,pos=.3,font=\scriptsize]{F} (5.2,{-5*\fcpitch});
+\draw[fca] (f9) -- (f11);
+\draw[fca] (f10.east) -- (7.1,{-6*\fcpitch}) |- (f11.east);
+\draw[fca] (f11) -- node[above,font=\scriptsize]{V} (f12);
+\draw[fca] (f11) -- node[right,font=\scriptsize]{F} (f13);
+\draw[fca] (f13) -- node[above,font=\scriptsize]{V} (f14);
+\draw[fca] (f13) -- node[right,font=\scriptsize]{F} (f15);
+\draw[fca] (f15) -- node[above,font=\scriptsize]{V} (f16);
+\draw[fca] (f15) -- node[right,font=\scriptsize]{F} (f17);
+\draw[fca] (f17) -- node[right,font=\scriptsize]{V} (f18);
+\draw[fca] (f18.west) -- ++(-1.0,0) |- (f17.west);
+\draw[fca] (f17.east) -- node[above,font=\scriptsize]{F} ++(1.0,0) |- (f19.east);
+\draw[fca] (f19) -- (f20);
+\draw[fca] (f3.west) -- (-8.7,{-1*\fcpitch}) |- (f20.west);
+\draw[fca] (f5.west) -- (-8.3,{-2*\fcpitch}) |- (f20.west);
+\draw[fca] (f12.west) -- (-7.9,{-7*\fcpitch}) |- (f20.west);
+\draw[fca] (f14.west) -- (-7.5,{-8*\fcpitch}) |- (f20.west);
+\draw[fca] (f16.west) -- (-7.1,{-9*\fcpitch}) |- (f20.west);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{SeleccionFinalistasService.seleccionar} (CU-05)}
+\label{fig:gf_cu05}
+\centering
+\begin{tikzpicture}
+\cgn{A}{0}{0}{cgp}{1,2}\cgn{B}{2}{0}{cgs}{3}\cgn{C}{0}{1}{cgp}{4}\cgn{D}{2}{1}{cgs}{5}\cgn{E}{0}{2}{cgp}{6,7}\cgn{F}{0}{3}{cgp}{8}
+\cgn{G}{0}{4}{cgs}{9}\cgn{H}{2}{4}{cgs}{10}\cgn{I}{0}{5}{cgp}{11}\cgn{J}{2}{5}{cgs}{12}\cgn{K}{0}{6}{cgp}{13}\cgn{L}{2}{6}{cgs}{14}
+\cgn{M}{0}{7}{cgp}{15}\cgn{N}{2}{7}{cgs}{16}\cgn{O}{0}{8}{cgp}{17}\cgn{P}{0}{9}{cgs}{18}\cgn{Q}{0}{10}{cgs}{19}\cgn{R}{0}{11}{cgf}{20}
+\draw[fca] (gA) -- node[above,font=\scriptsize]{V} (gB);
+\draw[fca] (gA) -- node[right,font=\scriptsize]{F} (gC);
+\draw[fca] (gC) -- node[above,font=\scriptsize]{V} (gD);
+\draw[fca] (gC) -- node[right,font=\scriptsize]{F} (gE);
+\draw[fca] (gE) -- node[right,font=\scriptsize]{V} (gF);
+\draw[fca] (gE.east) -- node[above,pos=.3,font=\scriptsize]{F} (2,{-2*1.25}) -- (gH.north);
+\draw[fca] (gF) -- node[right,font=\scriptsize]{V} (gG);
+\draw[semithick] (gF.east) -- node[above,pos=.3,font=\scriptsize]{F} (2,{-3*1.25});
+\draw[fca] (gG) -- (gI);
+\draw[fca] (gH.south) -- (2,{-5*1.25+0.65}) -| (gI.north);
+\draw[fca] (gI) -- node[above,font=\scriptsize]{V} (gJ);
+\draw[fca] (gI) -- node[right,font=\scriptsize]{F} (gK);
+\draw[fca] (gK) -- node[above,font=\scriptsize]{V} (gL);
+\draw[fca] (gK) -- node[right,font=\scriptsize]{F} (gM);
+\draw[fca] (gM) -- node[above,font=\scriptsize]{V} (gN);
+\draw[fca] (gM) -- node[right,font=\scriptsize]{F} (gO);
+\draw[fca] (gO) -- node[right,font=\scriptsize]{V} (gP);
+\draw[fca] (gP.west) -- ++(-1.0,0) |- (gO.west);
+\draw[fca] (gO.east) -- node[above,font=\scriptsize]{F} ++(1.0,0) |- (gQ.east);
+\draw[fca] (gQ) -- (gR);
+\draw[fca] (gB.east) -- (4.6,{0}) |- (gR.east);
+\draw[fca] (gD.east) -- (4.2,{-1*1.25}) |- (gR.east);
+\draw[fca] (gJ.east) -- (3.8,{-5*1.25}) |- (gR.east);
+\draw[fca] (gL.east) -- (3.4,{-6*1.25}) |- (gR.east);
+\draw[fca] (gN.east) -- (3.0,{-7*1.25}) |- (gR.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión. Cada nodo lleva los números de las instrucciones del diagrama de flujo que agrupa.
+\end{figure}
 
 \begin{table}[H]
 \centering
-\caption{Caminos independientes de CU-05 (caja blanca)}
-\label{tab:cb_cu05}
-\small
-\begin{tabular}{@{}p{0.9cm}p{4.2cm}p{5.3cm}p{3.2cm}@{}}
+\caption{Matriz de conexiones del grafo de flujo de CU-05}
+\label{tab:mat_cu05}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}cccccccccccccccccccr@{}}
 \toprule
-\textbf{ID} & \textbf{Camino} & \textbf{Dato de entrada} & \textbf{Resultado esperado} \\
+ & 1,2 & 3 & 4 & 5 & 6,7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & \textbf{Conexiones $-1$} \\
 \midrule
-CB-05-01 & Decisión 1 falsa & Expediente que no es finalista. & No se permite auditarlo. \\
-CB-05-02 & Decisión 2 falsa & Rendimiento académico de 35. & Rechazo del dato fuera de rango. \\
-CB-05-03 & Decisión 3 falsa & Total menor al mínimo requerido. & Estado «no adjudicada». \\
-CB-05-04 & Decisión 4 falsa & Total suficiente y sin cupos. & No se adjudica; queda en espera. \\
-CB-05-05 & Camino principal & Total suficiente y con cupos. & Estado «adjudicada» y registro en bitácora. \\
+1,2 &  & 1 & 1 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & $2-1=1$ \\
+3 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+4 &  &  &  & 1 & 1 &  &  &  &  &  &  &  &  &  &  &  &  &  & $2-1=1$ \\
+5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+6,7 &  &  &  &  &  & 1 &  & 1 &  &  &  &  &  &  &  &  &  &  & $2-1=1$ \\
+8 &  &  &  &  &  &  & 1 & 1 &  &  &  &  &  &  &  &  &  &  & $2-1=1$ \\
+9 &  &  &  &  &  &  &  &  & 1 &  &  &  &  &  &  &  &  &  & $1-1=0$ \\
+10 &  &  &  &  &  &  &  &  & 1 &  &  &  &  &  &  &  &  &  & $1-1=0$ \\
+11 &  &  &  &  &  &  &  &  &  & 1 & 1 &  &  &  &  &  &  &  & $2-1=1$ \\
+12 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+13 &  &  &  &  &  &  &  &  &  &  &  & 1 & 1 &  &  &  &  &  & $2-1=1$ \\
+14 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+15 &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & 1 &  &  &  & $2-1=1$ \\
+16 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+17 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & 1 &  & $2-1=1$ \\
+18 &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 &  &  &  & $1-1=0$ \\
+19 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 1 & $1-1=0$ \\
+20 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & $0$ \\
+\midrule
+\multicolumn{20}{@{}l}{$\sum=8$ \quad $V(G)=\sum+1=9$} \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
-\footnotesize\textit{Nota.} Elaboración propia a partir de RF-04. Resultado obtenido: por registrar al ejecutar.
+\footnotesize\textit{Nota.} Elaboración propia. Cada «1» indica una arista del nodo de la fila al nodo de la columna; los nodos se identifican por los números del diagrama de flujo que agrupan.
 \end{table}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{9.0cm}@{}}
+\caption{Caminos básicos independientes de CU-05}\label{tab:cam_cu05}\\
+\toprule
+\textbf{Camino} & \textbf{Flujo (nodos del diagrama de flujo)} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Flujo (nodos del diagrama de flujo)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1 & 1, 2, 3, 20 \\
+C2 & 1, 2, 4, 5, 20 \\
+C3 & 1, 2, 4, 6, 7, 8, 9, 11, 13, 15, (17, 18)$^{n}$, 17, 19, 20 \\
+C4 & 1, 2, 4, 6, 7, 10, 11, 13, 15, (17, 18)$^{n}$, 17, 19, 20 \\
+C5 & 1, 2, 4, 6, 7, 8, 10, 11, 13, 15, (17, 18)$^{n}$, 17, 19, 20 \\
+C6 & 1, 2, 4, 6, 7, 10, 11, 12, 20 \\
+C7 & 1, 2, 4, 6, 7, 8, 9, 11, 13, 14, 20 \\
+C8 & 1, 2, 4, 6, 7, 8, 9, 11, 13, 15, 16, 20 \\
+C9 & 1, 2, 4, 6, 7, 8, 9, 11, 13, 15, 17, 19, 20 (no factible) \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia. $n$ es la cantidad de finalistas guardados ($n\geq1$). $V(G)=9$ da nueve caminos teóricos, pero C9 (ciclo sin ninguna iteración con una cantidad válida) no es factible: con la convocatoria bloqueada, la lista devuelve tantas candidatas como la cantidad válida pedida. Se prueban los ocho factibles.
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{3.6cm}@{}}
+\caption{Diseño de los casos de prueba de CU-05 (caja blanca)}\label{tab:dcp_cu05}\\
+\toprule
+\textbf{Camino} & \textbf{Publicados} & \textbf{Admite decisiones} & \textbf{Cantidad pedida} & \textbf{Cantidad config.} & \textbf{Disponibles} & \textbf{Resultado esperado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Publicados} & \textbf{Admite decisiones} & \textbf{Cantidad pedida} & \textbf{Cantidad config.} & \textbf{Disponibles} & \textbf{Resultado esperado} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\footnotesize
+C1 & Sí & --- & --- & --- & --- & Error \texttt{ERR\_ADJ\_01}; no se crea ningún finalista. \\
+C2 & No & No & --- & --- & --- & Error \texttt{ERR\_ADJ\_05} (convocatoria abierta, o sin cupos o puntaje mínimo). \\
+C3 & No & Sí & 3 & --- & 5 & Se guardan 3 finalistas con su posición en la lista; se anota la bitácora. \\
+C4 & No & Sí & Sin cuerpo & 2 & 5 & Se usa la configurada: se guardan 2 finalistas. \\
+C5 & No & Sí & Cuerpo sin cantidad & 2 & 5 & Se usa la configurada: se guardan 2 finalistas. \\
+C6 & No & Sí & Sin cuerpo & Sin configurar & 5 & Error \texttt{ERR\_SYS\_01}: indicar cuántos finalistas seleccionar. \\
+C7 & No & Sí & 0 & --- & 5 & Error \texttt{ERR\_SYS\_01}: la cantidad debe ser un entero positivo. \\
+C8 & No & Sí & 10 & --- & 4 & Error \texttt{ERR\_SYS\_01} con la cantidad disponible (4); no se guarda nada. \\
+C9 & No & Sí & Válida & --- & --- & Camino no factible; no se prueba. \\
+\end{longtable}
+\noindent\textit{Nota.} Elaboración propia a partir de RF-04. «---» indica que la variable no influye en el camino. Publicados: resultados ya publicados de la convocatoria. Cantidad pedida y configurada: de finalistas. Disponibles: calificadas que aún no son finalistas. Resultado obtenido: por registrar al ejecutar.
 
 \subsubsection{9.3.2. Caja Negra}
 
@@ -216,7 +790,112 @@ Complementa a la herramienta con comprobaciones que esta no cubre bien:
 
 \subsubsection{9.3.4. Lista de Comprobación}
 
-La lista de comprobación recoge los puntos que se revisan antes de aceptar cada incremento.
+La prueba con lista de comprobación (\textit{checklist-based testing}) es una técnica basada en la experiencia: en lugar de escribir casos de prueba con datos y resultado esperado exactos, quien prueba recorre una lista de puntos que deben cumplirse. Cada punto es una condición del sistema redactada como afirmación («se rechaza el envío si falta un documento obligatorio»); se comprueba con el sistema, se marca como cumple o no cumple y se anota una observación si falla. La lista se arma a partir de los requisitos, las reglas del negocio y los errores previstos, y es más rápida de ejecutar que los casos de caja blanca y de caja negra, a cambio de menos detalle. Por eso complementa a esas dos técnicas: cubre muchas condiciones a la vez y sirve para repetir la revisión en cada incremento.
+
+% [PENDIENTE]: citar el libro de ingeniería de software (autor y año) que define esta técnica y agregarlo a referencias.bib; el nombre del tema que pidió el docente es «pruebas usando lista de componentes (libro de software)».
+
+Se elaboró una lista para cada uno de los tres casos de uso. Los puntos se obtuvieron de los requisitos del caso de uso y de los códigos de error que define el sistema, que se indican en la columna «Origen». La columna «Cumple» registra el resultado de la revisión que hizo el equipo con el sistema en funcionamiento, y «Observación» queda para anotar los puntos que fallen.
+
+\paragraph{9.3.4.1. Caso de uso: Enviar postulación a Beca Comedor (CU-02).}
+
+\begingroup\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.7cm}>{\raggedright\arraybackslash}p{7.6cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{2.3cm}@{}}
+\caption{Lista de comprobación de CU-02}\label{tab:lc_cu02}\\
+\toprule
+\textbf{N.°} & \textbf{Punto a verificar} & \textbf{Origen} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{N.°} & \textbf{Punto a verificar} & \textbf{Origen} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & Solo una cuenta con perfil de Postulante puede iniciar y enviar una postulación. & ERR\_VAL\_02 & Sí & \\
+2 & Sin convocatoria abierta, «Nueva postulación» informa que no hay convocatoria y la fecha de la próxima. & ERR\_ENV\_01 & Sí & \\
+3 & «Nueva postulación» crea un borrador y no crea otro si ya existe uno; dos solicitudes simultáneas no duplican. & ERR\_VAL\_01 & Sí & \\
+4 & Una postulación ajena o inexistente se rechaza. & ERR\_ENV\_02 & Sí & \\
+5 & Si falta un campo obligatorio, el envío se rechaza y el mensaje indica cuáles faltan. & ERR\_ENV\_04 & Sí & \\
+6 & Si falta un documento obligatorio, el envío se rechaza y el mensaje da su nombre; un documento opcional sin adjuntar no lo impide. & ERR\_ENV\_04 & Sí & \\
+7 & Los valores fuera de rango o las opciones inválidas se rechazan. & ERR\_ENV\_05 & Sí & \\
+8 & Los datos del perfil (nombre, carné y carrera) salen de la cuenta, no de lo que envía el formulario. & RF-02 & Sí & \\
+9 & Al enviar, la postulación pasa a «pendiente» y el cambio queda en el historial. & RF-02 & Sí & \\
+10 & Un segundo envío de la misma postulación (por ejemplo, doble clic) devuelve el mismo comprobante y no crea otro registro. & RNF-03 & Sí & \\
+11 & Una postulación «devuelta» se puede corregir y reenviar, y el historial registra «Reenvío tras corregir». & RF-02 & Sí & \\
+12 & Una postulación en estado final (archivada o adjudicada) no se puede enviar. & ERR\_ENV\_03 & Sí & \\
+13 & Si el módulo de IA falla después del envío, la postulación queda «pendiente» y el postulante no ve ningún error. & RF-03 & Sí & \\
+\end{longtable}
+\endgroup
+\noindent\textit{Nota.} Elaboración propia a partir de RF-02, RNF-03 y los códigos de error del envío de la postulación.
+
+\paragraph{9.3.4.2. Caso de uso: Precalificar postulación con Inteligencia Artificial (CU-03).}
+
+\begingroup\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.7cm}>{\raggedright\arraybackslash}p{7.6cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{2.3cm}@{}}
+\caption{Lista de comprobación de CU-03}\label{tab:lc_cu03}\\
+\toprule
+\textbf{N.°} & \textbf{Punto a verificar} & \textbf{Origen} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{N.°} & \textbf{Punto a verificar} & \textbf{Origen} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & Solo se calcula el puntaje de una postulación «pendiente»; si ya no lo está, se omite sin llamar a la IA. & RF-03 & Sí & \\
+2 & Con la IA disponible se registra el puntaje con su fecha de cálculo y la versión del modelo, y la postulación pasa a «calificada». & RF-03 & Sí & \\
+3 & El puntaje de la IA queda entre 0 y 70. & RF-03 & Sí & \\
+4 & Si la IA no responde, la postulación sigue «pendiente», no cuenta como rechazo y se reintenta después. & RF-03 & Sí & \\
+5 & Si la IA rechaza los datos, no se registra puntaje y se cuenta un rechazo. & RF-03 & Sí & \\
+6 & Tras tres rechazos la postulación se marca para revisión y deja de reintentarse. & RF-03 & Sí & \\
+7 & Una solicitud repetida de una postulación ya calificada no genera un segundo puntaje. & RNF-03 & Sí & \\
+8 & La solicitud a la IA lleva la versión vigente del modelo y sus parámetros; sin versión vigente o sin parámetros se usa el modelo por defecto de la IA. & RF-21 & Sí & \\
+9 & Si la IA responde con una versión de modelo no registrada, la postulación no se califica. & RF-21 & Sí & \\
+10 & Al recalcular, el puntaje anterior pasa al historial y queda un solo puntaje vigente. & RF-21 & Sí & \\
+11 & El cálculo corre en segundo plano y nunca muestra un error al postulante. & RF-02 & Sí & \\
+12 & El registro del sistema no contiene respuestas del formulario ni datos personales. & RNF-01 & Sí & \\
+13 & El puntaje de una postulación individual se calcula en 5 s o menos. & RNF-03 & Sí & \\
+\end{longtable}
+\endgroup
+\noindent\textit{Nota.} Elaboración propia a partir de RF-03 y RF-21 (modelo de preselección) y RNF-03.
+
+\paragraph{9.3.4.3. Caso de uso: Auditar y adjudicar becas (CU-05).}
+
+\begingroup\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.7cm}>{\raggedright\arraybackslash}p{7.6cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{2.3cm}@{}}
+\caption{Lista de comprobación de CU-05}\label{tab:lc_cu05}\\
+\toprule
+\textbf{N.°} & \textbf{Punto a verificar} & \textbf{Origen} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{N.°} & \textbf{Punto a verificar} & \textbf{Origen} & \textbf{Cumple} & \textbf{Observación} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & Solo el Administrador de la DUBSS accede al panel, a la selección de finalistas y a las decisiones; los demás perfiles reciben acceso denegado. & RNF-01 & Sí & \\
+2 & El panel muestra los cupos, el puntaje mínimo, los adjudicados, los no adjudicados y los cupos disponibles, que nunca son negativos. & RF-04 & Sí & \\
+3 & La selección de finalistas y las decisiones solo se habilitan con la convocatoria cerrada y con cupos y puntaje mínimo definidos. & ERR\_ADJ\_05 & Sí & \\
+4 & No se pueden elegir finalistas ni decidir si los resultados de la convocatoria ya fueron publicados. & ERR\_ADJ\_01 & Sí & \\
+5 & La selección toma las postulaciones calificadas mejor puntuadas, y una segunda selección no repite a las anteriores. & RF-04 & Sí & \\
+6 & La cantidad de finalistas debe ser un entero positivo y no superar las calificadas disponibles; si no se indica, se usa la configurada. & ERR\_SYS\_01 & Sí & \\
+7 & Se pueden elegir más finalistas que cupos (los de más son suplentes). & RF-04 & Sí & \\
+8 & Solo se adjudica si la última auditoría del expediente es «Validado». & ERR\_ADJ\_02 & Sí & \\
+9 & Solo se adjudica si el total (puntaje de la IA más rendimiento académico) alcanza el mínimo; un total igual al mínimo se permite. & ERR\_ADJ\_03 & Sí & \\
+10 & No se adjudica si ya no quedan cupos. & ERR\_ADJ\_04 & Sí & \\
+11 & «No adjudicar» exige un motivo y deja la postulación «no adjudicada». & RF-04 & Sí & \\
+12 & Una postulación que ya no está «calificada» no se puede decidir otra vez, y dos decisiones simultáneas se atienden una tras otra. & ERR\_ADJ\_01 & Sí & \\
+13 & Cada decisión queda en el historial y en la bitácora, sin datos personales ni el motivo. & RF-20 & Sí & \\
+14 & El postulante no recibe aviso de la decisión hasta que se publiquen los resultados. & RF-17 & Sí & \\
+\end{longtable}
+\endgroup
+\noindent\textit{Nota.} Elaboración propia a partir de RF-04 y los códigos de error de la adjudicación.
+
+\paragraph{9.3.4.4. Lista general de la entrega.}
+
+La lista general recoge los puntos que se revisan antes de aceptar cada incremento, sin importar el caso de uso.
 
 \begin{table}[H]
 \centering
@@ -227,22 +906,22 @@ La lista de comprobación recoge los puntos que se revisan antes de aceptar cada
 \toprule
 \textbf{Punto a verificar} & \textbf{Cumple} & \textbf{Observación} \\
 \midrule
-Los campos obligatorios se validan en pantalla y en el servidor. & & \\
-Solo se aceptan los formatos de documento permitidos. & & \\
-Cada rol accede únicamente a sus funciones (RNF-01). & & \\
-Las contraseñas se guardan como \textit{hash}. & & \\
-Las acciones críticas quedan en la bitácora de auditoría. & & \\
-Las peticiones duplicadas no generan registros repetidos (RNF-03). & & \\
-La pantalla carga en 3 s o menos (RNF-03). & & \\
-El puntaje de una postulación se calcula en 5 s o menos (RNF-03). & & \\
-Los mensajes de error son claros para el usuario (RNF-04). & & \\
-La aplicación web funciona en los navegadores y la móvil en Android definidos (RNF-05). & & \\
-Las pruebas automáticas pasan en la integración continua. & & \\
+Los campos obligatorios se validan en pantalla y en el servidor. & Sí & \\
+Solo se aceptan los formatos de documento permitidos. & Sí & \\
+Cada rol accede únicamente a sus funciones (RNF-01). & Sí & \\
+Las contraseñas se guardan como \textit{hash}. & Sí & \\
+Las acciones críticas quedan en la bitácora de auditoría. & Sí & \\
+Las peticiones duplicadas no generan registros repetidos (RNF-03). & Sí & \\
+La pantalla carga en 3 s o menos (RNF-03). & Sí & \\
+El puntaje de una postulación se calcula en 5 s o menos (RNF-03). & Sí & \\
+Los mensajes de error son claros para el usuario (RNF-04). & Sí & \\
+La aplicación web funciona en los navegadores y la móvil en Android definidos (RNF-05). & Sí & \\
+Las pruebas automáticas pasan en la integración continua. & Sí & \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
-\footnotesize\textit{Nota.} Elaboración propia. Las columnas «Cumple» y «Observación» se llenan al ejecutar la revisión.
+\footnotesize\textit{Nota.} Elaboración propia. La columna «Cumple» registra el resultado de la revisión que hizo el equipo; «Observación» queda para los puntos que fallen.
 \end{table}
 
 \subsection{9.4. Representación del Tiempo de Respuesta}
@@ -258,26 +937,205 @@ El requisito RNF-03 fija dos límites: la carga de una pantalla en 3 segundos o 
 \toprule
 \textbf{Operación} & \textbf{Límite (s)} & \textbf{Promedio} & \textbf{Máximo} \\
 \midrule
-Carga de la pantalla de postulación & 3 & & \\
-Carga de la lista priorizada (CU-06) & 3 & & \\
-Cálculo del puntaje de una postulación (CU-03) & 5 & & \\
+Carga de la pantalla de postulación & 3 & 0,85 & 0,91 \\
+Carga de la lista priorizada (CU-06) & 3 & 1,19 & 1,27 \\
+Cálculo del puntaje de una postulación (CU-03) & 5 & 0,13 & 0,13 \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
-\footnotesize\textit{Nota.} Los valores medidos se registran al terminar la implementación.
+\footnotesize\textit{Nota.} Valores en segundos. La carga de la pantalla de postulación se midió el 18 de noviembre de 2026 en la aplicación desplegada, con Chrome sin caché y 30 repeticiones, como el tiempo hasta que la red queda inactiva, es decir, hasta cargar todos los datos de la pantalla (el evento de carga del navegador tardó 0,38 s en promedio y 0,45 s como máximo). La lista priorizada se midió con una cuenta de Administrador y 30 repeticiones, desde la carga de la pantalla hasta que se muestran las 20 primeras filas de la convocatoria con más datos (42 postulaciones calificadas): la pantalla tardó 0,92 s en promedio y la lista 0,27 s más. El cálculo del puntaje se midió una sola vez (n = 1): una cuenta de postulante solo puede tener una postulación por gestión, así que no se pudo repetir. Se contó desde que se confirmó el envío hasta que la consulta del estado mostró la postulación como «calificada»; como la primera consulta ya la mostró así, 0,13 s es un tope y el cálculo pudo tardar menos.
 \end{table}
 
 \subsection{9.5. Herramientas para Asistir el Proceso de Pruebas en el Software}
 
+Esta sección describe las herramientas con las que se prueba el sistema y las pruebas que ya existen en el proyecto. Los datos salen del repositorio del sistema (carpetas \texttt{projects} y \texttt{.github}) a noviembre de 2026.
+
+\subsubsection{9.5.1. Herramientas utilizadas}
+
 \begin{itemize}
-    \item \textbf{JUnit y Testcontainers:} pruebas de unidad y de integración del \textit{backend} en Java, con una base PostgreSQL real levantada en un contenedor.
-    \item \textbf{pytest:} pruebas del módulo de IA en Python.
-    \item \textbf{Vitest:} pruebas de la interfaz web y del sitio de NEXWARE.
-    \item \textbf{\textit{flutter test}:} pruebas de la aplicación móvil.
-    \item \textbf{Swagger UI (springdoc-openapi):} ejecución manual de las operaciones de la API.
-    \item \textbf{OWASP ZAP:} análisis de vulnerabilidades (sección 9.3.3).
-    \item \textbf{GitHub Actions:} ejecución automática de todas las pruebas en cada \textit{pull request}.
+    \item \textbf{JUnit 5 y Mockito:} pruebas de unidad de los servicios del \textit{backend} en Java; Mockito reemplaza los repositorios y el módulo de IA para controlar cada situación.
+    \item \textbf{Spring MockMvc:} pruebas de los controladores (rutas, roles permitidos y formato de las respuestas).
+    \item \textbf{Testcontainers:} pruebas de los repositorios, de las migraciones de la base y de integración, con una base PostgreSQL real levantada en un contenedor.
+    \item \textbf{JaCoCo:} mide la cobertura del \textit{backend} (líneas, ramas y métodos); se integra a \texttt{mvnw test} sin cambiar las pruebas y genera informes HTML y XML.
+    \item \textbf{Vitest, Testing Library y jsdom:} pruebas de los componentes y las pantallas del panel web y del sitio de NEXWARE; con el proveedor V8 (\texttt{@vitest/coverage-v8}) también miden la cobertura del panel web.
+    \item \textbf{\textit{flutter test}:} pruebas de la aplicación móvil (unitarias y de \textit{widgets}); con \texttt{--coverage} genera el archivo \texttt{lcov.info} de cobertura.
+    \item \textbf{pytest y httpx:} pruebas del módulo de IA en Python.
+    \item \textbf{GitHub Actions:} ejecución automática de las pruebas, de la cobertura y del análisis de código en cada \textit{pull request} y \textit{push}, y del flujo manual de k6 (sección 9.5.3).
+    \item \textbf{Swagger UI (springdoc-openapi):} ejecución manual de las operaciones de la API al verificar cada caso de uso.
+    \item \textbf{Google Chrome con Puppeteer:} medición automática de los tiempos de carga de la sección 9.4 contra la aplicación desplegada.
+    \item \textbf{Bruno:} cliente de API de código abierto que ejecuta colecciones de peticiones con aserciones y genera un informe de la corrida. Se eligió porque sus colecciones son archivos de texto versionados en el repositorio (a diferencia de herramientas que las guardan en la nube) y porque su línea de comandos (\texttt{bru run}) corre desde la terminal sin cuenta. Con él se probó la API del \textit{backend} caso de uso por caso de uso (sección 9.5.5).
+    \item \textbf{Playwright:} automatiza un navegador real para probar el panel web de punta a punta (pantalla, API y base de datos) y deja capturas como evidencia (sección 9.5.5).
+    \item \textbf{k6:} prueba de rendimiento del \textit{backend} bajo carga, con usuarios virtuales y umbrales de latencia y de errores que hacen fallar la corrida; se ejecuta como flujo manual de GitHub Actions (sección 9.5.5).
+    \item \textbf{SonarQube Cloud:} plataforma de análisis estático que revisa la calidad y la seguridad del código; está conectada directamente al repositorio de GitHub, por lo que el repositorio no contiene su configuración (sección 9.5.5).
+    \item \textbf{OWASP ZAP:} análisis de vulnerabilidades previsto en la sección 9.3.3.
 \end{itemize}
+
+% [VERIFICAR]: confirmar si ya se ejecutó OWASP ZAP; si se hizo, registrar los hallazgos en 9.3.3 y quitar «previsto».
+
+\subsubsection{9.5.2. Pruebas automatizadas del proyecto}
+
+El proyecto tiene pruebas automatizadas en las cuatro partes del sistema. La Tabla~\ref{tab:pruebas_proyecto} resume cuántas hay.
+
+\begin{table}[H]
+\centering
+\caption{Pruebas automatizadas existentes en el proyecto}
+\label{tab:pruebas_proyecto}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.6cm}rr@{}}
+\toprule
+\textbf{Parte} & \textbf{Herramientas} & \textbf{Archivos} & \textbf{Pruebas} \\
+\midrule
+\textit{Backend} (API) & JUnit 5, Mockito, MockMvc, Testcontainers & 225 & 1\,991 \\
+Panel web & Vitest, Testing Library, jsdom & 147 & 1\,174 \\
+Aplicación móvil & \textit{flutter test} & 24 & 310 \\
+Módulo de IA & pytest, httpx & 4 & 48 \\
+Sitio de NEXWARE & Vitest & 6 & 25 \\
+\midrule
+\textbf{Total} & & \textbf{406} & \textbf{3\,548} \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir del código del repositorio. «Pruebas» es la cantidad de funciones de prueba escritas (anotaciones \texttt{@Test} en Java, \texttt{test} o \texttt{it} en Vitest y Flutter, funciones \texttt{test\_} en Python); no es la cantidad aprobada en una ejecución concreta.
+\end{table}
+
+En el \textit{backend} las pruebas se reparten por capas: 84 archivos de servicios (lógica de los casos de uso), 28 de controladores, 44 de repositorios (6 de ellos de las migraciones de la base), 12 de configuración, 5 de modelos y 5 de seguridad (control de acceso, límite de peticiones y usuario activo), además de 22 de integración que recorren el caso de uso completo contra una base real. En el módulo de IA las pruebas cubren el cálculo del puntaje, el estado del servicio y la coherencia del cálculo con el \textit{backend}.
+
+Los tres casos de uso de este capítulo tienen sus pruebas unitarias en el \textit{backend}: 26 para el envío de la postulación (CU-02), más 15 de la validación de elegibilidad que el envío incluye (CU-18); 19 para la precalificación con IA (CU-03); y 15 para la selección de finalistas y 33 para la adjudicación (CU-05), esta última también con una clase de pruebas de integración. Los casos de la sección 9.3.1 corresponden a los caminos de esos métodos.
+
+La Tabla~\ref{tab:cobertura} muestra la cobertura medida el 18 de noviembre de 2026 en el equipo de desarrollo, junto con las pruebas realmente ejecutadas. La cobertura indica cuánto código se ejecuta al probar; no garantiza la ausencia de errores.
+
+\begin{table}[H]
+\centering
+\caption{Resultado de la ejecución y cobertura de las pruebas automatizadas}
+\label{tab:cobertura}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{3.2cm}@{}}
+\toprule
+\textbf{Parte} & \textbf{Pruebas ejecutadas} & \textbf{Resultado} & \textbf{Cobertura de líneas} \\
+\midrule
+\textit{Backend} (JUnit, JaCoCo) & 2\,032 (1 omitida) & Todas pasan & 97,0\,\% (ramas 84,6\,\%) \\
+Panel web (Vitest) & 1\,296 en 147 archivos & Todas pasan & 83,4\,\% (ramas 74,3\,\%) \\
+Aplicación móvil (Flutter) & 310 & Todas pasan & 78,7\,\% (2\,841 de 3\,610) \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia. El \textit{backend} se ejecutó con Redis y Docker (Testcontainers) activos. La cobertura del panel web excluye \texttt{src/components/ui/} (generado por el CLI de shadcn), las pruebas y \texttt{routeTree.gen.ts}. Las cantidades difieren de la Tabla~\ref{tab:pruebas_proyecto} porque aquí se cuentan los casos ejecutados (incluidos los parametrizados) y allí las funciones escritas. Tras corregir una prueba de planillas del \textit{backend} no se repitió la corrida completa, por lo que su cobertura podría variar mínimamente.
+\end{table}
+
+En el \textit{backend}, los módulos de actas, asistencias, contacto, finalistas, \texttt{mibeca}, planillas y resultados llegan al 100\,\% de líneas; la mayoría de los demás está entre 98 y 99\,\%, y los más bajos son el panel (88\,\%) y \texttt{common} (93\,\%). La primera corrida tuvo dos fallas que se resolvieron: una prueba de configuración de seguridad requería Redis encendido, y una prueba de planillas esperaba el texto «Generada el» cuando el PDF dice «Generado el» (error de la prueba, no del sistema), ya corregido.
+
+\subsubsection{9.5.3. Ejecución automática}
+
+El flujo de integración continua (GitHub Actions) se ejecuta en cada \textit{pull request} hacia la rama principal y en cada \textit{push} a ella. Primero detecta qué carpetas cambiaron para ejecutar solo los trabajos que corresponden:
+
+\begin{itemize}
+    \item \textbf{\textit{Backend}:} análisis de estilo (Checkstyle), pruebas (\texttt{mvnw test}) y compilación.
+    \item \textbf{Módulo de IA:} análisis de código (\textit{ruff}) y pruebas (\textit{pytest}).
+    \item \textbf{Panel web:} análisis de código, pruebas (Vitest) y compilación.
+    \item \textbf{Sitio de NEXWARE:} análisis de código, verificación de tipos y de las traducciones, pruebas y compilación.
+    \item \textbf{Aplicación móvil:} análisis estático (\texttt{flutter analyze}) y pruebas (\textit{flutter test}).
+\end{itemize}
+
+El flujo también se ejecuta en los \textit{push} a la rama de trabajo y guarda como artefactos descargables los informes de cobertura y de resultados (JaCoCo y Surefire del \textit{backend}, Vitest del panel web y Flutter del móvil). Bruno y Playwright no corren en la integración continua: se ejecutan en local contra el \textit{backend} en perfil de desarrollo. El flujo manual de k6 (\textit{Run workflow} en la pestaña Actions) sí se ejecutó en GitHub. Los pasos de cobertura y de artefactos se validaron localmente y falta confirmar su corrida en GitHub.
+
+\subsubsection{9.5.4. Pruebas manuales y mediciones}
+
+Además de las automáticas, se hicieron estas verificaciones:
+
+\begin{itemize}
+    \item \textbf{Verificación manual por caso de uso:} el equipo dispone de una lista de pasos por caso de uso, con datos de prueba cargados en la base, y registró el resultado de cada uno. Figuran con resultado correcto los casos CU-01, CU-04, CU-05, CU-06, CU-07, CU-08, CU-14, CU-15, CU-19, CU-20, CU-21 y CU-22 y las notificaciones; el CU-12 aún no tiene resultado registrado.
+    \item \textbf{Caja blanca (sección 9.3.1):} análisis de tres métodos del \textit{backend} con complejidad ciclomática de 6, 6 y 9, con su diagrama de flujo, grafo, matriz de conexiones, caminos básicos y diseño de los casos de prueba.
+    \item \textbf{Caja negra (sección 9.3.2):} casos de prueba diseñados por partición de equivalencia y valores límite para los tres casos de uso.
+    \item \textbf{Listas de comprobación (sección 9.3.4):} 40 puntos de los tres casos de uso y 11 de la entrega, revisados por el equipo con el sistema en funcionamiento.
+    \item \textbf{Tiempos de respuesta (sección 9.4):} medidos con Chrome automatizado contra la aplicación desplegada: 30 repeticiones en las pantallas y una medición del cálculo del puntaje.
+\end{itemize}
+
+\subsubsection{9.5.5. Pruebas de sistema y análisis de calidad del código}
+
+\paragraph{9.5.5.1. Pruebas de la API con Bruno.}
+
+Bruno organiza las peticiones a la API en colecciones y verifica cada respuesta con aserciones, por ejemplo que el código de estado sea 200 o que un campo tenga el valor esperado. La colección está en la carpeta \texttt{tests/api-bruno} del repositorio y tiene una carpeta por caso de uso (CU-01 a CU-26), una de notificaciones push y una de preparación (\texttt{CU00-Preparacion}) que inicia sesión con cada rol (administrador, directivo, personal del comedor, becado y un postulante recién registrado) y ubica las convocatorias de prueba. Cada caso de uso prueba su camino feliz, sus errores de negocio con el código \texttt{ERR\_*} esperado y el permiso por rol (403 cuando corresponde). La Figura~\ref{fig:bruno_cu08} muestra como ejemplo la primera del CU-08: \texttt{GET /api/v1/actas/pendientes} respondió 200 en 16 ms y pasó sus dos verificaciones.
+
+La corrida completa, hecha el 18 de noviembre de 2026 contra el entorno local del \textit{backend}, ejecutó 191 peticiones sin ningún error: pasaron las 191 peticiones, las 444 aserciones y las 21 pruebas escritas en la colección, es decir, 465 controles con 0 fallidos. La corrida duró 13,051 s, recibió 1,07 MB y el tiempo de respuesta promedio fue de 36 ms (Figura~\ref{fig:bruno_resumen}). Como se ejecutó en un entorno local y no en el despliegue, estos tiempos no reemplazan las mediciones de la sección 9.4.
+
+\begin{figure}[H]
+\caption{Resumen de una corrida de la colección de pruebas de la API en Bruno}
+\label{fig:bruno_resumen}
+\centering
+\includegraphics[width=\textwidth]{images/151_Captura_Bruno_resumen.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del informe de Bruno del 18 de noviembre de 2026, entorno local.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Resultado de una petición de la colección de Bruno (CU-08)}
+\label{fig:bruno_cu08}
+\centering
+\includegraphics[width=\textwidth]{images/152_Captura_Bruno_CU08.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Petición \texttt{CU08-Generar-acta-de-adjudicacion/01-convocatorias-pendientes-de-acta}.
+\end{figure}
+
+La corrida usó el \textit{backend} en perfil de desarrollo sobre una base recién creada, con MinIO y Redis encendidos. Tiene estas limitaciones: diez peticiones (generar y descargar el acta y la planilla, y todo el CU-11) necesitan MinIO y se omiten con \texttt{--exclude-tags minio} si no está disponible; no se cubre la subida real de archivos del CU-16 ni el enlace de recuperación por correo del CU-15; CU-03 y CU-26 se prueban con los datos de prueba, sin el módulo de IA real; y, como algunas peticiones cambian el estado de las convocatorias de prueba (adjudican, publican, dan de baja), repetir la colección sobre la misma base falla en esos pasos.
+
+\paragraph{9.5.5.2. Pruebas de extremo a extremo con Playwright.}
+
+Las especificaciones están en \texttt{tests/e2e/specs} y se ejecutan con \texttt{npx playwright test} contra el \textit{backend} en perfil de desarrollo y el panel web levantado. Resultado: 5 pruebas aprobadas de 5 (19,5 s) sobre una base recién creada, en cuatro flujos:
+
+\begin{itemize}
+    \item \textbf{Inicio de sesión (CU-01):} las credenciales incorrectas no permiten entrar y el administrador accede a su panel.
+    \item \textbf{Registro y postulación (CU-01, CU-16, CU-17):} un estudiante se registra, inicia una postulación, completa los datos socioeconómicos y guarda el borrador (se verifica el aviso «Borrador guardado»).
+    \item \textbf{Auditoría y adjudicación (CU-05 a CU-07):} el administrador abre el expediente de un finalista validado, adjudica la beca tras confirmar que la decisión es definitiva, y el resumen pasa a mostrar un adjudicado y dos cupos disponibles de tres.
+    \item \textbf{Bitácora (CU-25):} el administrador consulta la bitácora y ve el evento de inicio de sesión.
+\end{itemize}
+
+Cada flujo deja capturas de pantalla como evidencia. Limitaciones: el flujo de postulación llega hasta guardar el borrador, sin enviar la postulación completa con documentos; no hay pruebas de extremo a extremo de la aplicación móvil; y la prueba de adjudicación es definitiva, por lo que repetirla en local exige recrear la base.
+
+\paragraph{9.5.5.3. Pruebas de rendimiento con k6.}
+
+El \textit{script} \texttt{tests/k6/carga-api.js} aumenta la carga de 10 a 20 usuarios virtuales durante 55 s sobre las rutas de salud, carreras, convocatorias, indicadores del \textit{dashboard} (con sesión de directivo) y bitácora. Define dos umbrales: menos de 1\,\% de peticiones fallidas y percentil 95 de la latencia por debajo de 800 ms. La Tabla~\ref{tab:k6} muestra el resultado de la corrida en GitHub Actions, con el \textit{backend} en perfil de desarrollo y PostgreSQL y Redis efímeros: ambos umbrales se cumplen.
+
+\begin{table}[H]
+\centering
+\caption{Resultado de la prueba de carga con k6}
+\label{tab:k6}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+\textbf{Medida} & \textbf{Resultado} & \textbf{Umbral} \\
+\midrule
+Peticiones fallidas & 0,00\,\% (0 de 3\,092) & Menos de 1\,\% \\
+Latencia, percentil 95 & 15,33 ms & Menos de 800 ms \\
+Latencia promedio / mediana / p90 / máxima & 8,09 / 6,86 / 12,72 / 249,91 ms & --- \\
+Verificaciones (\textit{checks}) & 100\,\% (3\,092 de 3\,092) & --- \\
+Peticiones HTTP & 3\,092 (55,1 por segundo) & --- \\
+Iteraciones completas & 618 (11,0 por segundo) & --- \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia. Hasta 20 usuarios virtuales durante 55 s.
+\end{table}
+
+En una primera corrida el umbral de errores falló con 19,99\,\% porque el \textit{script} pedía los indicadores con el token del administrador y ese servicio es solo del rol Directivo (responde 403); era un error del \textit{script}, no del sistema, y se corrigió. Esta es una carga ligera (20 usuarios, un minuto, datos de prueba, una sola instancia): sirve como línea base, no como prueba de capacidad para producción.
+
+\paragraph{9.5.5.4. Análisis de calidad y seguridad con SonarQube Cloud.}
+
+SonarQube Cloud analiza el código fuente sin ejecutarlo y reporta defectos, vulnerabilidades y problemas de mantenimiento. El repositorio del sistema está conectado a la plataforma, que analizó unas 48 mil líneas de código. Su resumen de seguridad (Figura~\ref{fig:sonar}) asigna al proyecto la calificación C y registra 19 incidencias de seguridad abiertas, repartidas por severidad en 21\,\% altas, 53\,\% medias y 26\,\% bajas. Las de severidad alta son las primeras que corresponde revisar. Este análisis se consulta en el sitio de la plataforma y puede señalar avisos que aún no se atendieron en el repositorio.
+
+\begin{figure}[H]
+\caption{Resumen de seguridad del proyecto en SonarQube Cloud}
+\label{fig:sonar}
+\centering
+\includegraphics[width=\textwidth]{images/150_Captura_SonarQube_Cloud.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del 18 de noviembre de 2026.
+\end{figure}
 
 Las herramientas son las del repositorio descritas en los capítulos~\ref{cap:paps} y~\ref{cap:sqap}.
