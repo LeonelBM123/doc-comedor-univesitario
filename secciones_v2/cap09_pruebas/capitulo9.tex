@@ -774,9 +774,52 @@ Como el sistema guarda datos personales y socioeconómicos de estudiantes, el re
 
 \paragraph{9.3.3.1. OWASP ZAP.}
 
-OWASP ZAP es una herramienta gratuita que ataca una aplicación web de forma automática y reporta las vulnerabilidades que encuentra. Se ejecuta contra el entorno de pruebas (nunca contra producción) con dos modos: un rastreo pasivo que solo observa el tráfico de la API y un ataque activo que envía entradas maliciosas. Los hallazgos se clasifican por riesgo (alto, medio y bajo) y se corrigen los altos antes de la entrega.
+OWASP ZAP es una herramienta gratuita que analiza una aplicación web y reporta las vulnerabilidades que encuentra. Tiene dos modos: un rastreo pasivo, que solo observa las respuestas del servidor, y un ataque activo, que envía entradas maliciosas. Los hallazgos se clasifican por riesgo (alto, medio, bajo e informativo). En este proyecto se ejecutó el modo pasivo (\textit{baseline}) con la versión 2.17.0 en un contenedor de Docker; el ataque activo no se ejecutó porque llenaría de datos de prueba la base de la demostración.
 
-\paragraph{9.3.3.2. Prueba de vulnerabilidad manual.}
+\paragraph{9.3.3.2. Resultado del análisis \textit{baseline}.}
+
+El 19 de noviembre de 2026 se ejecutó el análisis pasivo contra la demostración desplegada del sistema (el panel web publicado en CloudFront), sin ataques ni entradas maliciosas. ZAP rastreó 16 direcciones; 57 reglas pasivas no encontraron incidencias y el informe reunió 14 alertas: 1 de riesgo alto, 2 medio, 7 bajo y 4 informativas (Figura~\ref{fig:zap_resumen}). La Tabla~\ref{tab:zap_alertas} las agrupa.
+
+\begin{figure}[H]
+\caption{Resumen del informe de OWASP ZAP}
+\label{fig:zap_resumen}
+\centering
+\includegraphics[width=0.9\textwidth]{images/175_ZAP_Resumen_Alertas.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Informe de ZAP 2.17.0 del 19 de noviembre de 2026.
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Alertas del análisis \textit{baseline} de ZAP}
+\label{tab:zap_alertas}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
+\toprule
+\textbf{Alerta} & \textbf{Riesgo} & \textbf{Instancias} & \textbf{Corrección sugerida} \\
+\midrule
+Servidor nginx con versión con vulnerabilidades conocidas (nginx/1.31.8) & Alto & 1 & Actualizar nginx y ocultar la versión (\texttt{server\_tokens off}). \\
+Falta la cabecera Content-Security-Policy & Medio & 3 & Definir la política de contenido en el servidor web. \\
+Falta la protección contra \textit{clickjacking} & Medio & 3 & Agregar X-Frame-Options o \textit{frame-ancestors}. \\
+Falta la cabecera Strict-Transport-Security & Bajo & 5 & Activar HSTS. \\
+El encabezado \textit{Server} revela la versión & Bajo & 5 & Suprimir o generalizar el encabezado. \\
+Falta la cabecera X-Content-Type-Options & Bajo & 5 & Agregar \texttt{nosniff}. \\
+Falta la cabecera Permissions-Policy & Bajo & 5 & Definir los permisos del navegador. \\
+Faltan las cabeceras Cross-Origin-Embedder, -Opener y -Resource-Policy & Bajo & 2, 2 y 5 & Agregar las tres cabeceras. \\
+Aplicación web moderna; revisar Cache-control; contenido almacenable & Informativo & 3, 3, 5 y 5 & Revisar las directivas de caché. \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize\textit{Nota.} Elaboración propia a partir del informe de ZAP. Las instancias son las direcciones en las que apareció cada alerta.
+\end{table}
+
+Todas las alertas se refieren a cabeceras de seguridad de HTTP y a la versión del servidor web; ninguna señala una falla en el código de la aplicación. La de riesgo alto indica que la versión de nginx que anuncia el servidor tiene vulnerabilidades conocidas (ZAP lista 10, 3 de ellas altas). La corrección es simple: actualizar la imagen de nginx, ocultar su versión y agregar las cabeceras en la configuración del servidor o en la política de respuestas de CloudFront. Estas correcciones están pendientes y, como indica el criterio de esta sección, las de riesgo alto deben aplicarse antes de la entrega.
+
+El análisis tiene límites: es pasivo, solo recorrió las páginas públicas del panel (sin iniciar sesión), no probó la API ni envió entradas maliciosas, y se hizo contra la demostración desplegada y no contra un entorno aislado. No reemplaza el ataque activo ni la prueba manual de la sección siguiente.
+
+\paragraph{9.3.3.3. Prueba de vulnerabilidad manual.}
 
 Complementa a la herramienta con comprobaciones que esta no cubre bien:
 
@@ -790,9 +833,9 @@ Complementa a la herramienta con comprobaciones que esta no cubre bien:
 
 \subsubsection{9.3.4. Lista de Comprobación}
 
-La prueba con lista de comprobación (\textit{checklist-based testing}) es una técnica basada en la experiencia: en lugar de escribir casos de prueba con datos y resultado esperado exactos, quien prueba recorre una lista de puntos que deben cumplirse. Cada punto es una condición del sistema redactada como afirmación («se rechaza el envío si falta un documento obligatorio»); se comprueba con el sistema, se marca como cumple o no cumple y se anota una observación si falla. La lista se arma a partir de los requisitos, las reglas del negocio y los errores previstos, y es más rápida de ejecutar que los casos de caja blanca y de caja negra, a cambio de menos detalle. Por eso complementa a esas dos técnicas: cubre muchas condiciones a la vez y sirve para repetir la revisión en cada incremento.
+La prueba con lista de comprobación (\textit{checklist-based testing}) es una de las técnicas basadas en la experiencia que define el programa de estudios del ISTQB \parencite{istqb2023ctfl}: en lugar de escribir casos de prueba con datos y resultado esperado exactos, quien prueba recorre una lista de puntos que deben cumplirse. Cada punto es una condición del sistema redactada como afirmación («se rechaza el envío si falta un documento obligatorio»); se comprueba con el sistema, se marca como cumple o no cumple y se anota una observación si falla. La lista se arma a partir de los requisitos, las reglas del negocio y los errores previstos, y es más rápida de ejecutar que los casos de caja blanca y de caja negra, a cambio de menos detalle. Por eso complementa a esas dos técnicas: cubre muchas condiciones a la vez y sirve para repetir la revisión en cada incremento.
 
-% [PENDIENTE]: citar el libro de ingeniería de software (autor y año) que define esta técnica y agregarlo a referencias.bib; el nombre del tema que pidió el docente es «pruebas usando lista de componentes (libro de software)».
+% (La técnica se cita del programa de estudios del ISTQB v4.0, sección 4.4.3. No se verificó un libro de texto concreto; si el docente exige un libro, agregarlo a referencias.bib.)
 
 Se elaboró una lista para cada uno de los tres casos de uso. Los puntos se obtuvieron de los requisitos del caso de uso y de los códigos de error que define el sistema, que se indican en la columna «Origen». La columna «Cumple» registra el resultado de la revisión que hizo el equipo con el sistema en funcionamiento, y «Observación» queda para anotar los puntos que fallen.
 
@@ -924,6 +967,62 @@ Las pruebas automáticas pasan en la integración continua. & Sí & \\
 \footnotesize\textit{Nota.} Elaboración propia. La columna «Cumple» registra el resultado de la revisión que hizo el equipo; «Observación» queda para los puntos que fallen.
 \end{table}
 
+\subsubsection{9.3.5. Pruebas de Caja Negra de los 26 Casos de Uso}
+
+Las tablas de la sección 9.3.2 aplican las técnicas de partición de equivalencia y de valores límite a los tres casos de uso elegidos (CU-02, CU-03 y CU-05). Las pruebas de caja negra de los 26 casos de uso, con sus criterios de aceptación, datos de prueba, procedimiento y resultado esperado, se presentan en la sección 3.6.7 (Tabla~\ref{tab:reporte_cu}), dentro del flujo de trabajo de Pruebas del proceso de desarrollo.
+
+\subsubsection{9.3.6. Diagramas de Secuencia de los Casos de Uso Probados}
+
+Los diagramas de secuencia muestran, en el orden en que ocurren, los mensajes que intercambian los objetos del sistema al ejecutar cada caso de uso, y por eso sirven de apoyo para diseñar y revisar las pruebas de la sección 9.3.1. Se elaboraron con Enterprise Architect, en notación UML 2.5, a partir del código de los servicios del \textit{backend} que se analizaron en esa sección. Cada línea de vida es un objeto (el actor, la pantalla, el controlador, el servicio o el repositorio); las flechas continuas son llamadas y las punteadas, retornos; y los fragmentos combinados \textit{alt} separan los caminos alternativos según la condición indicada entre corchetes.
+
+\paragraph{9.3.6.1. CU-02 Enviar postulación.}
+
+El Postulante confirma el envío en el formulario, que llama al controlador, y este al servicio de envío. El servicio lee la cabecera de la postulación y la bloquea para que dos peticiones simultáneas no la procesen a la vez. Según el estado hay tres caminos: si ya está pendiente o calificada (envío repetido), devuelve el comprobante ya emitido; si no es borrador ni devuelta, responde un conflicto (\texttt{ERR\_ENV\_03}); y si es borrador o devuelta, valida la elegibilidad y la ausencia de duplicados, valida las respuestas, guarda la postulación como pendiente con su historial y solicita la precalificación de forma asíncrona (Figura~\ref{fig:ds_cu02}).
+
+\begin{landscape}
+\begin{figure}[p]
+\caption{Diagrama de secuencia del CU-02 Enviar postulación}
+\label{fig:ds_cu02}
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{images/176_Secuencia_CU02_Enviar_Postulacion.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia con Enterprise Architect. Se basa en el método de envío del servicio de postulaciones.
+\end{figure}
+\end{landscape}
+
+\paragraph{9.3.6.2. CU-03 Precalificar con inteligencia artificial.}
+
+La precalificación se ejecuta en segundo plano tras confirmarse el envío. El servicio de precalificación busca los datos de la postulación pendiente; si no hay datos, termina sin hacer nada. Si los hay, obtiene la versión vigente del modelo con sus ponderaciones y pide el cálculo al módulo de inteligencia artificial, con un límite de 5 segundos. Hay tres caminos: si la IA responde con un puntaje válido, el servicio retira el puntaje vigente anterior, guarda el nuevo con su fecha y marca la postulación como calificada; si la IA no responde o excede el tiempo, la postulación sigue pendiente y se reintenta; y si los datos son inválidos o el modelo no está registrado, se cuenta un fallo y no se calcula el puntaje (Figura~\ref{fig:ds_cu03}).
+
+\begin{landscape}
+\begin{figure}[p]
+\caption{Diagrama de secuencia del CU-03 Precalificar con inteligencia artificial}
+\label{fig:ds_cu03}
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{images/177_Secuencia_CU03_Precalificar_IA.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia con Enterprise Architect. Se basa en el método de precalificación del servicio de preselección.
+\end{figure}
+\end{landscape}
+
+\paragraph{9.3.6.3. CU-05 Auditar y adjudicar becas.}
+
+El Administrador DUBSS adjudica desde el expediente de un finalista. El servicio de adjudicación obtiene la cabecera del finalista y bloquea la convocatoria y la postulación; después reúne los datos de las reglas (publicación de resultados, última auditoría y cupos). Si los resultados ya se publicaron o la postulación ya no está calificada, responde \texttt{ERR\_ADJ\_01}; si la convocatoria no está cerrada, falta una auditoría validada, el puntaje total no alcanza el mínimo o no hay cupos, responde \texttt{ERR\_ADJ\_05}, \texttt{02}, \texttt{03} o \texttt{04}. Si se cumplen todas las reglas, guarda la adjudicación con el puntaje total, deja la fila en el historial (de calificada a adjudicada) y registra la acción en la bitácora (Figura~\ref{fig:ds_cu05}).
+
+\begin{landscape}
+\begin{figure}[p]
+\caption{Diagrama de secuencia del CU-05 Auditar y adjudicar becas}
+\label{fig:ds_cu05}
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{images/178_Secuencia_CU05_Adjudicar_Beca.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia con Enterprise Architect. Se basa en el método de decisión del servicio de adjudicación; la selección de finalistas es un paso anterior.
+\end{figure}
+\end{landscape}
+
 \subsection{9.4. Representación del Tiempo de Respuesta}
 
 El requisito RNF-03 fija dos límites: la carga de una pantalla en 3 segundos o menos y el cálculo del puntaje de una postulación en 5 segundos o menos. Cada uno se mide repitiendo la operación al menos 30 veces y se reporta el promedio y el valor máximo. Se registran en la Tabla~\ref{tab:tiempos}.
@@ -968,10 +1067,10 @@ Esta sección describe las herramientas con las que se prueba el sistema y las p
     \item \textbf{Playwright:} automatiza un navegador real para probar el panel web de punta a punta (pantalla, API y base de datos) y deja capturas como evidencia (sección 9.5.5).
     \item \textbf{k6:} prueba de rendimiento del \textit{backend} bajo carga, con usuarios virtuales y umbrales de latencia y de errores que hacen fallar la corrida; se ejecuta como flujo manual de GitHub Actions (sección 9.5.5).
     \item \textbf{SonarQube Cloud:} plataforma de análisis estático que revisa la calidad y la seguridad del código \parencite{sonarqubecloud2026}. Su uso en el proyecto se detalla en la sección 9.5.5.4.
-    \item \textbf{OWASP ZAP:} análisis de vulnerabilidades previsto en la sección 9.3.3.
+    \item \textbf{OWASP ZAP:} análisis de vulnerabilidades en modo pasivo (\textit{baseline}), ejecutado en un contenedor de Docker (sección 9.3.3).
 \end{itemize}
 
-% [VERIFICAR]: confirmar si ya se ejecutó OWASP ZAP; si se hizo, registrar los hallazgos en 9.3.3 y quitar «previsto».
+% (ZAP se ejecutó el 19-nov-2026; ver 9.3.3.2.)
 
 \subsubsection{9.5.2. Pruebas automatizadas del proyecto}
 
