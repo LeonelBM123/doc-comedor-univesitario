@@ -1,12 +1,12 @@
 % ------------------------------------------------------------------------------
 % 8.2. IMPLEMENTACIÓN DE LA ARQUITECTURA DEL SUBSISTEMA
 % ------------------------------------------------------------------------------
-\subsection{8.2. Implementación de la Arquitectura del Subsistema}\label{sec:cap8_arquitectura_subsistema}
+\wfa{\wn{8}.2. Implementación de la Arquitectura del Subsistema}\label{sec:cap8_arquitectura_subsistema}
 
 Cada subsistema sigue la misma arquitectura en tres capas, que corresponde a la organización por \textit{features} del código. La capa de cliente contiene las pantallas del panel web (una carpeta por \textit{feature} en React) y, cuando el caso de uso lo requiere, las pantallas y servicios de la aplicación móvil. La capa de servicio y negocio está en el paquete \texttt{com.comedoruagrm.backend.features} de Spring Boot: los controladores REST validan la entrada y delegan en servicios; los servicios contienen la lógica, las transacciones y la auditoría; y los repositorios, interfaces de Spring Data JPA o consultas SQL directas, acceden a la base de datos. La capa de base de datos corresponde a las tablas de PostgreSQL de cada paquete funcional. Las flechas de los diagramas indican dependencia de uso y se obtuvieron de las dependencias inyectadas en el código; para no recargar los diagramas, no se dibujan las lecturas de apoyo a tablas de otros subsistemas.
 
 
-\subsubsection{8.2.1. Implementación de la Arquitectura del Subsistema Cuentas y Acceso}\label{sec:cap8_sub_p1}
+\wfb{\wn{8}.2.1. Implementación de la Arquitectura del Subsistema Cuentas y Acceso}\label{sec:cap8_sub_p1}
 
 Este subsistema agrupa los casos de uso CU01, CU14, CU15.
 
@@ -37,7 +37,7 @@ La Figura~\ref{fig:impl_p1} presenta el diagrama de componentes del subsistema. 
 \end{landscape}
 
 
-\subsubsection{8.2.2. Implementación de la Arquitectura del Subsistema Convocatoria y Postulación}\label{sec:cap8_sub_p2}
+\wfb{\wn{8}.2.2. Implementación de la Arquitectura del Subsistema Convocatoria y Postulación}\label{sec:cap8_sub_p2}
 
 Este subsistema agrupa los casos de uso CU13, CU02, CU16, CU17, CU18, CU04.
 
@@ -68,7 +68,7 @@ La Figura~\ref{fig:impl_p2} presenta el diagrama de componentes del subsistema. 
 \end{landscape}
 
 
-\subsubsection{8.2.3. Implementación de la Arquitectura del Subsistema Preselección con IA}\label{sec:cap8_sub_p3}
+\wfb{\wn{8}.2.3. Implementación de la Arquitectura del Subsistema Preselección con IA}\label{sec:cap8_sub_p3}
 
 Este subsistema agrupa los casos de uso CU03, CU26.
 
@@ -98,7 +98,7 @@ La Figura~\ref{fig:impl_p3} presenta el diagrama de componentes del subsistema. 
 \end{landscape}
 
 
-\subsubsection{8.2.4. Implementación de la Arquitectura del Subsistema Auditoría y Adjudicación}\label{sec:cap8_sub_p4}
+\wfb{\wn{8}.2.4. Implementación de la Arquitectura del Subsistema Auditoría y Adjudicación}\label{sec:cap8_sub_p4}
 
 Este subsistema agrupa los casos de uso CU05, CU06, CU07, CU08, CU19, CU20, CU21, CU22 y CU-EXTRA-01.
 
@@ -129,7 +129,7 @@ La Figura~\ref{fig:impl_p4} presenta el diagrama de componentes del subsistema. 
 \end{landscape}
 
 
-\subsubsection{8.2.5. Implementación de la Arquitectura del Subsistema Becados y Asistencia}\label{sec:cap8_sub_p5}
+\wfb{\wn{8}.2.5. Implementación de la Arquitectura del Subsistema Becados y Asistencia}\label{sec:cap8_sub_p5}
 
 Este subsistema agrupa los casos de uso CU23, CU09, CU10, CU11, CU24.
 
@@ -160,7 +160,7 @@ La Figura~\ref{fig:impl_p5} presenta el diagrama de componentes del subsistema. 
 \end{landscape}
 
 
-\subsubsection{8.2.6. Implementación de la Arquitectura del Subsistema Reportes y Trazabilidad}\label{sec:cap8_sub_p6}
+\wfb{\wn{8}.2.6. Implementación de la Arquitectura del Subsistema Reportes y Trazabilidad}\label{sec:cap8_sub_p6}
 
 Este subsistema agrupa los casos de uso CU12, CU25.
 

@@ -1,11 +1,11 @@
 % ------------------------------------------------------------------------------
 % 8.3. HERRAMIENTAS PARA EL DESARROLLO
 % ------------------------------------------------------------------------------
-\subsection{8.3. Herramientas para el Desarrollo}\label{sec:cap8_herramientas}
+\wfa{\wn{8}.3. Herramientas para el Desarrollo}\label{sec:cap8_herramientas}
 
 Las versiones citadas se tomaron de los archivos de dependencias del proyecto (\texttt{pom.xml}, \texttt{package.json}, \texttt{pubspec.yaml}, \texttt{requirements.txt}) y de \texttt{docker-compose.yml}. En el panel web y en la aplicación móvil figura el rango de versión declarado.
 
-\subsubsection{8.3.1. Lenguajes de programación}\label{sec:cap8_lenguajes}
+\wfb{\wn{8}.3.1. Lenguajes de programación}\label{sec:cap8_lenguajes}
 
 \begin{table}[H]
 \caption{Lenguajes de programación utilizados}
@@ -30,7 +30,7 @@ HTML y CSS & --- & Interfaces web (CSS con Tailwind) \\
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{table}
 
-\subsubsection{8.3.2. Librerías}\label{sec:cap8_librerias}
+\wfb{\wn{8}.3.2. Librerías}\label{sec:cap8_librerias}
 
 La Tabla~\ref{tab:impl_librerias_back} lista las librerías del \textit{backend}. Las que figuran como BOM toman la versión de Spring Boot 4.1.2.
 
@@ -150,7 +150,7 @@ Vitest & 5.0 & Pruebas de la landing \\
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{table}
 
-\subsubsection{8.3.3. Frameworks}\label{sec:cap8_frameworks}
+\wfb{\wn{8}.3.3. Frameworks}\label{sec:cap8_frameworks}
 
 \begin{table}[H]
 \caption{Frameworks utilizados}
@@ -177,15 +177,15 @@ Docker Compose & --- & Orquestación del entorno: nginx, core, ia, panel, landin
 \noindent\raggedright\textit{Nota.} Elaboración propia.
 \end{table}
 
-\subsubsection{8.3.4. Sistema gestor de base de datos}\label{sec:cap8_sgbd}
+\wfb{\wn{8}.3.4. Sistema gestor de base de datos}\label{sec:cap8_sgbd}
 
 El sistema gestor de base de datos es PostgreSQL 18 (imagen \texttt{postgres:18-alpine}), al que la API accede por JDBC. El esquema se gestiona con migraciones Flyway versionadas por fecha y hora (\texttt{V\{aaaaMMddHHmmss\}\_\_descripcion.sql}; 25 migraciones al redactar este capítulo). Cada tabla tiene un identificador interno \texttt{bigint} y un código público UUID, y el borrado es lógico mediante la columna \texttt{eliminado\_en}. Para el tablero BI se crearon cinco vistas materializadas. Los archivos no se guardan en la base sino en MinIO, y Redis se usa como caché del dashboard BI.
 
-\subsubsection{8.3.5. Lenguaje de modelado de software}\label{sec:cap8_modelado}
+\wfb{\wn{8}.3.5. Lenguaje de modelado de software}\label{sec:cap8_modelado}
 
 El modelado se realizó con el Lenguaje Unificado de Modelado (UML 2.5): diagramas de casos de uso, de análisis, de secuencia, de clases, de componentes y de despliegue, elaborados con Sparx Enterprise Architect 15. El diseño lógico de la base de datos también se modeló en esa herramienta y se transcribió al archivo \texttt{DiagramaConceptual.mermaid} del repositorio del proyecto.
 
-\subsubsection{8.3.6. Protocolo de comunicación}\label{sec:cap8_protocolos}
+\wfb{\wn{8}.3.6. Protocolo de comunicación}\label{sec:cap8_protocolos}
 
 \begin{table}[H]
 \caption{Protocolos de comunicación del sistema}
