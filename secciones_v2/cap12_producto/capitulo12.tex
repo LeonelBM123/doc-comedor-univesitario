@@ -6,7 +6,7 @@
 \newpage
 \section{Capítulo 12: Software como Producto}\label{cap:producto}
 
-Este capítulo reúne los materiales de ayuda al usuario del sistema de la Beca Comedor: el manual de usuario y, como material previsto, un asistente conversacional y tutoriales guiados.
+Este capítulo reúne los materiales de ayuda al usuario del sistema de la Beca Comedor: el manual de usuario y, como material previsto, tutoriales guiados.
 
 \subsection{12.1. Para el Usuario}
 
@@ -14,9 +14,7 @@ Este capítulo reúne los materiales de ayuda al usuario del sistema de la Beca 
 
 \paragraph{12.1.1.1. Alcance del manual.}
 
-% NOTA: 'los 13 de 26 CU' cambiará cuando Leonel termine el bloque B (actualizar lista de CU).
-El manual describe las funciones del sistema que están implementadas a la fecha: 13 de los 26 casos de uso (CU-01, CU-04, CU-05, CU-06, CU-07, CU-08, CU-12, CU-14, CU-15, CU-19, CU-20, CU-21 y CU-22), junto con el servicio de avisos que los acompaña. Las funciones de los casos de uso restantes (entre ellas el envío de la postulación, la precalificación con inteligencia artificial y el control de asistencia) se agregarán al manual cuando se implementen. El sistema se usa desde un navegador web (panel web) y desde una aplicación móvil Android; la aplicación móvil cubre hoy el acceso, el perfil, los avisos y la consulta de las postulaciones del postulante. Las capturas de pantalla de cada pantalla descrita se incorporarán cuando el equipo las entregue.
-% TODO: insertar capturas de pantalla de cada pantalla descrita (a cargo de Mau).
+El manual describe las funciones del sistema de los 26 casos de uso, junto con el servicio de avisos que los acompaña. El sistema se usa desde un navegador web (panel web) y desde una aplicación móvil Android. La aplicación móvil cubre el acceso, el perfil, los avisos, la postulación y sus documentos, la consulta de las postulaciones y de la beca del estudiante, y el registro de la asistencia por el personal del comedor. Las guías de este manual están escritas como texto; no incluyen capturas de pantalla.
 
 \paragraph{12.1.1.2. Perfiles de usuario.}
 
@@ -35,9 +33,10 @@ Perfil & Opciones del menú \\
 \bottomrule
 \endfoot
 Sin sesión & Inicio, Iniciar sesión, Crear cuenta y Recuperar contraseña. \\
-Postulante & Mis postulaciones, Resultados, Perfil y bandeja de avisos. \\
-Administrador de la DUBSS & Dashboard, Lista priorizada, Finalistas, Auditoría y adjudicación, Publicar resultados, Actas, Administradores DUBSS, Directivos, Personal del Comedor, Perfil y bandeja de avisos. \\
+Postulante & Mis postulaciones (con la postulación nueva y el borrador), Resultados, Mi beca, Perfil y bandeja de avisos. \\
+Administrador de la DUBSS & Dashboard; Gestiones académicas y Convocatorias; Parámetros del modelo y Lista priorizada; Finalistas, Auditoría y adjudicación, Publicar resultados y Actas; Padrón de becados, Planillas y Cotejo de asistencia; Administradores DUBSS, Directivos, Personal del Comedor y Bitácora; Perfil y bandeja de avisos. \\
 Directivo & Dashboard de indicadores. \\
+Personal del Comedor & Panel en el sistema web; en la aplicación móvil, Registrar asistencia. \\
 \end{longtable}
 \noindent\textit{Nota.} Elaboración propia a partir de las opciones de menú del panel web. Las opciones heredadas del prototipo inicial (Menús, Pedidos, Mi Menú y Mis Pedidos) no forman parte de este producto.
 
@@ -49,9 +48,19 @@ Directivo & Dashboard de indicadores. \\
 
 \textbf{Gestionar el perfil (CU-15).} En \textit{Perfil} el Postulante ve sus datos, edita los de contacto (el carné de identidad no se puede cambiar) y puede cambiar su contraseña escribiendo primero la actual.
 
+\textbf{Enviar la postulación (CU-02).} Cuando hay una convocatoria abierta, el Postulante pulsa \textit{Nueva postulación}. El formulario tiene tres pasos. En el paso 1 ve sus datos personales ya cargados desde su perfil. En el paso 2 completa los datos socioeconómicos: ingresos familiares, número de dependientes, procedencia, patrimonio, estado de vulnerabilidad y promedio académico, además de las preguntas del formulario socioeconómico de la DUBSS. En el paso 3 adjunta los documentos que exige la convocatoria. Al pulsar \textit{Enviar postulación}, el sistema avisa que, una vez enviada, no podrá editarla, y pide confirmar. Antes de aceptar el envío, el sistema verifica que no falte ningún campo ni documento obligatorio, que los datos tengan un formato válido y que el Postulante sea elegible y no tenga otra postulación vigente en la misma gestión. Si todo es correcto, la postulación pasa a \textit{pendiente} y el sistema muestra un comprobante con su código. Si se repite el envío (por ejemplo, por un doble clic), recibe el mismo comprobante y no se crea una segunda postulación. Si no hay convocatoria abierta o la convocatoria ya cerró, el sistema no permite enviar e indica el motivo. Si la DUBSS devolvió la postulación para corregirla, el Postulante la abre con sus respuestas anteriores, la corrige y la reenvía; vuelve a \textit{pendiente}.\par
+
+\textbf{Calificación automática (CU-03 y CU-18).} Tras el envío, el sistema valida la elegibilidad y calcula en segundo plano un puntaje de vulnerabilidad con inteligencia artificial, de 0 a 70 puntos. El Postulante no tiene que hacer nada: la postulación pasa sola de \textit{pendiente} a \textit{calificada}. Si el módulo de inteligencia artificial no responde, el envío no se pierde: la postulación sigue \textit{pendiente} y el sistema vuelve a intentarlo cada 5 minutos.\par
+
+\textbf{Adjuntar documentos (CU-16).} En el paso 3 el sistema muestra la lista de documentos que exige la convocatoria, con los que ya se adjuntaron y los que faltan. El Postulante elige uno; en la aplicación móvil lo captura con la cámara y en el panel web lo selecciona desde su equipo. El sistema comprueba el formato y el tamaño del archivo y muestra una vista previa; el Postulante confirma el documento, lo reemplaza, lo vuelve a capturar o lo elimina. Los valores iniciales propuestos son archivos PDF, JPEG o PNG de hasta 5~MB, con hasta 5 archivos por tipo de documento; estos límites están por definir con la DUBSS. Un archivo de formato no permitido, o que supera el tamaño máximo, se rechaza con un mensaje. Una vez enviada la postulación, ya no se pueden adjuntar, reemplazar ni eliminar documentos, salvo que la postulación sea devuelta.\par
+
+\textbf{Guardar un borrador (CU-17).} En cualquier momento de los pasos 2 y 3 el Postulante pulsa \textit{Guardar borrador}: el sistema guarda lo escrito hasta ese momento, aunque falten campos o documentos, y confirma con la hora del guardado. En \textit{Mis postulaciones} aparece la tarjeta del borrador, con la última modificación y cuántos campos y documentos obligatorios faltan; el Postulante la continúa con \textit{Continuar}. El borrador se conserva hasta que cierra la convocatoria; no se puede guardar un borrador si la convocatoria ya cerró o si la postulación ya fue enviada.\par
+
 \textbf{Consultar el estado de una postulación (CU-04).} En \textit{Mis postulaciones} el Postulante ve la lista de sus postulaciones, de la más reciente a la más antigua, con la gestión académica, la fecha de envío y el estado. Puede filtrar por gestión. Al abrir una postulación ve el detalle con una línea de tiempo con la fecha y la hora de cada cambio y los pasos que aún faltan. Según el estado, se agrega información: en \textit{devuelta}, las observaciones del personal y la opción de corregir y reenviar; en \textit{archivada} o \textit{no adjudicada} por rechazo, el motivo registrado; en el caso de un finalista, el plazo y los documentos que debe entregar en la DUBSS. Hasta que la DUBSS publique los resultados, una postulación ya decidida se sigue mostrando como \textit{calificada}. La misma consulta está disponible en la aplicación móvil.
 
 \textbf{Ver los resultados (CU-22).} Una vez publicados los resultados de la convocatoria, el Postulante los consulta en \textit{Resultados}. Cada postulante ve su propio resultado.
+
+\textbf{Consultar la beca y la asistencia (CU-24).} Cuando el Postulante fue adjudicado y la DUBSS dio de alta su beca, en \textit{Mi beca} ve el código y el estado de la beca (vigente, suspendida o dada de baja), la convocatoria y la gestión, la fecha de adjudicación y el total de asistencias. Si la beca está suspendida o dada de baja, ve también el motivo. Debajo está el historial de asistencia, con las fechas registradas de la más reciente a la más antigua y paginadas, que puede filtrar por un rango de fechas. Quien no tiene beca recibe un mensaje y se lo lleva a \textit{Mis postulaciones}.\par
 
 \textbf{Avisos.} El sistema avisa al Postulante, en la bandeja de avisos, con una notificación en el celular y por correo, cuando es notificado como finalista, cuando se registra el resultado de la auditoría de su expediente, cuando su postulación es devuelta, archivada o rechazada, cuando se publican los resultados y cuando la DUBSS emite un comunicado. Al tocar un aviso se abre la postulación correspondiente.
 
@@ -73,11 +82,27 @@ Directivo & Dashboard de indicadores. \\
 
 \textbf{Generar el acta de adjudicación (CU-08).} En \textit{Actas} el Administrador ve las actas generadas y las convocatorias con resultados publicados que aún no tienen acta. Elige una convocatoria, puede ver una vista previa marcada como borrador y pulsa \textit{Generar PDF}; el sistema advierte que el acta es definitiva, la genera con los adjudicados (nombre, carné, carrera y puntaje final) y la guarda. El acta se descarga o imprime desde la misma pantalla con \textit{Descargar}; la descarga queda anotada en la bitácora.
 
+\textbf{Gestionar convocatorias y gestiones académicas (CU-13).} En \textit{Convocatorias} el Administrador ve la lista con la gestión académica, las fechas, los cupos y el estado de cada una (borrador, abierta o cerrada), y puede crear, editar, abrir, cerrar, eliminar o consultar una convocatoria. Al crear o editar indica el nombre, la gestión académica, las fechas de apertura y de cierre, los cupos, el puntaje mínimo y la cantidad de finalistas (estos dos últimos son opcionales) y los documentos obligatorios; los valores de cupos y puntaje mínimo se definen con la DUBSS. El sistema exige que el cierre sea posterior a la apertura, que haya al menos un documento obligatorio y que no exista otra convocatoria abierta en la misma gestión. La convocatoria pasa de borrador a abierta y de abierta a cerrada, sin volver atrás; solo mientras está abierta se reciben postulaciones. Las gestiones académicas se administran en \textit{Gestiones académicas}, donde se listan, crean y editan.\par
+
+\textbf{Parametrizar el modelo y reprocesar puntajes (CU-26).} En \textit{Parámetros del modelo} el Administrador ve la versión vigente del modelo de preselección, con la ponderación (puntos máximos) de cada variable, y el historial de versiones. Modifica las ponderaciones en la columna \textit{Nuevo}; el sistema muestra la suma mientras escribe, y solo permite guardar si suma 100 y cada valor está entre 0 y 100. Al pulsar \textit{Guardar versión}, se crea la versión siguiente, que pasa a ser la vigente, y la anterior se archiva; guardar no cambia ningún puntaje existente. Para recalcular, elige una convocatoria y pulsa \textit{Reprocesar puntajes}; el sistema muestra el resumen y pide confirmación, y recalcula en segundo plano mostrando el avance. No se puede reprocesar una convocatoria cuyos resultados ya fueron publicados.\par
+
+\textbf{Gestionar el padrón de becados (CU-23).} Una vez publicados los resultados, en \textit{Padrón de becados} el Administrador elige la convocatoria; el sistema indica cuántos adjudicados aún no figuran en el padrón y ofrece \textit{Dar de alta}, que crea una beca vigente por cada uno sin duplicar. En la tabla ve el nombre, el carné, la carrera y el estado de cada beca (vigente, suspendida o dada de baja). Sobre una beca vigente puede \textit{Suspender} o \textit{Dar de baja}, y el sistema pide un motivo obligatorio. Una beca dada de baja puede reemplazarse con el siguiente postulante priorizado disponible.\par
+
+\textbf{Generar la planilla de asistencia (CU-09).} En \textit{Planillas} el Administrador elige una convocatoria con resultados publicados e indica el periodo (fecha desde y fecha hasta). El periodo debe estar dentro de la gestión académica, la fecha final no puede ser anterior a la inicial y el periodo no puede pasar de 31 días. Puede ver antes una vista previa marcada como borrador. Al pulsar \textit{Generar planilla}, el sistema crea un PDF apaisado con los becados vigentes ordenados por apellido y nombre, con espacio para la firma, y lo guarda. Si la convocatoria no tiene becas vigentes, no se genera nada. La planilla se imprime y se firma en el comedor.\par
+
+\textbf{Cotejar la asistencia (CU-11).} En \textit{Cotejo de asistencia} el Administrador elige la convocatoria y la planilla. El sistema muestra los registros digitales de asistencia de ese periodo. El Administrador los compara con las firmas de la planilla física, ingresa el total de registros comparados y cuántos coinciden, y el sistema calcula las discrepancias y el resultado; agrega observaciones y pulsa \textit{Guardar cotejo}. Si las coincidencias y las discrepancias no suman el total, o el resultado no corresponde a las discrepancias, el sistema no guarda el cotejo. El cotejo queda en el historial y en la bitácora.\par
+
+\textbf{Consultar la bitácora (CU-25).} En \textit{Bitácora} el Administrador ve las acciones registradas del sistema, de la más reciente a la más antigua y paginadas. Puede filtrar por usuario, por acción y por rango de fechas y pulsar \textit{Buscar}; si la fecha inicial es posterior a la final, el sistema lo rechaza. La bitácora solo se consulta: no ofrece ninguna operación para modificar o eliminar acciones, y solo el Administrador de la DUBSS puede verla.\par
+
 \paragraph{12.1.1.5. Guía para el Directivo.}
 
 \textbf{Visualizar el dashboard de indicadores (CU-12).} Al iniciar sesión el Directivo abre \textit{Dashboard}, que muestra cuatro indicadores y los gráficos de postulaciones y de asistencia por mes de la gestión académica vigente, junto con la fecha de la última actualización. Puede elegir otra gestión o una convocatoria, pulsar \textit{Aplicar} para actualizar la vista y, si lo desea, pulsar \textit{Descargar PDF} para obtener el informe de lo que está viendo. Si no hay datos, el sistema lo informa y muestra los indicadores en cero.
 
-\paragraph{12.1.1.6. Mensajes y problemas frecuentes.}
+\paragraph{12.1.1.6. Guía para el Personal del Comedor.}
+
+\textbf{Registrar la asistencia (CU-10).} Al iniciar sesión en la aplicación móvil, el Personal del Comedor llega a \textit{Registrar asistencia}. La pantalla muestra la fecha de hoy y pide el carné del becado. El Personal lo escribe y pulsa \textit{Buscar}; el sistema muestra el nombre, el carné, la carrera, la convocatoria y el estado de la beca. Con la beca vigente, pulsa \textit{Registrar asistencia}: el sistema guarda la asistencia con la fecha, la hora y el usuario y deja la pantalla lista para el siguiente becado. Si el becado ya registró asistencia ese día, el sistema lo informa con la hora del primer registro y no crea otro. Si la beca está suspendida o dada de baja, o el carné no corresponde a ningún becado, el sistema muestra el motivo y no registra nada. El sistema no verifica la identidad del becado por sí mismo: solo registra el resultado de la verificación que hace el comedor.\par
+
+\paragraph{12.1.1.7. Mensajes y problemas frecuentes.}
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{5.2cm} >{\raggedright\arraybackslash}p{7.6cm}}
 \caption{Situaciones frecuentes y qué hacer}\label{tab:problemas_frecuentes}\\
@@ -97,14 +122,17 @@ No se habilita \textit{Auditar} & Registrar primero la documentación recibida d
 No se puede devolver una postulación & Debe estar calificada y haber sido auditada después de la última devolución. \\
 No se puede publicar los resultados & Quedan finalistas sin decisión; el mensaje indica cuántos faltan. \\
 Dos personas ejecutan la misma acción a la vez & La segunda recibe un aviso de conflicto y no se repite la operación. \\
+No se puede enviar la postulación & Revisar que no falte ningún campo ni documento obligatorio, que la convocatoria siga abierta y que no exista otra postulación vigente en la gestión. \\
+Un documento se rechaza al adjuntarlo & El formato no está permitido o supera el tamaño máximo; capturarlo de nuevo o adjuntar otro archivo. \\
+La postulación sigue pendiente después del envío & El módulo de inteligencia artificial puede estar sin responder; el sistema reintenta cada 5 minutos y la califica solo. \\
+No se puede abrir una convocatoria & Ya hay otra abierta en la misma gestión académica. \\
+No se guardan las ponderaciones del modelo & Deben sumar 100 y cada una estar entre 0 y 100. \\
+No se genera la planilla & El periodo debe estar dentro de la gestión y no pasar de 31 días, y la convocatoria debe tener becas vigentes. \\
+No se guarda el cotejo & Las coincidencias y las discrepancias deben sumar el total de registros comparados. \\
+El carné no registra asistencia & La beca está suspendida o dada de baja, o el carné no corresponde a un becado. \\
 \end{longtable}
 \noindent\textit{Nota.} Elaboración propia a partir de las reglas de los casos de uso.
 
-\subsubsection{12.1.2. Chatbots}
-
-Un asistente conversacional (\textit{chatbot}) es un programa que responde preguntas en lenguaje natural. El sistema todavía no incluye uno; esta sección describe lo previsto. El asistente resolvería las dudas frecuentes de los postulantes y del personal (requisitos de la beca, documentos a presentar, significado de cada estado de la postulación, plazos y cómo corregir una postulación devuelta) con respuestas basadas en el manual de usuario y en la información oficial de la convocatoria. Estaría disponible dentro del panel web y de la aplicación móvil, y derivaría a la DUBSS las consultas que no pueda resolver. Las consultas sobre la situación personal de un postulante se responderían solo con el estado que el propio usuario autenticado puede ver. La tecnología, las fuentes de conocimiento y el alcance del asistente aún no están definidos; se acordarán con la DUBSS.
-% TODO: definición del chatbot a cargo de Mau.
-
-\subsubsection{12.1.3. Tutoriales}
+\subsubsection{12.1.2. Tutoriales}
 
 Todavía no existen tutoriales. Está previsto incorporar un recorrido guiado (\textit{tour}) dentro del propio software, que oriente al usuario la primera vez que ingresa y pueda repetirse desde el menú de ayuda. El recorrido resaltaría paso a paso los elementos de la pantalla según el perfil: para el Postulante, cómo completar y enviar la postulación, cargar los documentos y consultar el estado; para el personal de la DUBSS, cómo revisar la lista priorizada, auditar un expediente y publicar resultados. Se complementaría con videos cortos y fichas de ayuda por caso de uso, que se elaborarían cuando las funciones respectivas estén implementadas. La herramienta del recorrido guiado y el calendario de elaboración se definirán más adelante.
