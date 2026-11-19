@@ -967,7 +967,7 @@ Esta sección describe las herramientas con las que se prueba el sistema y las p
     \item \textbf{Bruno:} cliente de API de código abierto que ejecuta colecciones de peticiones con aserciones y genera un informe de la corrida. Se eligió porque sus colecciones son archivos de texto versionados en el repositorio (a diferencia de herramientas que las guardan en la nube) y porque su línea de comandos (\texttt{bru run}) corre desde la terminal sin cuenta. Con él se probó la API del \textit{backend} caso de uso por caso de uso (sección 9.5.5).
     \item \textbf{Playwright:} automatiza un navegador real para probar el panel web de punta a punta (pantalla, API y base de datos) y deja capturas como evidencia (sección 9.5.5).
     \item \textbf{k6:} prueba de rendimiento del \textit{backend} bajo carga, con usuarios virtuales y umbrales de latencia y de errores que hacen fallar la corrida; se ejecuta como flujo manual de GitHub Actions (sección 9.5.5).
-    \item \textbf{SonarQube Cloud:} plataforma de análisis estático que revisa la calidad y la seguridad del código; está conectada directamente al repositorio de GitHub, por lo que el repositorio no contiene su configuración (sección 9.5.5).
+    \item \textbf{SonarQube Cloud:} plataforma de análisis estático que revisa la calidad y la seguridad del código \parencite{sonarqubecloud2026}. Su uso en el proyecto se detalla en la sección 9.5.5.4.
     \item \textbf{OWASP ZAP:} análisis de vulnerabilidades previsto en la sección 9.3.3.
 \end{itemize}
 

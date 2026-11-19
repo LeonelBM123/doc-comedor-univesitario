@@ -18,6 +18,12 @@
 % ==============================================================================
 \input{config/paquetes.tex}
 \input{config/preportada.tex}
+% Docente de la carátula solo para la versión 2 (main.tex conserva el suyo).
+\newcommand{\docentecaratula}{M. Sc. Ing. ROLANDO ANTONIO MARTINEZ CANEDO}
+\newcommand{\materiacaratula}{Ingeniería de Software II (INF512 - SB)}
+% En la v2 cada capítulo abre con una carátula (diseño universitario + nombre del capítulo).
+\input{config/caratula_capitulo.tex}
+\renewcommand{\preportadacapitulo}[2]{\caratulacapitulo{#1}{#2}}
 
 % Renumeración de capítulos reutilizados: el marco tecnológico (capítulo 2 en
 % main.tex) pasa a ser el capítulo 6 en esta versión.
