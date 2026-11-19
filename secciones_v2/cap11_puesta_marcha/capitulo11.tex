@@ -7,7 +7,7 @@
 \section{Capítulo 11: Aspectos de Puesta en Marcha del Software}\label{cap:puesta_marcha}
 
 % [INSTRUCCIÓN]: Puesta en marcha y despliegue (fase de Transición del PUDS). Contenido propio de esta versión.
-% [VERIFICAR]: las normas citadas se confirman en su texto oficial antes de la entrega; los precios de servidores y de la tienda de aplicaciones se toman de las páginas oficiales en la fecha de cotización.
+% [VERIFICAR]: las normas citadas se leyeron en LexiVox el 19-nov-2026 y se contrastan con la Gaceta Oficial antes de la entrega; los precios de servidores y de la tienda de aplicaciones se toman de las páginas oficiales en la fecha de cotización.
 
 Este capítulo corresponde a la fase de Transición del Proceso Unificado: lleva el sistema a producción y define las condiciones bajo las que se entrega. Se comparan las plataformas de alojamiento, se definen las licencias, y se resumen los términos, condiciones y políticas de privacidad.
 
@@ -47,15 +47,21 @@ La tabla compara las tres plataformas en los servicios que necesita el sistema.
 Contenedores de la API y de la IA & Servicio de contenedores o máquina virtual & Servicio de contenedores o máquina virtual & Servicio de contenedores o máquina virtual \\
 Base de datos PostgreSQL & Servicio administrado & Servicio administrado & Servicio administrado \\
 Archivos (documentos y actas) & Almacenamiento de objetos & Almacenamiento de objetos & Almacenamiento de objetos \\
-Costo mensual estimado & Por cotizar & Por cotizar & Por cotizar \\
+Costo mensual estimado & Unos USD 100 (máquina virtual y disco; ver el texto siguiente) & No se cotizó & No se cotizó \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
-\footnotesize\textit{Nota.} Elaboración propia. Los costos se completan con la calculadora de precios oficial de cada proveedor.
+\footnotesize\textit{Nota.} Elaboración propia. El costo de AWS se calculó con los precios de la lista oficial de AWS (API de precios) el 19 de noviembre de 2026; Azure y GCP no se cotizaron porque el sistema se desplegó en AWS.
 \end{table}
 
-% [PENDIENTE]: costo mensual de cada plataforma con la calculadora oficial (ver 11.6.1) para la carga prevista (20,000 postulaciones por gestión y al menos 50 administrativos concurrentes). No inventar montos.
+\paragraph{11.2.1. Costo del despliegue actual en AWS.}
+
+El despliegue actual del sistema, hecho para la demostración, corre en una sola máquina virtual de Amazon EC2 en la región de São Paulo (\texttt{sa-east-1}), de tipo \texttt{c7i-flex.large} (2 vCPU y 4 GiB de memoria), con un disco de 30 GB de tipo gp3. Dentro de la máquina, el sistema corre con Docker: el servidor web, el panel, el sitio de NEXWARE, la API, el módulo de IA, PostgreSQL y Redis. Las imágenes se guardan en Amazon ECR (cuatro repositorios), los archivos de los postulantes en Amazon S3, el correo sale por Amazon SES y el acceso público, con HTTPS, pasa por Amazon CloudFront. Es decir, la base de datos no es un servicio administrado, como se plantea para una producción definitiva.
+
+Con los precios de la lista oficial de AWS para esa región, la máquina virtual cuesta USD 0,13067 por hora, es decir, unos USD 95,39 al mes si está encendida todo el mes (730 horas), y el disco cuesta USD 0,152 por GB al mes, es decir, USD 4,56. Juntos suman unos USD 100 mensuales. Esta cifra no incluye el almacenamiento y las transferencias de S3, CloudFront, ECR, SES ni el cobro por la dirección IP pública, que dependen del uso real y no se calcularon. La cuenta no tiene activado el Explorador de Costos, por lo que no hay una factura real que confirmar. Esta estimación corresponde a la demostración y no a la carga prevista de producción (20,000 postulaciones por gestión y al menos 50 administrativos concurrentes).
+
+% [PENDIENTE]: costo real de AWS cuando se active el Explorador de Costos. Azure y GCP no se cotizan (decisión del equipo: el sistema usa AWS).
 
 \subsection{11.3. Tipos de Licencia Ofrecidos}
 
@@ -99,14 +105,14 @@ El sistema trata datos personales y socioeconómicos de estudiantes (ingresos fa
 \subsubsection{11.5.1. Leyes y normas bolivianas aplicables sobre datos personales}
 
 \begin{itemize}
-    \item \textbf{Constitución Política del Estado:} garantiza el derecho a la privacidad y a la intimidad y establece la acción de protección de privacidad para quien vea afectados sus datos.
-    \item \textbf{Ley N.º~164 (2011):} reconoce los derechos de los usuarios de servicios digitales a su privacidad.
-    \item \textbf{Ley N.º~1080 de Ciudadanía Digital (2018):} regula la identidad y los trámites digitales ante entidades públicas.
+    \item \textbf{Constitución Política del Estado:} reconoce el derecho a la privacidad, la intimidad, la honra, el honor, la propia imagen y la dignidad (artículo 21, numeral 2) y establece la acción de protección de privacidad para quien vea afectado su derecho a la intimidad y la privacidad por datos registrados en archivos o bancos de datos públicos o privados (artículo 130).
+    \item \textbf{Ley N.º~164 (2011):} reconoce a los usuarios de telecomunicaciones el derecho a exigir respeto a la privacidad e inviolabilidad de sus comunicaciones y a recibir del proveedor protección de sus datos personales contra la publicidad no autorizada (artículo 54, numerales 6 y 17); el artículo 56 obliga a garantizar la inviolabilidad y el secreto de las comunicaciones y la protección de los datos personales.
+    \item \textbf{Ley N.º~1080 de Ciudadanía Digital (2018):} establece las condiciones y responsabilidades para el acceso pleno y el ejercicio de la ciudadanía digital (artículo 1), lo que incluye la identidad y los trámites digitales.
 \end{itemize}
 
-Hasta donde el equipo ha podido verificar, Bolivia no cuenta con una ley específica y completa de protección de datos personales, por lo que el sistema aplica además buenas prácticas reconocidas.
+Hasta donde el equipo ha podido verificar, Bolivia no cuenta con una ley general de protección de datos personales: la Agencia de Gobierno Electrónico y Tecnologías de Información y Comunicación (AGETIC) presentó un anteproyecto en 2024 que, según las fuentes consultadas, seguía sin promulgarse en 2026. Por eso el sistema aplica, además de las normas anteriores, buenas prácticas reconocidas.
 
-% [VERIFICAR]: confirmar el estado actual de la legislación de protección de datos personales en Bolivia y el texto de las normas citadas.
+% [VERIFICAR]: los artículos citados se leyeron el 19-nov-2026 en LexiVox (no es la fuente oficial); contrastarlos con la Gaceta Oficial de Bolivia antes de la entrega. El estado del anteproyecto de protección de datos viene de fuentes secundarias (AGETIC y organizaciones de la sociedad civil); confirmarlo en la Asamblea Legislativa.
 
 \subsubsection{11.5.2. Redacción de las políticas de privacidad y gestión de datos}
 
@@ -127,7 +133,7 @@ El texto completo de la política se publica en el sitio de NEXWARE y en la fich
 
 \subsubsection{11.6.1. Herramientas de proyección de infraestructura (Cloud y Móvil)}
 
-Para calcular el costo de la nube se usan las calculadoras oficiales de los tres proveedores: AWS Pricing Calculator, la calculadora de precios de Azure y la calculadora de precios de Google Cloud. En el caso del despliegue móvil, la cuenta de desarrollador de Google Play tiene un pago de registro que se consulta en la página oficial de Google.
+Para calcular el costo de la nube en AWS se usa la API de precios y la calculadora oficial (AWS Pricing Calculator). En el caso del despliegue móvil, la cuenta de desarrollador de Google Play tiene un pago de registro que se consulta en la página oficial de Google.
 
 \subsubsection{11.6.2. Marco legal y normativo (Bolivia)}
 
@@ -135,4 +141,13 @@ Las normas del capítulo son el Código de Comercio, la Ley N.º~1322, la Ley N.
 
 \subsubsection{11.6.3. Recursos y evidencia del proyecto}
 
-% [PENDIENTE]: enlaces y evidencias reales (repositorio, captura del despliegue, ficha de Play Store) una vez que el sistema esté desplegado; no se incluyen evidencias que no existan.
+El sistema está desplegado y se accede a él en las direcciones siguientes:
+
+\begin{itemize}
+    \item \textbf{Panel web del sistema:} \url{https://d38nteg7p7v4qz.cloudfront.net/login}
+    \item \textbf{Sitio web de NEXWARE:} \url{https://d38nteg7p7v4qz.cloudfront.net/landing-page/es/}
+\end{itemize}
+
+El despliegue usa los servicios de AWS descritos en la sección 11.2.1. Para el despliegue de la aplicación móvil, el equipo prepara un archivo de instalación (APK) de Android; todavía no está publicada en Google Play Store.
+
+% [PENDIENTE]: enlace al APK (Drive), captura del despliegue y, si se decide, enlace público del repositorio. No incluir evidencias que no existan.
