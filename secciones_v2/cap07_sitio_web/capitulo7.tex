@@ -31,18 +31,18 @@ El sitio se diseña como una página de una sola columna con secciones que se re
 \begin{enumerate}
     \item \textbf{Contenido:} se redactan los textos de cada sección (identidad, servicios, proceso de trabajo y contacto) con la información de este capítulo.
     \item \textbf{Prototipo:} se dibujan las pantallas descritas en la sección 7.1.5 antes de programarlas, para validar el recorrido del visitante.
-    \item \textbf{Publicación:} se programa el sitio, se prueba en computadora y en celular y se publica en una dirección propia (sección 7.2).
+    \item \textbf{Publicación:} se programa el sitio, se prueba en computadora y en celular y se publica (sección 7.2).
 \end{enumerate}
 
 \subsubsection{7.1.3. Planificación del chatbot}
 
-El sitio incluirá un asistente conversacional (\textit{chatbot}) que atiende al visitante en cualquier momento. Su alcance previsto es limitado: responde las preguntas frecuentes (qué servicios ofrece NEXWARE, cómo es el proceso de trabajo y cómo solicitar una cotización), muestra la información de contacto y deriva al formulario cuando la consulta requiere a una persona. El asistente se limita a la información publicada en el sitio y no toma decisiones comerciales. Esta planificación es coherente con la definición del chatbot del producto (sección 12.1.2).
+El sitio contempla un asistente conversacional (\textit{chatbot}) que atiende al visitante en cualquier momento. Su alcance previsto es limitado: responde las preguntas frecuentes (qué servicios ofrece NEXWARE, cómo es el proceso de trabajo y cómo solicitar una cotización), muestra la información de contacto y deriva al formulario cuando la consulta requiere a una persona. El asistente se limita a la información publicada en el sitio y no toma decisiones comerciales. Esta planificación es coherente con la definición del chatbot del producto (sección 12.1.2).
 
 \subsubsection{7.1.4. Planificación de comunicación con los clientes}
 
 \paragraph{7.1.4.1. Información de la empresa.}
 
-La información de la empresa se muestra en la parte superior del sitio: nombre, eslogan, misión, visión y los datos de los dos integrantes. Esta sección responde a la primera pregunta del visitante: quién es NEXWARE y por qué confiar en ella.
+La información de la empresa se muestra en la vista de inicio (nombre, eslogan y descripción) y en la sección «Nosotros» (los dos socios). La misión y la visión se definen en el Capítulo~\ref{cap:sqap}; el sitio publicado no las muestra como tarjetas. Esta información responde a la primera pregunta del visitante: quién es NEXWARE y por qué confiar en ella.
 
 \paragraph{7.1.4.2. Descripción de productos y servicios.}
 
@@ -62,46 +62,140 @@ El sitio se adapta al ancho de la pantalla. En celular las secciones se apilan e
 
 \subsubsection{7.1.5. Diseño y prototipo}
 
-Se describen las ocho zonas de la página de inicio, en el orden en que las ve el visitante.
+Se describen las ocho zonas de la página de inicio del sitio publicado, en el orden en que las ve el visitante. Las capturas son del sitio en línea (sección 7.2).
 
 \paragraph{7.1.5.1. Vista de inicio.}
 
-Es la primera pantalla. Muestra el logotipo, un menú con anclas a cada sección, el eslogan «Si no existe, lo programamos.» como título principal, la frase «Tu idea, plasmada.» y un botón de llamada a la acción que lleva al formulario de contacto.
+Es la primera pantalla. El encabezado muestra el logotipo, un menú con anclas a cada sección (Servicios, Stack, Proceso, Portafolio, Nosotros y Contacto), el selector de idioma español/inglés, un botón para cambiar entre modo claro y oscuro y el botón «Hablemos», que lleva al formulario de contacto. Debajo aparecen la etiqueta «Web · Móvil · A medida — Santa Cruz, Bolivia», el eslogan «Si no existe, lo programamos.» como título principal, la frase «Tu idea, plasmada.», una descripción breve y dos botones: «Cuéntanos tu idea» y «Ver proyecto demo». A la derecha, una cuadrícula de cuadros que recuerda al logotipo de píxeles.
 
-\paragraph{7.1.5.2. Ingreso a los sistemas.}
+\begin{figure}[H]
+\caption{Vista de inicio del sitio web de NEXWARE}
+\label{fig:sitio_inicio}
+\centering
+\includegraphics[width=\textwidth]{images/157_Sitio_NEXWARE_Inicio.png}
 
-Un acceso visible en el menú lleva al visitante a los sistemas que NEXWARE entrega a sus clientes. El primero es el del comedor universitario, donde el postulante o el administrador de la DUBSS inicia sesión con su cuenta.
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
 
-\paragraph{7.1.5.3. Tarjetas de identidad (Misión y Visión).}
+\paragraph{7.1.5.2. Servicios.}
 
-Dos tarjetas lado a lado muestran la misión y la visión de la empresa, con el texto de las secciones 2.4 y 2.5. En celular se apilan una sobre otra.
+Tres tarjetas presentan lo que ofrece NEXWARE: web a medida (sitios y aplicaciones con React y TypeScript), aplicaciones móviles (una sola base de código para Android e iOS con Flutter) y 	extit{backend} e inteligencia artificial (APIs con Spring Boot y servicios de IA con FastAPI).
 
-\paragraph{7.1.5.4. Cuadrícula de fortalezas tecnológicas.}
+\begin{figure}[H]
+\caption{Sección de servicios del sitio web de NEXWARE}
+\label{fig:sitio_servicios}
+\centering
+\includegraphics[width=\textwidth]{images/158_Sitio_NEXWARE_Servicios.png}
 
-Una cuadrícula de tarjetas presenta las tecnologías y prácticas con las que NEXWARE trabaja: interfaz web, aplicación móvil, API, base de datos, control de versiones y pruebas automatizadas, tal como se describen en los capítulos~\ref{cap:case} y~\ref{cap:infraestructura}. Cada tarjeta lleva un ícono y una línea de explicación.
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
 
-\paragraph{7.1.5.5. Flujo del proceso.}
+\paragraph{7.1.5.3. Stack tecnológico.}
 
-Una línea de pasos muestra cómo trabaja NEXWARE con un cliente: reunión inicial para entender el problema, análisis y diseño, desarrollo por iteraciones con entregas parciales, pruebas y despliegue. Es la versión visible para el cliente del proceso unificado descrito en el Capítulo~\ref{cap:procesos_puds}.
+Cuatro tarjetas explican las tecnologías de la empresa y por qué se eligieron: React con TypeScript para la interfaz, Spring Boot para el 	extit{backend}, Flutter para el móvil y FastAPI para la inteligencia artificial. Cada tarjeta lleva el área, el nombre de la tecnología y una línea de justificación.
 
-\paragraph{7.1.5.6. Interfaz del chatbot.}
+\begin{figure}[H]
+\caption{Sección de stack tecnológico del sitio web de NEXWARE}
+\label{fig:sitio_stack}
+\centering
+\includegraphics[width=\textwidth]{images/159_Sitio_NEXWARE_Stack.png}
 
-El \textit{chatbot} se abre en una ventana pequeña sobre el sitio, con un encabezado con el nombre del asistente, un área de mensajes, un campo de texto, un botón de envío y un acceso directo al formulario de contacto.
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
 
-\paragraph{7.1.5.7. Muro de comentarios.}
+\paragraph{7.1.5.4. Proceso de trabajo.}
 
-Una sección muestra la opinión de los clientes. Mientras NEXWARE no tenga clientes con comentarios publicables, esta sección no se muestra: no se publican testimonios que no existan.
+Una secuencia de cuatro pasos numerados muestra cómo trabaja NEXWARE con un cliente: descubrimiento (entender el problema y definir el alcance), diseño (prototipar las pantallas y el flujo), desarrollo (ciclos cortos con entregas frecuentes) y entrega (despliegue, documentación y acompañamiento). Es la versión visible para el cliente del proceso unificado del Capítulo~\ref{cap:procesos_puds}.
 
-\paragraph{7.1.5.8. Pie de página de información.}
+\begin{figure}[H]
+\caption{Sección de proceso de trabajo del sitio web de NEXWARE}
+\label{fig:sitio_proceso}
+\centering
+\includegraphics[width=\textwidth]{images/160_Sitio_NEXWARE_Proceso.png}
 
-El pie repite el nombre y el eslogan de la empresa, los medios de contacto, los enlaces a las secciones del sitio y el aviso de derechos reservados.
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
+
+\paragraph{7.1.5.5. Portafolio.}
+
+Presenta el proyecto demo de la empresa, ComedorUAGRM: una captura del panel, la descripción de lo que resuelve, las tecnologías usadas (Spring Boot, React, Flutter y FastAPI) y el botón «Ver demo», que lleva al sistema en funcionamiento. Es el acceso del sitio a los sistemas que NEXWARE desarrolla (sección 7.1.4.2).
+
+\begin{figure}[H]
+\caption{Sección de portafolio del sitio web de NEXWARE}
+\label{fig:sitio_portafolio}
+\centering
+\includegraphics[width=\textwidth]{images/161_Sitio_NEXWARE_Portafolio.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
+
+\paragraph{7.1.5.6. Nosotros.}
+
+Presenta a los dos socios, Mauro Boris Gutierrez Primintela y Carlos Leonel Barrios Mayorga, ambos con el cargo de CEO y desarrollador 	extit{full stack}, cada uno con un enlace «Ver CV». Incluye también la explicación del nombre («Nexo + software») y del logotipo hecho de píxeles, que representa cada pieza encajando en su lugar.
+
+\begin{figure}[H]
+\caption{Sección «Nosotros» del sitio web de NEXWARE}
+\label{fig:sitio_nosotros}
+\centering
+\includegraphics[width=\textwidth]{images/162_Sitio_NEXWARE_Nosotros.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
+
+\paragraph{7.1.5.7. Contacto.}
+
+Muestra el correo de contacto de la empresa (	exttt{ceo.desarrollo@nexware.example}) y un formulario con los campos nombre, correo y «¿Qué quieres construir?», con el botón «Enviar mensaje». Incluye un campo oculto contra envíos automáticos.
+
+\begin{figure}[H]
+\caption{Sección de contacto del sitio web de NEXWARE}
+\label{fig:sitio_contacto}
+\centering
+\includegraphics[width=\textwidth]{images/163_Sitio_NEXWARE_Contacto.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
+
+\paragraph{7.1.5.8. Pie de página.}
+
+Repite el nombre y el eslogan de la empresa, los enlaces a las secciones del sitio y los enlaces legales (términos y condiciones, política de privacidad, política de cookies y aviso legal), y el aviso de derechos reservados de 2026. El aviso aclara que se trata de un proyecto académico ficticio de Ingeniería de Software 2.
+
+\begin{figure}[H]
+\caption{Pie de página del sitio web de NEXWARE}
+\label{fig:sitio_pie}
+\centering
+\includegraphics[width=\textwidth]{images/164_Sitio_NEXWARE_Pie.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Captura del sitio publicado, 19 de noviembre de 2026.
+\end{figure}
+
+\paragraph{7.1.5.9. Elementos previstos que el sitio publicado aún no incluye.}
+
+La planificación de las secciones 7.1.3 y 7.1.4 contempla dos elementos que no figuran en la versión publicada: el 	extit{chatbot} y un muro de comentarios de clientes. El 	extit{chatbot} se abriría en una ventana pequeña sobre el sitio, con el nombre del asistente, un área de mensajes, un campo de texto y un acceso directo al formulario de contacto. El muro de comentarios mostraría la opinión de los clientes y se mantendría oculto mientras NEXWARE no tenga testimonios reales publicables, porque no se publican comentarios que no existan.
 
 \subsection{7.2. Acceso al Sitio Web}
 
 \subsubsection{7.2.1. URL}
 
-% [PENDIENTE]: Dirección (URL) real del sitio publicado de NEXWARE. Se completa cuando el equipo confirme el dominio; no inventar.
+El sitio web de NEXWARE está publicado en \url{https://d38nteg7p7v4qz.cloudfront.net/landing-page/es/} (versión en español; el sitio también tiene versión en inglés).
 
 \subsubsection{7.2.2. QR}
 
-% [PENDIENTE]: Código QR de la URL anterior (imagen en images/ y figura con \caption). Se genera cuando la URL esté confirmada.
+La Figura~\ref{fig:qr_nexware} contiene el código QR que lleva al sitio desde un teléfono móvil.
+
+\begin{figure}[H]
+\caption{Código QR del sitio web de NEXWARE}
+\label{fig:qr_nexware}
+\centering
+\includegraphics[width=4cm]{images/154_QR_Sitio_NEXWARE.png}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Dirige a la versión en español del sitio.
+\end{figure}
