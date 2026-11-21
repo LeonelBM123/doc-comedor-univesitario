@@ -1,0 +1,65 @@
+% ==============================================================================
+% DOCUMENTO FINAL PARA LA FERIA
+% Contenido: título, contexto, problema, objetivos, propuesta de solución,
+% marco teórico/metodológico, conclusiones y bibliografía.
+% Reutiliza las secciones existentes de main.tex (sin duplicar texto).
+% ==============================================================================
+\documentclass[stu, 12pt, spanish, donotrepeattitle, floatsintext]{apa7}
+\input{config/paquetes.tex}
+\input{config/preportada.tex}
+\input{config/metadatos.tex}
+
+% Sube un nivel los encabezados de las secciones reutilizadas
+% (subsection -> section, subsubsection -> subsection).
+\let\feriaSection\section
+\let\feriaSubsection\subsection
+\newcommand{\subirnivel}[1]{\begingroup
+  \let\subsection\feriaSection \let\subsubsection\feriaSubsection
+  \input{#1}\endgroup}
+
+\begin{document}
+\input{config/caratula.tex}
+\justifying
+\setlength{\parindent}{0.5in}
+
+\newpage
+\renewcommand{\contentsname}{Índice General}
+\addcontentsline{toc}{section}{Índice General}
+\tableofcontents
+
+\newpage
+\section{Título definitivo}
+Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor mediante Inteligencia Artificial, con Reportes de Business Intelligence para la Dirección Universitaria de Bienestar Social y Salud (DUBSS) de la Universidad Autónoma Gabriel René Moreno.
+
+\newpage
+\section{Contexto y Antecedentes del Problema}
+\subirnivel{secciones/02_capitulo1_perfil/01_antecedentes.tex}
+
+\newpage
+\section{Descripción y Planteamiento del Problema}
+\subirnivel{secciones/02_capitulo1_perfil/02_definicion_problema.tex}
+
+\newpage
+\section{Objetivo General y Objetivos Específicos}
+\subirnivel{secciones/02_capitulo1_perfil/03_objetivos.tex}
+
+\newpage
+\section{Desarrollo y Propuesta de Solución}
+\subirnivel{secciones/11_feria/propuesta_solucion.tex}
+
+\newpage
+\section{Marco Teórico y Metodológico}
+\subirnivel{secciones/02_capitulo1_perfil/05_metodologia.tex}
+\subirnivel{secciones/03_capitulo2_tecnologias/01_ia_ml.tex}
+\subirnivel{secciones/03_capitulo2_tecnologias/02_business_intelligence.tex}
+
+\newpage
+\section{Conclusiones y Recomendaciones}
+\subirnivel{secciones/11_feria/conclusiones_final.tex}
+
+\newpage
+\phantomsection
+\section*{\normalfont\textbf{Bibliografía}}
+\addcontentsline{toc}{section}{Bibliografía}
+\printbibliography[heading=none]
+\end{document}
