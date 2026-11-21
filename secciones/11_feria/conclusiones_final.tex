@@ -1,18 +1,28 @@
 % Conclusiones y recomendaciones (documento final para la feria)
-\subsection{Conclusiones}\label{sec:feria_conclusiones}
+\newpage
+\section{Conclusiones}\label{sec:feria_conclusiones}
+
+El desarrollo del proyecto permite extraer las siguientes conclusiones:
 
 \begin{itemize}
-    \item El proceso manual de la Beca Comedor deja sin revisar cerca del 60\% de las carpetas (unas 12,000 de 20,000), por lo que la asignación de unos 900 cupos no garantiza que reciban la beca los estudiantes más necesitados.
-    \item Se cumplieron los objetivos de captura, análisis, diseño e implementación: se especificaron los requisitos según IEEE 830, se modelaron los casos de uso con UML bajo el PUDS y se construyó el sistema web y móvil con su módulo de IA y su tablero BI.
-    \item La preselección con IA permite calificar todas las solicitudes y concentrar la auditoría de la DUBSS en los finalistas mejor puntuados, lo que hace el proceso más objetivo, transparente y trazable.
-    \item La arquitectura por subsistemas (cuentas, postulación, IA, auditoría, asistencia y reportes) facilita el mantenimiento y la evolución del sistema.
+    \item El proceso manual de la Beca Comedor deja sin revisar cerca del 60\% de las carpetas (unas 12,000 de 20,000), por lo que la asignación de unos 900 cupos no garantiza que reciban la beca los estudiantes con mayor necesidad. El problema es estructural: la capacidad de revisión del personal es muy inferior a la demanda.
+    \item Se cumplieron los objetivos de captura de requisitos, análisis, diseño e implementación. Los requisitos se especificaron según el estándar IEEE 830; los 26 casos de uso se modelaron con UML bajo el Proceso Unificado de Desarrollo de Software (PUDS); y se construyó el sistema web y móvil con su módulo de Inteligencia Artificial y su tablero de Business Intelligence.
+    \item La preselección con IA permite calificar el 100\% de las solicitudes y concentrar la auditoría de la DUBSS en los finalistas mejor puntuados. El puntaje total combina el puntaje de la IA (hasta 70 puntos) con el rendimiento académico verificado por el auditor (hasta 30 puntos), lo que hace el proceso más objetivo, transparente y trazable.
+    \item La arquitectura organizada en seis subsistemas (cuentas y acceso, convocatoria y postulación, preselección con IA, auditoría y adjudicación, becados y asistencia, y reportes y trazabilidad) separa responsabilidades, facilita el mantenimiento y permite que el sistema evolucione sin rehacerse.
+    \item El uso de tecnologías abiertas y ampliamente documentadas (Spring Boot, React, Flutter, PostgreSQL y Python) reduce los costos de licenciamiento y facilita que la universidad continúe el proyecto.
+    \item La digitalización del expediente elimina el riesgo de extravío de documentos físicos y deja un registro de cada acción realizada por el personal (bitácora), lo que fortalece la rendición de cuentas ante auditorías.
 \end{itemize}
 
-\subsection{Recomendaciones}\label{sec:feria_recomendaciones}
+\newpage
+\section{Recomendaciones}\label{sec:feria_recomendaciones}
+
+A partir de los resultados del proyecto, se recomienda:
 
 \begin{itemize}
-    \item Validar y calibrar el modelo de precalificación con datos históricos reales de la DUBSS antes de su uso en producción, y fijar con ella el puntaje mínimo de adjudicación.
-    \item Capacitar al personal administrativo y de auditoría en el uso del sistema.
-    \item Establecer protocolos de seguridad y resguardo de la información socioeconómica de los postulantes, por su carácter sensible.
-    \item Mantener la verificación presencial por parte de Trabajo Social para los finalistas, como complemento del puntaje automatizado.
+    \item Validar y calibrar el modelo de precalificación con datos históricos reales de la DUBSS antes de su uso en producción, y definir junto con la Dirección el puntaje mínimo de adjudicación y el número exacto de cupos, que son valores por definir.
+    \item Capacitar al personal administrativo, de auditoría y del comedor en el uso del sistema, y planificar un periodo de transición en el que convivan el proceso manual y el digital.
+    \item Establecer protocolos de seguridad y resguardo de la información socioeconómica de los postulantes, por su carácter sensible, y revisar periódicamente los accesos por rol.
+    \item Mantener la verificación presencial por parte de Trabajo Social para los finalistas, como complemento del puntaje automatizado y no como su reemplazo.
+    \item Incorporar un mecanismo de apelación o reclamo para el postulante, que hoy no está contemplado en el alcance del sistema.
+    \item Evaluar a futuro la integración con los sistemas académicos de la universidad, para obtener el rendimiento académico de forma automática, y ampliar las proyecciones del módulo de Business Intelligence.
 \end{itemize}

@@ -1,10 +1,9 @@
 % ==============================================================================
-% DOCUMENTO FINAL PARA LA FERIA
-% Índice exigido: título, contexto/antecedentes, planteamiento del problema,
-% objetivos, desarrollo/propuesta de solución, marco teórico/metodológico,
-% conclusiones y recomendaciones, bibliografía.
-% Reutiliza TODAS las secciones del repositorio (sin duplicar texto) y las
-% agrupa bajo los ocho puntos del índice.
+% DOCUMENTO FINAL PARA LA FERIA (60-80 páginas)
+% Estructura tomada del modelo FERIA_SIG: carátula, índice, resumen,
+% introducción, antecedentes, planteamiento del problema, objetivos,
+% desarrollo, marco teórico, conclusiones, recomendaciones, bibliografía, anexos.
+% Reutiliza una selección de las secciones del repositorio (sin duplicar texto).
 % ==============================================================================
 \documentclass[stu, 12pt, spanish, donotrepeattitle, floatsintext]{apa7}
 \input{config/paquetes.tex}
@@ -17,69 +16,54 @@
 \input{config/caratula_feria.tex}
 \justifying
 \setlength{\parindent}{0.5in}
+\linespread{1.5}\selectfont % interlineado 1.5 como el modelo de la feria
 
-\incl{00_frontmatter/frontmatter}
+% ÍNDICE -----------------------------------------------------------------------
+\renewcommand{\contentsname}{Índice}
+\setcounter{tocdepth}{2}
+\tableofcontents
 
-% 1. TÍTULO DEFINITIVO ---------------------------------------------------------
-\newpage
-\section{Título definitivo}
-Sistema de Información Web y Móvil para la Postulación y Preselección Automatizada de la Beca Comedor mediante Inteligencia Artificial, con Reportes de Business Intelligence para la Dirección Universitaria de Bienestar Social y Salud (DUBSS) de la Universidad Autónoma Gabriel René Moreno.
-
+% RESUMEN / INTRODUCCIÓN -------------------------------------------------------
 \newpage
 \incl{01_introduccion/01_resumen}
 \newpage
-\incl{01_introduccion/02_abstract}
 \incl{01_introduccion/03_introduccion}
 
-% 2. CONTEXTO Y ANTECEDENTES ---------------------------------------------------
+% ANTECEDENTES DEL PROBLEMA ----------------------------------------------------
 \newpage
-\section{Contexto y Antecedentes del Problema}
+\section{Antecedentes del Problema}
 \incl{02_capitulo1_perfil/01_antecedentes}
 \incl{04_capitulo3_empresa/01_empresa_identidad}
 \incl{04_capitulo3_empresa/02_estructura_organizacional}
-\incl{04_capitulo3_empresa/03_ubicacion_infraestructura}
 \incl{04_capitulo3_empresa/04_modelo_negocio}
 \incl{04_capitulo3_empresa/05_flujo_operativo}
 
-% 3. DESCRIPCIÓN Y PLANTEAMIENTO DEL PROBLEMA ----------------------------------
+% PLANTEAMIENTO DEL PROBLEMA ---------------------------------------------------
 \newpage
-\section{Descripción y Planteamiento del Problema}
+\section{Planteamiento del Problema}
 \incl{02_capitulo1_perfil/02_definicion_problema}
 \incl{02_capitulo1_perfil/04_justificacion}
 
-% 4. OBJETIVOS -----------------------------------------------------------------
+% FORMULACIÓN DE OBJETIVOS -----------------------------------------------------
 \newpage
-\section{Objetivo General y Objetivos Específicos}
+\section{Formulación de Objetivos}
 \incl{02_capitulo1_perfil/03_objetivos}
 \incl{02_capitulo1_perfil/06_alcances_limitaciones}
 
-% 5. DESARROLLO / PROPUESTA DE SOLUCIÓN ----------------------------------------
+% DESARROLLO -------------------------------------------------------------------
 \newpage
-\section{Desarrollo y Propuesta de Solución}
+\section{Desarrollo}
 \incl{11_feria/propuesta_solucion}
-\incl{05_capitulo4_ieee830/01_introduccion_ers}
-\incl{05_capitulo4_ieee830/02_descripcion_general}
-\incl{05_capitulo4_ieee830/03_requisitos_especificos}
 \incl{07_capitulo5_requisitos/01_identificacion_actores}
 \incl{07_capitulo5_requisitos/02_identificacion_casos_uso}
-\incl{07_capitulo5_requisitos/03_priorizacion_casos_uso}
-\incl{07_capitulo5_requisitos/04_detalle_casos_uso}
-\incl{07_capitulo5_requisitos/05_diagrama_general_casos_uso}
-\incl{08_capitulo6_analisis/01_analisis_arquitectura}
-\incl{08_capitulo6_analisis/02_analisis_casos_uso}
-\incl{08_capitulo6_analisis/03_analisis_paquetes}
-\incl{09_capitulo7_diseno/01_diseno_arquitectura}
 \incl{09_capitulo7_diseno/02_diagrama_clase}
-\incl{09_capitulo7_diseno/03_diseno_datos}
-\incl{09_capitulo7_diseno/04_disenar_caso_uso}
-\incl{09_capitulo7_diseno/05_diseno_interfaces}
+\incl{11_feria/diseno_datos}
 \incl{10_capitulo8_implementacion/01_arquitectura_sistema}
-\incl{10_capitulo8_implementacion/02_arquitectura_subsistema}
 \incl{10_capitulo8_implementacion/03_herramientas}
 
-% 6. MARCO TEÓRICO / METODOLÓGICO ----------------------------------------------
+% MARCO TEÓRICO ----------------------------------------------------------------
 \newpage
-\section{Marco Teórico y Metodológico}
+\section{Marco Teórico}
 \incl{02_capitulo1_perfil/05_metodologia}
 \incl{03_capitulo2_tecnologias/01_ia_ml}
 \incl{03_capitulo2_tecnologias/02_business_intelligence}
@@ -88,15 +72,11 @@ Sistema de Información Web y Móvil para la Postulación y Preselección Automa
 \incl{03_capitulo2_tecnologias/05_mobile_flutter}
 \incl{03_capitulo2_tecnologias/06_base_datos}
 \incl{03_capitulo2_tecnologias/07_python_ia}
-\incl{02_capitulo1_perfil/07_recursos}
-\incl{02_capitulo1_perfil/08_cronograma}
 
-% 7. CONCLUSIONES Y RECOMENDACIONES --------------------------------------------
-\newpage
-\section{Conclusiones y Recomendaciones}
+% CONCLUSIONES Y RECOMENDACIONES -----------------------------------------------
 \incl{11_feria/conclusiones_final}
 
-% 8. BIBLIOGRAFÍA --------------------------------------------------------------
+% BIBLIOGRAFÍA -----------------------------------------------------------------
 \newpage
 \phantomsection
 \section*{\normalfont\textbf{Bibliografía}}
