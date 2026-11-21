@@ -1,0 +1,79 @@
+% Modelo Canvas y análisis FODA (documento final para la feria)
+\subsection{Modelo Canvas}\label{sec:feria_canvas}
+
+El Modelo Canvas resume en nueve bloques cómo el sistema crea y entrega valor a sus usuarios. Como el sistema es institucional, la DUBSS lo financia con su presupuesto y no se vende a los estudiantes; por eso el bloque de ingresos se plantea como ahorro y eficiencia. La Tabla~\ref{tab:feria_canvas} presenta el modelo.
+
+\begin{table}[H]
+\caption{Modelo Canvas del sistema ComedorUAGRM}
+\label{tab:feria_canvas}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.95cm}|>{\raggedright\arraybackslash}p{2.95cm}|>{\raggedright\arraybackslash}p{3.1cm}|>{\raggedright\arraybackslash}p{2.95cm}|>{\raggedright\arraybackslash}p{2.95cm}|}
+\hline
+\multirow{2}{*}{\parbox{2.95cm}{\textbf{Socios clave}\\[2pt] DUBSS (cliente y dueña del proceso); FICCT--UAGRM; concesionaria del comedor; Trabajo Social}} &
+\textbf{Actividades clave}\newline Desarrollo web y móvil; entrenamiento y calibración del modelo de IA; auditoría y adjudicación; mantenimiento &
+\multirow{2}{*}{\parbox{3.1cm}{\textbf{Propuesta de valor}\\[2pt] Postulación 100\% en línea; puntaje de vulnerabilidad con IA para todas las solicitudes; auditoría solo de finalistas; transparencia y trazabilidad; indicadores BI}} &
+\textbf{Relación con clientes}\newline Autoservicio; consulta del estado de la solicitud; notificaciones; soporte de la DUBSS &
+\multirow{2}{*}{\parbox{2.95cm}{\textbf{Segmentos de clientes}\\[2pt] Estudiantes postulantes; personal de la DUBSS; directivos; personal del comedor}} \\
+\cline{2-2}\cline{4-4}
+& \textbf{Recursos clave}\newline Equipo de desarrollo; módulo de IA; servidores (Docker); base de datos y archivos & & \textbf{Canales}\newline App móvil; panel web; correo y notificaciones push & \\
+\hline
+\multicolumn{2}{|>{\raggedright\arraybackslash}p{6.0cm}|}{\textbf{Estructura de costos}\newline Desarrollo del sistema; infraestructura y hospedaje; capacitación del personal; mantenimiento. Montos por definir con la DUBSS.} &
+\multicolumn{3}{>{\raggedright\arraybackslash}p{9.0cm}|}{\textbf{Fuentes de ingreso / beneficio}\newline Financiamiento con el presupuesto institucional (no hay cobro al estudiante). Beneficio: ahorro de papel y de horas de revisión, y asignación más justa de unas 900 becas.} \\
+\hline
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
+
+\subsection{Análisis FODA}\label{sec:feria_foda}
+
+El análisis FODA contrasta los factores internos del proyecto (fortalezas y debilidades) con los externos (oportunidades y amenazas). La Tabla~\ref{tab:feria_foda} lo resume.
+
+\begin{table}[H]
+\caption{Análisis FODA del sistema ComedorUAGRM}
+\label{tab:feria_foda}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{7.4cm}|>{\raggedright\arraybackslash}p{7.4cm}|}
+\hline
+\textbf{Fortalezas (interno)} & \textbf{Debilidades (interno)} \\
+\hline
+\begin{itemize}\setlength\itemsep{0pt}\setlength\leftmargin{0pt}
+\item Califica el 100\% de las solicitudes, no solo el 40\% que hoy se revisa.
+\item Arquitectura modular en seis subsistemas.
+\item Tecnologías abiertas y documentadas.
+\item Trazabilidad con bitácora de acciones.
+\item Apoyo directo de la DUBSS como cliente.
+\end{itemize} &
+\begin{itemize}\setlength\itemsep{0pt}\setlength\leftmargin{0pt}
+\item El modelo de IA aún necesita datos históricos reales para calibrarse.
+\item Puntaje mínimo de adjudicación y número de cupos por definir.
+\item Tiempo de desarrollo limitado (24-ago a 30-nov de 2026).
+\item Sin mecanismo de apelación en el alcance actual.
+\end{itemize} \\
+\hline
+\textbf{Oportunidades (externo)} & \textbf{Amenazas (externo)} \\
+\hline
+\begin{itemize}\setlength\itemsep{0pt}\setlength\leftmargin{0pt}
+\item Digitalización de los servicios universitarios.
+\item Uso extendido del celular entre los estudiantes.
+\item Posibilidad de integrarse con otros sistemas académicos de la UAGRM.
+\item Replicable en otras becas o programas de bienestar.
+\end{itemize} &
+\begin{itemize}\setlength\itemsep{0pt}\setlength\leftmargin{0pt}
+\item Resistencia al cambio del personal acostumbrado al proceso físico.
+\item Estudiantes con acceso limitado a internet o a equipos.
+\item Sensibilidad de los datos socioeconómicos (riesgo de filtración).
+\item Cambios de autoridades o de presupuesto de la DUBSS.
+\end{itemize} \\
+\hline
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
