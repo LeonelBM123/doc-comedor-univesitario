@@ -1,0 +1,24 @@
+% ------------------------------------------------------------------------------
+% 9.1. PLANIFICACIÓN DE PRUEBAS
+% ------------------------------------------------------------------------------
+\subsection{9.1. Planificación de Pruebas}\label{sec:cap9_planificacion}
+
+\subsubsection{9.1.1. Objetivo de las pruebas}\label{sec:cap9_objetivo}
+
+\begin{itemize}
+    \item Planificar las pruebas en cada iteración, incluyendo las pruebas de integración y las pruebas de sistema.
+    \item Diseñar e implementar las pruebas creando los casos de pruebas que especifican qué probar.
+    \item Realizar las diferentes pruebas y manejar los resultados de cada prueba sistemáticamente, documentando la evidencia que respalde cada resultado.
+    \item Verificar que el sistema cumple lo especificado en los requisitos y en los casos de uso, comprobando sus flujos principales y alternativos, la respuesta ante datos inválidos y el acceso de cada rol a las funciones que le corresponden.
+    \item Detectar errores de lógica, medir la cobertura del código e identificar debilidades de seguridad que pudieran comprometer la información de los postulantes y de la Dirección Universitaria de Bienestar Social y Salud.
+\end{itemize}
+
+\subsubsection{9.1.2. Tipos de pruebas a realizar}\label{sec:cap9_tipos_pruebas}
+
+Se realizarán tres tipos de pruebas, que se complementan entre sí:
+
+\begin{incisos}
+    \item \textbf{Pruebas de caja blanca.} Evalúan la estructura interna del código y su lógica. Quien prueba conoce el código fuente y diseña los casos para ejercitar sus caminos de ejecución: decisiones, ciclos, manejo de excepciones y reglas de negocio implementadas en servicios, controladores y consultas. Se aplican como pruebas unitarias y de integración en el \textit{backend}, en el panel web y en la aplicación móvil, y se complementan con la medición de cobertura, que indica qué proporción del código se ejecuta al correr las pruebas. Permiten detectar errores de lógica en etapas tempranas, de forma aislada y repetible.
+    \item \textbf{Pruebas de caja negra.} Evalúan el comportamiento funcional del sistema sin considerar su implementación interna. Se parte de la especificación de cada caso de uso: se definen los datos de entrada, las condiciones previas y el resultado esperado, y se compara con el resultado que el sistema produce. Se verifican el flujo principal, los flujos alternativos y de excepción, las validaciones de los datos y las restricciones por rol. Estas pruebas se documentan caso por caso con la estructura descrita en el punto 9.2.1 y permiten comprobar que el sistema satisface lo que el usuario necesita.
+    \item \textbf{Pruebas de vulnerabilidad.} Evalúan la seguridad del sistema, es decir, su capacidad para resistir accesos no autorizados y usos indebidos. Se revisan los mecanismos de autenticación y de manejo de sesiones, el control de acceso por rol, la validación de los datos de entrada, el tratamiento de los archivos adjuntos, la protección de las contraseñas y la limitación de peticiones. El propósito es identificar debilidades que pudieran comprometer la confidencialidad, la integridad o la disponibilidad de la información.
+\end{incisos}
