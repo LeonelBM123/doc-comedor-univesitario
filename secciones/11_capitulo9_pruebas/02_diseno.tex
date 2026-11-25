@@ -7,4 +7,48 @@
 
 \subsubsection{9.2.1. Identificación y Estructura de Procedimientos}\label{sec:cap9_procedimientos}
 
-% [REDACTAR]
+Para aplicar el método de caja negra se diseñó una estructura de datos única, que se utiliza para documentar cada caso de prueba. Cada caso de prueba corresponde a un caso de uso del sistema y se registra en una tabla con los siguientes campos, que combinan texto e imágenes de la ejecución:
+
+\begin{itemize}
+    \item \textbf{Nombre del caso de prueba:} nombre completo del caso de uso sobre el cual se realiza la prueba, con su identificador.
+    \item \textbf{Descripción:} breve resumen del caso de uso evaluado, destacando los aspectos funcionales que se van a verificar.
+    \item \textbf{Precondición:} estado o condición que debe cumplirse antes de ejecutar la prueba. Garantiza que el entorno y los datos iniciales sean adecuados para la evaluación, por ejemplo, la sesión de un rol determinado o la existencia de una convocatoria abierta.
+    \item \textbf{Datos de entrada:} información que requiere el caso de uso para producir resultados significativos para el usuario, como los valores ingresados en un formulario o los parámetros de una consulta.
+    \item \textbf{Condición de ejecución:} restricción que debe cumplirse para demostrar el correcto funcionamiento, cuando el caso de prueba la presenta. Si no existe, se indica que no aplica.
+    \item \textbf{Captura de imagen inicial:} captura de pantalla del estado del sistema antes de ejecutar los pasos de la prueba.
+    \item \textbf{Pasos:} secuencia numerada de acciones que realiza el probador sobre el sistema, desde el estado inicial hasta obtener el resultado.
+    \item \textbf{Resultado esperado:} resultado previsto al finalizar la prueba, ya sea exitoso o fallido. En este punto se establece cómo debe comportarse el sistema según lo especificado.
+    \item \textbf{Resultado obtenido:} transcripción de lo que respondió el software al ejecutar la prueba, para su validación o para su corrección si fuese necesario.
+    \item \textbf{Captura de imagen final:} captura de pantalla del estado del sistema luego de ejecutar los pasos, como evidencia del resultado obtenido.
+    \item \textbf{Resultado de prueba:} veredicto de la prueba, «Correcto» cuando el resultado obtenido coincide con el esperado e «Incorrecto» en caso contrario.
+\end{itemize}
+
+La Tabla~\ref{tab:pru_plantilla} presenta la plantilla de esta estructura, que se completa para cada caso de uso en las pruebas de caja negra.
+
+\begin{table}[H]
+\caption{Plantilla de caso de prueba de caja negra}
+\label{tab:pru_plantilla}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.5cm}>{\raggedright\arraybackslash}p{10.5cm}}
+\toprule
+\textbf{Campo} & \textbf{Contenido} \\
+\midrule
+Nombre del caso de prueba & CU-XX. Nombre completo del caso de uso \\
+Descripción & Resumen del caso de uso y de los aspectos funcionales a evaluar \\
+Precondición & Estado o condición previa a la ejecución \\
+Datos de entrada & Datos que se ingresan al sistema \\
+Condición de ejecución & Restricción de la prueba, o «No aplica» \\
+Captura de imagen inicial & (Captura de pantalla del estado inicial) \\
+Pasos & 1. Acción del probador. 2. Acción del probador. \\
+Resultado esperado & Comportamiento previsto del sistema \\
+Resultado obtenido & Respuesta real del sistema \\
+Captura de imagen final & (Captura de pantalla del resultado) \\
+Resultado de prueba & Correcto / Incorrecto \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia.
+\end{table}
