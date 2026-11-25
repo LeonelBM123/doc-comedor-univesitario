@@ -1,0 +1,20 @@
+% ==============================================================================
+% GRAFOS PARA LAS PRUEBAS DE CAJA BLANCA (9.3.2)
+% ==============================================================================
+% Macro y estilos TikZ del grafo de flujo (método del camino básico). Modelo tomado de la versión
+% SW2 del documento (rama doc-sw2, cap. 9). Requiere la librería shapes.geometric
+% (config/paquetes.tex).
+%
+%   \cgn{ID}{x}{fila}{estilo}{texto}   nodo del grafo; se llama g<ID> para dibujar las aristas
+%       estilos: cgs = secuencial (círculo), cgp = decisión (círculo sombreado),
+%                cgf = final «F» (círculo doble), cgi = «Inicio» (óvalo)
+%   Aristas:  \draw[fca] (gA) -- node[right,font=\scriptsize]{F} (gB);  (flecha con etiqueta V/F)
+
+\newcommand{\cgn}[5]{\node[#4] (g#1) at (#2,{-#3*1.25}) {#5};}
+\tikzset{
+    cgs/.style={circle, draw, minimum size=8.5mm, inner sep=0pt, font=\footnotesize},
+    cgp/.style={cgs, fill=gray!30},
+    cgf/.style={cgs, double},
+    cgi/.style={rectangle, rounded corners=6pt, draw, minimum height=6mm, minimum width=13mm, inner sep=2pt, font=\footnotesize},
+    fca/.style={-{Stealth[length=2mm]}, semithick}
+}

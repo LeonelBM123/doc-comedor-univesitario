@@ -1,0 +1,1710 @@
+% ------------------------------------------------------------------------------
+% 9.3.2. PRUEBAS DE CAJA BLANCA: un caso de uso por \paragraph, en orden numérico de CU.
+% Método del camino básico sobre código real del backend (comedor-uagrm-core).
+% Por función: (1) código numerado por nodos, (2) grafo de flujo y (3) una sola tabla
+% Camino / Entrada / Salida. Macros y estilos: config/grafos_cb.tex (modelo SW2).
+% El nodo final se llama «F»; en Entrada, «?» indica que la variable no influye en el camino.
+% ARCHIVO GENERADO a partir del script de la sesión de trabajo; editar con cuidado.
+% Resultado: ejecutado con JUnit y Mockito (pruebas *CajaBlancaTest del backend, 78 caminos factibles, todos correctos).
+% ------------------------------------------------------------------------------
+
+% ==============================================================================
+% CU-01. REGISTRARSE Y AUTENTICARSE: UsuarioService.registrarPostulante
+% ==============================================================================
+\paragraph{9.3.2.1. Caso de uso: Registrarse y autenticarse (CU-01).}
+
+Primer método analizado: \texttt{UsuarioService.registrarPostulante} (registro del postulante). Sus siete decisiones son: (2) ¿el correo ya está registrado?; (3) ¿tiene el mismo CI?; (4) ¿tiene la misma contraseña?; (7) ¿el CI ya existe?; (9) ¿el correo ya existe?; (11) ¿el registro universitario ya existe?; y (14) ¿la base de datos rechaza el guardado (\texttt{DataIntegrityViolationException})? Las tres primeras forman la condición compuesta de la repetición idempotente (RNF-03). Por tanto $V(G)=8$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{UsuarioService.registrarPostulante} y sus nodos (CU-01)}
+\label{fig:cod_cu01a}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/usuarios/service/UsuarioService.java
+public ResultadoRegistro registrarPostulante(RegistroRequest request) {
+    String correo = normalizarCorreo(request.correo());                     // 1
+    var existente = usuarioRepository.findByCorreo(correo);                 // 1
+    if (existente.isPresent()                                               // 2
+            && existente.get().getCi().equals(request.ci())                 // 3
+            && passwordEncoder.matches(request.contrasena(),                // 4
+                    existente.get().getPasswordHash())) {
+        return new ResultadoRegistro(existente.get(), false);               // 5
+    }
+    Carrera carrera = carreraRepository.findByCodigo(...).orElseThrow(...); // 6
+    if (usuarioRepository.existsByCi(request.ci())) {                       // 7
+        throw rechazar(new ConflictException(ERR_US_01, "..."));            // 8
+    }
+    if (existente.isPresent()) {                                            // 9
+        throw rechazar(new ConflictException(ERR_US_02, "..."));            // 10
+    }
+    if (postulanteRepository.existsByRegistroUniversitario(                 // 11
+            request.registroUniversitario())) {
+        throw rechazar(new ConflictException(ERR_US_03, "..."));            // 12
+    }
+    Rol rol = rolRepository.findByNombre(POSTULANTE).orElseThrow(...);      // 13
+    try {                                                                   // 13
+        Usuario usuario = usuarioRepository.saveAndFlush(new Usuario(...)); // 13
+        postulanteRepository.saveAndFlush(new Postulante(...));             // 13
+        return new ResultadoRegistro(usuario, true);                        // 15
+    } catch (DataIntegrityViolationException e) {                           // 14
+        throw traducirConflicto(e);                                         // 16
+    }
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu01a}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{UsuarioService.registrarPostulante} (CU-01)}
+\label{fig:gf_cu01a}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgp] (g3) at (0,-3.75) {3};
+\node[cgp] (g4) at (0,-5) {4};
+\node[cgs] (g5) at (2,-5) {5};
+\node[cgs] (g6) at (0,-6.25) {6};
+\node[cgp] (g7) at (0,-7.5) {7};
+\node[cgs] (g8) at (2,-7.5) {8};
+\node[cgp] (g9) at (0,-8.75) {9};
+\node[cgs] (g10) at (2,-8.75) {10};
+\node[cgp] (g11) at (0,-10) {11};
+\node[cgs] (g12) at (2,-10) {12};
+\node[cgs] (g13) at (0,-11.25) {13};
+\node[cgp] (g14) at (0,-12.5) {14};
+\node[cgs] (g15) at (0,-13.75) {15};
+\node[cgs] (g16) at (2,-12.5) {16};
+\node[cgf] (gF) at (0,-15) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{V} (g3);
+\draw[fca] (g2.west) -- node[above,font=\scriptsize]{F} ++(-1.4,0) |- (g6.west);
+\draw[fca] (g3) -- node[right,font=\scriptsize]{V} (g4);
+\draw[fca] (g3.west) -- node[above,font=\scriptsize]{F} ++(-1,0) |- (g6.west);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g5.east) -- (4.6,-5) |- (gF.east);
+\draw[fca] (g6) -- (g7);
+\draw[fca] (g7) -- node[above,font=\scriptsize]{V} (g8);
+\draw[fca] (g7) -- node[right,font=\scriptsize]{F} (g9);
+\draw[fca] (g8.east) -- (4.2,-7.5) |- (gF.east);
+\draw[fca] (g9) -- node[above,font=\scriptsize]{V} (g10);
+\draw[fca] (g9) -- node[right,font=\scriptsize]{F} (g11);
+\draw[fca] (g10.east) -- (3.8,-8.75) |- (gF.east);
+\draw[fca] (g11) -- node[above,font=\scriptsize]{V} (g12);
+\draw[fca] (g11) -- node[right,font=\scriptsize]{F} (g13);
+\draw[fca] (g12.east) -- (3.4,-10) |- (gF.east);
+\draw[fca] (g13) -- (g14);
+\draw[fca] (g14) -- node[above,font=\scriptsize]{V} (g16);
+\draw[fca] (g14) -- node[right,font=\scriptsize]{F} (g15);
+\draw[fca] (g15) -- (gF);
+\draw[fca] (g16.east) -- (3,-12.5) |- (gF.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu01a}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=24-18+2=8$ y $V(G)=P+1=7+1=8$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu01a}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-01 (\texttt{registrarPostulante}) (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-01 (\texttt{registrarPostulante}) (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-01. $V(G)=8$: los siete primeros caminos son factibles. La existencia de la carrera y del rol se resuelve dentro de sus nodos. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{UsuarioServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, 4, 5, F & CorreoRegistrado = V\newline MismoCI = V\newline MismaContrasena = V\newline CIRegistrado = ?\newline RURegistrado = ?\newline ErrorIntegridad = ? & Se devuelve la cuenta existente sin crear nada (registro idempotente). & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 6, 7, 8, F & CorreoRegistrado = V\newline MismoCI = V\newline MismaContrasena = F\newline CIRegistrado = V\newline RURegistrado = ?\newline ErrorIntegridad = ? & Error \texttt{ERR\_US\_01}: ya existe una cuenta con ese CI. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 6, 7, 9, 10, F & CorreoRegistrado = V\newline MismoCI = F\newline MismaContrasena = ?\newline CIRegistrado = F\newline RURegistrado = ?\newline ErrorIntegridad = ? & Error \texttt{ERR\_US\_02}: ya existe una cuenta con ese correo electrónico. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 7, 8, F & CorreoRegistrado = F\newline MismoCI = ?\newline MismaContrasena = ?\newline CIRegistrado = V\newline RURegistrado = ?\newline ErrorIntegridad = ? & Error \texttt{ERR\_US\_01}: ya existe una cuenta con ese CI. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 7, 9, 11, 12, F & CorreoRegistrado = F\newline MismoCI = ?\newline MismaContrasena = ?\newline CIRegistrado = F\newline RURegistrado = V\newline ErrorIntegridad = ? & Error \texttt{ERR\_US\_03}: ya existe una cuenta con ese registro universitario. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 7, 9, 11, 13, 14, 15, F & CorreoRegistrado = F\newline MismoCI = ?\newline MismaContrasena = ?\newline CIRegistrado = F\newline RURegistrado = F\newline ErrorIntegridad = F & Se crean el usuario y el postulante y se devuelve el resultado con la cuenta nueva. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 7, 9, 11, 13, 14, 16, F & CorreoRegistrado = F\newline MismoCI = ?\newline MismaContrasena = ?\newline CIRegistrado = F\newline RURegistrado = F\newline ErrorIntegridad = V & La restricción de la base de datos se traduce al error de conflicto correspondiente. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 7, 9, 10, F & --- & No factible: el nodo 9 repite la condición del nodo 2, y el correo no puede estar registrado y no registrado a la vez. & No factible \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ------------------------------------------------------------------------------
+% CU-01. REGISTRARSE Y AUTENTICARSE: UsuarioService.validarCredenciales
+% ------------------------------------------------------------------------------
+Segundo método analizado: \texttt{UsuarioService.validarCredenciales} (inicio de sesión). Sus cinco decisiones son: (2) ¿la cuenta no existe?; (5) ¿hay una fecha de bloqueo?; (6) ¿el bloqueo sigue vigente?; (8) ¿la contraseña es incorrecta?; y (10) ¿la cuenta está desactivada? Por tanto $V(G)=6$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{UsuarioService.validarCredenciales} y sus nodos (CU-01)}
+\label{fig:cod_cu01b}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/usuarios/service/UsuarioService.java
+public Usuario validarCredenciales(String correo, String contrasena) {
+    var encontrado = usuarioRepository.findByCorreo(normalizarCorreo(correo)); // 1
+    if (encontrado.isEmpty()) {                                             // 2
+        passwordEncoder.matches(contrasena, hashSenuelo());                 // 3
+        throw credencialesIncorrectas();                                    // 3
+    }
+    Usuario usuario = encontrado.get();                                     // 4
+    Instant ahora = Instant.now();                                          // 4
+    if (usuario.getBloqueadoHasta() != null                                 // 5
+            && usuario.getBloqueadoHasta().isAfter(ahora)) {                // 6
+        throw cuentaBloqueada(usuario.getBloqueadoHasta(), ahora);          // 7
+    }
+    if (!passwordEncoder.matches(contrasena, usuario.getPasswordHash())) {  // 8
+        registrarIntentoFallido(usuario, ahora);                            // 9
+        throw credencialesIncorrectas();                                    // 9
+    }
+    if (!usuario.isActivo()) {                                              // 10
+        LOG.warn("...");                                                    // 11
+        throw new ForbiddenException(ERR_AUTH_03, "...");                   // 11
+    }
+    usuario.setIntentosFallidos(0);                                         // 12
+    usuario.setBloqueosConsecutivos(0);                                     // 12
+    usuario.setBloqueadoHasta(null);                                        // 12
+    return usuario;                                                         // 12
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu01b}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{UsuarioService.validarCredenciales} (CU-01)}
+\label{fig:gf_cu01b}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgs] (g4) at (0,-3.75) {4};
+\node[cgp] (g5) at (0,-5) {5};
+\node[cgp] (g6) at (0,-6.25) {6};
+\node[cgs] (g7) at (2,-6.25) {7};
+\node[cgp] (g8) at (0,-7.5) {8};
+\node[cgs] (g9) at (2,-7.5) {9};
+\node[cgp] (g10) at (0,-8.75) {10};
+\node[cgs] (g11) at (2,-8.75) {11};
+\node[cgs] (g12) at (0,-10) {12};
+\node[cgf] (gF) at (0,-11.25) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g3.east) -- (4.2,-2.5) |- (gF.east);
+\draw[fca] (g4) -- (g5);
+\draw[fca] (g5) -- node[right,font=\scriptsize]{V} (g6);
+\draw[fca] (g5.west) -- node[above,font=\scriptsize]{F} ++(-1,0) |- (g8.west);
+\draw[fca] (g6) -- node[above,font=\scriptsize]{V} (g7);
+\draw[fca] (g6) -- node[right,font=\scriptsize]{F} (g8);
+\draw[fca] (g7.east) -- (3.8,-6.25) |- (gF.east);
+\draw[fca] (g8) -- node[above,font=\scriptsize]{V} (g9);
+\draw[fca] (g8) -- node[right,font=\scriptsize]{F} (g10);
+\draw[fca] (g9.east) -- (3.4,-7.5) |- (gF.east);
+\draw[fca] (g10) -- node[above,font=\scriptsize]{V} (g11);
+\draw[fca] (g10) -- node[right,font=\scriptsize]{F} (g12);
+\draw[fca] (g11.east) -- (3,-8.75) |- (gF.east);
+\draw[fca] (g12) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu01b}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=18-14+2=6$ y $V(G)=P+1=5+1=6$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu01b}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-01 (\texttt{validarCredenciales}) (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-01 (\texttt{validarCredenciales}) (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-01. $V(G)=6$: los seis caminos son factibles. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{UsuarioServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & CuentaNoExiste = V\newline BloqueoDefinido = ?\newline BloqueoVigente = ?\newline ContrasenaIncorrecta = ?\newline CuentaDesactivada = ? & Error de credenciales incorrectas, con el mismo mensaje exista o no el correo. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 6, 7, F & CuentaNoExiste = F\newline BloqueoDefinido = V\newline BloqueoVigente = V\newline ContrasenaIncorrecta = ?\newline CuentaDesactivada = ? & Error de cuenta bloqueada, aunque la contraseña sea correcta. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 8, 9, F & CuentaNoExiste = F\newline BloqueoDefinido = F\newline BloqueoVigente = ?\newline ContrasenaIncorrecta = V\newline CuentaDesactivada = ? & Se registra el intento fallido y se devuelve el error de credenciales incorrectas. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 6, 8, 9, F & CuentaNoExiste = F\newline BloqueoDefinido = V\newline BloqueoVigente = F\newline ContrasenaIncorrecta = V\newline CuentaDesactivada = ? & Con el bloqueo ya vencido, se registra el intento fallido y se devuelve el error de credenciales incorrectas. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 8, 10, 11, F & CuentaNoExiste = F\newline BloqueoDefinido = F\newline BloqueoVigente = ?\newline ContrasenaIncorrecta = F\newline CuentaDesactivada = V & Error \texttt{ERR\_AUTH\_03}: la cuenta está desactivada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 8, 10, 12, F & CuentaNoExiste = F\newline BloqueoDefinido = F\newline BloqueoVigente = ?\newline ContrasenaIncorrecta = F\newline CuentaDesactivada = F & Se devuelve el usuario y se reinician los intentos fallidos y los bloqueos. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-04. CONSULTAR ESTADO DE POSTULACIÓN: MisPostulacionesService.lineaDeTiempo
+% ==============================================================================
+\paragraph{9.3.2.2. Caso de uso: Consultar estado de postulación (CU-04).}
+
+Método analizado: \texttt{MisPostulacionesService.lineaDeTiempo} (método privado que arma el recorrido de la postulación para \texttt{detalle}). Sus tres decisiones son: (2) ¿hay otra fila en el historial?; (3) ¿la fila no está oculta?; y (5) ¿hay otro paso pendiente? Las decisiones 2 y 5 son ciclos \texttt{for}. Por tanto $V(G)=4$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{MisPostulacionesService.lineaDeTiempo} y sus nodos (CU-04)}
+\label{fig:cod_cu04}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/postulaciones/service/MisPostulacionesService.java
+private static List<PasoLineaTiempoResponse> lineaDeTiempo(
+        List<FilaHistorial> historial, EstadoPostulacion visible,
+        boolean resultadosVisibles) {
+    List<PasoLineaTiempoResponse> pasos = new ArrayList<>();                // 1
+    for (FilaHistorial fila : historial) {                                  // 2
+        if (!EstadoVisible.ocultaFila(                                      // 3
+                EstadoPostulacion.valueOf(fila.estadoNuevo()),
+                resultadosVisibles)) {
+            pasos.add(new PasoLineaTiempoResponse(..., COMPLETADO));        // 4
+        }
+    }
+    for (String pendiente : pasosPendientes(visible)) {                     // 5
+        pasos.add(new PasoLineaTiempoResponse(pendiente, null, PENDIENTE)); // 6
+    }
+    return pasos;                                                           // 7
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu04}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{MisPostulacionesService.lineaDeTiempo} (CU-04)}
+\label{fig:gf_cu04}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgp] (g3) at (0,-3.75) {3};
+\node[cgs] (g4) at (0,-5) {4};
+\node[cgp] (g5) at (0,-6.25) {5};
+\node[cgs] (g6) at (0,-7.5) {6};
+\node[cgs] (g7) at (0,-8.75) {7};
+\node[cgf] (gF) at (0,-10) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{V} (g3);
+\draw[fca] (g2.east) -- node[above,font=\scriptsize]{F} ++(1,0) |- (g5.east);
+\draw[fca] (g3) -- node[right,font=\scriptsize]{V} (g4);
+\draw[fca] (g3.west) -- node[above,font=\scriptsize]{F} ++(-0.8,0) |- (g2.west);
+\draw[fca] (g4.west) -- ++(-1.2,0) |- (g2.west);
+\draw[fca] (g5) -- node[right,font=\scriptsize]{V} (g6);
+\draw[fca] (g5.south east) -- node[above,font=\scriptsize]{F} ++(0.9,0) |- (g7.east);
+\draw[fca] (g6.west) -- ++(-1.2,0) |- (g5.west);
+\draw[fca] (g7) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu04}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=11-9+2=4$ y $V(G)=P+1=3+1=4$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu04}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-04 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-04 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-06. $V(G)=4$: los cuatro caminos son factibles. En los ciclos, los valores separados por coma son el resultado de cada evaluación, en orden. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{MisPostulacionesServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 5, 7, F & HayFila = F\newline FilaVisible = ?\newline HayPendiente = F & Se devuelve la línea de tiempo vacía. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 2, 5, 7, F & HayFila = V, F\newline FilaVisible = F\newline HayPendiente = F & La fila oculta no se agrega: la línea de tiempo queda vacía. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 2, 5, 7, F & HayFila = V, F\newline FilaVisible = V\newline HayPendiente = F & Se agrega el paso completado de la fila del historial. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 5, 6, 5, 7, F & HayFila = F\newline FilaVisible = ?\newline HayPendiente = V, F & Se agrega el paso pendiente al final de la línea de tiempo. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-05. AUDITAR Y ADJUDICAR BECAS: AdjudicacionService.decidir
+% ==============================================================================
+\paragraph{9.3.2.3. Caso de uso: Auditar y adjudicar becas (CU-05).}
+
+Método analizado: \texttt{AdjudicacionService.decidir} (método privado que usan \texttt{adjudicar} y \texttt{noAdjudicar}). Sus siete decisiones son: (2) ¿los resultados ya fueron publicados?; (4) ¿la convocatoria no admite decisiones?; (7) ¿la postulación ya no está calificada?; y (10), (12), (15) y (18) ¿la decisión es adjudicar?, que se evalúa en la validación, en el operador ternario del estado nuevo, en el \texttt{if} que cambia el estado y en el operador ternario del texto del registro. Por tanto $V(G)=8$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{AdjudicacionService.decidir} y sus nodos (CU-05)}
+\label{fig:cod_cu05}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\fontsize{6.8}{7.6}\selectfont, commentstyle=\bfseries\ttfamily\fontsize{6.8}{7.6}\selectfont, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/postulaciones/service/AdjudicacionService.java
+private ResultadoAuditado<DecisionAdjudicacionResponse> decidir(
+        ResultadoAdjudicacion resultado, UUID actorCodigo,
+        UUID finalistaCodigo, String motivo) {
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);           // 1
+    CabeceraFinalista c = consulta.cabeceraFinalista(...).orElseThrow(...); // 1
+    consulta.bloquearConvocatoria(c.convocatoriaId());                      // 1
+    consulta.bloquearPostulacion(c.postulacionId());                        // 1
+    DatosConvocatoria convocatoria = consulta.convocatoria(...).orElseThrow(...); // 1
+    if (consulta.resultadosPublicados(c.convocatoriaId())) {                // 2
+        throw new ConflictException(ERR_ADJ_01, "...");                     // 3
+    }
+    if (!decisionesPosibles(convocatoria)) {                                // 4
+        throw new ConflictException(ERR_ADJ_05, "...");                     // 5
+    }
+    String estadoActual = consulta.estadoActual(c.postulacionId());         // 6
+    if (!calificada.name().equals(estadoActual)) {                          // 7
+        throw new ConflictException(ERR_ADJ_01, "...");                     // 8
+    }
+    UltimaAuditoria auditoria = consulta.ultimaAuditoria(...).orElseThrow(...); // 9
+    BigDecimal total = total(c.puntajeIa(), auditoria.puntajeAcademico());  // 9
+    if (resultado == ResultadoAdjudicacion.ADJUDICADA) {                    // 10
+        validarAdjudicacion(c, convocatoria, auditoria, total);             // 11
+    }
+    Postulacion postulacion = postulacionRepository.findById(...).orElseThrow(); // 12
+    EstadoPostulacion estadoNuevo = resultado == ADJUDICADA                 // 12: V -> 13, F -> 14
+            ? adjudicada : no_adjudicada;
+    if (resultado == ResultadoAdjudicacion.ADJUDICADA) {                    // 15
+        postulacion.adjudicar();                                            // 16
+    } else {
+        postulacion.noAdjudicar();                                          // 17
+    }
+    Adjudicacion adjudicacion = adjudicacionRepository.saveAndFlush(...);   // 18
+    historialRepository.saveAndFlush(new PostulacionHistorial(...));        // 18
+    LOG.info("Beca " + (resultado == ADJUDICADA ? "adjudicada"             // 18: V -> 19, F -> 20
+            : "no adjudicada"), ...);
+    ... detalle, cupos disponibles y respuesta ...                          // 21
+    return new ResultadoAuditado<>(respuesta, ...);                         // 21
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado (se omiten las líneas que arman el detalle y la respuesta). Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu05}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{AdjudicacionService.decidir} (CU-05)}
+\label{fig:gf_cu05}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g1) at (0,-1) {1};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g2) at (0,-2) {2};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g3) at (2,-2) {3};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g4) at (0,-3) {4};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g5) at (2,-3) {5};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g6) at (0,-4) {6};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g7) at (0,-5) {7};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g8) at (2,-5) {8};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g9) at (0,-6) {9};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g10) at (0,-7) {10};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g11) at (2,-7) {11};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g12) at (0,-8) {12};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g13) at (-2,-8) {13};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g14) at (0,-9) {14};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g15) at (0,-10) {15};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g16) at (2,-10) {16};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g17) at (0,-11) {17};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g18) at (0,-12) {18};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g19) at (-2,-12) {19};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g20) at (0,-13) {20};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g21) at (0,-14) {21};
+\node[cgf,minimum size=7mm,font=\scriptsize] (gF) at (0,-15) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g3.east) -- (3.8,-2) |- (gF.east);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g5.east) -- (3.4,-3) |- (gF.east);
+\draw[fca] (g6) -- (g7);
+\draw[fca] (g7) -- node[above,font=\scriptsize]{V} (g8);
+\draw[fca] (g7) -- node[right,font=\scriptsize]{F} (g9);
+\draw[fca] (g8.east) -- (3,-5) |- (gF.east);
+\draw[fca] (g9) -- (g10);
+\draw[fca] (g10) -- node[above,font=\scriptsize]{V} (g11);
+\draw[fca] (g10) -- node[right,font=\scriptsize]{F} (g12);
+\draw[fca] (g11) |- (g12.east);
+\draw[fca] (g12) -- node[above,font=\scriptsize]{V} (g13);
+\draw[fca] (g12) -- node[right,font=\scriptsize]{F} (g14);
+\draw[fca] (g13) |- (g15.west);
+\draw[fca] (g14) -- (g15);
+\draw[fca] (g15) -- node[above,font=\scriptsize]{V} (g16);
+\draw[fca] (g15) -- node[right,font=\scriptsize]{F} (g17);
+\draw[fca] (g16) |- (g18.east);
+\draw[fca] (g17) -- (g18);
+\draw[fca] (g18) -- node[above,font=\scriptsize]{V} (g19);
+\draw[fca] (g18) -- node[right,font=\scriptsize]{F} (g20);
+\draw[fca] (g19) |- (g21.west);
+\draw[fca] (g20) -- (g21);
+\draw[fca] (g21) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu05}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=29-23+2=8$ y $V(G)=P+1=7+1=8$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu05}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-05 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-05 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-04. $V(G)=8$: los cinco primeros caminos son factibles; los tres últimos no, porque los nodos 10, 12, 15 y 18 evalúan la misma variable. «Adjudicada» es verdadera cuando la decisión es adjudicar. La ausencia de auditoría (\texttt{ERR\_ADJ\_02}) y las reglas de \texttt{validarAdjudicacion} se resuelven dentro de los nodos 9 y 11. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{AdjudicacionServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & Publicados = V\newline SinDecisionesPosibles = ?\newline NoCalificada = ?\newline Adjudicada = ? & Error \texttt{ERR\_ADJ\_01}: los resultados de la convocatoria ya fueron publicados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, F & Publicados = F\newline SinDecisionesPosibles = V\newline NoCalificada = ?\newline Adjudicada = ? & Error \texttt{ERR\_ADJ\_05}: la convocatoria debe estar cerrada y tener cupos y puntaje mínimo. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, F & Publicados = F\newline SinDecisionesPosibles = F\newline NoCalificada = V\newline Adjudicada = ? & Error \texttt{ERR\_ADJ\_01}: la postulación ya no está calificada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 9, 10, 11, 12, 13, 15, 16, 18, 19, 21, F & Publicados = F\newline SinDecisionesPosibles = F\newline NoCalificada = F\newline Adjudicada = V & Se valida la adjudicación, la postulación pasa a «adjudicada», se guardan la adjudicación y el historial y se devuelve la respuesta con los cupos disponibles. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 9, 10, 12, 14, 15, 17, 18, 20, 21, F & Publicados = F\newline SinDecisionesPosibles = F\newline NoCalificada = F\newline Adjudicada = F & La postulación pasa a «no adjudicada», se guardan la decisión y el historial con el motivo y se devuelve la respuesta. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 9, 10, 11, 12, 14, 15, 16, 18, 19, 21, F & --- & No factible: el nodo 12 repite la condición del nodo 10. & No factible \\
+1, 2, 4, 6, 7, 9, 10, 11, 12, 13, 15, 17, 18, 19, 21, F & --- & No factible: el nodo 15 repite la condición del nodo 10. & No factible \\
+1, 2, 4, 6, 7, 9, 10, 11, 12, 13, 15, 16, 18, 20, 21, F & --- & No factible: el nodo 18 repite la condición del nodo 10. & No factible \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-06. VISUALIZAR LISTA PRIORIZADA: ListaPriorizadaService.listarPriorizados
+% ==============================================================================
+\paragraph{9.3.2.4. Caso de uso: Visualizar lista priorizada de postulantes (CU-06).}
+
+Método analizado: \texttt{ListaPriorizadaService.listarPriorizados}. Sus cinco decisiones son: (1) ¿la página es menor que 1?; (2) ¿el tamaño de página es menor que 1?; (4) ¿se indicó un orden (\texttt{sort})?; (5) ¿el orden no está en blanco?; y (8) ¿el desplazamiento supera el total? (operador ternario de la página). Por tanto $V(G)=6$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{ListaPriorizadaService.listarPriorizados} y sus nodos (CU-06)}
+\label{fig:cod_cu06}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/postulaciones/service/ListaPriorizadaService.java
+public PaginaListaPriorizada listarPriorizados(UUID convocatoriaCodigo, String search,
+        UUID carreraCodigo, int page, int pageSize, String sort) {
+    if (page < 1                                                            // 1
+            || pageSize < 1) {                                              // 2
+        throw new ValidationException("ERR_SYS_01", "...");                // 3
+    }
+    if (sort != null                                                        // 4
+            && !sort.isBlank()) {                                           // 5
+        throw new ValidationException(ERR_PRI_02, "...");                   // 6
+    }
+    exigirConvocatoria(convocatoriaCodigo);                                 // 7
+    String busqueda = patronDeBusqueda(search);                             // 7
+    long total = repository.contar(convocatoriaCodigo, carreraCodigo, busqueda); // 7
+    long desplazamiento = (long) (page - 1) * pageSize;                     // 7
+    List<PostulacionPriorizadaResponse> datos = desplazamiento >= total     // 8: V -> 9, F -> 10
+            ? List.of()
+            : repository.buscar(..., pageSize, desplazamiento);
+    int totalPaginas = (int) ((total + pageSize - 1) / pageSize);           // 11
+    return new PaginaListaPriorizada(datos, new PageMeta(...));             // 11
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu06}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{ListaPriorizadaService.listarPriorizados} (CU-06)}
+\label{fig:gf_cu06}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgp] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgp] (g4) at (0,-3.75) {4};
+\node[cgp] (g5) at (0,-5) {5};
+\node[cgs] (g6) at (2,-5) {6};
+\node[cgs] (g7) at (0,-6.25) {7};
+\node[cgp] (g8) at (0,-7.5) {8};
+\node[cgs] (g9) at (2,-7.5) {9};
+\node[cgs] (g10) at (0,-8.75) {10};
+\node[cgs] (g11) at (0,-10) {11};
+\node[cgf] (gF) at (0,-11.25) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- node[right,font=\scriptsize]{F} (g2);
+\draw[fca] (g1) -| node[above,font=\scriptsize,pos=.25]{V} (g3);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g3.east) -- (3.4,-2.5) |- (gF.east);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{V} (g5);
+\draw[fca] (g4.west) -- node[above,font=\scriptsize]{F} ++(-1,0) |- (g7.west);
+\draw[fca] (g5) -- node[above,font=\scriptsize]{V} (g6);
+\draw[fca] (g5) -- node[right,font=\scriptsize]{F} (g7);
+\draw[fca] (g6.east) -- (3,-5) |- (gF.east);
+\draw[fca] (g7) -- (g8);
+\draw[fca] (g8) -- node[above,font=\scriptsize]{V} (g9);
+\draw[fca] (g8) -- node[right,font=\scriptsize]{F} (g10);
+\draw[fca] (g9) |- (g11.east);
+\draw[fca] (g10) -- (g11);
+\draw[fca] (g11) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu06}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=17-13+2=6$ y $V(G)=P+1=5+1=6$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu06}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-06 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-06 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-04. $V(G)=6$: los seis caminos son factibles. La existencia de la convocatoria (\texttt{exigirConvocatoria}) se resuelve dentro del nodo 7. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{ListaPriorizadaServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 3, F & PaginaMenorA1 = V\newline TamanoMenorA1 = ?\newline SortNoNulo = ?\newline SortNoVacio = ?\newline FueraDeRango = ? & Error \texttt{ERR\_SYS\_01}: la página y el tamaño de página deben ser mayores a cero. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, F & PaginaMenorA1 = F\newline TamanoMenorA1 = V\newline SortNoNulo = ?\newline SortNoVacio = ?\newline FueraDeRango = ? & Error \texttt{ERR\_SYS\_01}: la página y el tamaño de página deben ser mayores a cero. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 6, F & PaginaMenorA1 = F\newline TamanoMenorA1 = F\newline SortNoNulo = V\newline SortNoVacio = V\newline FueraDeRango = ? & Error \texttt{ERR\_PRI\_02}: la lista siempre va ordenada por puntaje y no admite «sort». & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 7, 8, 9, 11, F & PaginaMenorA1 = F\newline TamanoMenorA1 = F\newline SortNoNulo = F\newline SortNoVacio = ?\newline FueraDeRango = V & Se devuelve la página vacía con el total de la convocatoria. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 7, 8, 10, 11, F & PaginaMenorA1 = F\newline TamanoMenorA1 = F\newline SortNoNulo = F\newline SortNoVacio = ?\newline FueraDeRango = F & Se devuelve la página solicitada, ordenada por puntaje de mayor a menor. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 7, 8, 10, 11, F & PaginaMenorA1 = F\newline TamanoMenorA1 = F\newline SortNoNulo = V\newline SortNoVacio = F\newline FueraDeRango = F & Un «sort» en blanco no se rechaza: se devuelve la página solicitada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-07. AUDITAR EXPEDIENTE FINALISTA: ExpedienteService.registrarAuditoria (acotada)
+% ==============================================================================
+\paragraph{9.3.2.5. Caso de uso: Auditar expediente finalista (CU-07).}
+
+Método analizado: \texttt{ExpedienteService.registrarAuditoria}. Por tener $V(G)=17$ al contar cada condición simple, se acota el análisis a los caminos de mayor valor: cada condición compuesta se toma como una sola decisión y las instrucciones secuenciales se agrupan en nodos. Así quedan ocho decisiones: (2) ¿hay una auditoría previa con la misma clave?; (3) ¿tiene distinto contenido?; (6) ¿no está validado y no hay observaciones?; (8) ¿está validado y no hay puntaje?; (10) ¿el puntaje es inválido?; (12) ¿la postulación no está calificada?; (14) ¿falta la recepción de la documentación física?; y (17) ¿hay puntaje? Por tanto $V(G)=9$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{ExpedienteService.registrarAuditoria} y sus nodos (CU-07)}
+\label{fig:cod_cu07}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\fontsize{6.8}{7.6}\selectfont, commentstyle=\bfseries\ttfamily\fontsize{6.8}{7.6}\selectfont, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/expedientes/service/ExpedienteService.java
+public ResultadoAuditado<ResultadoAuditoriaResponse> registrarAuditoria(
+        UUID actorCodigo, UUID finalistaCodigo, String claveIdempotencia,
+        RegistrarAuditoriaRequest request) {
+    UUID clave = leerClave(claveIdempotencia);                              // 1
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);           // 1
+    Cabecera c = consulta.cabecera(finalistaCodigo).orElseThrow(...);       // 1
+    consulta.bloquearFinalista(c.finalistaId());                            // 1
+    ... resultado, observaciones normalizadas y puntaje ...                 // 1
+    AuditoriaExpediente previa = clave == null ? null : buscarPrevia(...);  // 1
+    if (previa != null) {                                                   // 2
+        if (!mismoContenido(previa, resultado, observaciones, puntaje)) {   // 3
+            throw new ConflictException(ERR_EXP_06, "...");                 // 5
+        }
+        return new ResultadoAuditado<>(... auditoria existente ...);        // 4
+    }
+    if (resultado != VALIDADO && observaciones == null) {                   // 6
+        throw new ValidationException(ERR_EXP_03, "...");                   // 7
+    }
+    if (resultado == VALIDADO && puntaje == null) {                         // 8
+        throw new ValidationException(ERR_EXP_04, "...");                   // 9
+    }
+    if (puntaje != null && (puntaje < 0 || puntaje > 30 || escala > 2)) {   // 10
+        throw new ValidationException(ERR_EXP_04, "...");                   // 11
+    }
+    if (!"calificada".equals(c.estadoPostulacion())) {                      // 12
+        throw new ConflictException(ERR_EXP_02, "...");                     // 13
+    }
+    if (c.entregaRecibidaEn() == null) {                                    // 14
+        throw new ConflictException(ERR_EXP_01, "...");                     // 15
+    }
+    AuditoriaExpediente guardada = auditoriaRepository.saveAndFlush(...);   // 16
+    avisar(c, resultado, observaciones);                                    // 16
+    Map<String, Object> detalle = ...;                                      // 16
+    if (puntaje != null) {                                                  // 17
+        detalle.put("puntajeAcademico", puntaje.toPlainString());           // 18
+    }
+    AuditoriaResponse respuesta = new AuditoriaResponse(...);               // 19
+    return new ResultadoAuditado<>(new ResultadoAuditoriaResponse(...), ...); // 19
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado y acotado (cada condición compuesta es un solo nodo). Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu07}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{ExpedienteService.registrarAuditoria} (CU-07)}
+\label{fig:gf_cu07}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g1) at (0,-1.1) {1};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g2) at (0,-2.2) {2};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g3) at (2,-2.2) {3};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g4) at (2,-3.3) {4};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g5) at (4,-2.2) {5};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g6) at (0,-4.4) {6};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g7) at (2,-4.4) {7};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g8) at (0,-5.5) {8};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g9) at (2,-5.5) {9};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g10) at (0,-6.6) {10};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g11) at (2,-6.6) {11};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g12) at (0,-7.7) {12};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g13) at (2,-7.7) {13};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g14) at (0,-8.8) {14};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g15) at (2,-8.8) {15};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g16) at (0,-9.9) {16};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g17) at (0,-11) {17};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g18) at (2,-11) {18};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g19) at (0,-12.1) {19};
+\node[cgf,minimum size=7mm,font=\scriptsize] (gF) at (0,-13.2) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g3) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g3) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g4.east) -- (7,-3.3) |- (gF.east);
+\draw[fca] (g5.east) -- (7.4,-2.2) |- (gF.east);
+\draw[fca] (g6) -- node[above,font=\scriptsize]{V} (g7);
+\draw[fca] (g6) -- node[right,font=\scriptsize]{F} (g8);
+\draw[fca] (g7.east) -- (6.6,-4.4) |- (gF.east);
+\draw[fca] (g8) -- node[above,font=\scriptsize]{V} (g9);
+\draw[fca] (g8) -- node[right,font=\scriptsize]{F} (g10);
+\draw[fca] (g9.east) -- (6.2,-5.5) |- (gF.east);
+\draw[fca] (g10) -- node[above,font=\scriptsize]{V} (g11);
+\draw[fca] (g10) -- node[right,font=\scriptsize]{F} (g12);
+\draw[fca] (g11.east) -- (5.8,-6.6) |- (gF.east);
+\draw[fca] (g12) -- node[above,font=\scriptsize]{V} (g13);
+\draw[fca] (g12) -- node[right,font=\scriptsize]{F} (g14);
+\draw[fca] (g13.east) -- (5.4,-7.7) |- (gF.east);
+\draw[fca] (g14) -- node[above,font=\scriptsize]{V} (g15);
+\draw[fca] (g14) -- node[right,font=\scriptsize]{F} (g16);
+\draw[fca] (g15.east) -- (5,-8.8) |- (gF.east);
+\draw[fca] (g16) -- (g17);
+\draw[fca] (g17) -- node[above,font=\scriptsize]{V} (g18);
+\draw[fca] (g17) -- node[right,font=\scriptsize]{F} (g19);
+\draw[fca] (g18) |- (g19.east);
+\draw[fca] (g19) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu07}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=28-21+2=9$ y $V(G)=P+1=8+1=9$. El análisis está acotado: cada condición compuesta se toma como una sola decisión.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu07}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-07 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-07 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-04. $V(G)=9$ en el análisis acotado, con los nueve caminos factibles; el método completo tiene $V(G)=17$ al contar cada condición simple. La normalización de las observaciones y la búsqueda de la auditoría previa se resuelven dentro del nodo 1. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{ExpedienteServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, 4, F & AuditoriaPrevia = V\newline ContenidoDistinto = F\newline NoValidadoSinObs = ?\newline ValidadoSinPuntaje = ?\newline PuntajeInvalido = ?\newline NoCalificada = ?\newline SinRecepcion = ?\newline ConPuntaje = ? & Repetición idempotente: se devuelve la auditoría existente y no se crea otra. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 5, F & AuditoriaPrevia = V\newline ContenidoDistinto = V\newline NoValidadoSinObs = ?\newline ValidadoSinPuntaje = ?\newline PuntajeInvalido = ?\newline NoCalificada = ?\newline SinRecepcion = ?\newline ConPuntaje = ? & Error \texttt{ERR\_EXP\_06}: la clave de idempotencia ya se usó para otra auditoría. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 7, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = V\newline ValidadoSinPuntaje = ?\newline PuntajeInvalido = ?\newline NoCalificada = ?\newline SinRecepcion = ?\newline ConPuntaje = ? & Error \texttt{ERR\_EXP\_03}: las observaciones son obligatorias si el expediente es observado o no válido. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 8, 9, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = F\newline ValidadoSinPuntaje = V\newline PuntajeInvalido = ?\newline NoCalificada = ?\newline SinRecepcion = ?\newline ConPuntaje = ? & Error \texttt{ERR\_EXP\_04}: el puntaje académico es obligatorio si el expediente es validado. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 8, 10, 11, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = F\newline ValidadoSinPuntaje = F\newline PuntajeInvalido = V\newline NoCalificada = ?\newline SinRecepcion = ?\newline ConPuntaje = ? & Error \texttt{ERR\_EXP\_04}: el puntaje debe estar entre 0 y 30, con hasta dos decimales. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 8, 10, 12, 13, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = F\newline ValidadoSinPuntaje = F\newline PuntajeInvalido = F\newline NoCalificada = V\newline SinRecepcion = ?\newline ConPuntaje = ? & Error \texttt{ERR\_EXP\_02}: solo se audita una postulación calificada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 8, 10, 12, 14, 15, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = F\newline ValidadoSinPuntaje = F\newline PuntajeInvalido = F\newline NoCalificada = F\newline SinRecepcion = V\newline ConPuntaje = ? & Error \texttt{ERR\_EXP\_01}: primero se debe registrar la recepción de la documentación física. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 8, 10, 12, 14, 16, 17, 18, 19, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = F\newline ValidadoSinPuntaje = F\newline PuntajeInvalido = F\newline NoCalificada = F\newline SinRecepcion = F\newline ConPuntaje = V & Se guarda la auditoría, se avisa al postulante y el detalle incluye el puntaje académico. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 6, 8, 10, 12, 14, 16, 17, 19, F & AuditoriaPrevia = F\newline ContenidoDistinto = ?\newline NoValidadoSinObs = F\newline ValidadoSinPuntaje = F\newline PuntajeInvalido = F\newline NoCalificada = F\newline SinRecepcion = F\newline ConPuntaje = F & Se guarda la auditoría y se avisa al postulante; el detalle no lleva puntaje. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-08. GENERAR ACTA DE ADJUDICACIÓN: ActaAdjudicacionService.validar
+% ==============================================================================
+\paragraph{9.3.2.6. Caso de uso: Generar acta de adjudicación (CU-08).}
+
+Método analizado: \texttt{ActaAdjudicacionService.validar}, que usan \texttt{generar} y \texttt{vistaPrevia}. Tiene dos decisiones, por lo que $V(G)=3$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{ActaAdjudicacionService.validar} y sus nodos (CU-08)}
+\label{fig:cod_cu08}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/actas/service/ActaAdjudicacionService.java
+private void validar(DatosConvocatoria c) {
+    if (actaRepository.existsByConvocatoriaId(c.id())) {            // 1
+        throw new ConflictException(ERR_ACT_02, "...");              // 2
+    }
+    if (consulta.publicacion(c.id()).isEmpty()) {                   // 3
+        throw new ConflictException(ERR_ACT_01, "...");              // 4
+    }
+}                                                                   // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu08}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{ActaAdjudicacionService.validar} (CU-08)}
+\label{fig:gf_cu08}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgp] (g1) at (0,-1.25) {1};
+\node[cgs] (g2) at (2,-1.25) {2};
+\node[cgp] (g3) at (0,-2.5) {3};
+\node[cgs] (g4) at (2,-2.5) {4};
+\node[cgf] (gF) at (0,-3.75) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- node[above,font=\scriptsize]{V} (g2);
+\draw[fca] (g1) -- node[right,font=\scriptsize]{F} (g3);
+\draw[fca] (g3) -- node[above,font=\scriptsize]{V} (g4);
+\draw[fca] (g3) -- node[right,font=\scriptsize]{F} (gF);
+\draw[fca] (g2.east) -- (3.4,-1.25) |- (gF.east);
+\draw[fca] (g4.east) -- (3,-2.5) |- (gF.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu08}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=7-6+2=3$ y $V(G)=P+1=2+1=3$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu08}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-08 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-08 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-04. $V(G)=3$: los tres caminos son factibles. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{ActaAdjudicacionServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, F & ActaExistente = V\newline SinPublicacion = ? & Error \texttt{ERR\_ACT\_02}: la convocatoria ya tiene acta de adjudicación. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 3, 4, F & ActaExistente = F\newline SinPublicacion = V & Error \texttt{ERR\_ACT\_01}: los resultados de la convocatoria todavía no están publicados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 3, F & ActaExistente = F\newline SinPublicacion = F & La validación termina sin error y el flujo continúa. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-12. DASHBOARD DE INDICADORES BI: IndicadoresService.obtener
+% ==============================================================================
+\paragraph{9.3.2.7. Caso de uso: Visualizar dashboard de indicadores BI (CU-12).}
+
+Método analizado: \texttt{IndicadoresService.obtener}, que arma los indicadores de una gestión. Sus cinco decisiones son: (2) ¿no hay gestión?; (4) y (12) ¿no hay convocatoria? (operadores ternarios del identificador y del resumen); (8) ¿las postulaciones son cero?; y (9) ¿los finalistas son cero? Las dos últimas forman la expresión \texttt{\&\&} de «sin datos». Por tanto $V(G)=6$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{IndicadoresService.obtener} y sus nodos (CU-12)}
+\label{fig:cod_cu12}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/dashboard/service/IndicadoresService.java
+IndicadoresResponse obtener(UUID gestionCodigo, UUID convocatoriaCodigo) {
+    Seleccion seleccion = resolver(gestionCodigo, convocatoriaCodigo);      // 1
+    GestionDatos gestion = seleccion.gestion();                             // 1
+    ConvocatoriaDatos convocatoria = seleccion.convocatoria();              // 1
+    if (gestion == null) {                                                  // 2
+        return new IndicadoresResponse(null, null, ..., List.of(), null, true); // 3
+    }
+    Long convocatoriaId = convocatoria == null                              // 4: V -> 5, F -> 6
+            ? null : convocatoria.id();
+    TotalesFila totales = repositorio.totales(gestion.id(), convocatoriaId); // 7
+    FilaAsistenciaTotal asistencia = repositorio.asistenciaTotal(...);      // 7
+    Totales respuestaTotales = new Totales(..., porcentaje(...));           // 7
+    boolean sinDatos = totales.postulaciones() == 0                         // 8: F -> 11
+            && totales.finalistas() == 0                                    // 9: F -> 11
+            && totales.adjudicadas() == 0;                                  // 10 (V) / 11 (F)
+    return new IndicadoresResponse(new GestionResumen(...),                 // 12: V -> 13, F -> 14
+            convocatoria == null ? null : new ConvocatoriaResumen(...),
+            respuestaTotales, serieSinHuecos(...), ..., sinDatos);          // 15
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu12}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{IndicadoresService.obtener} (CU-12)}
+\label{fig:gf_cu12}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgp] (g4) at (0,-3.75) {4};
+\node[cgs] (g5) at (2,-3.75) {5};
+\node[cgs] (g6) at (0,-5) {6};
+\node[cgs] (g7) at (0,-6.25) {7};
+\node[cgp] (g8) at (0,-7.5) {8};
+\node[cgp] (g9) at (0,-8.75) {9};
+\node[cgs] (g10) at (0,-10) {10};
+\node[cgs] (g11) at (2,-10) {11};
+\node[cgp] (g12) at (0,-11.25) {12};
+\node[cgs] (g13) at (-2,-11.25) {13};
+\node[cgs] (g14) at (0,-12.5) {14};
+\node[cgs] (g15) at (0,-13.75) {15};
+\node[cgf] (gF) at (0,-15) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g3.east) -- (3,-2.5) |- (gF.east);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g5) |- (g7.east);
+\draw[fca] (g6) -- (g7);
+\draw[fca] (g7) -- (g8);
+\draw[fca] (g8) -- node[right,font=\scriptsize]{V} (g9);
+\draw[fca] (g8) -| node[above,font=\scriptsize,pos=.25]{F} (g11);
+\draw[fca] (g9) -- node[right,font=\scriptsize]{V} (g10);
+\draw[fca] (g9) -| node[above,font=\scriptsize,pos=.25]{F} (g11);
+\draw[fca] (g10) -- (g12);
+\draw[fca] (g11) |- (g12.east);
+\draw[fca] (g12) -- node[above,font=\scriptsize]{V} (g13);
+\draw[fca] (g12) -- node[right,font=\scriptsize]{F} (g14);
+\draw[fca] (g13) |- (g15.west);
+\draw[fca] (g14) -- (g15);
+\draw[fca] (g15) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu12}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=21-17+2=6$ y $V(G)=P+1=5+1=6$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu12}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-12 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-12 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-07. $V(G)=6$: los cinco primeros caminos son factibles; el sexto no, porque los nodos 4 y 12 evalúan la misma variable. «SinConvocatoria» es verdadera cuando no se elige convocatoria. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{IndicadoresServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & SinGestion = V\newline SinConvocatoria = ?\newline PostulacionesEnCero = ?\newline FinalistasEnCero = ? & Se devuelven indicadores vacíos con «sin datos» verdadero. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, 9, 10, 12, 14, 15, F & SinGestion = F\newline SinConvocatoria = F\newline PostulacionesEnCero = V\newline FinalistasEnCero = V & Indicadores de la convocatoria elegida; «sin datos» es verdadero solo si las adjudicadas también son cero. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 7, 8, 9, 10, 12, 13, 15, F & SinGestion = F\newline SinConvocatoria = V\newline PostulacionesEnCero = V\newline FinalistasEnCero = V & Indicadores de todas las convocatorias de la gestión, sin convocatoria en la respuesta. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, 11, 12, 14, 15, F & SinGestion = F\newline SinConvocatoria = F\newline PostulacionesEnCero = F\newline FinalistasEnCero = ? & Con postulaciones, «sin datos» es falso. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, 9, 11, 12, 14, 15, F & SinGestion = F\newline SinConvocatoria = F\newline PostulacionesEnCero = V\newline FinalistasEnCero = F & Con finalistas, «sin datos» es falso. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 7, 8, 9, 10, 12, 14, 15, F & --- & No factible: el nodo 12 repite la condición del nodo 4. & No factible \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-14. GESTIONAR USUARIOS Y ROLES: UsuarioPersonalService.desactivar
+% ==============================================================================
+\paragraph{9.3.2.8. Caso de uso: Gestionar usuarios y roles (CU-14).}
+
+Método analizado: \texttt{UsuarioPersonalService.desactivar}. Sus tres decisiones son: (2) ¿es la propia cuenta?; (4) ¿la cuenta ya está desactivada?; y (6) ¿la cuenta es de un administrador? Por tanto $V(G)=4$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{UsuarioPersonalService.desactivar} y sus nodos (CU-14)}
+\label{fig:cod_cu14}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/usuarios/service/UsuarioPersonalService.java
+public ResultadoAuditado<UsuarioPersonalResponse> desactivar(UUID actorCodigo, UUID codigo) {
+    Usuario actor = actor(actorCodigo);                                     // 1
+    Usuario cuenta = buscarPersonal(codigo);                                // 1
+    if (actor.getId().equals(cuenta.getId())) {                             // 2
+        throw rechazar("...", new ForbiddenException(ERR_US_08, "..."));   // 3
+    }
+    if (!cuenta.isActivo()) {                                               // 4
+        throw rechazar("...", new ConflictException(ERR_US_07, "..."));    // 5
+    }
+    if (ADMINISTRADOR_DUBSS.equals(cuenta.getRol().getNombre())) {          // 6
+        validarNoUltimoAdministrador(cuenta);                               // 7
+    }
+    cuenta.setActivo(false);                                                // 8
+    usuarioRepository.saveAndFlush(cuenta);                                 // 8
+    sesionService.revocarTodas(cuenta);                                     // 8
+    return new ResultadoAuditado<>(aRespuesta(cuenta), ...);                // 8
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu14}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{UsuarioPersonalService.desactivar} (CU-14)}
+\label{fig:gf_cu14}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgp] (g4) at (0,-3.75) {4};
+\node[cgs] (g5) at (2,-3.75) {5};
+\node[cgp] (g6) at (0,-5) {6};
+\node[cgs] (g7) at (2,-5) {7};
+\node[cgs] (g8) at (0,-6.25) {8};
+\node[cgf] (gF) at (0,-7.5) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g3.east) -- (3.4,-2.5) |- (gF.east);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g5.east) -- (3,-3.75) |- (gF.east);
+\draw[fca] (g6) -- node[above,font=\scriptsize]{V} (g7);
+\draw[fca] (g6) -- node[right,font=\scriptsize]{F} (g8);
+\draw[fca] (g7) |- (g8.east);
+\draw[fca] (g8) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu14}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=12-10+2=4$ y $V(G)=P+1=3+1=4$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu14}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-14 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-14 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-09. $V(G)=4$: los cuatro caminos son factibles. La regla del último administrador (\texttt{validarNoUltimoAdministrador}) se resuelve dentro del nodo 7. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{UsuarioPersonalServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & MismaCuenta = V\newline CuentaDesactivada = ?\newline EsAdministrador = ? & Error \texttt{ERR\_US\_08}: no se puede desactivar la propia cuenta. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, F & MismaCuenta = F\newline CuentaDesactivada = V\newline EsAdministrador = ? & Error \texttt{ERR\_US\_07}: la cuenta ya está desactivada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, F & MismaCuenta = F\newline CuentaDesactivada = F\newline EsAdministrador = V & Se comprueba que no sea el último administrador, se desactiva la cuenta y se revocan sus sesiones. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 8, F & MismaCuenta = F\newline CuentaDesactivada = F\newline EsAdministrador = F & Se desactiva la cuenta y se revocan sus sesiones. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-15. RECUPERAR CONTRASEÑA Y GESTIONAR PERFIL: PerfilService.actualizar
+% ==============================================================================
+\paragraph{9.3.2.9. Caso de uso: Recuperar contraseña y gestionar perfil (CU-15).}
+
+Método analizado: \texttt{PerfilService.actualizar} (gestión del perfil). Sus nueve decisiones son: (2) ¿se indicó un correo?; (3) ¿el correo es distinto del actual?; (4) ¿el correo ya existe?; (7) ¿se indicó un teléfono?; (8) ¿la cuenta no tiene postulante?; (10) ¿el teléfono es distinto del actual?; (12) ¿hay campos modificados?; (13) ¿existe el postulante?; y (15) ¿la base de datos rechaza el guardado? Por tanto $V(G)=10$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{PerfilService.actualizar} y sus nodos (CU-15)}
+\label{fig:cod_cu15}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\fontsize{6.8}{7.6}\selectfont, commentstyle=\bfseries\ttfamily\fontsize{6.8}{7.6}\selectfont, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/usuarios/service/PerfilService.java
+public ResultadoAuditado<PerfilResponse> actualizar(UUID usuarioCodigo,
+        ActualizarPerfilRequest request) {
+    Usuario usuario = usuarioService.obtenerPorCodigo(usuarioCodigo);       // 1
+    Postulante postulante = postulanteDe(usuario);                          // 1
+    List<String> campos = new ArrayList<>();                                // 1
+    if (request.correo() != null) {                                         // 2
+        String correo = normalizarCorreo(request.correo());                 // 3
+        if (!correo.equals(usuario.getCorreo())) {                          // 3
+            usuarioService.verificarContrasenaActual(usuario, ...);         // 4
+            if (usuarioRepository.existsByCorreo(correo)) {                 // 4
+                throw rechazar(new ConflictException(ERR_US_02, "..."));    // 5
+            }
+            usuario.setCorreo(correo);                                      // 6
+            campos.add("correo");                                           // 6
+        }
+    }
+    if (request.telefono() != null) {                                       // 7
+        if (postulante == null) {                                           // 8
+            throw rechazar(new ValidationException(ERR_US_13, "..."));      // 9
+        }
+        String telefono = request.telefono().trim();                        // 10
+        if (!telefono.equals(postulante.getTelefono())) {                   // 10
+            postulante.setTelefono(telefono);                               // 11
+            campos.add("telefono");                                         // 11
+        }
+    }
+    if (!campos.isEmpty()) {                                                // 12
+        try {                                                               // 13
+            usuarioRepository.saveAndFlush(usuario);                        // 13
+            if (postulante != null) {                                       // 13
+                postulanteRepository.saveAndFlush(postulante);              // 14
+            }
+        } catch (DataIntegrityViolationException e) {                       // 15
+            throw traducirConflicto(e);                                     // 16
+        }
+        LOG.info("Perfil actualizado", ...);                                // 17
+    }
+    return new ResultadoAuditado<>(aPerfil(usuario, postulante), ...);      // 18
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu15}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{PerfilService.actualizar} (CU-15)}
+\label{fig:gf_cu15}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g1) at (0,-1.05) {1};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g2) at (0,-2.1) {2};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g3) at (0,-3.15) {3};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g4) at (0,-4.2) {4};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g5) at (2,-4.2) {5};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g6) at (0,-5.25) {6};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g7) at (0,-6.3) {7};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g8) at (0,-7.35) {8};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g9) at (2,-7.35) {9};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g10) at (0,-8.4) {10};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g11) at (2,-8.4) {11};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g12) at (0,-9.45) {12};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g13) at (0,-10.5) {13};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g14) at (0,-11.55) {14};
+\node[cgp,minimum size=7mm,font=\scriptsize] (g15) at (0,-12.6) {15};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g16) at (2,-12.6) {16};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g17) at (0,-13.65) {17};
+\node[cgs,minimum size=7mm,font=\scriptsize] (g18) at (0,-14.7) {18};
+\node[cgf,minimum size=7mm,font=\scriptsize] (gF) at (0,-15.75) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{V} (g3);
+\draw[fca] (g2.west) -- node[above,font=\scriptsize]{F} ++(-2.4,0) |- (g7.west);
+\draw[fca] (g3) -- node[right,font=\scriptsize]{V} (g4);
+\draw[fca] (g3.west) -- node[above,font=\scriptsize]{F} ++(-2,0) |- (g7.west);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g5.east) -- (3.8,-4.2) |- (gF.east);
+\draw[fca] (g6) -- (g7);
+\draw[fca] (g7) -- node[right,font=\scriptsize]{V} (g8);
+\draw[fca] (g7.west) -- node[above,font=\scriptsize]{F} ++(-1.6,0) |- (g12.west);
+\draw[fca] (g8) -- node[above,font=\scriptsize]{V} (g9);
+\draw[fca] (g8) -- node[right,font=\scriptsize]{F} (g10);
+\draw[fca] (g9.east) -- (3.4,-7.35) |- (gF.east);
+\draw[fca] (g10) -- node[above,font=\scriptsize]{V} (g11);
+\draw[fca] (g10) -- node[right,font=\scriptsize]{F} (g12);
+\draw[fca] (g11) |- (g12.east);
+\draw[fca] (g12) -- node[right,font=\scriptsize]{V} (g13);
+\draw[fca] (g12.south west) -- node[above,font=\scriptsize]{F} ++(-2.9,0) |- (g18.west);
+\draw[fca] (g13) -- node[right,font=\scriptsize]{V} (g14);
+\draw[fca] (g13.west) -- node[above,font=\scriptsize]{F} ++(-1,0) |- (g15.west);
+\draw[fca] (g14) -- (g15);
+\draw[fca] (g15) -- node[above,font=\scriptsize]{V} (g16);
+\draw[fca] (g15) -- node[right,font=\scriptsize]{F} (g17);
+\draw[fca] (g16.east) -- (3,-12.6) |- (gF.east);
+\draw[fca] (g17) -- (g18);
+\draw[fca] (g18) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu15}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=28-20+2=10$ y $V(G)=P+1=9+1=10$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu15}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-15 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-15 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-10. $V(G)=10$: los diez caminos son factibles. La verificación de la contraseña actual (\texttt{verificarContrasenaActual}) se resuelve dentro del nodo 4. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{PerfilServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 7, 12, 18, F & CorreoIndicado = F\newline CorreoDistinto = ?\newline CorreoExistente = ?\newline TelefonoIndicado = F\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = F\newline ConPostulante = ?\newline ErrorIntegridad = ? & No hay cambios: se devuelve el perfil actual sin guardar. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 7, 12, 18, F & CorreoIndicado = V\newline CorreoDistinto = F\newline CorreoExistente = ?\newline TelefonoIndicado = F\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = F\newline ConPostulante = ?\newline ErrorIntegridad = ? & El correo es igual al actual: no hay cambios y no se guarda. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 5, F & CorreoIndicado = V\newline CorreoDistinto = V\newline CorreoExistente = V\newline TelefonoIndicado = ?\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = ?\newline ConPostulante = ?\newline ErrorIntegridad = ? & Error \texttt{ERR\_US\_02}: ya existe una cuenta con ese correo electrónico. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 6, 7, 12, 13, 14, 15, 17, 18, F & CorreoIndicado = V\newline CorreoDistinto = V\newline CorreoExistente = F\newline TelefonoIndicado = F\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = V\newline ConPostulante = V\newline ErrorIntegridad = F & Se actualiza el correo, se guardan usuario y postulante y se devuelve el perfil. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 7, 8, 9, F & CorreoIndicado = F\newline CorreoDistinto = ?\newline CorreoExistente = ?\newline TelefonoIndicado = V\newline SinPostulante = V\newline TelefonoDistinto = ?\newline HayCambios = ?\newline ConPostulante = ?\newline ErrorIntegridad = ? & Error \texttt{ERR\_US\_13}: solo los postulantes tienen un teléfono para actualizar. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, F & CorreoIndicado = F\newline CorreoDistinto = ?\newline CorreoExistente = ?\newline TelefonoIndicado = V\newline SinPostulante = F\newline TelefonoDistinto = V\newline HayCambios = V\newline ConPostulante = V\newline ErrorIntegridad = F & Se actualiza el teléfono, se guardan usuario y postulante y se devuelve el perfil. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 7, 8, 10, 12, 18, F & CorreoIndicado = F\newline CorreoDistinto = ?\newline CorreoExistente = ?\newline TelefonoIndicado = V\newline SinPostulante = F\newline TelefonoDistinto = F\newline HayCambios = F\newline ConPostulante = ?\newline ErrorIntegridad = ? & El teléfono es igual al actual: no hay cambios y no se guarda. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 6, 7, 12, 13, 15, 17, 18, F & CorreoIndicado = V\newline CorreoDistinto = V\newline CorreoExistente = F\newline TelefonoIndicado = F\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = V\newline ConPostulante = F\newline ErrorIntegridad = F & Se actualiza el correo de una cuenta sin postulante: solo se guarda el usuario. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 6, 7, 12, 13, 14, 15, 16, F & CorreoIndicado = V\newline CorreoDistinto = V\newline CorreoExistente = F\newline TelefonoIndicado = F\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = V\newline ConPostulante = V\newline ErrorIntegridad = V & La restricción de la base de datos se traduce al error de conflicto correspondiente. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 4, 6, 7, 12, 13, 15, 16, F & CorreoIndicado = V\newline CorreoDistinto = V\newline CorreoExistente = F\newline TelefonoIndicado = F\newline SinPostulante = ?\newline TelefonoDistinto = ?\newline HayCambios = V\newline ConPostulante = F\newline ErrorIntegridad = V & La restricción de la base de datos se traduce al error de conflicto, sin postulante. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-19. DEVOLVER POSTULACIÓN PARA CORRECCIÓN: DevolucionService.devolver
+% ==============================================================================
+\paragraph{9.3.2.10. Caso de uso: Devolver postulación para corrección (CU-19).}
+
+Método analizado: \texttt{DevolucionService.devolver}. Sus cuatro decisiones son: (2) ¿la postulación ya no está «calificada»?; (4) ¿los resultados de la convocatoria ya fueron publicados?; (6) ¿falta una auditoría posterior a la última devolución?; y (9) ¿el historial no trae fecha de creación? (operador ternario de la fecha de respuesta). Por tanto $V(G)=5$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{DevolucionService.devolver} y sus nodos (CU-19)}
+\label{fig:cod_cu19}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\fontsize{6.8}{7.6}\selectfont, commentstyle=\bfseries\ttfamily\fontsize{6.8}{7.6}\selectfont, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/postulaciones/service/DevolucionService.java
+public ResultadoAuditado<DevolucionResponse> devolver(UUID actorCodigo,
+        UUID finalistaCodigo, DevolverPostulacionRequest request) {
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);       // 1
+    Cabecera c = consulta.cabecera(finalistaCodigo).orElseThrow(...);   // 1
+    consulta.bloquearPostulacion(c.postulacionId());                    // 1
+    String motivo = request.motivo().trim();                            // 1
+
+    if (!calificada.name().equals(                                      // 2
+            consulta.estadoActual(c.postulacionId()))) {
+        throw new ConflictException(ERR_DEV_01, "...");                 // 3
+    }
+    if (consulta.resultadosPublicadosDe(c.postulacionId())) {           // 4
+        throw new ConflictException(ERR_DEV_01, "...");                 // 5
+    }
+    if (!consulta.hayAuditoriaPosteriorALaUltimaDevolucion(             // 6
+            c.finalistaId(), c.postulacionId())) {
+        throw new ConflictException(ERR_DEV_02, "...");                 // 7
+    }
+
+    Postulacion postulacion = postulacionRepository
+            .findById(c.postulacionId()).orElseThrow();                 // 8
+    postulacion.devolver();                                             // 8
+    PostulacionHistorial historial = historialRepository
+            .saveAndFlush(new PostulacionHistorial(...));               // 8
+    avisar(c, motivo);                                                  // 8
+    Map<String, Object> detalle = ...;                                  // 8
+    Instant fecha = historial.getCreadoEn() == null                     // 9: V -> 10, F -> 11
+            ? Instant.now() : historial.getCreadoEn();
+    DevolucionResponse respuesta = new DevolucionResponse(...);         // 12
+    return new ResultadoAuditado<>(respuesta, ...);                     // 12
+}                                                                       // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu19}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{DevolucionService.devolver} (CU-19)}
+\label{fig:gf_cu19}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgp] (g4) at (0,-3.75) {4};
+\node[cgs] (g5) at (2,-3.75) {5};
+\node[cgp] (g6) at (0,-5) {6};
+\node[cgs] (g7) at (2,-5) {7};
+\node[cgs] (g8) at (0,-6.25) {8};
+\node[cgp] (g9) at (0,-7.5) {9};
+\node[cgs] (g10) at (2,-7.5) {10};
+\node[cgs] (g11) at (0,-8.75) {11};
+\node[cgs] (g12) at (0,-10) {12};
+\node[cgf] (gF) at (0,-11.25) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g6) -- node[above,font=\scriptsize]{V} (g7);
+\draw[fca] (g6) -- node[right,font=\scriptsize]{F} (g8);
+\draw[fca] (g8) -- (g9);
+\draw[fca] (g9) -- node[above,font=\scriptsize]{V} (g10);
+\draw[fca] (g9) -- node[right,font=\scriptsize]{F} (g11);
+\draw[fca] (g10) |- (g12.east);
+\draw[fca] (g11) -- (g12);
+\draw[fca] (g12) -- (gF);
+\draw[fca] (g3.east) -- (3.8,-2.5) |- (gF.east);
+\draw[fca] (g5.east) -- (3.4,-3.75) |- (gF.east);
+\draw[fca] (g7.east) -- (3,-5) |- (gF.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu19}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=17-14+2=5$ y $V(G)=P+1=4+1=5$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu19}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-19 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-19 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-14. $V(G)=5$: los cinco caminos son factibles. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{DevolucionServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & NoCalificada = V\newline Publicados = ?\newline SinAuditoria = ?\newline SinFecha = ? & Error \texttt{ERR\_DEV\_01}: solo se puede devolver una postulación calificada; no se cambia nada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, F & NoCalificada = F\newline Publicados = V\newline SinAuditoria = ?\newline SinFecha = ? & Error \texttt{ERR\_DEV\_01}: los resultados de la convocatoria ya fueron publicados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, F & NoCalificada = F\newline Publicados = F\newline SinAuditoria = V\newline SinFecha = ? & Error \texttt{ERR\_DEV\_02}: primero se debe registrar la auditoría del expediente. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 8, 9, 10, 12, F & NoCalificada = F\newline Publicados = F\newline SinAuditoria = F\newline SinFecha = V & Pasa a «devuelta», el historial guarda el motivo, se avisa al postulante y la fecha de la respuesta es el instante actual. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 8, 9, 11, 12, F & NoCalificada = F\newline Publicados = F\newline SinAuditoria = F\newline SinFecha = F & Pasa a «devuelta», el historial guarda el motivo, se avisa al postulante y la fecha de la respuesta es la del historial. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-20. ARCHIVAR O RECHAZAR POSTULACIÓN: CierrePostulacionService.cerrar
+% ==============================================================================
+\paragraph{9.3.2.11. Caso de uso: Archivar o rechazar postulación (CU-20).}
+
+Método analizado: \texttt{CierrePostulacionService.cerrar} (método privado que usan \texttt{archivar} y \texttt{rechazar}). Sus tres decisiones son: (2) ¿la postulación ya no está «calificada»?; (4) ¿los resultados de la convocatoria ya fueron publicados?; y (7) ¿el historial no trae fecha de creación? (operador ternario de la fecha de respuesta). Por tanto $V(G)=4$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{CierrePostulacionService.cerrar} y sus nodos (CU-20)}
+\label{fig:cod_cu20}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/postulaciones/service/CierrePostulacionService.java
+private ResultadoAuditado<CierrePostulacionResponse> cerrar(Accion accion,
+        UUID actorCodigo, UUID finalistaCodigo, CierrePostulacionRequest request) {
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);           // 1
+    Cabecera c = consulta.cabecera(finalistaCodigo).orElseThrow(...);       // 1
+    consulta.bloquearPostulacion(c.postulacionId());                        // 1
+    String motivo = request.motivo().trim();                                // 1
+    String estadoActual = consulta.estadoActual(c.postulacionId());         // 1
+    if (!calificada.name().equals(estadoActual)) {                          // 2
+        throw new ConflictException(ERR_ARC_01, "...");                     // 3
+    }
+    if (consulta.resultadosPublicados(c.convocatoriaId())) {                // 4
+        throw new ConflictException(ERR_ARC_01, "...");                     // 5
+    }
+    Postulacion postulacion = postulacionRepository.findById(...).orElseThrow(); // 6
+    accion.aplicar(postulacion);                                            // 6
+    PostulacionHistorial historial = historialRepository.saveAndFlush(...); // 6
+    avisar(accion, c, motivo);                                              // 6
+    Map<String, Object> detalle = ...;                                      // 6
+    Instant fecha = historial.getCreadoEn() == null                         // 7: V -> 8, F -> 9
+            ? Instant.now() : historial.getCreadoEn();
+    CierrePostulacionResponse respuesta = new CierrePostulacionResponse(...); // 10
+    return new ResultadoAuditado<>(respuesta, ...);                         // 10
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu20}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{CierrePostulacionService.cerrar} (CU-20)}
+\label{fig:gf_cu20}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgp] (g4) at (0,-3.75) {4};
+\node[cgs] (g5) at (2,-3.75) {5};
+\node[cgs] (g6) at (0,-5) {6};
+\node[cgp] (g7) at (0,-6.25) {7};
+\node[cgs] (g8) at (2,-6.25) {8};
+\node[cgs] (g9) at (0,-7.5) {9};
+\node[cgs] (g10) at (0,-8.75) {10};
+\node[cgf] (gF) at (0,-10) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g6) -- (g7);
+\draw[fca] (g7) -- node[above,font=\scriptsize]{V} (g8);
+\draw[fca] (g7) -- node[right,font=\scriptsize]{F} (g9);
+\draw[fca] (g8) |- (g10.east);
+\draw[fca] (g9) -- (g10);
+\draw[fca] (g10) -- (gF);
+\draw[fca] (g3.east) -- (3.4,-2.5) |- (gF.east);
+\draw[fca] (g5.east) -- (3,-3.75) |- (gF.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu20}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=14-12+2=4$ y $V(G)=P+1=3+1=4$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu20}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-20 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-20 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-15. $V(G)=4$: los cuatro caminos son factibles. El estado nuevo y el aviso dependen de la acción (archivar o rechazar), que se resuelve dentro del nodo 6. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{CierrePostulacionServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & NoCalificada = V\newline Publicados = ?\newline SinFecha = ? & Error \texttt{ERR\_ARC\_01}: la postulación ya no está calificada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, F & NoCalificada = F\newline Publicados = V\newline SinFecha = ? & Error \texttt{ERR\_ARC\_01}: los resultados de la convocatoria ya fueron publicados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, 10, F & NoCalificada = F\newline Publicados = F\newline SinFecha = V & La postulación pasa a «archivada» o «no adjudicada», se guarda el historial con el motivo, se avisa y la fecha de la respuesta es el instante actual. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 9, 10, F & NoCalificada = F\newline Publicados = F\newline SinFecha = F & Igual que el camino anterior, con la fecha del historial como fecha de la respuesta. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-21. NOTIFICAR FINALISTAS Y PUBLICAR COMUNICADOS: FinalistaService.registrarEntrega
+% ==============================================================================
+\paragraph{9.3.2.12. Caso de uso: Notificar finalistas y publicar comunicados (CU-21).}
+
+Método analizado: \texttt{FinalistaService.registrarEntrega} (registro de la entrega de documentación física). Sus seis decisiones son: (2) ¿no se indicó fecha de recepción? (operador ternario); (5) ¿la fecha es futura?; (7) ¿no hay una entrega previa? (operador ternario); (11) ¿hay una fecha anterior?; (13) ¿hay observaciones?; y (14) ¿las observaciones no están en blanco? Por tanto $V(G)=7$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{FinalistaService.registrarEntrega} y sus nodos (CU-21)}
+\label{fig:cod_cu21}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/finalistas/service/FinalistaService.java
+public ResultadoAuditado<FinalistaResponse> registrarEntrega(UUID actorCodigo,
+        UUID finalistaCodigo, RegistrarEntregaRequest request) {
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);           // 1
+    Finalista finalista = finalistaRepository.findByCodigo(...).orElseThrow(...); // 1
+    LocalDate hoy = LocalDate.now(ZONA);                                    // 1
+    LocalDate fecha = request.fechaRecepcion() == null                      // 2: V -> 3, F -> 4
+            ? hoy : request.fechaRecepcion();
+    if (fecha.isAfter(hoy)) {                                               // 5
+        throw new ValidationException(ERR_FIN_03, "...");                   // 6
+    }
+    LocalDate anterior = finalista.getDocumentacionRecibidaEn() == null     // 7: V -> 8, F -> 9
+            ? null : (instante anterior convertido a fecha);
+    finalista.setDocumentacionRecibidaEn(fecha.atStartOfDay(ZONA).toInstant()); // 10
+    finalistaRepository.saveAndFlush(finalista);                            // 10
+    LOG.info("Entrega de documentacion registrada", ...);                   // 10
+    Map<String, Object> detalle = new LinkedHashMap<>();                    // 10
+    detalle.put("finalista", ...); detalle.put("fechaRecepcion", ...);      // 10
+    if (anterior != null) {                                                 // 11
+        detalle.put("fechaAnterior", anterior.toString());                  // 12
+    }
+    if (request.observaciones() != null                                     // 13
+            && !request.observaciones().isBlank()) {                        // 14
+        detalle.put("observaciones", request.observaciones().trim());       // 15
+    }
+    FinalistaResponse respuesta = consulta.buscarUno(...).orElseThrow(...); // 16
+    return new ResultadoAuditado<>(respuesta, ...);                         // 16
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu21}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{FinalistaService.registrarEntrega} (CU-21)}
+\label{fig:gf_cu21}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (-2,-2.5) {3};
+\node[cgs] (g4) at (0,-3.75) {4};
+\node[cgp] (g5) at (0,-5) {5};
+\node[cgs] (g6) at (2,-5) {6};
+\node[cgp] (g7) at (0,-6.25) {7};
+\node[cgs] (g8) at (-2,-6.25) {8};
+\node[cgs] (g9) at (0,-7.5) {9};
+\node[cgs] (g10) at (0,-8.75) {10};
+\node[cgp] (g11) at (0,-10) {11};
+\node[cgs] (g12) at (2,-10) {12};
+\node[cgp] (g13) at (0,-11.25) {13};
+\node[cgp] (g14) at (0,-12.5) {14};
+\node[cgs] (g15) at (2,-12.5) {15};
+\node[cgs] (g16) at (0,-13.75) {16};
+\node[cgf] (gF) at (0,-15) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g3) |- (g5.west);
+\draw[fca] (g4) -- (g5);
+\draw[fca] (g5) -- node[above,font=\scriptsize]{V} (g6);
+\draw[fca] (g5) -- node[right,font=\scriptsize]{F} (g7);
+\draw[fca] (g6.east) -- (3,-5) |- (gF.east);
+\draw[fca] (g7) -- node[above,font=\scriptsize]{V} (g8);
+\draw[fca] (g7) -- node[right,font=\scriptsize]{F} (g9);
+\draw[fca] (g8) |- (g10.west);
+\draw[fca] (g9) -- (g10);
+\draw[fca] (g10) -- (g11);
+\draw[fca] (g11) -- node[above,font=\scriptsize]{V} (g12);
+\draw[fca] (g11) -- node[right,font=\scriptsize]{F} (g13);
+\draw[fca] (g12) |- (g13.east);
+\draw[fca] (g13) -- node[right,font=\scriptsize]{V} (g14);
+\draw[fca] (g13.west) -- node[above,font=\scriptsize]{F} ++(-1,0) |- (g16.west);
+\draw[fca] (g14) -- node[above,font=\scriptsize]{V} (g15);
+\draw[fca] (g14) -- node[right,font=\scriptsize]{F} (g16);
+\draw[fca] (g15) |- (g16.east);
+\draw[fca] (g16) -- (gF);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu21}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=23-18+2=7$ y $V(G)=P+1=6+1=7$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu21}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-21 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-21 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-16. $V(G)=7$: los seis primeros caminos son factibles. «EntregaPrevia» es verdadera cuando ya había una documentación recibida: el nodo 7 es verdadero cuando no la hay y el nodo 11 cuando sí. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{FinalistaServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 4, 5, 6, F & SinFechaIndicada = F\newline FechaFutura = V\newline EntregaPrevia = ?\newline ObsNoNulas = ?\newline ObsNoVacias = ? & Error \texttt{ERR\_FIN\_03}: la fecha de recepción no puede ser futura. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 5, 7, 8, 10, 11, 13, 16, F & SinFechaIndicada = V\newline FechaFutura = F\newline EntregaPrevia = F\newline ObsNoNulas = F\newline ObsNoVacias = ? & Se registra la recepción con la fecha de hoy; el detalle no lleva fecha anterior ni observaciones. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, 7, 8, 10, 11, 13, 16, F & SinFechaIndicada = F\newline FechaFutura = F\newline EntregaPrevia = F\newline ObsNoNulas = F\newline ObsNoVacias = ? & Se registra la recepción con la fecha indicada. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 5, 7, 9, 10, 11, 12, 13, 16, F & SinFechaIndicada = V\newline FechaFutura = F\newline EntregaPrevia = V\newline ObsNoNulas = F\newline ObsNoVacias = ? & Corrección de una entrega previa: el detalle incluye la fecha de recepción anterior. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 5, 7, 8, 10, 11, 13, 14, 15, 16, F & SinFechaIndicada = V\newline FechaFutura = F\newline EntregaPrevia = F\newline ObsNoNulas = V\newline ObsNoVacias = V & El detalle incluye las observaciones, sin espacios sobrantes. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 5, 7, 8, 10, 11, 13, 14, 16, F & SinFechaIndicada = V\newline FechaFutura = F\newline EntregaPrevia = F\newline ObsNoNulas = V\newline ObsNoVacias = F & Las observaciones en blanco no se agregan al detalle. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 3, 5, 6, F & --- & No factible: con la fecha de hoy, el nodo 5 nunca es verdadero (solo una fecha indicada puede ser futura). & No factible \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
+
+% ==============================================================================
+% CU-22. PUBLICAR RESULTADOS DE ADJUDICACIÓN: PublicacionResultadosService.publicar
+% ==============================================================================
+\paragraph{9.3.2.13. Caso de uso: Publicar resultados de adjudicación (CU-22).}
+
+Método analizado: \texttt{PublicacionResultadosService.publicar}. Sus tres decisiones son: (2) ¿los resultados ya fueron publicados?; (4) ¿la convocatoria no está cerrada?; y (7) ¿quedan postulaciones calificadas sin decidir? Por tanto $V(G)=4$.
+
+\begin{figure}[H]
+\caption{Código de \texttt{PublicacionResultadosService.publicar} y sus nodos (CU-22)}
+\label{fig:cod_cu22}
+\centering
+\begin{lstlisting}[language=Java, columns=fixed, basicstyle=\ttfamily\scriptsize, commentstyle=\bfseries\ttfamily\scriptsize, breaklines=false, xleftmargin=0pt]
+// Archivo: projects/backend/comedor-uagrm-core/src/main/java/
+//   com/comedoruagrm/backend/features/resultados/service/PublicacionResultadosService.java
+public ResultadoAuditado<PublicacionResultadoResponse> publicar(UUID actorCodigo,
+        UUID convocatoriaCodigo) {
+    Usuario actor = usuarioService.obtenerPorCodigo(actorCodigo);           // 1
+    DatosConvocatoria buscada = exigirConvocatoria(convocatoriaCodigo);     // 1
+    consulta.bloquearConvocatoria(buscada.id());                            // 1
+    DatosConvocatoria c = exigirConvocatoria(convocatoriaCodigo);           // 1
+    if (consulta.publicacion(c.id()).isPresent()) {                         // 2
+        throw new ConflictException(ERR_PUB_02, "...");                     // 3
+    }
+    if (!CERRADA.name().equals(c.estado())) {                               // 4
+        throw new ConflictException(ERR_PUB_03, "...");                     // 5
+    }
+    Conteos conteos = consulta.contarPorEstado(c.id());                     // 6
+    if (conteos.calificadas() > 0) {                                        // 7
+        throw new ConflictException(ERR_PUB_01, "...");                     // 8
+    }
+    PublicacionResultado publicacion = guardar(c, actor);                   // 9
+    consulta.marcarConvocatoriaPublicada(c.id());                           // 9
+    int avisados = avisar(c, consulta.destinatariosDelAviso(c.id()));       // 9
+    ... bitacora, detalle y respuesta ...                                   // 9
+    return new ResultadoAuditado<>(respuesta, ...);                         // 9
+}                                                                           // F
+\end{lstlisting}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir del código del \textit{backend}, abreviado. Las dos primeras líneas son la ruta del archivo desde la raíz del repositorio y el número final de cada línea es su nodo en la Figura~\ref{fig:gf_cu22}; \textit{F} es el nodo final.
+\end{figure}
+
+\begin{figure}[H]
+\caption{Grafo de flujo del método \texttt{PublicacionResultadosService.publicar} (CU-22)}
+\label{fig:gf_cu22}
+\centering
+\begin{tikzpicture}
+\node[cgi] (gI) at (0,0) {Inicio};
+\node[cgs] (g1) at (0,-1.25) {1};
+\node[cgp] (g2) at (0,-2.5) {2};
+\node[cgs] (g3) at (2,-2.5) {3};
+\node[cgp] (g4) at (0,-3.75) {4};
+\node[cgs] (g5) at (2,-3.75) {5};
+\node[cgs] (g6) at (0,-5) {6};
+\node[cgp] (g7) at (0,-6.25) {7};
+\node[cgs] (g8) at (2,-6.25) {8};
+\node[cgs] (g9) at (0,-7.5) {9};
+\node[cgf] (gF) at (0,-8.75) {F};
+\draw[fca] (gI) -- (g1);
+\draw[fca] (g1) -- (g2);
+\draw[fca] (g2) -- node[above,font=\scriptsize]{V} (g3);
+\draw[fca] (g2) -- node[right,font=\scriptsize]{F} (g4);
+\draw[fca] (g4) -- node[above,font=\scriptsize]{V} (g5);
+\draw[fca] (g4) -- node[right,font=\scriptsize]{F} (g6);
+\draw[fca] (g6) -- (g7);
+\draw[fca] (g7) -- node[above,font=\scriptsize]{V} (g8);
+\draw[fca] (g7) -- node[right,font=\scriptsize]{F} (g9);
+\draw[fca] (g9) -- (gF);
+\draw[fca] (g3.east) -- (3.8,-2.5) |- (gF.east);
+\draw[fca] (g5.east) -- (3.4,-3.75) |- (gF.east);
+\draw[fca] (g8.east) -- (3,-6.25) |- (gF.east);
+\end{tikzpicture}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia. Los nodos sombreados son de decisión y llevan el número de la instrucción de la Figura~\ref{fig:cod_cu22}. \textit{V} y \textit{F} indican el resultado verdadero o falso de la condición. $V(G)=A-N+2=13-11+2=4$ y $V(G)=P+1=3+1=4$.
+\end{figure}
+
+\refstepcounter{table}\label{tab:cb_cu22}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Caminos básicos y casos de prueba de CU-22 (caja blanca)}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Caminos básicos y casos de prueba de CU-22 (caja blanca)}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Camino} & \textbf{Entrada} & \textbf{Salida} & \textbf{Resultado} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{4}{p{\dimexpr13.2cm+6\tabcolsep\relax}}{\textit{Nota.} Elaboración propia a partir de RF-17. $V(G)=4$: los cuatro caminos son factibles. «?» indica que la variable no influye en el camino. Resultado: ejecución con JUnit y Mockito de \texttt{PublicacionResultadosServiceCajaBlancaTest} el 25 de noviembre de 2026; los caminos no factibles no se ejecutan.} \\
+\endlastfoot
+1, 2, 3, F & YaPublicada = V\newline NoCerrada = ?\newline ConCalificadas = ? & Error \texttt{ERR\_PUB\_02}: los resultados de la convocatoria ya fueron publicados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 5, F & YaPublicada = F\newline NoCerrada = V\newline ConCalificadas = ? & Error \texttt{ERR\_PUB\_03}: la convocatoria debe estar cerrada para publicar sus resultados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 8, F & YaPublicada = F\newline NoCerrada = F\newline ConCalificadas = V & Error \texttt{ERR\_PUB\_01}: faltan decisiones de adjudicación para publicar los resultados. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+1, 2, 4, 6, 7, 9, F & YaPublicada = F\newline NoCerrada = F\newline ConCalificadas = F & Se guarda la publicación, se marca la convocatoria como publicada, se avisa a los postulantes y se devuelve el resumen. & \textcolor{green!45!black}{\textbf{CORRECTO}} \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
