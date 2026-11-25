@@ -7,7 +7,39 @@
 
 \subsubsection{9.3.1. Pruebas de Caja Negra}\label{sec:cap9_caja_negra}
 
-% [REDACTAR]
+\begin{table}[H]
+\caption{Resumen de resultados de las pruebas de caja negra por caso de uso}
+\label{tab:cn_resumen}
+\centering
+\footnotesize\linespread{1}\selectfont
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{7.4cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{4.2cm}}
+\toprule
+\textbf{CU} & \textbf{Caso de uso} & \textbf{Casos} & \textbf{Resultado} \\
+\midrule
+CU-01 & Registrarse y autenticarse & 4 & 4 correctos \\
+CU-04 & Consultar estado de postulación & 2 & 2 correctos \\
+CU-05 & Auditar y adjudicar becas & 3 & 3 correctos \\
+CU-06 & Visualizar lista priorizada de postulantes & 3 & 3 correctos \\
+CU-07 & Auditar expediente finalista & 3 & 3 correctos \\
+CU-08 & Generar acta de adjudicación & 3 & 3 correctos \\
+CU-12 & Visualizar dashboard de indicadores BI & 4 & 4 correctos \\
+CU-14 & Gestionar usuarios y roles & 3 & 3 correctos \\
+CU-15 & Recuperar contraseña y gestionar perfil & 3 & 3 correctos \\
+CU-19 & Devolver postulación para corrección & 2 & 2 correctos \\
+CU-20 & Archivar o rechazar postulación & 2 & 2 correctos \\
+CU-21 & Notificar finalistas y publicar comunicados & 4 & 4 correctos \\
+CU-22 & Publicar resultados de adjudicación & 3 & 3 correctos \\
+\midrule
+\textbf{Total} & & \textbf{39} & \textbf{39 correctos} \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\raggedright\textit{Nota.} Elaboración propia a partir de la ejecución de las pruebas.
+\end{table}
+
+\input{secciones/11_capitulo9_pruebas/03a_caja_negra.tex}
 
 \subsubsection{9.3.2. Pruebas de Caja Blanca}\label{sec:cap9_caja_blanca}
 
