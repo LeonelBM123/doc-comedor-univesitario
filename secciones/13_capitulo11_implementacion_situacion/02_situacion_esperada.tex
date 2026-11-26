@@ -1,0 +1,43 @@
+% ------------------------------------------------------------------------------
+% 11.2. SITUACIÓN ESPERADA CON EL SISTEMA
+% ------------------------------------------------------------------------------
+\subsection{11.2. Situación esperada con el Sistema}\label{sec:cap11_situacion}
+
+La Tabla~\ref{tab:cap11_situacion} compara la situación actual del proceso de la Beca Comedor en la Dirección Universitaria de Bienestar Social y Salud (DUBSS), descrita en el Capítulo~3, con la situación esperada una vez implementado el Sistema ComedorUAGRM.
+
+\refstepcounter{table}\label{tab:cap11_situacion}
+\addcontentsline{lot}{table}{\protect\numberline{\thetable}Situación esperada con el Sistema}
+\noindent\textbf{Tabla~\thetable}\par\nopagebreak
+\noindent\textit{Situación esperada con el Sistema}\par\nopagebreak
+\begingroup\footnotesize\linespread{1}\selectfont
+\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{6.1cm} >{\raggedright\arraybackslash}p{6.1cm}}
+\toprule
+\textbf{Aspecto} & \textbf{Situación actual (antes del Sistema)} & \textbf{Situación esperada (con el Sistema)} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Aspecto} & \textbf{Situación actual (antes del Sistema)} & \textbf{Situación esperada (con el Sistema)} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\bottomrule
+\multicolumn{3}{l}{\textit{Nota.} Elaboración propia a partir del flujo operativo actual (Capítulo 3) y de los casos de uso del Sistema.} \\
+\endlastfoot
+Convocatoria y gestión académica & La convocatoria se difundía por redes sociales y los postulantes entregaban sus documentos físicamente en la DUBSS dentro del plazo establecido. & La DUBSS gestiona la convocatoria y la gestión académica desde el Sistema, y la postulación solo se habilita mientras la convocatoria está vigente. \\
+Gestión de usuarios y acceso & No había ningún sistema y todo el proceso se hacía a mano, por lo que no existían cuentas de usuario ni roles. & Cuentas con roles y permisos específicos (postulante, administrador de la DUBSS, directivo y personal del comedor), con registro, recuperación de contraseña y gestión de perfil. \\
+Postulación & El postulante presenta una carpeta física con la documentación; hay riesgo de extravío de documentos y de carpetas incompletas. & Postulación 100~\% en línea desde el panel web o la aplicación móvil, con documentos digitalizados con la cámara, borrador guardable y validación de campos y documentos obligatorios antes del envío. \\
+Evaluación y preselección & La revisión se hace manualmente y solo alcanza una parte de las carpetas, por orden de llegada o al azar. & Todas las solicitudes reciben un puntaje de vulnerabilidad calculado con inteligencia artificial y quedan ordenadas en una lista priorizada. \\
+Auditoría de expedientes & La DUBSS no puede revisar todos los expedientes y el criterio puede variar entre revisores. & La DUBSS audita solo a los finalistas mejor puntuados, con la posibilidad de devolver una postulación para corrección, archivarla o rechazarla, y registra el rendimiento académico en la auditoría. \\
+Adjudicación & El puntaje total se calcula con pasos manuales entre varios funcionarios, con riesgo de errores y sesgos. & El Sistema suma el puntaje de la IA y el rendimiento académico registrado, y genera el acta de adjudicación para respaldar la decisión. \\
+Comunicación con el postulante & El postulante debe consultar en la oficina para conocer el estado de su solicitud y los resultados. & El postulante consulta el estado de su postulación en el Sistema y recibe avisos por bandeja, notificación push y correo ante cada cambio de estado; los resultados se publican desde el Sistema. \\
+Control de becados y asistencia & La asistencia se controla en planillas físicas, y el seguimiento de bajas, suspensiones y reemplazos es manual. & El personal del comedor registra la asistencia digital, el Sistema genera las planillas imprimibles y permite cotejar el registro con el respaldo físico; el padrón de becados se gestiona en el Sistema y el becado consulta su historial. \\
+Reportes y toma de decisiones & Obtener información consolidada exige revisar carpetas y planillas, lo que es lento. & Los directivos consultan un dashboard de indicadores de Business Intelligence con información consolidada por gestión. \\
+Seguridad y trazabilidad & La documentación en papel está expuesta a pérdida o consulta no controlada, y no queda registro de quién hizo cada acción. & Autenticación con JWT, contraseñas guardadas como hash, archivos en almacenamiento controlado y bitácora de acciones consultable por la DUBSS, con el puntaje registrado con su fecha de cálculo. \\
+Transparencia y eficiencia operativa & Proceso lento, con sesgos por la revisión parcial y poca visibilidad del criterio aplicado. & Proceso automatizado y con criterio uniforme para todas las solicitudes, con decisiones trazables de principio a fin. \\
+\end{longtable}
+\endgroup
+\addtocounter{table}{-1}
+\vspace{-0.5\baselineskip}
