@@ -1,0 +1,42 @@
+% ------------------------------------------------------------------------------
+% 11.1. IMPLEMENTACIÓN DEL SISTEMA
+% ------------------------------------------------------------------------------
+\subsection{11.1. Implementación del Sistema}\label{sec:cap11_implementacion}
+
+El Sistema ComedorUAGRM busca lograr los siguientes resultados:
+
+\begin{enumerate}
+    \item \textbf{Digitalización de la convocatoria y la postulación:}
+    \begin{itemize}
+        \item Postulación 100~\% en línea, desde el panel web o la aplicación móvil, con digitalización de los documentos mediante la cámara del dispositivo.
+        \item Validación de campos y documentos obligatorios, de la elegibilidad y de los duplicados antes de enviar la solicitud.
+        \item Consulta del estado de la postulación por parte del postulante, con avisos por cada cambio de estado.
+    \end{itemize}
+
+    \item \textbf{Objetividad en la preselección y la adjudicación:}
+    \begin{itemize}
+        \item Cálculo del puntaje de vulnerabilidad con inteligencia artificial para todas las solicitudes recibidas, y no solo para las que se alcanzan a revisar.
+        \item Lista priorizada que permite a la Dirección Universitaria de Bienestar Social y Salud (DUBSS) auditar únicamente a los finalistas mejor puntuados.
+        \item Adjudicación respaldada por un acta y por el registro del puntaje con su fecha de cálculo, lo que da trazabilidad a cada decisión.
+    \end{itemize}
+
+    \item \textbf{Control de becados y de la asistencia al comedor:}
+    \begin{itemize}
+        \item Registro digital diario de la asistencia por parte del personal del comedor.
+        \item Generación de planillas de asistencia imprimibles y cotejo del registro digital con el respaldo físico.
+        \item Gestión del padrón de becados (baja, suspensión y reemplazo) y consulta del historial de asistencia por el propio becado.
+    \end{itemize}
+
+    \item \textbf{Información para la toma de decisiones:}
+    \begin{itemize}
+        \item Dashboard de indicadores de Business Intelligence para los directivos de la DUBSS.
+        \item Bitácora de acciones que permite consultar quién realizó cada operación relevante y cuándo.
+    \end{itemize}
+
+    \item \textbf{Fortalecimiento de la seguridad:}
+    \begin{itemize}
+        \item Control de accesos mediante roles y permisos específicos para el postulante, el administrador de la DUBSS, el directivo y el personal del comedor.
+        \item Autenticación con tokens JWT y almacenamiento de las contraseñas como hash.
+        \item Protección de los datos personales y de los documentos de los postulantes mediante el almacenamiento controlado de archivos.
+    \end{itemize}
+\end{enumerate}
